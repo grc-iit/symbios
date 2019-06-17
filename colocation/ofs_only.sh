@@ -32,7 +32,6 @@ cd ${OFS_SCRIPT_DIR}
 ./start-server.sh
 
 cd ${CWD}
-first_client=`head -1 ${CLIENT_HOSTS} | cut -d':' -f1`
 for ppn in ${PPNS[@]}
 do
   for mode in ${MODES[@]}

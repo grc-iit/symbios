@@ -27,7 +27,11 @@ int main(int argc, char *argv[])
   MPI_Init(&argc, &argv);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &nprocs);
-  if (rank == 0) printf("Reading trace from %s ...\n", trace_file);
+  if (rank == 0) {
+    printf("Reading trace from %s ...\n", trace_file);
+    printf("Time limit: %d seconds\n", time_limit);
+  }
+  MPI_Bcast(&time_limit, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
   redis_init(rank);
   prepare_data_redis(trace_file, rank);

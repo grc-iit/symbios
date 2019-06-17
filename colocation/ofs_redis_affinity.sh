@@ -15,6 +15,7 @@ PLOT_SEP_SLEEP=10
 REDIS_TIME_LIMIT=60
 xsize=$1
 delay=$2
+aff=$3
 
 reset()
 {
@@ -30,10 +31,25 @@ reset()
 
 reset
 
-cd ${OFS_SCRIPT_DIR}
-./start-server.sh
-cd ${REDIS_SCRIPT_DIR}
-./start.sh
+if [[ ${aff} == "numa" ]]
+then
+  cd ${OFS_SCRIPT_DIR}
+  ./start-server-numa.sh
+  cd ${REDIS_SCRIPT_DIR}
+  ./start-numa.sh
+elif [[ ${aff} == "interleave" ]]
+then
+  cd ${OFS_SCRIPT_DIR}
+  ./start-server-interleave.sh
+  cd ${REDIS_SCRIPT_DIR}
+  ./start-interleave.sh
+else
+  cd ${OFS_SCRIPT_DIR}
+  ./start-server.sh
+  cd ${REDIS_SCRIPT_DIR}
+  ./start.sh
+fi
+
 
 cd ${CWD}
 first_client=`head -1 ${CLIENT_HOSTS} | cut -d':' -f1`

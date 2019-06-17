@@ -23,9 +23,8 @@ echo "Redis test of trace file ${trace_file} with a delay of ${delay} seconds"
 echo "Redis starts: `date +"%Y-%m-%d-%H-%M-%S-%N"`"
 trap 'echo "Redis ends: `date +'%Y-%m-%d-%H-%M-%S-%N'`"' KILL
 trap 'echo "Redis ends: `date +'%Y-%m-%d-%H-%M-%S-%N'`"' INT
-while true
-do
-  ((np=${ppn}*${nclient}))
-  sleep ${delay}
-  /home/kfeng/MPICH/bin/mpiexec -n ${np} -iface ${IFACE} -f ${CLIENT_HOSTS} ${REDIS_RW_BIN} ${trace_file} ${time_limit} 0
-done
+
+((np=${ppn}*${nclient}))
+sleep ${delay}
+echo /home/kfeng/MPICH/bin/mpiexec -n ${np} -iface ${IFACE} -f ${CLIENT_HOSTS} ${REDIS_RW_BIN} ${trace_file} ${time_limit} 0
+/home/kfeng/MPICH/bin/mpiexec -n ${np} -iface ${IFACE} -f ${CLIENT_HOSTS} ${REDIS_RW_BIN} ${trace_file} ${time_limit} 0
