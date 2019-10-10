@@ -1,0 +1,7 @@
+*.o
+*.log
+*.obj
+
+clients
+servers
+data
