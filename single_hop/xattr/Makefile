@@ -3,27 +3,27 @@ CFLAGS+=-fopenmp -O3 -g
 CFLAGS+=-I/home/kfeng/install/include
 CFLAGS+=-Wl,-rpath=$(PVFS_DIR)/lib
 #CFLAGS+=-I/home/kfeng/pkg_src/hiredis-vip
-LDFLAGS+=-L$(PVFS_DIR)/lib -lorangefsposix
+#LDFLAGS+=-L$(PVFS_DIR)/lib -lorangefsposix
 LDFLAGS+=-L/home/kfeng/install/lib -lpthread -lcrypto -lm
 LDFLAGS+=-L/home/kfeng/pkg_src/hiredis-vip -lhiredis_vip
 #LDFLAGS+=-L/home/kfeng/install/lib -lpthread -lcrypto -llmpe -lmpe -ltmpe -lm
-MPICC=/home/kfeng/MPICH_331_CH4/bin/mpicc
-CC=/home/kfeng/MPICH_331_CH4/bin/mpicc
+MPICC=/home/kfeng/MPICH/bin/mpicc
+CC=/home/kfeng/MPICH/bin/mpicc
 #CC=gcc
 PWD=$(shell pwd)
 
 all: setxattr getxattr header header_mpi
 
-setxattr: setxattr.o get_num.o error_functions.o
+setxattr: setxattr.o get_num.o error_functions.o link_fs.o common.o
 	$(CC) -o $@ $^ $(CFLAGS) $(LDFLAGS)
 
-header: header.o get_num.o error_functions.o
+header: header.o get_num.o error_functions.o common.o
 	$(CC) -o $@ $^ $(CFLAGS) $(LDFLAGS)
 
-header_mpi: header_mpi.o get_num.o error_functions.o
+header_mpi: header_mpi.o get_num.o error_functions.o common.o
 	$(MPICC) -o $@ $^ $(CFLAGS) $(LDFLAGS)
 
-getxattr: getxattr.o get_num.o error_functions.o
+getxattr: getxattr.o get_num.o error_functions.o common.o
 	$(CC) -o $@ $^ $(CFLAGS) $(LDFLAGS)
 
 %.o: %.c

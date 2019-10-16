@@ -10,10 +10,10 @@ PWD=$(shell pwd)
 
 all: redis_create_shadow redis_create_shadow_mt
 
-redis_create_shadow: redis_create_shadow.o
+redis_create_shadow: redis_create_shadow.o link_redis.o
 	$(MPICC) -o $@ $^ $(CFLAGS) $(LDFLAGS)
 
-redis_create_shadow_mt: redis_create_shadow_mt.o
+redis_create_shadow_mt: redis_create_shadow_mt.o link_redis.o
 	$(MPICC) -o $@ $^ $(CFLAGS) $(LDFLAGS)
 
 %.o: %.c
