@@ -1,58 +1,56 @@
-#include <sys/xattr.h>
+#include <sys/time.h>
 #include "mpi.h"
 #include "tlpi_hdr.h"
 #include "common.h"
+#include "link_fs.h"
 
-#define NUM_OPS 10
+#define NUM_OPS 100
 
 int main(int argc, char *argv[])
 {
   char *value, filename[1024];
   int i = 0, ret, nprocs, rank;
-  FILE *fd;
-  struct timeval start, end;
-  double duration = 0, duration_sum;
+  struct timeval start1, start2, end;
+  double duration1 = 0, duration2 = 0, duration_sum1, duration_sum2;
 
   MPI_Init(&argc, &argv);
   MPI_Comm_size(MPI_COMM_WORLD, &nprocs);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-  memset(filename, 0, 1024);
-  if (nprocs == 1)
-    strcpy(filename, argv[1]);
-  else
-    sprintf(filename, "%s_%d", argv[1], rank);
   if (argc < 2 || strcmp(argv[1], "--help") == 0)
     usageErr("%s file\n", argv[0]);
-  /*printf("%s\n", filename);*/
 
   while (i++ < NUM_OPS) {
-    gettimeofday(&start, NULL);
-    if ((fd = fopen(filename, "a+")) == NULL)
-      errExit("fail to open %s\n", filename);
-    fclose(fd);
-    /*printf("aaa\n");*/
+    memset(filename, 0, 1024);
+    if (nprocs == 1)
+      sprintf(filename, "%s_%d", argv[1], i);
+    else
+      sprintf(filename, "%s_%d_%d", argv[1], rank, i);
 
-    value = "The past is not dead.";
-    if (setxattr(filename, "user.x", value, strlen(value), 0) == -1)
-      errExit("setxattr");
-    /*printf("aaa\n");*/
+    gettimeofday(&start1, NULL);
+    touch_link(filename);
+
+    gettimeofday(&start2, NULL);
+    insert_link(filename, i, "loc", "redis");
 
     gettimeofday(&end, NULL);
-    duration += timeval_substract(&start, &end);
+    duration1 += timeval_substract(&start1, &end);
+    duration2 += timeval_substract(&start2, &end);
 
-    if ((ret = remove(filename)) == -1)
-      errExit("fail to remove %s\n", filename);
-    /*printf("aaa\n");*/
+    remove_link(filename);
   }
 
-  if (nprocs == 1)
-    printf("Throughput of shadow_creation (setxattr): %lf op/s\n", NUM_OPS / duration);
-  else {
-    MPI_Reduce(&duration, &duration_sum, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+  if (nprocs == 1) {
+    printf("Throughput of shadow_creation (setxattr): %lf op/s\n", NUM_OPS / duration1);
+    printf("Throughput of shadow_insert (setxattr): %lf op/s\n", NUM_OPS / duration2);
+  } else {
+    MPI_Reduce(&duration1, &duration_sum1, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+    MPI_Reduce(&duration2, &duration_sum2, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
     if (rank == 0) {
       printf("Throughput of shadow_creation (setxattr): %lf op/s\n",
-              NUM_OPS * nprocs * nprocs / duration_sum);
+              NUM_OPS * nprocs * nprocs / duration_sum1);
+      printf("Throughput of shadow_insert (setxattr): %lf op/s\n",
+              NUM_OPS * nprocs * nprocs / duration_sum2);
     }
   }
 

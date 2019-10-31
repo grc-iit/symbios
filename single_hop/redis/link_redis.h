@@ -1,5 +1,5 @@
-#ifndef __LINK_FS_H__
-#define __LINK_FS_H__
+#ifndef __LINK_REDIS_H__
+#define __LINK_REDIS_H__
 
 #include "hircluster.h"
 
