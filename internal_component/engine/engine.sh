@@ -35,10 +35,10 @@ clear_pfs()
 
   if [[ ${pfs_id} -eq 1 ]]
   then
-    remote_dir=${PFS1_SCRIPT_DIR}
+    remote_dir=${PFS1_MOUNT_POINT}
   elif [[ ${pfs_id} -eq 2 ]]
   then
-    remote_dir=${PFS2_SCRIPT_DIR}
+    remote_dir=${PFS2_MOUNT_POINT}
   fi
   ssh ${first_client} "rm -rf ${remote_dir}/*"
 }
