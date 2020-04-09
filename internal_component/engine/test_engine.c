@@ -211,24 +211,83 @@ trace_record *next_trace_record(FILE *trace_fp, trace_record *record, int rank)
 void pfs_io(int stripe_size, trace_record *record)
 {
   FILE *dest_fp;
+  size_t cnt;
 
   if (stripe_size == PFS1_STRIPE_SIZE)
-    dest_fp = fdopen(dup(fileno(dest_fp1)), "w");
+    dest_fp = fdopen(dup(fileno(dest_fp1)), "a+");
   else if (stripe_size == PFS2_STRIPE_SIZE)
-    dest_fp = fdopen(dup(fileno(dest_fp2)), "w");
+    dest_fp = fdopen(dup(fileno(dest_fp2)), "a+");
 
+  if (dest_fp == NULL) {
+    fprintf(stderr, "Fail to dup dest file descriptor\n");
+    MPI_Abort(MPI_COMM_WORLD, 206);
+  }
+
+  if (fseek(dest_fp1, record->offset, SEEK_SET) != 0 ||
+      fseek(dest_fp2, record->offset, SEEK_SET) != 0) {
+    fprintf(stderr, "Fail to seek to offset in destination file\n");
+    MPI_Abort(MPI_COMM_WORLD, 207);
+  }
   if (record->ops == WRITE) {
-    if (fwrite(buf, record->size, 1, dest_fp) < 0) {
+    if ((cnt = fwrite(buf, 1, record->size, dest_fp)) < 0) {
       fprintf(stderr, "Fail to write to destination file\n");
-      exit(-1);
+      MPI_Abort(MPI_COMM_WORLD, 207);
     } else
-      debug_print(2, "Write %d bytes to PFS\n", record->size);
+      debug_print(2, "Write %d bytes to PFS\n", cnt);
   } else if (record->ops == READ) {
-    if (fread(buf, record->size, 1, dest_fp) < 0) {
+    if ((cnt = fread(buf, 1, record->size, dest_fp)) < 0) {
       fprintf(stderr, "Fail to read from destination file\n");
-      exit(-1);
+      MPI_Abort(MPI_COMM_WORLD, 207);
     } else
-      debug_print(2, "Read %d bytes from PFS\n", record->size);
+      debug_print(2, "Read %d bytes from PFS\n", cnt);
+  }
+
+  fclose(dest_fp);
+}
+
+void pfs1_io(trace_record *record)
+{
+  size_t cnt;
+
+  if (fseek(dest_fp1, record->offset, SEEK_SET) != 0) {
+    fprintf(stderr, "Fail to seek to offset in destination file\n");
+    MPI_Abort(MPI_COMM_WORLD, 207);
+  }
+  if (record->ops == WRITE) {
+    if ((cnt = fwrite(buf, 1, record->size, dest_fp1)) < 0) {
+      fprintf(stderr, "Fail to write to destination file\n");
+      MPI_Abort(MPI_COMM_WORLD, 207);
+    } else
+      debug_print(2, "Write %d bytes to PFS1\n", cnt);
+  } else if (record->ops == READ) {
+    if ((cnt = fread(buf, 1, record->size, dest_fp1)) < 0) {
+      fprintf(stderr, "Fail to read from destination file\n");
+      MPI_Abort(MPI_COMM_WORLD, 207);
+    } else
+      debug_print(2, "Read %d bytes from PFS1\n", cnt);
+  }
+}
+
+void pfs2_io(trace_record *record)
+{
+  size_t cnt;
+
+  if (fseek(dest_fp2, record->offset, SEEK_SET) != 0) {
+    fprintf(stderr, "Fail to seek to offset in destination file\n");
+    MPI_Abort(MPI_COMM_WORLD, 207);
+  }
+  if (record->ops == WRITE) {
+    if ((cnt = fwrite(buf, 1, record->size, dest_fp2)) < 0) {
+      fprintf(stderr, "Fail to write to destination file\n");
+      MPI_Abort(MPI_COMM_WORLD, 207);
+    } else
+      debug_print(2, "Write %d bytes to PFS2\n", cnt);
+  } else if (record->ops == READ) {
+    if ((cnt = fread(buf, 1, record->size, dest_fp2)) < 0) {
+      fprintf(stderr, "Fail to read from destination file\n");
+      MPI_Abort(MPI_COMM_WORLD, 207);
+    } else
+      debug_print(2, "Read %d bytes from PFS2\n", cnt);
   }
 }
 
@@ -278,13 +337,18 @@ void do_io(char *target, char *trace_file, int rank)
   finished_record_cnt = 0;
   while (finished_record_cnt++ < record_cnt - 1) {
     record = next_trace_record(trace_fp, record, rank);
+    debug_print(2, "ops: %d, offset: %d, size: %d\n", record->ops,
+                                                      record->offset,
+                                                      record->size);
 
     START_TIMING(1);
     /*debug_print(1, "TRACE: op: %d, size: %d\n", record->ops, record->size);*/
     if (strcmp(target, "PFS1") == 0) {
-      pfs_io(PFS1_STRIPE_SIZE, record);
+      /*pfs_io(PFS1_STRIPE_SIZE, record);*/
+      pfs1_io(record);
     } else if (strcmp(target, "PFS2") == 0) {
-      pfs_io(PFS2_STRIPE_SIZE, record);
+      /*pfs_io(PFS2_STRIPE_SIZE, record);*/
+      pfs2_io(record);
     } else if (strcmp(target, "REDIS") == 0) {
       redis_io(record);
     } else if (strcmp(target, "MONGO") == 0) {
@@ -310,7 +374,7 @@ void init(char *target_stor, char *redis_hosts, int max_req_size)
   if (strcmp(target_stor, "") == 0 || strcmp(target_stor, "PFS1") == 0) {
     retries = 0;
     sprintf(pfs1_dest_file_name, "%s_%d", PFS1_DEST_FILE, rank);
-    while ((dest_fp1 = fopen(pfs1_dest_file_name, "w+")) == NULL &&
+    while ((dest_fp1 = fopen(pfs1_dest_file_name, "a+")) == NULL &&
            retries++ < PFS_MAX_RETRY) {
       debug_print(1, "Retry opening dest file %s on PFS1\n",
                   pfs1_dest_file_name);
@@ -319,16 +383,21 @@ void init(char *target_stor, char *redis_hosts, int max_req_size)
       fprintf(stderr, "Fail to open dest file %s on PFS1\n",
               pfs1_dest_file_name);
       MPI_Abort(MPI_COMM_WORLD, 201);
-    } else
+    } else {
       debug_print(1, "Dest file %s on PFS1 is opened\n",
                   pfs1_dest_file_name);
+      if (fseek(dest_fp1, 0, SEEK_SET) != 0) {
+        fprintf(stderr, "Fail to seek to offset in destination file\n");
+        MPI_Abort(MPI_COMM_WORLD, 207);
+      }
+    }
   }
 
   // Open file on PFS2
   if (strcmp(target_stor, "") == 0 || strcmp(target_stor, "PFS2") == 0) {
     retries = 0;
     sprintf(pfs2_dest_file_name, "%s_%d", PFS2_DEST_FILE, rank);
-    while ((dest_fp2 = fopen(pfs2_dest_file_name, "w+")) == NULL &&
+    while ((dest_fp2 = fopen(pfs2_dest_file_name, "a+")) == NULL &&
            retries++ < PFS_MAX_RETRY) {
       debug_print(1, "Retry opening dest file %s on PFS2\n",
                   pfs2_dest_file_name);
@@ -337,9 +406,14 @@ void init(char *target_stor, char *redis_hosts, int max_req_size)
       fprintf(stderr, "Fail to open dest file %s on PFS2\n",
               pfs2_dest_file_name);
       MPI_Abort(MPI_COMM_WORLD, 202);
-    } else
+    } else {
       debug_print(1, "Dest file %s on PFS2 is opened\n",
                   pfs2_dest_file_name);
+      if (fseek(dest_fp2, 0, SEEK_SET) != 0) {
+        fprintf(stderr, "Fail to seek to offset in destination file\n");
+        MPI_Abort(MPI_COMM_WORLD, 207);
+      }
+    }
   }
 
   // Connect to Redis cluster

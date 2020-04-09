@@ -25,7 +25,7 @@
 #define MEGA              (1024 * 1024)
 #define MAX_REQ_SIZE      (256 * MEGA)
 
-#define DEBUG             1
+#define DEBUG             0
 #define debug_print(level, fmt, ...) \
         do { if (level <= DEBUG)\
           fprintf(stderr, fmt, ##__VA_ARGS__); } while (0)
