@@ -1,0 +1,630 @@
+[0] IOR-3.0.1: MPI Coordinated Test of Parallel I/O
+[0] 
+[0] Began: Fri Mar 20 01:34:53 2020
+[0] Command line used: /home/kfeng/pkg_src/ior/src/ior.mpich -a[0]  MPIIO -t 128k -b 32m -E -k -w[0]  -o pvfs2://mnt/nvme/kfeng/pvfs2-mount/ior.test
+[0] Machine: Linux ares-comp-07[0] 
+[0] 
+[0] Test 0 started: Fri Mar 20 01:34:53 2020
+[0] Summary:
+[0] 	api                = MPIIO (version=3, subversion=1)
+[0] 	test filename      = pvfs2://mnt/nvme/kfeng/pvfs2-mount/ior.test
+[0] 	access             = single-shared-file
+[0] 	ordering in a file = sequential offsets
+[0] 	ordering inter file= no tasks offsets[0] 
+[0] 	clients            = 24 (1 per node)
+[0] 	repetitions        = 1
+[0] 	xfersize           = 131072 bytes
+[0] 	blocksize          = 32 MiB
+[0] 	aggregate filesize = 768 MiB
+[0] 
+[0] access    bw(MiB/s)  block(KiB) xfer(KiB)  open(s)    wr/rd(s)   close(s)   total(s)   iter
+[0] ------    ---------  ---------- ---------  --------   --------   --------   --------   ----
+[0] write     [0] 240.89     32768      [0] 128.00     0.154891   [0] 3.03       0.155947   [0] 3.19       0   
+[0] 
+[0] Max Write: 240.89 MiB/sec (252.59 MB/sec)
+[0] 
+[0] Summary of all tests:
+[0] Operation   Max(MiB)   Min(MiB)  Mean(MiB)     StdDev    Mean(s) Test# #Tasks tPN reps fPP reord reordoff reordrand seed segcnt blksiz xsize aggsize API RefNum
+[0] write     [0]     240.89     240.89 [0]     240.89       0.00    3.18823 0 24 1 1 0 0 1 0 0 1 33554432 131072 805306368 [0] MPIIO 0
+[0] 
+[0] Finished: Fri Mar 20 01:34:56 2020
+[0] IOR-3.0.1: MPI Coordinated Test of Parallel I/O
+[0] 
+[0] Began: Fri Mar 20 01:35:02 2020
+[0] Command line used: /home/kfeng/pkg_src/ior/src/ior.mpich -a[0]  MPIIO -t 128k -b 32m -E -k -w[0]  -o pvfs2://mnt/nvme/kfeng/pvfs2-mount/ior.test
+[0] Machine: Linux ares-comp-07[0] 
+[0] 
+[0] Test 0 started: Fri Mar 20 01:35:02 2020
+[0] Summary:
+[0] 	api                = MPIIO (version=3, subversion=1)
+[0] 	test filename      = pvfs2://mnt/nvme/kfeng/pvfs2-mount/ior.test
+[0] 	access             = single-shared-file
+[0] 	ordering in a file = sequential offsets
+[0] 	ordering inter file= no tasks offsets[0] 
+[0] 	clients            = 24 (1 per node)
+[0] 	repetitions        = 1
+[0] 	xfersize           = 131072 bytes
+[0] 	blocksize          = 32 MiB
+[0] 	aggregate filesize = 768 MiB
+[0] 
+[0] access    bw(MiB/s)  block(KiB) xfer(KiB)  open(s)    wr/rd(s)   close(s)   total(s)   iter
+[0] ------    ---------  ---------- ---------  --------   --------   --------   --------   ----
+[0] write     [0] 246.01     32768      128.00     [0] 0.156336   2.97       [0] 0.088028   3.12       0   
+[0] 
+[0] Max Write: 246.01 MiB/sec (257.96 MB/sec)
+[0] 
+[0] Summary of all tests:
+[0] Operation   Max(MiB)   Min(MiB)  Mean(MiB)     StdDev    Mean(s) Test# #Tasks tPN reps fPP reord reordoff reordrand seed segcnt blksiz xsize aggsize API RefNum
+[0] write     [0]     246.01     246.01 [0]     246.01       0.00 [0]    3.12183 0 24 1 [0] 1 0 0 [0] 1 0 0 1 [0] 33554432 131072 805306368 [0] MPIIO 0
+[0] 
+[0] Finished: Fri Mar 20 01:35:05 2020
+[0] IOR-3.0.1: MPI Coordinated Test of Parallel I/O
+[0] 
+[0] Began: Fri Mar 20 01:35:11 2020
+[0] Command line used: /home/kfeng/pkg_src/ior/src/ior.mpich -a[0]  MPIIO -t 128k -b 32m -E -k[0]  -w -o pvfs2://mnt/nvme/kfeng/pvfs2-mount/ior.test
+[0] Machine: Linux ares-comp-07
+[0] 
+[0] Test 0 started: Fri Mar 20 01:35:11 2020
+[0] Summary:
+[0] 	api                = MPIIO (version=3, subversion=1)
+[0] 	test filename      = pvfs2://mnt/nvme/kfeng/pvfs2-mount/ior.test
+[0] 	access             = single-shared-file
+[0] 	ordering in a file = sequential offsets
+[0] 	ordering inter file= no tasks offsets[0] 
+[0] 	clients            = 24 (1 per node)
+[0] 	repetitions        = 1
+[0] 	xfersize           = 131072 bytes
+[0] 	blocksize          = 32 MiB
+[0] 	aggregate filesize = 768 MiB
+[0] 
+[0] access    bw(MiB/s)  block(KiB) xfer(KiB)  open(s)    wr/rd(s)   close(s)   total(s)   iter
+[0] ------    ---------  ---------- ---------  --------   --------   --------   --------   ----
+[0] write     [0] 247.20     32768      128.00     [0] 0.156810   2.95       [0] 0.057953   3.11       0   
+[0] 
+[0] Max Write: 247.20 MiB/sec (259.20 MB/sec)
+[0] 
+[0] Summary of all tests:
+[0] Operation   Max(MiB)   Min(MiB)  Mean(MiB)     StdDev    Mean(s) Test# #Tasks tPN reps fPP reord reordoff reordrand seed segcnt blksiz xsize aggsize API RefNum
+[0] write     [0]     247.20     247.20     247.20       0.00    3.10683 0 24 [0] 1 1 0 0 1 0 0 1 [0] 33554432 131072 805306368 [0] MPIIO 0
+[0] 
+[0] Finished: Fri Mar 20 01:35:14 2020
+[0] IOR-3.0.1: MPI Coordinated Test of Parallel I/O
+[0] 
+[0] Began: Fri Mar 20 01:36:57 2020
+[0] Command line used: /home/kfeng/pkg_src/ior/src/ior.mpich[0]  -a MPIIO -t[0]  128k[0]  -b 32m -E -k -w[0]  -o pvfs2://mnt/nvme/kfeng/pvfs2-mount/ior.test[0] 
+[0] Machine: Linux ares-comp-07
+[0] 
+[0] Test 0 started: Fri Mar 20 01:36:57 2020
+[0] Summary:
+[0] 	api                = MPIIO (version=3, subversion=1)
+[0] 	test filename      = pvfs2://mnt/nvme/kfeng/pvfs2-mount/ior.test
+[0] 	access             = single-shared-file
+[0] 	ordering in a file = sequential offsets[0] 
+[0] 	ordering inter file= no tasks offsets
+[0] 	clients            = 24 (1 per node)
+[0] 	repetitions        = 1
+[0] 	xfersize           = 131072 bytes
+[0] 	blocksize          = 32 MiB
+[0] 	aggregate filesize = 768 MiB
+[0] 
+[0] access    bw(MiB/s)  block(KiB) xfer(KiB)  open(s)    wr/rd(s)   close(s)   total(s)   iter
+[0] ------    ---------  ---------- ---------  --------   --------   --------   --------   ----
+[0] write     [0] 231.32     32768      [0] 128.00     0.193943   3.13       [0] 0.078992   3.32       0   
+[0] 
+[0] Max Write: 231.32 MiB/sec (242.55 MB/sec)
+[0] 
+[0] Summary of all tests:
+[0] Operation   Max(MiB)   Min(MiB)  Mean(MiB)     StdDev    Mean(s) Test# #Tasks tPN reps fPP reord reordoff reordrand seed segcnt blksiz xsize aggsize API RefNum
+[0] write         231.32 [0]     231.32     231.32 [0]       0.00    3.32011 0 [0] 24 1 1 0 [0] 0 1 0 0 1 33554432 131072 805306368 MPIIO 0
+[0] 
+[0] Finished: Fri Mar 20 01:37:00 2020
+[0] IOR-3.0.1: MPI Coordinated Test of Parallel I/O
+[0] 
+[0] Began: Fri Mar 20 01:37:06 2020
+[0] Command line used: /home/kfeng/pkg_src/ior/src/ior.mpich[0]  -a MPIIO -t 128k -b 32m -E -k[0]  -w -o pvfs2://mnt/nvme/kfeng/pvfs2-mount/ior.test
+[0] Machine: Linux ares-comp-07
+[0] 
+[0] Test 0 started: Fri Mar 20 01:37:06 2020
+[0] Summary:
+[0] 	api                = MPIIO (version=3, subversion=1)
+[0] 	test filename      = pvfs2://mnt/nvme/kfeng/pvfs2-mount/ior.test
+[0] 	access             = single-shared-file
+[0] 	ordering in a file = sequential offsets
+[0] 	ordering inter file=[0]  no tasks offsets
+[0] 	clients            = 24 (1 per node)
+[0] 	repetitions        = 1
+[0] 	xfersize           = 131072 bytes
+[0] 	blocksize          = 32 MiB
+[0] 	aggregate filesize = 768 MiB
+[0] 
+[0] access    bw(MiB/s)  block(KiB) xfer(KiB)  open(s)    wr/rd(s)   close(s)   total(s)   iter
+[0] ------    ---------  ---------- ---------  --------   --------   --------   --------   ----
+[0] write     [0] 234.87     32768      128.00     [0] 0.161468   3.11       [0] 0.068443   3.27       0   
+[0] 
+[0] Max Write: 234.87 MiB/sec (246.28 MB/sec)
+[0] 
+[0] Summary of all tests:
+[0] Operation   Max(MiB)   Min(MiB)  Mean(MiB)     StdDev    Mean(s) Test# #Tasks tPN reps fPP reord reordoff reordrand seed segcnt blksiz xsize aggsize API RefNum
+[0] write     [0]     234.87     234.87     234.87 [0]       0.00    3.26994 0 [0] 24 1 1 [0] 0 0 1 0 [0] 0 1 33554432 131072 [0] 805306368 MPIIO 0
+[0] 
+[0] Finished: Fri Mar 20 01:37:09 2020
+[0] IOR-3.0.1: MPI Coordinated Test of Parallel I/O
+[0] 
+[0] Began: Fri Mar 20 01:37:16 2020
+[0] Command line used: /home/kfeng/pkg_src/ior/src/ior.mpich[0]  -a MPIIO -t 128k -b 32m -E[0]  -k -w -o pvfs2://mnt/nvme/kfeng/pvfs2-mount/ior.test
+[0] Machine: Linux ares-comp-07[0] 
+[0] 
+[0] Test 0 started: Fri Mar 20 01:37:16 2020
+[0] Summary:
+[0] 	api                = MPIIO (version=3, subversion=1)
+[0] 	test filename      = pvfs2://mnt/nvme/kfeng/pvfs2-mount/ior.test
+[0] 	access             = single-shared-file
+[0] 	ordering in a file = sequential offsets[0] 
+[0] 	ordering inter file= no tasks offsets
+[0] 	clients            = 24 (1 per node)
+[0] 	repetitions        = 1
+[0] 	xfersize           = 131072 bytes
+[0] 	blocksize          = 32 MiB
+[0] 	aggregate filesize = 768 MiB
+[0] 
+[0] access    bw(MiB/s)  block(KiB) xfer(KiB)  open(s)    wr/rd(s)   close(s)   total(s)   iter
+[0] ------    ---------  ---------- ---------  --------   --------   --------   --------   ----
+[0] write     [0] 237.82     32768      128.00     [0] 0.159108   3.07       [0] 0.066842   3.23       0   
+[0] 
+[0] Max Write: 237.82 MiB/sec (249.37 MB/sec)
+[0] 
+[0] Summary of all tests:
+[0] Operation   Max(MiB)   Min(MiB)  Mean(MiB)     StdDev    Mean(s) Test# #Tasks tPN reps fPP reord reordoff reordrand seed segcnt blksiz xsize aggsize API RefNum
+[0] write     [0]     237.82     237.82 [0]     237.82       0.00    3.22933 0 [0] 24 1 1 [0] 0 0 1 0 0 1 33554432 131072 805306368 [0] MPIIO 0
+[0] 
+[0] Finished: Fri Mar 20 01:37:19 2020
+[0] IOR-3.0.1: MPI Coordinated Test of Parallel I/O
+[0] 
+[0] Began: Fri Mar 20 01:38:12 2020
+[0] Command line used: /home/kfeng/pkg_src/ior/src/ior.mpich -a[0]  MPIIO -t 128k -b 32m -E -k -w[0]  -o pvfs2://mnt/nvme/kfeng/pvfs2-mount/ior.test
+[0] Machine: Linux ares-comp-07
+[0] 
+[0] Test 0 started: Fri Mar 20 01:38:12 2020
+[0] Summary:
+[0] 	api                = MPIIO (version=3, subversion=1)
+[0] 	test filename      = pvfs2://mnt/nvme/kfeng/pvfs2-mount/ior.test
+[0] 	access             = single-shared-file
+[0] 	ordering in a file = sequential offsets
+[0] 	ordering inter file=[0]  no tasks offsets
+[0] 	clients            = 24 (1 per node)
+[0] 	repetitions        = 1
+[0] 	xfersize           = 131072 bytes
+[0] 	blocksize          = 32 MiB
+[0] 	aggregate filesize = 768 MiB
+[0] 
+[0] access    bw(MiB/s)  block(KiB) xfer(KiB)  open(s)    wr/rd(s)   close(s)   total(s)   iter
+[0] ------    ---------  ---------- ---------  --------   --------   --------   --------   ----
+[0] write     [0] 229.11     32768      128.00     [0] 0.227337   3.13       0.088954   3.35       [0] 0   
+[0] 
+[0] Max Write: 229.11 MiB/sec (240.24 MB/sec)
+[0] 
+[0] Summary of all tests:
+[0] Operation   Max(MiB)   Min(MiB)  Mean(MiB)     StdDev    Mean(s) Test# #Tasks tPN reps fPP reord reordoff reordrand seed segcnt blksiz xsize aggsize API RefNum
+[0] write     [0]     229.11     229.11 [0]     229.11       0.00    3.35206 [0] 0 24 1 1 [0] 0 0 1 0 [0] 0 1 33554432 [0] 131072 805306368 MPIIO 0
+[0] 
+[0] Finished: Fri Mar 20 01:38:16 2020
+[0] IOR-3.0.1: MPI Coordinated Test of Parallel I/O
+[0] 
+[0] Began: Fri Mar 20 01:38:22 2020
+[0] Command line used:[0]  /home/kfeng/pkg_src/ior/src/ior.mpich -a MPIIO -t 128k[0]  -b 32m -E -k[0]  -w -o pvfs2://mnt/nvme/kfeng/pvfs2-mount/ior.test[0] 
+[0] Machine: Linux ares-comp-07
+[0] 
+[0] Test 0 started: Fri Mar 20 01:38:22 2020
+[0] Summary:
+[0] 	api                = MPIIO (version=3, subversion=1)
+[0] 	test filename      = pvfs2://mnt/nvme/kfeng/pvfs2-mount/ior.test
+[0] 	access             = single-shared-file
+[0] 	ordering in a file = sequential offsets
+[0] 	ordering inter file=[0]  no tasks offsets
+[0] 	clients            = 24 (1 per node)
+[0] 	repetitions        = 1
+[0] 	xfersize           = 131072 bytes
+[0] 	blocksize          = 32 MiB
+[0] 	aggregate filesize = 768 MiB
+[0] 
+[0] access    bw(MiB/s)  block(KiB) xfer(KiB)  open(s)    wr/rd(s)   close(s)   total(s)   iter
+[0] ------    ---------  ---------- ---------  --------   --------   --------   --------   ----
+[0] write     [0] 240.31     32768      [0] 128.00     0.165899   [0] 3.03       0.063927   [0] 3.20       0   
+[0] 
+[0] Max Write: 240.31 MiB/sec (251.99 MB/sec)
+[0] 
+[0] Summary of all tests:
+[0] Operation   Max(MiB)   Min(MiB)  Mean(MiB)     StdDev    Mean(s) Test# #Tasks tPN reps fPP reord reordoff reordrand seed segcnt blksiz xsize aggsize API RefNum
+[0] write     [0]     240.31     240.31     240.31 [0]       0.00    3.19582 0 [0] 24 1 1 [0] 0 0 1 0 [0] 0 1 33554432 131072 [0] 805306368 MPIIO 0
+[0] 
+[0] Finished: Fri Mar 20 01:38:25 2020
+[0] IOR-3.0.1: MPI Coordinated Test of Parallel I/O
+[0] 
+[0] Began: Fri Mar 20 01:38:31 2020
+[0] Command line used: /home/kfeng/pkg_src/ior/src/ior.mpich[0]  -a MPIIO -t 128k -b 32m -E -k[0]  -w -o pvfs2://mnt/nvme/kfeng/pvfs2-mount/ior.test
+[0] Machine: Linux ares-comp-07
+[0] 
+[0] Test 0 started: Fri Mar 20 01:38:31 2020
+[0] Summary:
+[0] 	api                = MPIIO (version=3, subversion=1)
+[0] 	test filename      = pvfs2://mnt/nvme/kfeng/pvfs2-mount/ior.test
+[0] 	access             = single-shared-file
+[0] 	ordering in a file = sequential offsets
+[0] 	ordering inter file=[0]  no tasks offsets
+[0] 	clients            = 24 (1 per node)
+[0] 	repetitions        = 1
+[0] 	xfersize           = 131072 bytes
+[0] 	blocksize          = 32 MiB
+[0] 	aggregate filesize = 768 MiB
+[0] 
+[0] access    bw(MiB/s)  block(KiB) xfer(KiB)  open(s)    wr/rd(s)   close(s)   total(s)   iter
+[0] ------    ---------  ---------- ---------  --------   --------   --------   --------   ----
+[0] write     [0] 241.64     32768      128.00     0.169845   [0] 3.01       0.078415   [0] 3.18       0   
+[0] 
+[0] Max Write: 241.64 MiB/sec (253.38 MB/sec)
+[0] 
+[0] Summary of all tests:
+[0] Operation   Max(MiB)   Min(MiB)  Mean(MiB)     StdDev    Mean(s) Test# #Tasks tPN reps fPP reord reordoff reordrand seed segcnt blksiz xsize aggsize API RefNum
+[0] write     [0]     241.64     241.64     241.64       0.00    3.17826 0 24 [0] 1 1 0 0 [0] 1 0 0 1 [0] 33554432 131072 805306368 MPIIO [0] 0
+[0] 
+[0] Finished: Fri Mar 20 01:38:34 2020
+[0] IOR-3.0.1: MPI Coordinated Test of Parallel I/O
+[0] 
+[0] Began: Fri Mar 20 01:39:28 2020
+[0] Command line used: /home/kfeng/pkg_src/ior/src/ior.mpich -a[0]  MPIIO -t 128k -b 32m -E -k -w -o[0]  pvfs2://mnt/nvme/kfeng/pvfs2-mount/ior.test
+[0] Machine: Linux ares-comp-07
+[0] 
+[0] Test 0 started: Fri Mar 20 01:39:28 2020
+[0] Summary:
+[0] 	api                = MPIIO (version=3, subversion=1)
+[0] 	test filename      = pvfs2://mnt/nvme/kfeng/pvfs2-mount/ior.test
+[0] 	access             = single-shared-file
+[0] 	ordering in a file = sequential offsets
+[0] 	ordering inter file= no tasks offsets[0] 
+[0] 	clients            = 24 (1 per node)
+[0] 	repetitions        = 1
+[0] 	xfersize           = 131072 bytes
+[0] 	blocksize          = 32 MiB
+[0] 	aggregate filesize = 768 MiB
+[0] 
+[0] access    bw(MiB/s)  block(KiB) xfer(KiB)  open(s)    wr/rd(s)   close(s)   total(s)   iter
+[0] ------    ---------  ---------- ---------  --------   --------   --------   --------   ----
+[0] write     [0] 232.51     32768      128.00     0.187401   [0] 3.12       0.131525   [0] 3.30       0   
+[0] 
+[0] Max Write: 232.51 MiB/sec (243.81 MB/sec)
+[0] 
+[0] Summary of all tests:
+[0] Operation   Max(MiB)   Min(MiB)  Mean(MiB)     StdDev    Mean(s) Test# #Tasks tPN reps fPP reord reordoff reordrand seed segcnt blksiz xsize aggsize API RefNum
+[0] write     [0]     232.51     232.51 [0]     232.51       0.00    3.30304 [0] 0 24 1 1 [0] 0 0 1 [0] 0 0 1 33554432 131072 805306368 MPIIO 0
+[0] 
+[0] Finished: Fri Mar 20 01:39:32 2020
+[0] IOR-3.0.1: MPI Coordinated Test of Parallel I/O
+[0] 
+[0] Began: Fri Mar 20 01:39:38 2020
+[0] Command line used: /home/kfeng/pkg_src/ior/src/ior.mpich -a MPIIO[0]  -t 128k -b 32m -E -k -w -o[0]  pvfs2://mnt/nvme/kfeng/pvfs2-mount/ior.test
+[0] Machine: Linux ares-comp-07
+[0] 
+[0] Test 0 started: Fri Mar 20 01:39:38 2020
+[0] Summary:
+[0] 	api                = MPIIO (version=3, subversion=1)
+[0] 	test filename      = pvfs2://mnt/nvme/kfeng/pvfs2-mount/ior.test
+[0] 	access             = single-shared-file
+[0] 	ordering in a file = sequential offsets
+[0] 	ordering inter file=[0]  no tasks offsets
+[0] 	clients            = 24 (1 per node)
+[0] 	repetitions        = 1
+[0] 	xfersize           = 131072 bytes
+[0] 	blocksize          = 32 MiB
+[0] 	aggregate filesize = 768 MiB
+[0] 
+[0] access    bw(MiB/s)  block(KiB) xfer(KiB)  open(s)    wr/rd(s)   close(s)   total(s)   iter
+[0] ------    ---------  ---------- ---------  --------   --------   --------   --------   ----
+[0] write     [0] 238.77     32768      128.00     [0] 0.168511   3.05       0.094576   [0] 3.22       0   
+[0] 
+[0] Max Write: 238.77 MiB/sec (250.37 MB/sec)
+[0] 
+[0] Summary of all tests:
+[0] Operation   Max(MiB)   Min(MiB)  Mean(MiB)     StdDev    Mean(s) Test# #Tasks tPN reps fPP reord reordoff reordrand seed segcnt blksiz xsize aggsize API RefNum
+[0] write         238.77 [0]     238.77     238.77 [0]       0.00    3.21647 0 24 [0] 1 1 0 [0] 0 1 0 0 [0] 1 33554432 131072 [0] 805306368 MPIIO 0
+[0] 
+[0] Finished: Fri Mar 20 01:39:41 2020
+[0] IOR-3.0.1: MPI Coordinated Test of Parallel I/O
+[0] 
+[0] Began: Fri Mar 20 01:39:47 2020
+[0] Command line used: /home/kfeng/pkg_src/ior/src/ior.mpich[0]  -a MPIIO -t 128k -b 32m -E[0]  -k -w -o[0]  pvfs2://mnt/nvme/kfeng/pvfs2-mount/ior.test
+[0] Machine: Linux ares-comp-07[0] 
+[0] 
+[0] Test 0 started: Fri Mar 20 01:39:47 2020
+[0] Summary:
+[0] 	api                = MPIIO (version=3, subversion=1)
+[0] 	test filename      = pvfs2://mnt/nvme/kfeng/pvfs2-mount/ior.test
+[0] 	access             = single-shared-file
+[0] 	ordering in a file =[0]  sequential offsets
+[0] 	ordering inter file= no tasks offsets
+[0] 	clients            = 24 (1 per node)
+[0] 	repetitions        = 1
+[0] 	xfersize           = 131072 bytes
+[0] 	blocksize          = 32 MiB
+[0] 	aggregate filesize = 768 MiB
+[0] 
+[0] access    bw(MiB/s)  block(KiB) xfer(KiB)  open(s)    wr/rd(s)   close(s)   total(s)   iter
+[0] ------    ---------  ---------- ---------  --------   --------   --------   --------   ----
+[0] write     [0] 237.49     32768      128.00     [0] 0.166113   3.07       [0] 0.076064   3.23       0   
+[0] 
+[0] Max Write: 237.49 MiB/sec (249.02 MB/sec)
+[0] 
+[0] Summary of all tests:
+[0] Operation   Max(MiB)   Min(MiB)  Mean(MiB)     StdDev    Mean(s) Test# #Tasks tPN reps fPP reord reordoff reordrand seed segcnt blksiz xsize aggsize API RefNum
+[0] write     [0]     237.49     237.49 [0]     237.49       0.00 [0]    3.23387 0 24 [0] 1 1 0 0 [0] 1 0 0 1 [0] 33554432 131072 805306368 [0] MPIIO 0
+[0] 
+[0] Finished: Fri Mar 20 01:39:50 2020
+[0] IOR-3.0.1: MPI Coordinated Test of Parallel I/O
+[0] 
+[0] Began: Fri Mar 20 01:40:46 2020
+[0] Command line used: /home/kfeng/pkg_src/ior/src/ior.mpich -a[0]  MPIIO -t 128k -b 32m -E -k -w[0]  -o pvfs2://mnt/nvme/kfeng/pvfs2-mount/ior.test
+[0] Machine: Linux ares-comp-07[0] 
+[0] 
+[0] Test 0 started: Fri Mar 20 01:40:46 2020
+[0] Summary:
+[0] 	api                = MPIIO (version=3, subversion=1)
+[0] 	test filename      = pvfs2://mnt/nvme/kfeng/pvfs2-mount/ior.test
+[0] 	access             = single-shared-file
+[0] 	ordering in a file = sequential offsets
+[0] 	ordering inter file= no tasks offsets[0] 
+[0] 	clients            = 24 (1 per node)
+[0] 	repetitions        = 1
+[0] 	xfersize           = 131072 bytes
+[0] 	blocksize          = 32 MiB
+[0] 	aggregate filesize = 768 MiB
+[0] 
+[0] access    bw(MiB/s)  block(KiB) xfer(KiB)  open(s)    wr/rd(s)   close(s)   total(s)   iter
+[0] ------    ---------  ---------- ---------  --------   --------   --------   --------   ----
+[0] write     [0] 227.92     32768      [0] 128.00     0.210581   [0] 3.16       0.071255   [0] 3.37       0   
+[0] 
+[0] Max Write: 227.92 MiB/sec (238.99 MB/sec)
+[0] 
+[0] Summary of all tests:
+[0] Operation   Max(MiB)   Min(MiB)  Mean(MiB)     StdDev    Mean(s) Test# #Tasks tPN reps fPP reord reordoff reordrand seed segcnt blksiz xsize aggsize API RefNum
+[0] write     [0]     227.92     227.92     227.92       0.00    3.36964 0 [0] 24 1 1 0 [0] 0 1 0 0 1 33554432 131072 805306368 MPIIO 0
+[0] 
+[0] Finished: Fri Mar 20 01:40:49 2020
+[0] IOR-3.0.1: MPI Coordinated Test of Parallel I/O
+[0] 
+[0] Began: Fri Mar 20 01:40:55 2020
+[0] Command line used: /home/kfeng/pkg_src/ior/src/ior.mpich[0]  -a MPIIO -t 128k -b 32m[0]  -E -k -w -o pvfs2://mnt/nvme/kfeng/pvfs2-mount/ior.test[0] 
+[0] Machine: Linux ares-comp-07
+[0] 
+[0] Test 0 started: Fri Mar 20 01:40:55 2020
+[0] Summary:
+[0] 	api                = MPIIO (version=3, subversion=1)
+[0] 	test filename      = pvfs2://mnt/nvme/kfeng/pvfs2-mount/ior.test
+[0] 	access             = single-shared-file
+[0] 	ordering in a file = sequential offsets[0] 
+[0] 	ordering inter file= no tasks offsets
+[0] 	clients            = 24 (1 per node)
+[0] 	repetitions        = 1
+[0] 	xfersize           = 131072 bytes
+[0] 	blocksize          = 32 MiB
+[0] 	aggregate filesize = 768 MiB
+[0] 
+[0] access    bw(MiB/s)  block(KiB) xfer(KiB)  open(s)    wr/rd(s)   close(s)   total(s)   iter
+[0] ------    ---------  ---------- ---------  --------   --------   --------   --------   ----
+[0] write     [0] 237.07     32768      128.00     0.181514   [0] 3.06       0.058648   3.24       0   
+[0] 
+[0] Max Write: 237.07 MiB/sec (248.59 MB/sec)
+[0] 
+[0] Summary of all tests:
+[0] Operation   Max(MiB)   Min(MiB)  Mean(MiB)     StdDev    Mean(s) Test# #Tasks tPN reps fPP reord reordoff reordrand seed segcnt blksiz xsize aggsize API RefNum
+[0] write     [0]     237.07     237.07     237.07 [0]       0.00    3.23952 0 [0] 24 1 1 0 [0] 0 1 0 [0] 0 1 33554432 131072 [0] 805306368 MPIIO 0[0] 
+[0] 
+[0] Finished: Fri Mar 20 01:40:58 2020
+[0] IOR-3.0.1: MPI Coordinated Test of Parallel I/O
+[0] 
+[0] Began: Fri Mar 20 01:41:05 2020
+[0] Command line used: /home/kfeng/pkg_src/ior/src/ior.mpich -a[0]  MPIIO -t 128k -b 32m -E -k[0]  -w -o pvfs2://mnt/nvme/kfeng/pvfs2-mount/ior.test
+[0] Machine: Linux ares-comp-07
+[0] 
+[0] Test 0 started: Fri Mar 20 01:41:05 2020
+[0] Summary:
+[0] 	api                = MPIIO (version=3, subversion=1)
+[0] 	test filename      = pvfs2://mnt/nvme/kfeng/pvfs2-mount/ior.test
+[0] 	access             = single-shared-file
+[0] 	ordering in a file = sequential offsets
+[0] 	ordering inter file= no tasks offsets[0] 
+[0] 	clients            = 24 (1 per node)
+[0] 	repetitions        = 1
+[0] 	xfersize           = 131072 bytes
+[0] 	blocksize          = 32 MiB
+[0] 	aggregate filesize = 768 MiB
+[0] 
+[0] access    bw(MiB/s)  block(KiB) xfer(KiB)  open(s)    wr/rd(s)   close(s)   total(s)   iter
+[0] ------    ---------  ---------- ---------  --------   --------   --------   --------   ----
+[0] write     [0] 235.38     32768      128.00     0.168818   [0] 3.09       0.055076   [0] 3.26       0   
+[0] 
+[0] Max Write: 235.38 MiB/sec (246.82 MB/sec)
+[0] 
+[0] Summary of all tests:
+[0] Operation   Max(MiB)   Min(MiB)  Mean(MiB)     StdDev    Mean(s) Test# #Tasks tPN reps fPP reord reordoff reordrand seed segcnt blksiz xsize aggsize API RefNum
+[0] write     [0]     235.38     235.38 [0]     235.38       0.00 [0]    3.26279 0 24 1 1 [0] 0 0 1 0 [0] 0 1 33554432 131072 [0] 805306368 MPIIO 0
+[0] 
+[0] Finished: Fri Mar 20 01:41:08 2020
+[0] IOR-3.0.1: MPI Coordinated Test of Parallel I/O
+[0] 
+[0] Began: Fri Mar 20 01:42:02 2020
+[0] Command line used: /home/kfeng/pkg_src/ior/src/ior.mpich -a[0]  MPIIO -t 128k -b 32m -E -k[0]  -w -o pvfs2://mnt/nvme/kfeng/pvfs2-mount/ior.test
+[0] Machine: Linux ares-comp-07
+[0] 
+[0] Test 0 started: Fri Mar 20 01:42:02 2020
+[0] Summary:
+[0] 	api                = MPIIO (version=3, subversion=1)
+[0] 	test filename      = pvfs2://mnt/nvme/kfeng/pvfs2-mount/ior.test
+[0] 	access             = single-shared-file
+[0] 	ordering in a file =[0]  sequential offsets
+[0] 	ordering inter file= no tasks offsets[0] 
+[0] 	clients            = 24 (1 per node)
+[0] 	repetitions        = 1
+[0] 	xfersize           = 131072 bytes
+[0] 	blocksize          = 32 MiB
+[0] 	aggregate filesize = 768 MiB
+[0] 
+[0] access    bw(MiB/s)  block(KiB) xfer(KiB)  open(s)    wr/rd(s)   close(s)   total(s)   iter
+[0] ------    ---------  ---------- ---------  --------   --------   --------   --------   ----
+[0] write     [0] 235.30     32768      128.00     0.164857   [0] 3.10       0.090557   [0] 3.26       0   
+[0] 
+[0] Max Write: 235.30 MiB/sec (246.73 MB/sec)
+[0] 
+[0] Summary of all tests:
+[0] Operation   Max(MiB)   Min(MiB)  Mean(MiB)     StdDev    Mean(s) Test# #Tasks tPN reps fPP reord reordoff reordrand seed segcnt blksiz xsize aggsize API RefNum
+[0] write     [0]     235.30     235.30 [0]     235.30       0.00    3.26392 [0] 0 24 1 1 [0] 0 0 1 0 [0] 0 1 33554432 131072 [0] 805306368 MPIIO 0
+[0] 
+[0] Finished: Fri Mar 20 01:42:06 2020
+[0] IOR-3.0.1: MPI Coordinated Test of Parallel I/O
+[0] 
+[0] Began: Fri Mar 20 01:42:12 2020
+[0] Command line used: /home/kfeng/pkg_src/ior/src/ior.mpich -a MPIIO[0]  -t 128k -b 32m -E -k -w -o[0]  pvfs2://mnt/nvme/kfeng/pvfs2-mount/ior.test
+[0] Machine: Linux ares-comp-07
+[0] 
+[0] Test 0 started: Fri Mar 20 01:42:12 2020
+[0] Summary:
+[0] 	api                = MPIIO (version=3, subversion=1)
+[0] 	test filename      = pvfs2://mnt/nvme/kfeng/pvfs2-mount/ior.test
+[0] 	access             = single-shared-file
+[0] 	ordering in a file = sequential offsets
+[0] 	ordering inter file=[0]  no tasks offsets
+[0] 	clients            = 24 (1 per node)
+[0] 	repetitions        = 1
+[0] 	xfersize           = 131072 bytes
+[0] 	blocksize          = 32 MiB
+[0] 	aggregate filesize = 768 MiB
+[0] 
+[0] access    bw(MiB/s)  block(KiB) xfer(KiB)  open(s)    wr/rd(s)   close(s)   total(s)   iter
+[0] ------    ---------  ---------- ---------  --------   --------   --------   --------   ----
+[0] write     [0] 238.91     32768      128.00     [0] 0.160411   3.05       0.067273   3.21       0   
+[0] 
+[0] Max Write: 238.91 MiB/sec (250.51 MB/sec)
+[0] 
+[0] Summary of all tests:
+[0] Operation   Max(MiB)   Min(MiB)  Mean(MiB)     StdDev    Mean(s) Test# #Tasks tPN reps fPP reord reordoff reordrand seed segcnt blksiz xsize aggsize API RefNum
+[0] write     [0]     238.91     238.91     238.91       0.00    3.21465 0 24 1 [0] 1 0 0 1 0 0 1 33554432 131072 805306368 MPIIO 0
+[0] 
+[0] Finished: Fri Mar 20 01:42:15 2020
+[0] IOR-3.0.1: MPI Coordinated Test of Parallel I/O
+[0] 
+[0] Began: Fri Mar 20 01:42:21 2020
+[0] Command line used: /home/kfeng/pkg_src/ior/src/ior.mpich -a[0]  MPIIO -t 128k -b 32m -E -k -w[0]  -o pvfs2://mnt/nvme/kfeng/pvfs2-mount/ior.test
+[0] Machine: Linux ares-comp-07
+[0] 
+[0] Test 0 started: Fri Mar 20 01:42:21 2020
+[0] Summary:
+[0] 	api                = MPIIO (version=3, subversion=1)
+[0] 	test filename      = pvfs2://mnt/nvme/kfeng/pvfs2-mount/ior.test
+[0] 	access             = single-shared-file
+[0] 	ordering in a file = sequential offsets
+[0] 	ordering inter file= no tasks offsets[0] 
+[0] 	clients            = 24 (1 per node)
+[0] 	repetitions        = 1
+[0] 	xfersize           = 131072 bytes
+[0] 	blocksize          = 32 MiB
+[0] 	aggregate filesize = 768 MiB
+[0] 
+[0] access    bw(MiB/s)  block(KiB) xfer(KiB)  open(s)    wr/rd(s)   close(s)   total(s)   iter
+[0] ------    ---------  ---------- ---------  --------   --------   --------   --------   ----
+[0] write     [0] 239.73     32768      128.00     0.171628   3.03       0.058836   [0] 3.20       0   
+[0] 
+[0] Max Write: 239.73 MiB/sec (251.37 MB/sec)
+[0] 
+[0] Summary of all tests:
+[0] Operation   Max(MiB)   Min(MiB)  Mean(MiB)     StdDev    Mean(s) Test# #Tasks tPN reps fPP reord reordoff reordrand seed segcnt blksiz xsize aggsize API RefNum
+[0] write     [0]     239.73     239.73 [0]     239.73       0.00    3.20367 [0] 0 24 1 [0] 1 0 0 1 [0] 0 0 1 33554432 [0] 131072 805306368 MPIIO [0] 0
+[0] 
+[0] Finished: Fri Mar 20 01:42:24 2020
+[0] IOR-3.0.1: MPI Coordinated Test of Parallel I/O
+[0] 
+[0] Began: Fri Mar 20 01:43:19 2020
+[0] Command line used:[0]  /home/kfeng/pkg_src/ior/src/ior.mpich -a MPIIO -t 128k -b[0]  32m -E -k -w[0]  -o pvfs2://mnt/nvme/kfeng/pvfs2-mount/ior.test
+[0] Machine: Linux ares-comp-07
+[0] 
+[0] Test 0 started: Fri Mar 20 01:43:19 2020
+[0] Summary:
+[0] 	api                = MPIIO (version=3, subversion=1)
+[0] 	test filename      = pvfs2://mnt/nvme/kfeng/pvfs2-mount/ior.test
+[0] 	access             = single-shared-file
+[0] 	ordering in a file =[0]  sequential offsets
+[0] 	ordering inter file= no tasks offsets
+[0] 	clients            = 24 (1 per node)
+[0] 	repetitions        = 1
+[0] 	xfersize           = 131072 bytes
+[0] 	blocksize          = 32 MiB
+[0] 	aggregate filesize = 768 MiB
+[0] 
+[0] access    bw(MiB/s)  block(KiB) xfer(KiB)  open(s)    wr/rd(s)   close(s)   total(s)   iter
+[0] ------    ---------  ---------- ---------  --------   --------   --------   --------   ----
+[0] write     [0] 227.25     32768      128.00     [0] 0.224164   3.16       [0] 0.131828   3.38       0   
+[0] 
+[0] Max Write: 227.25 MiB/sec (238.29 MB/sec)
+[0] 
+[0] Summary of all tests:
+[0] Operation   Max(MiB)   Min(MiB)  Mean(MiB)     StdDev    Mean(s) Test# #Tasks tPN reps fPP reord reordoff reordrand seed segcnt blksiz xsize aggsize API RefNum
+[0] write         227.25     227.25     227.25       0.00    3.37953 0 24 [0] 1 1 0 0 1 0 0 [0] 1 33554432 131072 805306368 MPIIO 0
+[0] 
+[0] Finished: Fri Mar 20 01:43:22 2020
+[0] IOR-3.0.1: MPI Coordinated Test of Parallel I/O
+[0] 
+[0] Began: Fri Mar 20 01:43:28 2020
+[0] Command line used:[0]  /home/kfeng/pkg_src/ior/src/ior.mpich -a MPIIO -t 128k -b[0]  32m -E -k -w[0]  -o pvfs2://mnt/nvme/kfeng/pvfs2-mount/ior.test
+[0] Machine: Linux ares-comp-07
+[0] 
+[0] Test 0 started: Fri Mar 20 01:43:28 2020
+[0] Summary:
+[0] 	api                = MPIIO (version=3, subversion=1)
+[0] 	test filename      = pvfs2://mnt/nvme/kfeng/pvfs2-mount/ior.test
+[0] 	access             = single-shared-file[0] 
+[0] 	ordering in a file = sequential offsets
+[0] 	ordering inter file= no tasks offsets
+[0] 	clients            = 24 (1 per node)
+[0] 	repetitions        = 1
+[0] 	xfersize           = 131072 bytes
+[0] 	blocksize          = 32 MiB
+[0] 	aggregate filesize = 768 MiB
+[0] 
+[0] access    bw(MiB/s)  block(KiB) xfer(KiB)  open(s)    wr/rd(s)   close(s)   total(s)   iter
+[0] ------    ---------  ---------- ---------  --------   --------   --------   --------   ----
+[0] write     [0] 233.03     32768      128.00     0.171015   [0] 3.13       0.095488   [0] 3.30       0   
+[0] 
+[0] Max Write: 233.03 MiB/sec (244.35 MB/sec)
+[0] 
+[0] Summary of all tests:
+[0] Operation   Max(MiB)   Min(MiB)  Mean(MiB)     StdDev    Mean(s) Test# #Tasks tPN reps fPP reord reordoff reordrand seed segcnt blksiz xsize aggsize API RefNum
+[0] write     [0]     233.03     233.03     233.03       0.00    3.29577 [0] 0 24 1 1 0 [0] 0 1 0 0 1 33554432 131072 805306368 MPIIO 0
+[0] 
+[0] Finished: Fri Mar 20 01:43:31 2020
+[0] IOR-3.0.1: MPI Coordinated Test of Parallel I/O
+[0] 
+[0] Began: Fri Mar 20 01:43:37 2020
+[0] Command line used: /home/kfeng/pkg_src/ior/src/ior.mpich -a[0]  MPIIO -t 128k -b 32m -E -k -w -o pvfs2://mnt/nvme/kfeng/pvfs2-mount/ior.test[0] 
+[0] Machine: Linux ares-comp-07
+[0] 
+[0] Test 0 started: Fri Mar 20 01:43:37 2020
+[0] Summary:
+[0] 	api                = MPIIO (version=3, subversion=1)
+[0] 	test filename      = pvfs2://mnt/nvme/kfeng/pvfs2-mount/ior.test
+[0] 	access             = single-shared-file
+[0] 	ordering in a file = sequential offsets
+[0] 	ordering inter file= no tasks offsets[0] 
+[0] 	clients            = 24 (1 per node)
+[0] 	repetitions        = 1
+[0] 	xfersize           = 131072 bytes
+[0] 	blocksize          = 32 MiB
+[0] 	aggregate filesize = 768 MiB
+[0] 
+[0] access    bw(MiB/s)  block(KiB) xfer(KiB)  open(s)    wr/rd(s)   close(s)   total(s)   iter
+[0] ------    ---------  ---------- ---------  --------   --------   --------   --------   ----
+[0] write     [0] 234.49     32768      128.00     0.176130   [0] 3.10       0.084041   [0] 3.28       0   
+[0] 
+[0] Max Write: 234.49 MiB/sec (245.88 MB/sec)
+[0] 
+[0] Summary of all tests:
+[0] Operation   Max(MiB)   Min(MiB)  Mean(MiB)     StdDev    Mean(s) Test# #Tasks tPN reps fPP reord reordoff reordrand seed segcnt blksiz xsize aggsize API RefNum
+[0] write     [0]     234.49     234.49     234.49 [0]       0.00    3.27522 0 [0] 24 1 1 [0] 0 0 1 0 [0] 0 1 33554432 131072 [0] 805306368 MPIIO 0[0] 
+[0] 
+[0] Finished: Fri Mar 20 01:43:41 2020
