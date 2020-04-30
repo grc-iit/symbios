@@ -1,0 +1,407 @@
+mv: cannot stat ‘/home/kfeng/SuperServer/internal_component/colocation/colocation.log’: No such file or directory
+mv: cannot stat ‘/home/kfeng/SuperServer/internal_component/colocation/result.log’: No such file or directory
+Cleaning up ...
+ares-stor-01 => pvfs2-server: no process found
+ares-stor-03 => pvfs2-server: no process found
+ares-stor-04 => pvfs2-server: no process found
+ares-stor-02 => pvfs2-server: no process found
+Generating host files ...
+/opt/ohpc/pub/orangefs/bin/pvfs2-genconfig --quiet --protocol tcp --tcpport 3334 --dist-name simple_stripe --dist-params strip_size:4096 --ioservers ares-stor-01,ares-stor-02,ares-stor-03,ares-stor-04,ares-stor-05,ares-stor-06,ares-stor-07,ares-stor-08,ares-stor-09,ares-stor-10,ares-stor-11,ares-stor-12, --metaservers ares-stor-01,ares-stor-02,ares-stor-03,ares-stor-04,ares-stor-05,ares-stor-06,ares-stor-07,ares-stor-08,ares-stor-09,ares-stor-10,ares-stor-11,ares-stor-12, --storage /mnt/hdd/kfeng/pvfs2-storage-space --metadata /mnt/hdd/kfeng/pvfs2-storage-space --logfile /dev/shm/orangefs-server.log /home/kfeng/pkg_src/Utility-scripts/OrangeFS/pvfs2-12N.conf
+3
+/opt/ohpc/pub/orangefs/bin/pvfs2-genconfig --quiet --protocol tcp --tcpport 3335 --dist-name simple_stripe --dist-params strip_size:131072 --ioservers ares-stor-13,ares-stor-14,ares-stor-15,ares-stor-16,ares-stor-22,ares-stor-23,ares-stor-24,ares-stor-25,ares-stor-26,ares-stor-27,ares-stor-28,ares-stor-29, --metaservers ares-stor-13,ares-stor-14,ares-stor-15,ares-stor-16,ares-stor-22,ares-stor-23,ares-stor-24,ares-stor-25,ares-stor-26,ares-stor-27,ares-stor-28,ares-stor-29, --storage /mnt/hdd/kfeng/pvfs2-storage-space2 --metadata /mnt/hdd/kfeng/pvfs2-storage-space2 --logfile /dev/shm/orangefs-server2.log /home/kfeng/pkg_src/Utility-scripts/OrangeFS2/pvfs2-12N.conf
+3
+Starting OrangeFS ...
+[0;32mStarting OrangeFS servers ...[0m
+ares-stor-01 => [S 04/26/2020 11:41:33] PVFS2 Server on node ares-stor-01 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-01 => [D 04/26/2020 11:41:33] PVFS2 Server: storage space created.
+ares-stor-01 => [D 04/26/2020 11:41:33] Exiting.
+ares-stor-03 => [S 04/26/2020 11:41:33] PVFS2 Server on node ares-stor-03 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-06 => [S 04/26/2020 11:41:33] PVFS2 Server on node ares-stor-06 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-02 => [S 04/26/2020 11:41:33] PVFS2 Server on node ares-stor-02 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-04 => [S 04/26/2020 11:41:33] PVFS2 Server on node ares-stor-04 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-08 => [S 04/26/2020 11:41:33] PVFS2 Server on node ares-stor-08 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-05 => [S 04/26/2020 11:41:33] PVFS2 Server on node ares-stor-05 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-09 => [S 04/26/2020 11:41:33] PVFS2 Server on node ares-stor-09 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-07 => [S 04/26/2020 11:41:33] PVFS2 Server on node ares-stor-07 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-10 => [S 04/26/2020 11:41:33] PVFS2 Server on node ares-stor-10 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-11 => [S 04/26/2020 11:41:33] PVFS2 Server on node ares-stor-11 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-12 => [S 04/26/2020 11:41:33] PVFS2 Server on node ares-stor-12 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-03 => [D 04/26/2020 11:41:33] PVFS2 Server: storage space created.
+ares-stor-03 => [D 04/26/2020 11:41:33] Exiting.
+ares-stor-06 => [D 04/26/2020 11:41:33] PVFS2 Server: storage space created.
+ares-stor-06 => [D 04/26/2020 11:41:33] Exiting.
+ares-stor-09 => [D 04/26/2020 11:41:33] PVFS2 Server: storage space created.
+ares-stor-09 => [D 04/26/2020 11:41:33] Exiting.
+ares-stor-04 => [D 04/26/2020 11:41:33] PVFS2 Server: storage space created.
+ares-stor-04 => [D 04/26/2020 11:41:33] Exiting.
+ares-stor-05 => [D 04/26/2020 11:41:33] PVFS2 Server: storage space created.
+ares-stor-05 => [D 04/26/2020 11:41:33] Exiting.
+ares-stor-07 => [D 04/26/2020 11:41:33] PVFS2 Server: storage space created.
+ares-stor-07 => [D 04/26/2020 11:41:33] Exiting.
+ares-stor-11 => [D 04/26/2020 11:41:33] PVFS2 Server: storage space created.
+ares-stor-11 => [D 04/26/2020 11:41:33] Exiting.
+ares-stor-12 => [D 04/26/2020 11:41:33] PVFS2 Server: storage space created.
+ares-stor-12 => [D 04/26/2020 11:41:33] Exiting.
+ares-stor-08 => [D 04/26/2020 11:41:34] PVFS2 Server: storage space created.
+ares-stor-08 => [D 04/26/2020 11:41:34] Exiting.
+ares-stor-02 => [D 04/26/2020 11:41:34] PVFS2 Server: storage space created.
+ares-stor-02 => [D 04/26/2020 11:41:34] Exiting.
+ares-stor-10 => [D 04/26/2020 11:41:34] PVFS2 Server: storage space created.
+ares-stor-10 => [D 04/26/2020 11:41:34] Exiting.
+ares-stor-01 => [S 04/26/2020 11:41:34] PVFS2 Server on node ares-stor-01 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-04 => [S 04/26/2020 11:41:34] PVFS2 Server on node ares-stor-04 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-03 => [S 04/26/2020 11:41:34] PVFS2 Server on node ares-stor-03 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-02 => [S 04/26/2020 11:41:34] PVFS2 Server on node ares-stor-02 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-09 => [S 04/26/2020 11:41:34] PVFS2 Server on node ares-stor-09 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-06 => [S 04/26/2020 11:41:34] PVFS2 Server on node ares-stor-06 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-07 => [S 04/26/2020 11:41:34] PVFS2 Server on node ares-stor-07 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-11 => [S 04/26/2020 11:41:34] PVFS2 Server on node ares-stor-11 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-08 => [S 04/26/2020 11:41:34] PVFS2 Server on node ares-stor-08 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-05 => [S 04/26/2020 11:41:34] PVFS2 Server on node ares-stor-05 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-10 => [S 04/26/2020 11:41:34] PVFS2 Server on node ares-stor-10 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-12 => [S 04/26/2020 11:41:34] PVFS2 Server on node ares-stor-12 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-01 -> 10538 /opt/ohpc/pub/orangefs/sbin/pvfs2-server /home/kfeng/pkg_src/Utility-scripts/OrangeFS/pvfs2-12N.conf
+ares-stor-02 -> 29512 /opt/ohpc/pub/orangefs/sbin/pvfs2-server /home/kfeng/pkg_src/Utility-scripts/OrangeFS/pvfs2-12N.conf
+ares-stor-03 -> 6983 /opt/ohpc/pub/orangefs/sbin/pvfs2-server /home/kfeng/pkg_src/Utility-scripts/OrangeFS/pvfs2-12N.conf
+ares-stor-04 -> 10012 /opt/ohpc/pub/orangefs/sbin/pvfs2-server /home/kfeng/pkg_src/Utility-scripts/OrangeFS/pvfs2-12N.conf
+ares-stor-05 -> 16202 /opt/ohpc/pub/orangefs/sbin/pvfs2-server /home/kfeng/pkg_src/Utility-scripts/OrangeFS/pvfs2-12N.conf
+ares-stor-06 -> 21411 /opt/ohpc/pub/orangefs/sbin/pvfs2-server /home/kfeng/pkg_src/Utility-scripts/OrangeFS/pvfs2-12N.conf
+ares-stor-07 -> 26016 /opt/ohpc/pub/orangefs/sbin/pvfs2-server /home/kfeng/pkg_src/Utility-scripts/OrangeFS/pvfs2-12N.conf
+ares-stor-08 -> 25153 /opt/ohpc/pub/orangefs/sbin/pvfs2-server /home/kfeng/pkg_src/Utility-scripts/OrangeFS/pvfs2-12N.conf
+ares-stor-09 -> 1361 /opt/ohpc/pub/orangefs/sbin/pvfs2-server /home/kfeng/pkg_src/Utility-scripts/OrangeFS/pvfs2-12N.conf
+ares-stor-10 -> 18800 /opt/ohpc/pub/orangefs/sbin/pvfs2-server /home/kfeng/pkg_src/Utility-scripts/OrangeFS/pvfs2-12N.conf
+ares-stor-11 -> 4391 /opt/ohpc/pub/orangefs/sbin/pvfs2-server /home/kfeng/pkg_src/Utility-scripts/OrangeFS/pvfs2-12N.conf
+ares-stor-12 -> 2767 /opt/ohpc/pub/orangefs/sbin/pvfs2-server /home/kfeng/pkg_src/Utility-scripts/OrangeFS/pvfs2-12N.conf
+[0;32mVerifying OrangeFS servers ...[0m
+ares-comp-13-40g => [E 11:41:41.100090] Warning: msgpair failed to tcp://172.25.201.24:3335, will retry: Connection refused
+ares-comp-07-40g => [E 11:41:41.244680] Warning: msgpair failed to tcp://172.25.201.13:3335, will retry: Connection refused
+ares-comp-11-40g => [E 11:41:41.284167] Warning: msgpair failed to tcp://172.25.201.22:3335, will retry: Connection refused
+ares-comp-10-40g => [E 11:41:41.286360] Warning: msgpair failed to tcp://172.25.201.16:3335, will retry: Connection refused
+ares-comp-09-40g => [E 11:41:41.298695] Warning: msgpair failed to tcp://172.25.201.15:3335, will retry: Connection refused
+ares-comp-08-40g => [E 11:41:41.298931] Warning: msgpair failed to tcp://172.25.201.14:3335, will retry: Connection refused
+ares-comp-12-40g => [E 11:41:41.315360] Warning: msgpair failed to tcp://172.25.201.23:3335, will retry: Connection refused
+ares-comp-14-40g => [E 11:41:41.328615] Warning: msgpair failed to tcp://172.25.201.25:3335, will retry: Connection refused
+ares-comp-15-40g => [E 11:41:41.335208] Warning: msgpair failed to tcp://172.25.201.26:3335, will retry: Connection refused
+ares-comp-16-40g => [E 11:41:41.357269] Warning: msgpair failed to tcp://172.25.201.27:3335, will retry: Connection refused
+ares-comp-25-40g => [E 11:41:41.363839] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-19-40g => [E 11:41:41.383665] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-17-40g => [E 11:41:41.390912] Warning: msgpair failed to tcp://172.25.201.28:3335, will retry: Connection refused
+ares-comp-21-40g => [E 11:41:41.402741] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-20-40g => [E 11:41:41.420413] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-22-40g => [E 11:41:41.433942] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-23-40g => [E 11:41:41.442931] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-24-40g => [E 11:41:41.454973] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-26-40g => [E 11:41:41.462388] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-28-40g => [E 11:41:41.462579] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-30-40g => [E 11:41:41.476740] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-27-40g => [E 11:41:41.479602] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-29-40g => [E 11:41:41.497437] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-18-40g => [E 11:41:41.664167] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-13-40g => [E 11:41:43.107607] Warning: msgpair failed to tcp://172.25.201.24:3335, will retry: Connection refused
+ares-comp-07-40g => [E 11:41:43.252283] Warning: msgpair failed to tcp://172.25.201.13:3335, will retry: Connection refused
+ares-comp-11-40g => [E 11:41:43.291849] Warning: msgpair failed to tcp://172.25.201.22:3335, will retry: Connection refused
+ares-comp-10-40g => [E 11:41:43.293991] Warning: msgpair failed to tcp://172.25.201.16:3335, will retry: Connection refused
+ares-comp-09-40g => [E 11:41:43.306250] Warning: msgpair failed to tcp://172.25.201.15:3335, will retry: Connection refused
+ares-comp-08-40g => [E 11:41:43.306606] Warning: msgpair failed to tcp://172.25.201.14:3335, will retry: Connection refused
+ares-comp-12-40g => [E 11:41:43.323043] Warning: msgpair failed to tcp://172.25.201.23:3335, will retry: Connection refused
+ares-comp-14-40g => [E 11:41:43.336240] Warning: msgpair failed to tcp://172.25.201.25:3335, will retry: Connection refused
+ares-comp-15-40g => [E 11:41:43.342717] Warning: msgpair failed to tcp://172.25.201.26:3335, will retry: Connection refused
+ares-comp-16-40g => [E 11:41:43.364934] Warning: msgpair failed to tcp://172.25.201.27:3335, will retry: Connection refused
+ares-comp-25-40g => [E 11:41:43.371443] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-19-40g => [E 11:41:43.391249] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-17-40g => [E 11:41:43.398514] Warning: msgpair failed to tcp://172.25.201.28:3335, will retry: Connection refused
+ares-comp-21-40g => [E 11:41:43.410416] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-20-40g => [E 11:41:43.428117] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-22-40g => [E 11:41:43.441499] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-23-40g => [E 11:41:43.450519] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-24-40g => [E 11:41:43.462587] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-26-40g => [E 11:41:43.470057] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-28-40g => [E 11:41:43.470122] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-30-40g => [E 11:41:43.484375] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-27-40g => [E 11:41:43.487329] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-29-40g => [E 11:41:43.505014] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-18-40g => [E 11:41:43.671887] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-13-40g => [E 11:41:45.115034] Warning: msgpair failed to tcp://172.25.201.24:3335, will retry: Connection refused
+ares-comp-07-40g => [E 11:41:45.259785] Warning: msgpair failed to tcp://172.25.201.13:3335, will retry: Connection refused
+ares-comp-11-40g => [E 11:41:45.299434] Warning: msgpair failed to tcp://172.25.201.22:3335, will retry: Connection refused
+ares-comp-10-40g => [E 11:41:45.301576] Warning: msgpair failed to tcp://172.25.201.16:3335, will retry: Connection refused
+ares-comp-09-40g => [E 11:41:45.313720] Warning: msgpair failed to tcp://172.25.201.15:3335, will retry: Connection refused
+ares-comp-08-40g => [E 11:41:45.314172] Warning: msgpair failed to tcp://172.25.201.14:3335, will retry: Connection refused
+ares-comp-12-40g => [E 11:41:45.330533] Warning: msgpair failed to tcp://172.25.201.23:3335, will retry: Connection refused
+ares-comp-14-40g => [E 11:41:45.343800] Warning: msgpair failed to tcp://172.25.201.25:3335, will retry: Connection refused
+ares-comp-15-40g => [E 11:41:45.350258] Warning: msgpair failed to tcp://172.25.201.26:3335, will retry: Connection refused
+ares-comp-16-40g => [E 11:41:45.372506] Warning: msgpair failed to tcp://172.25.201.27:3335, will retry: Connection refused
+ares-comp-25-40g => [E 11:41:45.379006] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-19-40g => [E 11:41:45.398706] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-17-40g => [E 11:41:45.406084] Warning: msgpair failed to tcp://172.25.201.28:3335, will retry: Connection refused
+ares-comp-21-40g => [E 11:41:45.417989] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-20-40g => [E 11:41:45.435628] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-22-40g => [E 11:41:45.449053] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-23-40g => [E 11:41:45.458152] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-24-40g => [E 11:41:45.470056] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-26-40g => [E 11:41:45.477543] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-28-40g => [E 11:41:45.477509] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-30-40g => [E 11:41:45.491922] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-27-40g => [E 11:41:45.494897] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-29-40g => [E 11:41:45.512506] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-18-40g => [E 11:41:45.679451] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-13-40g => [E 11:41:47.122545] Warning: msgpair failed to tcp://172.25.201.24:3335, will retry: Connection refused
+ares-comp-07-40g => [E 11:41:47.267282] Warning: msgpair failed to tcp://172.25.201.13:3335, will retry: Connection refused
+ares-comp-11-40g => [E 11:41:47.306935] Warning: msgpair failed to tcp://172.25.201.22:3335, will retry: Connection refused
+ares-comp-10-40g => [E 11:41:47.309077] Warning: msgpair failed to tcp://172.25.201.16:3335, will retry: Connection refused
+ares-comp-09-40g => [E 11:41:47.321146] Warning: msgpair failed to tcp://172.25.201.15:3335, will retry: Connection refused
+ares-comp-08-40g => [E 11:41:47.321651] Warning: msgpair failed to tcp://172.25.201.14:3335, will retry: Connection refused
+ares-comp-12-40g => [E 11:41:47.338142] Warning: msgpair failed to tcp://172.25.201.23:3335, will retry: Connection refused
+ares-comp-14-40g => [E 11:41:47.351345] Warning: msgpair failed to tcp://172.25.201.25:3335, will retry: Connection refused
+ares-comp-15-40g => [E 11:41:47.357738] Warning: msgpair failed to tcp://172.25.201.26:3335, will retry: Connection refused
+ares-comp-16-40g => [E 11:41:47.380071] Warning: msgpair failed to tcp://172.25.201.27:3335, will retry: Connection refused
+ares-comp-25-40g => [E 11:41:47.386489] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-19-40g => [E 11:41:47.406200] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-17-40g => [E 11:41:47.413637] Warning: msgpair failed to tcp://172.25.201.28:3335, will retry: Connection refused
+ares-comp-21-40g => [E 11:41:47.425481] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-20-40g => [E 11:41:47.443106] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-22-40g => [E 11:41:47.456599] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-23-40g => [E 11:41:47.465702] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-24-40g => [E 11:41:47.477575] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-28-40g => [E 11:41:47.484992] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-26-40g => [E 11:41:47.485058] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-30-40g => [E 11:41:47.499407] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-27-40g => [E 11:41:47.502379] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-29-40g => [E 11:41:47.520003] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-18-40g => [E 11:41:47.686991] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-13-40g => [E 11:41:49.130052] Warning: msgpair failed to tcp://172.25.201.24:3335, will retry: Connection refused
+ares-comp-07-40g => [E 11:41:49.274799] Warning: msgpair failed to tcp://172.25.201.13:3335, will retry: Connection refused
+ares-comp-11-40g => [E 11:41:49.314428] Warning: msgpair failed to tcp://172.25.201.22:3335, will retry: Connection refused
+ares-comp-10-40g => [E 11:41:49.316603] Warning: msgpair failed to tcp://172.25.201.16:3335, will retry: Connection refused
+ares-comp-09-40g => [E 11:41:49.328531] Warning: msgpair failed to tcp://172.25.201.15:3335, will retry: Connection refused
+ares-comp-08-40g => [E 11:41:49.329077] Warning: msgpair failed to tcp://172.25.201.14:3335, will retry: Connection refused
+ares-comp-12-40g => [E 11:41:49.345689] Warning: msgpair failed to tcp://172.25.201.23:3335, will retry: Connection refused
+ares-comp-14-40g => [E 11:41:49.358827] Warning: msgpair failed to tcp://172.25.201.25:3335, will retry: Connection refused
+ares-comp-15-40g => [E 11:41:49.365267] Warning: msgpair failed to tcp://172.25.201.26:3335, will retry: Connection refused
+ares-comp-16-40g => [E 11:41:49.387560] Warning: msgpair failed to tcp://172.25.201.27:3335, will retry: Connection refused
+ares-comp-25-40g => [E 11:41:49.393958] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-19-40g => [E 11:41:49.413643] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-17-40g => [E 11:41:49.421078] Warning: msgpair failed to tcp://172.25.201.28:3335, will retry: Connection refused
+ares-comp-21-40g => [E 11:41:49.432900] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-20-40g => [E 11:41:49.450627] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-22-40g => [E 11:41:49.464113] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-23-40g => [E 11:41:49.473151] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-24-40g => [E 11:41:49.485055] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-28-40g => [E 11:41:49.492436] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-26-40g => [E 11:41:49.492549] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-30-40g => [E 11:41:49.506854] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-27-40g => [E 11:41:49.509901] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-29-40g => [E 11:41:49.527450] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-18-40g => [E 11:41:49.694487] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-13-40g => [E 11:41:51.137556] Warning: msgpair failed to tcp://172.25.201.24:3335, will retry: Connection refused
+ares-comp-13-40g => [E 11:41:51.137587] *** msgpairarray_completion_fn: msgpair to server tcp://172.25.201.24:3335 failed: Connection refused
+ares-comp-13-40g => [E 11:41:51.137609] *** Out of retries.
+ares-comp-13-40g => Failure: could not initialze at least one of the target file systems.
+ares-comp-07-40g => [E 11:41:51.282267] Warning: msgpair failed to tcp://172.25.201.13:3335, will retry: Connection refused
+ares-comp-07-40g => [E 11:41:51.282312] *** msgpairarray_completion_fn: msgpair to server tcp://172.25.201.13:3335 failed: Connection refused
+ares-comp-07-40g => [E 11:41:51.282334] *** Out of retries.
+ares-comp-07-40g => Failure: could not initialze at least one of the target file systems.
+ares-comp-11-40g => [E 11:41:51.321918] Warning: msgpair failed to tcp://172.25.201.22:3335, will retry: Connection refused
+ares-comp-11-40g => [E 11:41:51.321948] *** msgpairarray_completion_fn: msgpair to server tcp://172.25.201.22:3335 failed: Connection refused
+ares-comp-11-40g => [E 11:41:51.321969] *** Out of retries.
+ares-comp-11-40g => Failure: could not initialze at least one of the target file systems.
+ares-comp-10-40g => [E 11:41:51.324147] Warning: msgpair failed to tcp://172.25.201.16:3335, will retry: Connection refused
+ares-comp-10-40g => [E 11:41:51.324179] *** msgpairarray_completion_fn: msgpair to server tcp://172.25.201.16:3335 failed: Connection refused
+ares-comp-10-40g => [E 11:41:51.324201] *** Out of retries.
+ares-comp-10-40g => Failure: could not initialze at least one of the target file systems.
+ares-comp-09-40g => [E 11:41:51.335896] Warning: msgpair failed to tcp://172.25.201.15:3335, will retry: Connection refused
+ares-comp-09-40g => [E 11:41:51.335928] *** msgpairarray_completion_fn: msgpair to server tcp://172.25.201.15:3335 failed: Connection refused
+ares-comp-09-40g => [E 11:41:51.335949] *** Out of retries.
+ares-comp-09-40g => Failure: could not initialze at least one of the target file systems.
+ares-comp-08-40g => [E 11:41:51.336504] Warning: msgpair failed to tcp://172.25.201.14:3335, will retry: Connection refused
+ares-comp-08-40g => [E 11:41:51.336536] *** msgpairarray_completion_fn: msgpair to server tcp://172.25.201.14:3335 failed: Connection refused
+ares-comp-08-40g => [E 11:41:51.336557] *** Out of retries.
+ares-comp-08-40g => Failure: could not initialze at least one of the target file systems.
+ares-comp-12-40g => [E 11:41:51.353213] Warning: msgpair failed to tcp://172.25.201.23:3335, will retry: Connection refused
+ares-comp-12-40g => [E 11:41:51.353245] *** msgpairarray_completion_fn: msgpair to server tcp://172.25.201.23:3335 failed: Connection refused
+ares-comp-12-40g => [E 11:41:51.353266] *** Out of retries.
+ares-comp-12-40g => Failure: could not initialze at least one of the target file systems.
+ares-comp-14-40g => [E 11:41:51.366238] Warning: msgpair failed to tcp://172.25.201.25:3335, will retry: Connection refused
+ares-comp-14-40g => [E 11:41:51.366268] *** msgpairarray_completion_fn: msgpair to server tcp://172.25.201.25:3335 failed: Connection refused
+ares-comp-14-40g => [E 11:41:51.366289] *** Out of retries.
+ares-comp-14-40g => Failure: could not initialze at least one of the target file systems.
+ares-comp-15-40g => [E 11:41:51.372725] Warning: msgpair failed to tcp://172.25.201.26:3335, will retry: Connection refused
+ares-comp-15-40g => [E 11:41:51.372756] *** msgpairarray_completion_fn: msgpair to server tcp://172.25.201.26:3335 failed: Connection refused
+ares-comp-15-40g => [E 11:41:51.372777] *** Out of retries.
+ares-comp-15-40g => Failure: could not initialze at least one of the target file systems.
+ares-comp-16-40g => [E 11:41:51.395108] Warning: msgpair failed to tcp://172.25.201.27:3335, will retry: Connection refused
+ares-comp-16-40g => [E 11:41:51.395139] *** msgpairarray_completion_fn: msgpair to server tcp://172.25.201.27:3335 failed: Connection refused
+ares-comp-16-40g => [E 11:41:51.395160] *** Out of retries.
+ares-comp-16-40g => Failure: could not initialze at least one of the target file systems.
+ares-comp-25-40g => [E 11:41:51.401388] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-25-40g => [E 11:41:51.401418] *** msgpairarray_completion_fn: msgpair to server tcp://172.25.201.29:3335 failed: Connection refused
+ares-comp-25-40g => [E 11:41:51.401439] *** Out of retries.
+ares-comp-25-40g => Failure: could not initialze at least one of the target file systems.
+ares-comp-19-40g => [E 11:41:51.421080] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-19-40g => [E 11:41:51.421110] *** msgpairarray_completion_fn: msgpair to server tcp://172.25.201.29:3335 failed: Connection refused
+ares-comp-19-40g => [E 11:41:51.421131] *** Out of retries.
+ares-comp-19-40g => Failure: could not initialze at least one of the target file systems.
+ares-comp-17-40g => [E 11:41:51.428522] Warning: msgpair failed to tcp://172.25.201.28:3335, will retry: Connection refused
+ares-comp-17-40g => [E 11:41:51.428552] *** msgpairarray_completion_fn: msgpair to server tcp://172.25.201.28:3335 failed: Connection refused
+ares-comp-17-40g => [E 11:41:51.428573] *** Out of retries.
+ares-comp-17-40g => Failure: could not initialze at least one of the target file systems.
+ares-comp-21-40g => [E 11:41:51.440358] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-21-40g => [E 11:41:51.440388] *** msgpairarray_completion_fn: msgpair to server tcp://172.25.201.29:3335 failed: Connection refused
+ares-comp-21-40g => [E 11:41:51.440409] *** Out of retries.
+ares-comp-21-40g => Failure: could not initialze at least one of the target file systems.
+ares-comp-20-40g => [E 11:41:51.458110] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-20-40g => [E 11:41:51.458145] *** msgpairarray_completion_fn: msgpair to server tcp://172.25.201.29:3335 failed: Connection refused
+ares-comp-20-40g => [E 11:41:51.458167] *** Out of retries.
+ares-comp-20-40g => Failure: could not initialze at least one of the target file systems.
+ares-comp-22-40g => [E 11:41:51.471700] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-22-40g => [E 11:41:51.471730] *** msgpairarray_completion_fn: msgpair to server tcp://172.25.201.29:3335 failed: Connection refused
+ares-comp-22-40g => [E 11:41:51.471751] *** Out of retries.
+ares-comp-22-40g => Failure: could not initialze at least one of the target file systems.
+ares-comp-23-40g => [E 11:41:51.480651] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-23-40g => [E 11:41:51.480694] *** msgpairarray_completion_fn: msgpair to server tcp://172.25.201.29:3335 failed: Connection refused
+ares-comp-23-40g => [E 11:41:51.480730] *** Out of retries.
+ares-comp-23-40g => Failure: could not initialze at least one of the target file systems.
+ares-comp-24-40g => [E 11:41:51.492469] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-24-40g => [E 11:41:51.492499] *** msgpairarray_completion_fn: msgpair to server tcp://172.25.201.29:3335 failed: Connection refused
+ares-comp-24-40g => [E 11:41:51.492520] *** Out of retries.
+ares-comp-24-40g => Failure: could not initialze at least one of the target file systems.
+ares-comp-28-40g => [E 11:41:51.499841] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-28-40g => [E 11:41:51.499872] *** msgpairarray_completion_fn: msgpair to server tcp://172.25.201.29:3335 failed: Connection refused
+ares-comp-28-40g => [E 11:41:51.499894] *** Out of retries.
+ares-comp-28-40g => Failure: could not initialze at least one of the target file systems.
+ares-comp-26-40g => [E 11:41:51.500024] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-26-40g => [E 11:41:51.500054] *** msgpairarray_completion_fn: msgpair to server tcp://172.25.201.29:3335 failed: Connection refused
+ares-comp-26-40g => [E 11:41:51.500075] *** Out of retries.
+ares-comp-26-40g => Failure: could not initialze at least one of the target file systems.
+ares-comp-30-40g => [E 11:41:51.514316] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-30-40g => [E 11:41:51.514346] *** msgpairarray_completion_fn: msgpair to server tcp://172.25.201.29:3335 failed: Connection refused
+ares-comp-30-40g => [E 11:41:51.514367] *** Out of retries.
+ares-comp-30-40g => Failure: could not initialze at least one of the target file systems.
+ares-comp-27-40g => [E 11:41:51.517378] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-27-40g => [E 11:41:51.517408] *** msgpairarray_completion_fn: msgpair to server tcp://172.25.201.29:3335 failed: Connection refused
+ares-comp-27-40g => [E 11:41:51.517429] *** Out of retries.
+ares-comp-27-40g => Failure: could not initialze at least one of the target file systems.
+ares-comp-29-40g => [E 11:41:51.534910] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-29-40g => [E 11:41:51.534944] *** msgpairarray_completion_fn: msgpair to server tcp://172.25.201.29:3335 failed: Connection refused
+ares-comp-29-40g => [E 11:41:51.534972] *** Out of retries.
+ares-comp-29-40g => Failure: could not initialze at least one of the target file systems.
+ares-comp-18-40g => [E 11:41:51.701976] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-18-40g => [E 11:41:51.702009] *** msgpairarray_completion_fn: msgpair to server tcp://172.25.201.29:3335 failed: Connection refused
+ares-comp-18-40g => [E 11:41:51.702030] *** Out of retries.
+ares-comp-18-40g => Failure: could not initialze at least one of the target file systems.
+[0;32mStarting OrangeFS servers ...[0m
+ares-stor-16 => [S 04/26/2020 11:41:52] PVFS2 Server on node ares-stor-16 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-13 => [S 04/26/2020 11:41:52] PVFS2 Server on node ares-stor-13 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-24 => [S 04/26/2020 11:41:52] PVFS2 Server on node ares-stor-24 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-22 => [S 04/26/2020 11:41:52] PVFS2 Server on node ares-stor-22 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-15 => [S 04/26/2020 11:41:52] PVFS2 Server on node ares-stor-15 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-23 => [S 04/26/2020 11:41:52] PVFS2 Server on node ares-stor-23 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-27 => [S 04/26/2020 11:41:52] PVFS2 Server on node ares-stor-27 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-14 => [S 04/26/2020 11:41:52] PVFS2 Server on node ares-stor-14 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-26 => [S 04/26/2020 11:41:52] PVFS2 Server on node ares-stor-26 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-25 => [S 04/26/2020 11:41:52] PVFS2 Server on node ares-stor-25 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-28 => [S 04/26/2020 11:41:52] PVFS2 Server on node ares-stor-28 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-29 => [S 04/26/2020 11:41:52] PVFS2 Server on node ares-stor-29 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-16 => [D 04/26/2020 11:41:52] PVFS2 Server: storage space created.
+ares-stor-16 => [D 04/26/2020 11:41:52] Exiting.
+ares-stor-23 => [D 04/26/2020 11:41:52] PVFS2 Server: storage space created.
+ares-stor-23 => [D 04/26/2020 11:41:52] Exiting.
+ares-stor-15 => [D 04/26/2020 11:41:52] PVFS2 Server: storage space created.
+ares-stor-15 => [D 04/26/2020 11:41:52] Exiting.
+ares-stor-14 => [D 04/26/2020 11:41:52] PVFS2 Server: storage space created.
+ares-stor-14 => [D 04/26/2020 11:41:52] Exiting.
+ares-stor-24 => [D 04/26/2020 11:41:52] PVFS2 Server: storage space created.
+ares-stor-24 => [D 04/26/2020 11:41:52] Exiting.
+ares-stor-27 => [D 04/26/2020 11:41:52] PVFS2 Server: storage space created.
+ares-stor-27 => [D 04/26/2020 11:41:52] Exiting.
+ares-stor-13 => [D 04/26/2020 11:41:52] PVFS2 Server: storage space created.
+ares-stor-13 => [D 04/26/2020 11:41:52] Exiting.
+ares-stor-26 => [D 04/26/2020 11:41:52] PVFS2 Server: storage space created.
+ares-stor-26 => [D 04/26/2020 11:41:52] Exiting.
+ares-stor-28 => [D 04/26/2020 11:41:52] PVFS2 Server: storage space created.
+ares-stor-28 => [D 04/26/2020 11:41:52] Exiting.
+ares-stor-29 => [D 04/26/2020 11:41:52] PVFS2 Server: storage space created.
+ares-stor-29 => [D 04/26/2020 11:41:52] Exiting.
+ares-stor-22 => [D 04/26/2020 11:41:52] PVFS2 Server: storage space created.
+ares-stor-22 => [D 04/26/2020 11:41:52] Exiting.
+ares-stor-25 => [D 04/26/2020 11:41:52] PVFS2 Server: storage space created.
+ares-stor-25 => [D 04/26/2020 11:41:52] Exiting.
+ares-stor-13 => [S 04/26/2020 11:41:53] PVFS2 Server on node ares-stor-13 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-14 => [S 04/26/2020 11:41:53] PVFS2 Server on node ares-stor-14 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-16 => [S 04/26/2020 11:41:53] PVFS2 Server on node ares-stor-16 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-15 => [S 04/26/2020 11:41:53] PVFS2 Server on node ares-stor-15 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-22 => [S 04/26/2020 11:41:53] PVFS2 Server on node ares-stor-22 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-25 => [S 04/26/2020 11:41:53] PVFS2 Server on node ares-stor-25 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-24 => [S 04/26/2020 11:41:53] PVFS2 Server on node ares-stor-24 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-26 => [S 04/26/2020 11:41:53] PVFS2 Server on node ares-stor-26 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-27 => [S 04/26/2020 11:41:53] PVFS2 Server on node ares-stor-27 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-29 => [S 04/26/2020 11:41:53] PVFS2 Server on node ares-stor-29 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-23 => [S 04/26/2020 11:41:53] PVFS2 Server on node ares-stor-23 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-28 => [S 04/26/2020 11:41:53] PVFS2 Server on node ares-stor-28 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-13 -> 27421 /opt/ohpc/pub/orangefs/sbin/pvfs2-server /home/kfeng/pkg_src/Utility-scripts/OrangeFS2/pvfs2-12N.conf
+ares-stor-14 -> 2930 /opt/ohpc/pub/orangefs/sbin/pvfs2-server /home/kfeng/pkg_src/Utility-scripts/OrangeFS2/pvfs2-12N.conf
+ares-stor-15 -> 28861 /opt/ohpc/pub/orangefs/sbin/pvfs2-server /home/kfeng/pkg_src/Utility-scripts/OrangeFS2/pvfs2-12N.conf
+ares-stor-16 -> 26085 /opt/ohpc/pub/orangefs/sbin/pvfs2-server /home/kfeng/pkg_src/Utility-scripts/OrangeFS2/pvfs2-12N.conf
+ares-stor-22 -> 12337 /opt/ohpc/pub/orangefs/sbin/pvfs2-server /home/kfeng/pkg_src/Utility-scripts/OrangeFS2/pvfs2-12N.conf
+ares-stor-23 -> 10106 /opt/ohpc/pub/orangefs/sbin/pvfs2-server /home/kfeng/pkg_src/Utility-scripts/OrangeFS2/pvfs2-12N.conf
+ares-stor-24 -> 9182 /opt/ohpc/pub/orangefs/sbin/pvfs2-server /home/kfeng/pkg_src/Utility-scripts/OrangeFS2/pvfs2-12N.conf
+ares-stor-25 -> 30125 /opt/ohpc/pub/orangefs/sbin/pvfs2-server /home/kfeng/pkg_src/Utility-scripts/OrangeFS2/pvfs2-12N.conf
+ares-stor-26 -> 28203 /opt/ohpc/pub/orangefs/sbin/pvfs2-server /home/kfeng/pkg_src/Utility-scripts/OrangeFS2/pvfs2-12N.conf
+ares-stor-27 -> 5383 /opt/ohpc/pub/orangefs/sbin/pvfs2-server /home/kfeng/pkg_src/Utility-scripts/OrangeFS2/pvfs2-12N.conf
+ares-stor-28 -> 26900 /opt/ohpc/pub/orangefs/sbin/pvfs2-server /home/kfeng/pkg_src/Utility-scripts/OrangeFS2/pvfs2-12N.conf
+ares-stor-29 -> 3547 /opt/ohpc/pub/orangefs/sbin/pvfs2-server /home/kfeng/pkg_src/Utility-scripts/OrangeFS2/pvfs2-12N.conf
+[0;32mVerifying OrangeFS servers ...[0m
+ares-comp-07-40g -> The PVFS2 filesystem at /mnt/nvme/kfeng/pvfs2-mount2 appears to be correctly configured.
+ares-comp-08-40g -> The PVFS2 filesystem at /mnt/nvme/kfeng/pvfs2-mount2 appears to be correctly configured.
+ares-comp-09-40g -> The PVFS2 filesystem at /mnt/nvme/kfeng/pvfs2-mount2 appears to be correctly configured.
+ares-comp-10-40g -> The PVFS2 filesystem at /mnt/nvme/kfeng/pvfs2-mount2 appears to be correctly configured.
+ares-comp-11-40g -> The PVFS2 filesystem at /mnt/nvme/kfeng/pvfs2-mount2 appears to be correctly configured.
+ares-comp-12-40g -> The PVFS2 filesystem at /mnt/nvme/kfeng/pvfs2-mount2 appears to be correctly configured.
+ares-comp-13-40g -> The PVFS2 filesystem at /mnt/nvme/kfeng/pvfs2-mount2 appears to be correctly configured.
+ares-comp-14-40g -> The PVFS2 filesystem at /mnt/nvme/kfeng/pvfs2-mount2 appears to be correctly configured.
+ares-comp-15-40g -> The PVFS2 filesystem at /mnt/nvme/kfeng/pvfs2-mount2 appears to be correctly configured.
+ares-comp-16-40g -> The PVFS2 filesystem at /mnt/nvme/kfeng/pvfs2-mount2 appears to be correctly configured.
+ares-comp-17-40g -> The PVFS2 filesystem at /mnt/nvme/kfeng/pvfs2-mount2 appears to be correctly configured.
+ares-comp-18-40g -> The PVFS2 filesystem at /mnt/nvme/kfeng/pvfs2-mount2 appears to be correctly configured.
+ares-comp-19-40g -> The PVFS2 filesystem at /mnt/nvme/kfeng/pvfs2-mount2 appears to be correctly configured.
+ares-comp-20-40g -> The PVFS2 filesystem at /mnt/nvme/kfeng/pvfs2-mount2 appears to be correctly configured.
+ares-comp-21-40g -> The PVFS2 filesystem at /mnt/nvme/kfeng/pvfs2-mount2 appears to be correctly configured.
+ares-comp-22-40g -> The PVFS2 filesystem at /mnt/nvme/kfeng/pvfs2-mount2 appears to be correctly configured.
+ares-comp-23-40g -> The PVFS2 filesystem at /mnt/nvme/kfeng/pvfs2-mount2 appears to be correctly configured.
+ares-comp-24-40g -> The PVFS2 filesystem at /mnt/nvme/kfeng/pvfs2-mount2 appears to be correctly configured.
+ares-comp-25-40g -> The PVFS2 filesystem at /mnt/nvme/kfeng/pvfs2-mount2 appears to be correctly configured.
+ares-comp-26-40g -> The PVFS2 filesystem at /mnt/nvme/kfeng/pvfs2-mount2 appears to be correctly configured.
+ares-comp-27-40g -> The PVFS2 filesystem at /mnt/nvme/kfeng/pvfs2-mount2 appears to be correctly configured.
+ares-comp-28-40g -> The PVFS2 filesystem at /mnt/nvme/kfeng/pvfs2-mount2 appears to be correctly configured.
+ares-comp-29-40g -> The PVFS2 filesystem at /mnt/nvme/kfeng/pvfs2-mount2 appears to be correctly configured.
+ares-comp-30-40g -> The PVFS2 filesystem at /mnt/nvme/kfeng/pvfs2-mount2 appears to be correctly configured.
+
+Co-locating OrangeFS (#server_ofs1=12, #server_ofs2=12), rep=1 finishes, sleep for 5 seconds...
+
+
+Co-locating OrangeFS (#server_ofs1=12, #server_ofs2=12), rep=2 finishes, sleep for 5 seconds...
+
+
+Co-locating OrangeFS (#server_ofs1=12, #server_ofs2=12), rep=3 finishes, sleep for 5 seconds...
+
+
+Co-locating OrangeFS (#server_ofs1=12, #server_ofs2=12), rep=4 finishes, sleep for 5 seconds...
+
+
+Co-locating OrangeFS (#server_ofs1=12, #server_ofs2=12), rep=5 finishes, sleep for 5 seconds...
+
+
+Co-locating OrangeFS (#server_ofs1=12, #server_ofs2=12), rep=6 finishes, sleep for 5 seconds...
+
+
+Co-locating OrangeFS (#server_ofs1=12, #server_ofs2=12), rep=7 finishes, sleep for 5 seconds...
+
+
+Co-locating OrangeFS (#server_ofs1=12, #server_ofs2=12), rep=8 finishes, sleep for 5 seconds...
+
+
+Co-locating OrangeFS (#server_ofs1=12, #server_ofs2=12), rep=9 finishes, sleep for 5 seconds...
+
+
+Co-locating OrangeFS (#server_ofs1=12, #server_ofs2=12), rep=10 finishes, sleep for 5 seconds...
+

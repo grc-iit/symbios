@@ -1,0 +1,1009 @@
+mv: cannot stat ‘/home/kfeng/SuperServer/internal_component/colocation/result.log’: No such file or directory
+Cleaning up ...
+Generating host files ...
+/opt/ohpc/pub/orangefs/bin/pvfs2-genconfig --quiet --protocol tcp --tcpport 3334 --dist-name simple_stripe --dist-params strip_size:32768 --ioservers ares-stor-01,ares-stor-02,ares-stor-03,ares-stor-04,ares-stor-05,ares-stor-06,ares-stor-07,ares-stor-08,ares-stor-09,ares-stor-10,ares-stor-11,ares-stor-12, --metaservers ares-stor-01,ares-stor-02,ares-stor-03,ares-stor-04,ares-stor-05,ares-stor-06,ares-stor-07,ares-stor-08,ares-stor-09,ares-stor-10,ares-stor-11,ares-stor-12, --storage /mnt/hdd/kfeng/pvfs2-storage-space --metadata /mnt/hdd/kfeng/pvfs2-storage-space --logfile /dev/shm/orangefs-server.log /home/kfeng/pkg_src/Utility-scripts/OrangeFS/pvfs2-12N.conf
+3
+/opt/ohpc/pub/orangefs/bin/pvfs2-genconfig --quiet --protocol tcp --tcpport 3335 --dist-name simple_stripe --dist-params strip_size:524288 --ioservers ares-stor-13,ares-stor-14,ares-stor-15,ares-stor-16,ares-stor-22,ares-stor-23,ares-stor-24,ares-stor-25,ares-stor-26,ares-stor-27,ares-stor-28,ares-stor-29, --metaservers ares-stor-13,ares-stor-14,ares-stor-15,ares-stor-16,ares-stor-22,ares-stor-23,ares-stor-24,ares-stor-25,ares-stor-26,ares-stor-27,ares-stor-28,ares-stor-29, --storage /mnt/hdd/kfeng/pvfs2-storage-space2 --metadata /mnt/hdd/kfeng/pvfs2-storage-space2 --logfile /dev/shm/orangefs-server2.log /home/kfeng/pkg_src/Utility-scripts/OrangeFS2/pvfs2-12N.conf
+3
+Starting OrangeFS ...
+[0;32mStarting OrangeFS servers ...[0m
+ares-stor-01 => [S 04/15/2020 11:10:40] PVFS2 Server on node ares-stor-01 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-04 => [S 04/15/2020 11:10:40] PVFS2 Server on node ares-stor-04 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-02 => [S 04/15/2020 11:10:40] PVFS2 Server on node ares-stor-02 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-03 => [S 04/15/2020 11:10:40] PVFS2 Server on node ares-stor-03 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-01 => [D 04/15/2020 11:10:40] PVFS2 Server: storage space created.
+ares-stor-01 => [D 04/15/2020 11:10:40] Exiting.
+ares-stor-06 => [S 04/15/2020 11:10:40] PVFS2 Server on node ares-stor-06 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-05 => [S 04/15/2020 11:10:40] PVFS2 Server on node ares-stor-05 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-10 => [S 04/15/2020 11:10:40] PVFS2 Server on node ares-stor-10 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-07 => [S 04/15/2020 11:10:40] PVFS2 Server on node ares-stor-07 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-11 => [S 04/15/2020 11:10:40] PVFS2 Server on node ares-stor-11 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-08 => [S 04/15/2020 11:10:40] PVFS2 Server on node ares-stor-08 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-12 => [S 04/15/2020 11:10:40] PVFS2 Server on node ares-stor-12 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-09 => [S 04/15/2020 11:10:40] PVFS2 Server on node ares-stor-09 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-02 => [D 04/15/2020 11:10:41] PVFS2 Server: storage space created.
+ares-stor-02 => [D 04/15/2020 11:10:41] Exiting.
+ares-stor-04 => [D 04/15/2020 11:10:41] PVFS2 Server: storage space created.
+ares-stor-04 => [D 04/15/2020 11:10:41] Exiting.
+ares-stor-03 => [D 04/15/2020 11:10:41] PVFS2 Server: storage space created.
+ares-stor-03 => [D 04/15/2020 11:10:41] Exiting.
+ares-stor-06 => [D 04/15/2020 11:10:41] PVFS2 Server: storage space created.
+ares-stor-06 => [D 04/15/2020 11:10:41] Exiting.
+ares-stor-08 => [D 04/15/2020 11:10:41] PVFS2 Server: storage space created.
+ares-stor-08 => [D 04/15/2020 11:10:41] Exiting.
+ares-stor-10 => [D 04/15/2020 11:10:41] PVFS2 Server: storage space created.
+ares-stor-10 => [D 04/15/2020 11:10:41] Exiting.
+ares-stor-07 => [D 04/15/2020 11:10:41] PVFS2 Server: storage space created.
+ares-stor-07 => [D 04/15/2020 11:10:41] Exiting.
+ares-stor-05 => [D 04/15/2020 11:10:41] PVFS2 Server: storage space created.
+ares-stor-05 => [D 04/15/2020 11:10:41] Exiting.
+ares-stor-12 => [D 04/15/2020 11:10:41] PVFS2 Server: storage space created.
+ares-stor-12 => [D 04/15/2020 11:10:41] Exiting.
+ares-stor-11 => [D 04/15/2020 11:10:41] PVFS2 Server: storage space created.
+ares-stor-11 => [D 04/15/2020 11:10:41] Exiting.
+ares-stor-09 => [D 04/15/2020 11:10:41] PVFS2 Server: storage space created.
+ares-stor-09 => [D 04/15/2020 11:10:41] Exiting.
+ares-stor-01 => [S 04/15/2020 11:10:41] PVFS2 Server on node ares-stor-01 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-02 => [S 04/15/2020 11:10:41] PVFS2 Server on node ares-stor-02 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-03 => [S 04/15/2020 11:10:41] PVFS2 Server on node ares-stor-03 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-07 => [S 04/15/2020 11:10:41] PVFS2 Server on node ares-stor-07 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-04 => [S 04/15/2020 11:10:41] PVFS2 Server on node ares-stor-04 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-05 => [S 04/15/2020 11:10:41] PVFS2 Server on node ares-stor-05 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-10 => [S 04/15/2020 11:10:41] PVFS2 Server on node ares-stor-10 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-06 => [S 04/15/2020 11:10:41] PVFS2 Server on node ares-stor-06 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-12 => [S 04/15/2020 11:10:41] PVFS2 Server on node ares-stor-12 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-11 => [S 04/15/2020 11:10:41] PVFS2 Server on node ares-stor-11 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-08 => [S 04/15/2020 11:10:41] PVFS2 Server on node ares-stor-08 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-09 => [S 04/15/2020 11:10:41] PVFS2 Server on node ares-stor-09 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-01 -> 9912 /opt/ohpc/pub/orangefs/sbin/pvfs2-server /home/kfeng/pkg_src/Utility-scripts/OrangeFS/pvfs2-12N.conf
+ares-stor-02 -> 23632 /opt/ohpc/pub/orangefs/sbin/pvfs2-server /home/kfeng/pkg_src/Utility-scripts/OrangeFS/pvfs2-12N.conf
+ares-stor-03 -> 2401 /opt/ohpc/pub/orangefs/sbin/pvfs2-server /home/kfeng/pkg_src/Utility-scripts/OrangeFS/pvfs2-12N.conf
+ares-stor-04 -> 3380 /opt/ohpc/pub/orangefs/sbin/pvfs2-server /home/kfeng/pkg_src/Utility-scripts/OrangeFS/pvfs2-12N.conf
+ares-stor-05 -> 1058 /opt/ohpc/pub/orangefs/sbin/pvfs2-server /home/kfeng/pkg_src/Utility-scripts/OrangeFS/pvfs2-12N.conf
+ares-stor-06 -> 6202 /opt/ohpc/pub/orangefs/sbin/pvfs2-server /home/kfeng/pkg_src/Utility-scripts/OrangeFS/pvfs2-12N.conf
+ares-stor-07 -> 9252 /opt/ohpc/pub/orangefs/sbin/pvfs2-server /home/kfeng/pkg_src/Utility-scripts/OrangeFS/pvfs2-12N.conf
+ares-stor-08 -> 11545 /opt/ohpc/pub/orangefs/sbin/pvfs2-server /home/kfeng/pkg_src/Utility-scripts/OrangeFS/pvfs2-12N.conf
+ares-stor-09 -> 11161 /opt/ohpc/pub/orangefs/sbin/pvfs2-server /home/kfeng/pkg_src/Utility-scripts/OrangeFS/pvfs2-12N.conf
+ares-stor-10 -> 1521 /opt/ohpc/pub/orangefs/sbin/pvfs2-server /home/kfeng/pkg_src/Utility-scripts/OrangeFS/pvfs2-12N.conf
+ares-stor-11 -> 13261 /opt/ohpc/pub/orangefs/sbin/pvfs2-server /home/kfeng/pkg_src/Utility-scripts/OrangeFS/pvfs2-12N.conf
+ares-stor-12 -> 11238 /opt/ohpc/pub/orangefs/sbin/pvfs2-server /home/kfeng/pkg_src/Utility-scripts/OrangeFS/pvfs2-12N.conf
+[0;32mVerifying OrangeFS servers ...[0m
+ares-comp-13-40g => [E 11:10:48.189306] Warning: msgpair failed to tcp://172.25.201.24:3335, will retry: Connection refused
+ares-comp-07-40g => [E 11:10:48.323946] Warning: msgpair failed to tcp://172.25.201.13:3335, will retry: Connection refused
+ares-comp-09-40g => [E 11:10:48.324835] Warning: msgpair failed to tcp://172.25.201.15:3335, will retry: Connection refused
+ares-comp-08-40g => [E 11:10:48.359323] Warning: msgpair failed to tcp://172.25.201.14:3335, will retry: Connection refused
+ares-comp-10-40g => [E 11:10:48.389475] Warning: msgpair failed to tcp://172.25.201.16:3335, will retry: Connection refused
+ares-comp-11-40g => [E 11:10:48.391603] Warning: msgpair failed to tcp://172.25.201.22:3335, will retry: Connection refused
+ares-comp-12-40g => [E 11:10:48.394401] Warning: msgpair failed to tcp://172.25.201.23:3335, will retry: Connection refused
+ares-comp-16-40g => [E 11:10:48.403853] Warning: msgpair failed to tcp://172.25.201.27:3335, will retry: Connection refused
+ares-comp-17-40g => [E 11:10:48.428261] Warning: msgpair failed to tcp://172.25.201.28:3335, will retry: Connection refused
+ares-comp-15-40g => [E 11:10:48.440742] Warning: msgpair failed to tcp://172.25.201.26:3335, will retry: Connection refused
+ares-comp-14-40g => [E 11:10:48.445015] Warning: msgpair failed to tcp://172.25.201.25:3335, will retry: Connection refused
+ares-comp-19-40g => [E 11:10:48.451673] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-20-40g => [E 11:10:48.459394] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-25-40g => [E 11:10:48.480548] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-22-40g => [E 11:10:48.490563] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-21-40g => [E 11:10:48.500103] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-24-40g => [E 11:10:48.501952] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-23-40g => [E 11:10:48.511343] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-26-40g => [E 11:10:48.530669] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-27-40g => [E 11:10:48.541553] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-28-40g => [E 11:10:48.561693] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-29-40g => [E 11:10:48.564859] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-30-40g => [E 11:10:48.582225] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-18-40g => [E 11:10:48.727602] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-13-40g => [E 11:10:50.196891] Warning: msgpair failed to tcp://172.25.201.24:3335, will retry: Connection refused
+ares-comp-07-40g => [E 11:10:50.331605] Warning: msgpair failed to tcp://172.25.201.13:3335, will retry: Connection refused
+ares-comp-09-40g => [E 11:10:50.332441] Warning: msgpair failed to tcp://172.25.201.15:3335, will retry: Connection refused
+ares-comp-08-40g => [E 11:10:50.367060] Warning: msgpair failed to tcp://172.25.201.14:3335, will retry: Connection refused
+ares-comp-10-40g => [E 11:10:50.397133] Warning: msgpair failed to tcp://172.25.201.16:3335, will retry: Connection refused
+ares-comp-11-40g => [E 11:10:50.399302] Warning: msgpair failed to tcp://172.25.201.22:3335, will retry: Connection refused
+ares-comp-12-40g => [E 11:10:50.402083] Warning: msgpair failed to tcp://172.25.201.23:3335, will retry: Connection refused
+ares-comp-16-40g => [E 11:10:50.411481] Warning: msgpair failed to tcp://172.25.201.27:3335, will retry: Connection refused
+ares-comp-17-40g => [E 11:10:50.435828] Warning: msgpair failed to tcp://172.25.201.28:3335, will retry: Connection refused
+ares-comp-15-40g => [E 11:10:50.448515] Warning: msgpair failed to tcp://172.25.201.26:3335, will retry: Connection refused
+ares-comp-14-40g => [E 11:10:50.452671] Warning: msgpair failed to tcp://172.25.201.25:3335, will retry: Connection refused
+ares-comp-19-40g => [E 11:10:50.459351] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-20-40g => [E 11:10:50.467097] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-25-40g => [E 11:10:50.488185] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-22-40g => [E 11:10:50.498204] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-21-40g => [E 11:10:50.507715] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-24-40g => [E 11:10:50.509585] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-23-40g => [E 11:10:50.518929] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-26-40g => [E 11:10:50.538219] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-27-40g => [E 11:10:50.549033] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-28-40g => [E 11:10:50.569319] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-29-40g => [E 11:10:50.572484] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-30-40g => [E 11:10:50.589905] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-18-40g => [E 11:10:50.735379] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-13-40g => [E 11:10:52.204297] Warning: msgpair failed to tcp://172.25.201.24:3335, will retry: Connection refused
+ares-comp-07-40g => [E 11:10:52.339023] Warning: msgpair failed to tcp://172.25.201.13:3335, will retry: Connection refused
+ares-comp-09-40g => [E 11:10:52.339868] Warning: msgpair failed to tcp://172.25.201.15:3335, will retry: Connection refused
+ares-comp-08-40g => [E 11:10:52.374562] Warning: msgpair failed to tcp://172.25.201.14:3335, will retry: Connection refused
+ares-comp-10-40g => [E 11:10:52.404657] Warning: msgpair failed to tcp://172.25.201.16:3335, will retry: Connection refused
+ares-comp-11-40g => [E 11:10:52.406750] Warning: msgpair failed to tcp://172.25.201.22:3335, will retry: Connection refused
+ares-comp-12-40g => [E 11:10:52.409531] Warning: msgpair failed to tcp://172.25.201.23:3335, will retry: Connection refused
+ares-comp-16-40g => [E 11:10:52.419067] Warning: msgpair failed to tcp://172.25.201.27:3335, will retry: Connection refused
+ares-comp-17-40g => [E 11:10:52.443212] Warning: msgpair failed to tcp://172.25.201.28:3335, will retry: Connection refused
+ares-comp-15-40g => [E 11:10:52.455938] Warning: msgpair failed to tcp://172.25.201.26:3335, will retry: Connection refused
+ares-comp-14-40g => [E 11:10:52.460146] Warning: msgpair failed to tcp://172.25.201.25:3335, will retry: Connection refused
+ares-comp-19-40g => [E 11:10:52.466794] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-20-40g => [E 11:10:52.474621] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-25-40g => [E 11:10:52.495735] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-22-40g => [E 11:10:52.505778] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-21-40g => [E 11:10:52.515083] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-24-40g => [E 11:10:52.517051] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-23-40g => [E 11:10:52.526381] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-26-40g => [E 11:10:52.545680] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-27-40g => [E 11:10:52.556437] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-28-40g => [E 11:10:52.576726] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-29-40g => [E 11:10:52.579892] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-30-40g => [E 11:10:52.597463] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-18-40g => [E 11:10:52.742937] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-13-40g => [E 11:10:54.211802] Warning: msgpair failed to tcp://172.25.201.24:3335, will retry: Connection refused
+ares-comp-07-40g => [E 11:10:54.346460] Warning: msgpair failed to tcp://172.25.201.13:3335, will retry: Connection refused
+ares-comp-09-40g => [E 11:10:54.347110] Warning: msgpair failed to tcp://172.25.201.15:3335, will retry: Connection refused
+ares-comp-08-40g => [E 11:10:54.382019] Warning: msgpair failed to tcp://172.25.201.14:3335, will retry: Connection refused
+ares-comp-10-40g => [E 11:10:54.412011] Warning: msgpair failed to tcp://172.25.201.16:3335, will retry: Connection refused
+ares-comp-11-40g => [E 11:10:54.414244] Warning: msgpair failed to tcp://172.25.201.22:3335, will retry: Connection refused
+ares-comp-12-40g => [E 11:10:54.417066] Warning: msgpair failed to tcp://172.25.201.23:3335, will retry: Connection refused
+ares-comp-16-40g => [E 11:10:54.426444] Warning: msgpair failed to tcp://172.25.201.27:3335, will retry: Connection refused
+ares-comp-17-40g => [E 11:10:54.450757] Warning: msgpair failed to tcp://172.25.201.28:3335, will retry: Connection refused
+ares-comp-15-40g => [E 11:10:54.463292] Warning: msgpair failed to tcp://172.25.201.26:3335, will retry: Connection refused
+ares-comp-14-40g => [E 11:10:54.467516] Warning: msgpair failed to tcp://172.25.201.25:3335, will retry: Connection refused
+ares-comp-19-40g => [E 11:10:54.474280] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-20-40g => [E 11:10:54.482162] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-25-40g => [E 11:10:54.503224] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-22-40g => [E 11:10:54.513157] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-21-40g => [E 11:10:54.522403] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-24-40g => [E 11:10:54.524551] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-23-40g => [E 11:10:54.533783] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-26-40g => [E 11:10:54.553049] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-27-40g => [E 11:10:54.563929] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-28-40g => [E 11:10:54.584181] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-29-40g => [E 11:10:54.587306] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-30-40g => [E 11:10:54.604906] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-18-40g => [E 11:10:54.750518] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-13-40g => [E 11:10:56.219427] Warning: msgpair failed to tcp://172.25.201.24:3335, will retry: Connection refused
+ares-comp-07-40g => [E 11:10:56.353894] Warning: msgpair failed to tcp://172.25.201.13:3335, will retry: Connection refused
+ares-comp-09-40g => [E 11:10:56.354667] Warning: msgpair failed to tcp://172.25.201.15:3335, will retry: Connection refused
+ares-comp-08-40g => [E 11:10:56.389502] Warning: msgpair failed to tcp://172.25.201.14:3335, will retry: Connection refused
+ares-comp-10-40g => [E 11:10:56.419400] Warning: msgpair failed to tcp://172.25.201.16:3335, will retry: Connection refused
+ares-comp-11-40g => [E 11:10:56.421683] Warning: msgpair failed to tcp://172.25.201.22:3335, will retry: Connection refused
+ares-comp-12-40g => [E 11:10:56.424505] Warning: msgpair failed to tcp://172.25.201.23:3335, will retry: Connection refused
+ares-comp-16-40g => [E 11:10:56.433882] Warning: msgpair failed to tcp://172.25.201.27:3335, will retry: Connection refused
+ares-comp-17-40g => [E 11:10:56.458234] Warning: msgpair failed to tcp://172.25.201.28:3335, will retry: Connection refused
+ares-comp-15-40g => [E 11:10:56.470718] Warning: msgpair failed to tcp://172.25.201.26:3335, will retry: Connection refused
+ares-comp-14-40g => [E 11:10:56.474856] Warning: msgpair failed to tcp://172.25.201.25:3335, will retry: Connection refused
+ares-comp-19-40g => [E 11:10:56.481734] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-20-40g => [E 11:10:56.489510] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-25-40g => [E 11:10:56.510615] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-22-40g => [E 11:10:56.520503] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-21-40g => [E 11:10:56.529915] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-24-40g => [E 11:10:56.532023] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-23-40g => [E 11:10:56.541197] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-26-40g => [E 11:10:56.560413] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-27-40g => [E 11:10:56.571361] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-28-40g => [E 11:10:56.591657] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-29-40g => [E 11:10:56.594704] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-30-40g => [E 11:10:56.612217] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-18-40g => [E 11:10:56.758106] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-13-40g => [E 11:10:58.226882] Warning: msgpair failed to tcp://172.25.201.24:3335, will retry: Connection refused
+ares-comp-13-40g => [E 11:10:58.226917] *** msgpairarray_completion_fn: msgpair to server tcp://172.25.201.24:3335 failed: Connection refused
+ares-comp-13-40g => [E 11:10:58.226938] *** Out of retries.
+ares-comp-13-40g => Failure: could not initialze at least one of the target file systems.
+ares-comp-07-40g => [E 11:10:58.361420] Warning: msgpair failed to tcp://172.25.201.13:3335, will retry: Connection refused
+ares-comp-07-40g => [E 11:10:58.361455] *** msgpairarray_completion_fn: msgpair to server tcp://172.25.201.13:3335 failed: Connection refused
+ares-comp-07-40g => [E 11:10:58.361483] *** Out of retries.
+ares-comp-07-40g => Failure: could not initialze at least one of the target file systems.
+ares-comp-09-40g => [E 11:10:58.362146] Warning: msgpair failed to tcp://172.25.201.15:3335, will retry: Connection refused
+ares-comp-09-40g => [E 11:10:58.362176] *** msgpairarray_completion_fn: msgpair to server tcp://172.25.201.15:3335 failed: Connection refused
+ares-comp-09-40g => [E 11:10:58.362198] *** Out of retries.
+ares-comp-09-40g => Failure: could not initialze at least one of the target file systems.
+ares-comp-08-40g => [E 11:10:58.396950] Warning: msgpair failed to tcp://172.25.201.14:3335, will retry: Connection refused
+ares-comp-08-40g => [E 11:10:58.396980] *** msgpairarray_completion_fn: msgpair to server tcp://172.25.201.14:3335 failed: Connection refused
+ares-comp-08-40g => [E 11:10:58.397001] *** Out of retries.
+ares-comp-08-40g => Failure: could not initialze at least one of the target file systems.
+ares-comp-10-40g => [E 11:10:58.426933] Warning: msgpair failed to tcp://172.25.201.16:3335, will retry: Connection refused
+ares-comp-10-40g => [E 11:10:58.426967] *** msgpairarray_completion_fn: msgpair to server tcp://172.25.201.16:3335 failed: Connection refused
+ares-comp-10-40g => [E 11:10:58.426989] *** Out of retries.
+ares-comp-10-40g => Failure: could not initialze at least one of the target file systems.
+ares-comp-11-40g => [E 11:10:58.429247] Warning: msgpair failed to tcp://172.25.201.22:3335, will retry: Connection refused
+ares-comp-11-40g => [E 11:10:58.429290] *** msgpairarray_completion_fn: msgpair to server tcp://172.25.201.22:3335 failed: Connection refused
+ares-comp-11-40g => [E 11:10:58.429312] *** Out of retries.
+ares-comp-11-40g => Failure: could not initialze at least one of the target file systems.
+ares-comp-12-40g => [E 11:10:58.431964] Warning: msgpair failed to tcp://172.25.201.23:3335, will retry: Connection refused
+ares-comp-12-40g => [E 11:10:58.431995] *** msgpairarray_completion_fn: msgpair to server tcp://172.25.201.23:3335 failed: Connection refused
+ares-comp-12-40g => [E 11:10:58.432016] *** Out of retries.
+ares-comp-12-40g => Failure: could not initialze at least one of the target file systems.
+ares-comp-16-40g => [E 11:10:58.441285] Warning: msgpair failed to tcp://172.25.201.27:3335, will retry: Connection refused
+ares-comp-16-40g => [E 11:10:58.441315] *** msgpairarray_completion_fn: msgpair to server tcp://172.25.201.27:3335 failed: Connection refused
+ares-comp-16-40g => [E 11:10:58.441336] *** Out of retries.
+ares-comp-16-40g => Failure: could not initialze at least one of the target file systems.
+ares-comp-17-40g => [E 11:10:58.465636] Warning: msgpair failed to tcp://172.25.201.28:3335, will retry: Connection refused
+ares-comp-17-40g => [E 11:10:58.465667] *** msgpairarray_completion_fn: msgpair to server tcp://172.25.201.28:3335 failed: Connection refused
+ares-comp-17-40g => [E 11:10:58.465689] *** Out of retries.
+ares-comp-17-40g => Failure: could not initialze at least one of the target file systems.
+ares-comp-15-40g => [E 11:10:58.478047] Warning: msgpair failed to tcp://172.25.201.26:3335, will retry: Connection refused
+ares-comp-15-40g => [E 11:10:58.478077] *** msgpairarray_completion_fn: msgpair to server tcp://172.25.201.26:3335 failed: Connection refused
+ares-comp-15-40g => [E 11:10:58.478098] *** Out of retries.
+ares-comp-15-40g => Failure: could not initialze at least one of the target file systems.
+ares-comp-14-40g => [E 11:10:58.482299] Warning: msgpair failed to tcp://172.25.201.25:3335, will retry: Connection refused
+ares-comp-14-40g => [E 11:10:58.482333] *** msgpairarray_completion_fn: msgpair to server tcp://172.25.201.25:3335 failed: Connection refused
+ares-comp-14-40g => [E 11:10:58.482361] *** Out of retries.
+ares-comp-14-40g => Failure: could not initialze at least one of the target file systems.
+ares-comp-19-40g => [E 11:10:58.489148] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-19-40g => [E 11:10:58.489178] *** msgpairarray_completion_fn: msgpair to server tcp://172.25.201.29:3335 failed: Connection refused
+ares-comp-19-40g => [E 11:10:58.489200] *** Out of retries.
+ares-comp-19-40g => Failure: could not initialze at least one of the target file systems.
+ares-comp-20-40g => [E 11:10:58.496931] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-20-40g => [E 11:10:58.496962] *** msgpairarray_completion_fn: msgpair to server tcp://172.25.201.29:3335 failed: Connection refused
+ares-comp-20-40g => [E 11:10:58.496984] *** Out of retries.
+ares-comp-20-40g => Failure: could not initialze at least one of the target file systems.
+ares-comp-25-40g => [E 11:10:58.518094] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-25-40g => [E 11:10:58.518126] *** msgpairarray_completion_fn: msgpair to server tcp://172.25.201.29:3335 failed: Connection refused
+ares-comp-25-40g => [E 11:10:58.518147] *** Out of retries.
+ares-comp-25-40g => Failure: could not initialze at least one of the target file systems.
+ares-comp-22-40g => [E 11:10:58.527982] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-22-40g => [E 11:10:58.528013] *** msgpairarray_completion_fn: msgpair to server tcp://172.25.201.29:3335 failed: Connection refused
+ares-comp-22-40g => [E 11:10:58.528034] *** Out of retries.
+ares-comp-22-40g => Failure: could not initialze at least one of the target file systems.
+ares-comp-21-40g => [E 11:10:58.537320] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-21-40g => [E 11:10:58.537351] *** msgpairarray_completion_fn: msgpair to server tcp://172.25.201.29:3335 failed: Connection refused
+ares-comp-21-40g => [E 11:10:58.537373] *** Out of retries.
+ares-comp-21-40g => Failure: could not initialze at least one of the target file systems.
+ares-comp-24-40g => [E 11:10:58.539458] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-24-40g => [E 11:10:58.539490] *** msgpairarray_completion_fn: msgpair to server tcp://172.25.201.29:3335 failed: Connection refused
+ares-comp-24-40g => [E 11:10:58.539512] *** Out of retries.
+ares-comp-24-40g => Failure: could not initialze at least one of the target file systems.
+ares-comp-23-40g => [E 11:10:58.548583] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-23-40g => [E 11:10:58.548614] *** msgpairarray_completion_fn: msgpair to server tcp://172.25.201.29:3335 failed: Connection refused
+ares-comp-23-40g => [E 11:10:58.548635] *** Out of retries.
+ares-comp-23-40g => Failure: could not initialze at least one of the target file systems.
+ares-comp-26-40g => [E 11:10:58.567775] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-26-40g => [E 11:10:58.567807] *** msgpairarray_completion_fn: msgpair to server tcp://172.25.201.29:3335 failed: Connection refused
+ares-comp-26-40g => [E 11:10:58.567828] *** Out of retries.
+ares-comp-26-40g => Failure: could not initialze at least one of the target file systems.
+ares-comp-27-40g => [E 11:10:58.578812] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-27-40g => [E 11:10:58.578847] *** msgpairarray_completion_fn: msgpair to server tcp://172.25.201.29:3335 failed: Connection refused
+ares-comp-27-40g => [E 11:10:58.578868] *** Out of retries.
+ares-comp-27-40g => Failure: could not initialze at least one of the target file systems.
+ares-comp-28-40g => [E 11:10:58.599106] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-28-40g => [E 11:10:58.599137] *** msgpairarray_completion_fn: msgpair to server tcp://172.25.201.29:3335 failed: Connection refused
+ares-comp-28-40g => [E 11:10:58.599158] *** Out of retries.
+ares-comp-28-40g => Failure: could not initialze at least one of the target file systems.
+ares-comp-29-40g => [E 11:10:58.602205] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-29-40g => [E 11:10:58.602241] *** msgpairarray_completion_fn: msgpair to server tcp://172.25.201.29:3335 failed: Connection refused
+ares-comp-29-40g => [E 11:10:58.602263] *** Out of retries.
+ares-comp-29-40g => Failure: could not initialze at least one of the target file systems.
+ares-comp-30-40g => [E 11:10:58.619652] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-30-40g => [E 11:10:58.619681] *** msgpairarray_completion_fn: msgpair to server tcp://172.25.201.29:3335 failed: Connection refused
+ares-comp-30-40g => [E 11:10:58.619703] *** Out of retries.
+ares-comp-30-40g => Failure: could not initialze at least one of the target file systems.
+ares-comp-18-40g => [E 11:10:58.765716] Warning: msgpair failed to tcp://172.25.201.29:3335, will retry: Connection refused
+ares-comp-18-40g => [E 11:10:58.765746] *** msgpairarray_completion_fn: msgpair to server tcp://172.25.201.29:3335 failed: Connection refused
+ares-comp-18-40g => [E 11:10:58.765768] *** Out of retries.
+ares-comp-18-40g => Failure: could not initialze at least one of the target file systems.
+[0;32mStarting OrangeFS servers ...[0m
+ares-stor-13 => [S 04/15/2020 11:10:59] PVFS2 Server on node ares-stor-13 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-14 => [S 04/15/2020 11:10:59] PVFS2 Server on node ares-stor-14 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-24 => [S 04/15/2020 11:10:59] PVFS2 Server on node ares-stor-24 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-15 => [S 04/15/2020 11:10:59] PVFS2 Server on node ares-stor-15 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-16 => [S 04/15/2020 11:10:59] PVFS2 Server on node ares-stor-16 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-22 => [S 04/15/2020 11:10:59] PVFS2 Server on node ares-stor-22 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-23 => [S 04/15/2020 11:10:59] PVFS2 Server on node ares-stor-23 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-25 => [S 04/15/2020 11:10:59] PVFS2 Server on node ares-stor-25 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-27 => [S 04/15/2020 11:10:59] PVFS2 Server on node ares-stor-27 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-28 => [S 04/15/2020 11:10:59] PVFS2 Server on node ares-stor-28 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-29 => [S 04/15/2020 11:10:59] PVFS2 Server on node ares-stor-29 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-26 => [S 04/15/2020 11:10:59] PVFS2 Server on node ares-stor-26 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-14 => [D 04/15/2020 11:10:59] PVFS2 Server: storage space created.
+ares-stor-14 => [D 04/15/2020 11:10:59] Exiting.
+ares-stor-15 => [D 04/15/2020 11:10:59] PVFS2 Server: storage space created.
+ares-stor-15 => [D 04/15/2020 11:10:59] Exiting.
+ares-stor-24 => [D 04/15/2020 11:10:59] PVFS2 Server: storage space created.
+ares-stor-24 => [D 04/15/2020 11:10:59] Exiting.
+ares-stor-13 => [D 04/15/2020 11:10:59] PVFS2 Server: storage space created.
+ares-stor-13 => [D 04/15/2020 11:10:59] Exiting.
+ares-stor-22 => [D 04/15/2020 11:10:59] PVFS2 Server: storage space created.
+ares-stor-22 => [D 04/15/2020 11:10:59] Exiting.
+ares-stor-23 => [D 04/15/2020 11:10:59] PVFS2 Server: storage space created.
+ares-stor-23 => [D 04/15/2020 11:10:59] Exiting.
+ares-stor-16 => [D 04/15/2020 11:10:59] PVFS2 Server: storage space created.
+ares-stor-16 => [D 04/15/2020 11:10:59] Exiting.
+ares-stor-25 => [D 04/15/2020 11:10:59] PVFS2 Server: storage space created.
+ares-stor-25 => [D 04/15/2020 11:10:59] Exiting.
+ares-stor-29 => [D 04/15/2020 11:10:59] PVFS2 Server: storage space created.
+ares-stor-29 => [D 04/15/2020 11:10:59] Exiting.
+ares-stor-27 => [D 04/15/2020 11:10:59] PVFS2 Server: storage space created.
+ares-stor-27 => [D 04/15/2020 11:10:59] Exiting.
+ares-stor-26 => [D 04/15/2020 11:10:59] PVFS2 Server: storage space created.
+ares-stor-26 => [D 04/15/2020 11:10:59] Exiting.
+ares-stor-28 => [D 04/15/2020 11:10:59] PVFS2 Server: storage space created.
+ares-stor-28 => [D 04/15/2020 11:10:59] Exiting.
+ares-stor-13 => [S 04/15/2020 11:11:00] PVFS2 Server on node ares-stor-13 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-22 => [S 04/15/2020 11:11:00] PVFS2 Server on node ares-stor-22 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-25 => [S 04/15/2020 11:11:00] PVFS2 Server on node ares-stor-25 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-14 => [S 04/15/2020 11:11:00] PVFS2 Server on node ares-stor-14 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-24 => [S 04/15/2020 11:11:00] PVFS2 Server on node ares-stor-24 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-26 => [S 04/15/2020 11:11:00] PVFS2 Server on node ares-stor-26 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-16 => [S 04/15/2020 11:11:00] PVFS2 Server on node ares-stor-16 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-28 => [S 04/15/2020 11:11:00] PVFS2 Server on node ares-stor-28 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-23 => [S 04/15/2020 11:11:00] PVFS2 Server on node ares-stor-23 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-15 => [S 04/15/2020 11:11:00] PVFS2 Server on node ares-stor-15 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-29 => [S 04/15/2020 11:11:00] PVFS2 Server on node ares-stor-29 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-27 => [S 04/15/2020 11:11:00] PVFS2 Server on node ares-stor-27 version 2.9.7-orangefs-DEVEL-2019-12-30-152831 starting...
+ares-stor-13 -> 17244 /opt/ohpc/pub/orangefs/sbin/pvfs2-server /home/kfeng/pkg_src/Utility-scripts/OrangeFS2/pvfs2-12N.conf
+ares-stor-14 -> 18010 /opt/ohpc/pub/orangefs/sbin/pvfs2-server /home/kfeng/pkg_src/Utility-scripts/OrangeFS2/pvfs2-12N.conf
+ares-stor-15 -> 15335 /opt/ohpc/pub/orangefs/sbin/pvfs2-server /home/kfeng/pkg_src/Utility-scripts/OrangeFS2/pvfs2-12N.conf
+ares-stor-16 -> 10672 /opt/ohpc/pub/orangefs/sbin/pvfs2-server /home/kfeng/pkg_src/Utility-scripts/OrangeFS2/pvfs2-12N.conf
+ares-stor-22 -> 1602 /opt/ohpc/pub/orangefs/sbin/pvfs2-server /home/kfeng/pkg_src/Utility-scripts/OrangeFS2/pvfs2-12N.conf
+ares-stor-23 -> 4594 /opt/ohpc/pub/orangefs/sbin/pvfs2-server /home/kfeng/pkg_src/Utility-scripts/OrangeFS2/pvfs2-12N.conf
+ares-stor-24 -> 4798 /opt/ohpc/pub/orangefs/sbin/pvfs2-server /home/kfeng/pkg_src/Utility-scripts/OrangeFS2/pvfs2-12N.conf
+ares-stor-25 -> 23957 /opt/ohpc/pub/orangefs/sbin/pvfs2-server /home/kfeng/pkg_src/Utility-scripts/OrangeFS2/pvfs2-12N.conf
+ares-stor-26 -> 24814 /opt/ohpc/pub/orangefs/sbin/pvfs2-server /home/kfeng/pkg_src/Utility-scripts/OrangeFS2/pvfs2-12N.conf
+ares-stor-27 -> 32622 /opt/ohpc/pub/orangefs/sbin/pvfs2-server /home/kfeng/pkg_src/Utility-scripts/OrangeFS2/pvfs2-12N.conf
+ares-stor-28 -> 27200 /opt/ohpc/pub/orangefs/sbin/pvfs2-server /home/kfeng/pkg_src/Utility-scripts/OrangeFS2/pvfs2-12N.conf
+ares-stor-29 -> 28455 /opt/ohpc/pub/orangefs/sbin/pvfs2-server /home/kfeng/pkg_src/Utility-scripts/OrangeFS2/pvfs2-12N.conf
+[0;32mVerifying OrangeFS servers ...[0m
+ares-comp-07-40g -> The PVFS2 filesystem at /mnt/nvme/kfeng/pvfs2-mount2 appears to be correctly configured.
+ares-comp-08-40g -> The PVFS2 filesystem at /mnt/nvme/kfeng/pvfs2-mount2 appears to be correctly configured.
+ares-comp-09-40g -> The PVFS2 filesystem at /mnt/nvme/kfeng/pvfs2-mount2 appears to be correctly configured.
+ares-comp-10-40g -> The PVFS2 filesystem at /mnt/nvme/kfeng/pvfs2-mount2 appears to be correctly configured.
+ares-comp-11-40g -> The PVFS2 filesystem at /mnt/nvme/kfeng/pvfs2-mount2 appears to be correctly configured.
+ares-comp-12-40g -> The PVFS2 filesystem at /mnt/nvme/kfeng/pvfs2-mount2 appears to be correctly configured.
+ares-comp-13-40g -> The PVFS2 filesystem at /mnt/nvme/kfeng/pvfs2-mount2 appears to be correctly configured.
+ares-comp-14-40g -> The PVFS2 filesystem at /mnt/nvme/kfeng/pvfs2-mount2 appears to be correctly configured.
+ares-comp-15-40g -> The PVFS2 filesystem at /mnt/nvme/kfeng/pvfs2-mount2 appears to be correctly configured.
+ares-comp-16-40g -> The PVFS2 filesystem at /mnt/nvme/kfeng/pvfs2-mount2 appears to be correctly configured.
+ares-comp-17-40g -> The PVFS2 filesystem at /mnt/nvme/kfeng/pvfs2-mount2 appears to be correctly configured.
+ares-comp-18-40g -> The PVFS2 filesystem at /mnt/nvme/kfeng/pvfs2-mount2 appears to be correctly configured.
+ares-comp-19-40g -> The PVFS2 filesystem at /mnt/nvme/kfeng/pvfs2-mount2 appears to be correctly configured.
+ares-comp-20-40g -> The PVFS2 filesystem at /mnt/nvme/kfeng/pvfs2-mount2 appears to be correctly configured.
+ares-comp-21-40g -> The PVFS2 filesystem at /mnt/nvme/kfeng/pvfs2-mount2 appears to be correctly configured.
+ares-comp-22-40g -> The PVFS2 filesystem at /mnt/nvme/kfeng/pvfs2-mount2 appears to be correctly configured.
+ares-comp-23-40g -> The PVFS2 filesystem at /mnt/nvme/kfeng/pvfs2-mount2 appears to be correctly configured.
+ares-comp-24-40g -> The PVFS2 filesystem at /mnt/nvme/kfeng/pvfs2-mount2 appears to be correctly configured.
+ares-comp-25-40g -> The PVFS2 filesystem at /mnt/nvme/kfeng/pvfs2-mount2 appears to be correctly configured.
+ares-comp-26-40g -> The PVFS2 filesystem at /mnt/nvme/kfeng/pvfs2-mount2 appears to be correctly configured.
+ares-comp-27-40g -> The PVFS2 filesystem at /mnt/nvme/kfeng/pvfs2-mount2 appears to be correctly configured.
+ares-comp-28-40g -> The PVFS2 filesystem at /mnt/nvme/kfeng/pvfs2-mount2 appears to be correctly configured.
+ares-comp-29-40g -> The PVFS2 filesystem at /mnt/nvme/kfeng/pvfs2-mount2 appears to be correctly configured.
+ares-comp-30-40g -> The PVFS2 filesystem at /mnt/nvme/kfeng/pvfs2-mount2 appears to be correctly configured.
+[239] [86] [E 11:11:15.062752] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[E 11:11:15.062810] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[431] [E 11:11:15.062746] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[455] [E 11:11:15.062789] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[326] [E 11:11:15.063011] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[167] [E 11:11:15.062827] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[398] [E 11:11:15.063262] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[407] [E 11:11:15.062906] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[477] [E 11:11:15.063351] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[479] [E 11:11:15.063132] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[165] [E 11:11:15.063353] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[311] [E 11:11:15.063263] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[455] [158] [E 11:11:15.063215] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[E 11:11:15.063619] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[206] [E 11:11:15.063520] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[309] [E 11:11:15.063791] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[254] [E 11:11:15.063910] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[38] [E 11:11:15.064053] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[446] [E 11:11:15.064111] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[428] [134] [E 11:11:15.064195] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[E 11:11:15.064279] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[429] [E 11:11:15.065063] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[278] [E 11:11:15.064904] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[333] [E 11:11:15.065242] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[398] [E 11:11:15.065024] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[260] [E 11:11:15.065132] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[38] [E 11:11:15.065174] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[350] [E 11:11:15.065243] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[117] [E 11:11:15.065497] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[261] [E 11:11:15.065611] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[374] [E 11:11:15.065367] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[237] [E 11:11:15.065472] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[470] [E 11:11:15.065757] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[446] [381] [E 11:11:15.065466] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[E 11:11:15.065869] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[14] [E 11:11:15.065883] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[69] [E 11:11:15.066193] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[422] [E 11:11:15.066183] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[116] [E 11:11:15.066191] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[302] [E 11:11:15.066231] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[21] [E 11:11:15.066582] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[93] [E 11:11:15.067046] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[405] [E 11:11:15.067209] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[189] [E 11:11:15.067255] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[236] [E 11:11:15.067397] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[237] [E 11:11:15.067372] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[20] [E 11:11:15.067586] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[69] [E 11:11:15.067714] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[452] [E 11:11:15.067556] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[476] [E 11:11:15.067551] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[452] [E 11:11:15.067795] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[116] [E 11:11:15.067898] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[213] [E 11:11:15.067214] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[381] [E 11:11:15.068232] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[476] [E 11:11:15.067891] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[356] [E 11:11:15.068949] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[64] [E 11:11:15.068895] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[117] [E 11:11:15.067574] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[165] [E 11:11:15.069174] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[328] [E 11:11:15.069617] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[16] [E 11:11:15.069652] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[112] [304] [E 11:11:15.069854] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[E 11:11:15.069701] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[328] [E 11:11:15.070188] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[404] [E 11:11:15.070330] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[400] [E 11:11:15.071391] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[324] [E 11:11:15.071394] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[424] [E 11:11:15.071488] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[252] [E 11:11:15.071567] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[208] [E 11:11:15.071558] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[280] [E 11:11:15.071709] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[324] [E 11:11:15.071706] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[16] [E 11:11:15.071796] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[424] [E 11:11:15.071880] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[280] [E 11:11:15.071836] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[112] [E 11:11:15.071990] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[400] [E 11:11:15.072100] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[304] [E 11:11:15.072186] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[376] [E 11:11:15.072332] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[380] [E 11:11:15.072703] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[232] [E 11:11:15.073301] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[348] [E 11:11:15.073902] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[36] [E 11:11:15.074005] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[92] [E 11:11:15.074138] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[68] [332] [E 11:11:15.074070] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[E 11:11:15.074080] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[164] [E 11:11:15.074056] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[348] [E 11:11:15.074243] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[156] [E 11:11:15.074503] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[188] [E 11:11:15.074358] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[444] [E 11:11:15.074362] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[276] [E 11:11:15.074529] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[308] [E 11:11:15.074662] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[68] [308] [E 11:11:15.074921] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[E 11:11:15.074909] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[212] [380] [E 11:11:15.074991] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[E 11:11:15.075009] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[64] [60] [E 11:11:15.075173] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[E 11:11:15.075143] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[36] [E 11:11:15.075046] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[140] [E 11:11:15.075139] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[140] [E 11:11:15.075341] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[88] [132] [E 11:11:15.075270] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[E 11:11:15.075076] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[108] [E 11:11:15.075189] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[228] [E 11:11:15.075127] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[188] [E 11:11:15.075487] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[12] [132] [E 11:11:15.075210] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[E 11:11:15.075102] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[180] [E 11:11:15.075562] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[156] [E 11:11:15.075151] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[448] [E 11:11:15.075890] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[180] [E 11:11:15.075456] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[184] [E 11:11:15.075860] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[300] [E 11:11:15.075927] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[108] [E 11:11:15.075569] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[252] [E 11:11:15.075793] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[40] [E 11:11:15.076260] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[420] [E 11:11:15.075944] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[257] [E 11:11:15.076327] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[372] [84] [E 11:11:15.076180] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[E 11:11:15.075827] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[233] [256] [E 11:11:15.076338] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[E 11:11:15.076437] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[396] [E 11:11:15.075662] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[17] [E 11:11:15.076505] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[396] [E 11:11:15.076334] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[281] [E 11:11:15.076615] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[468] [E 11:11:15.076111] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[276] [E 11:11:15.076453] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[305] [E 11:11:15.076646] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[204] [E 11:11:15.076345] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[472] [E 11:11:15.076846] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[232] [185] [E 11:11:15.076739] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[E 11:11:15.076712] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[444] [E 11:11:15.076452] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[136] [E 11:11:15.076784] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[160] [E 11:11:15.076932] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[468] [E 11:11:15.076584] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[256] [E 11:11:15.076973] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[473] [E 11:11:15.077107] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[228] [E 11:11:15.076801] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[420] [E 11:11:15.077031] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[376] [E 11:11:15.077231] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[160] [E 11:11:15.077257] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[353] [E 11:11:15.077380] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[41] [E 11:11:15.077450] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[377] [E 11:11:15.077631] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[184] [E 11:11:15.077533] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[300] [E 11:11:15.075458] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[448] [E 11:11:15.077615] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[159] [E 11:11:15.077640] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[352] [E 11:11:15.077686] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[40] [E 11:11:15.077785] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[88] [E 11:11:15.077926] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[353] [E 11:11:15.078413] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[209] [E 11:11:15.078439] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[377] [E 11:11:15.078642] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[231] [E 11:11:15.079382] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[399] [E 11:11:15.080069] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[327] [E 11:11:15.080370] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[111] [E 11:11:15.080391] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[303] [E 11:11:15.080424] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[63] [E 11:11:15.080646] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[15] [E 11:11:15.080847] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[39] [E 11:11:15.081037] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[207] [E 11:11:15.081122] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[279] [E 11:11:15.081118] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[375] [E 11:11:15.081253] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[87] [E 11:11:15.081320] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[135] [E 11:11:15.081329] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[471] [E 11:11:15.081374] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[159] [E 11:11:15.081471] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[183] [E 11:11:15.081521] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[351] [E 11:11:15.081560] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[255] [E 11:11:15.081685] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[423] [E 11:11:15.081914] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[226] [E 11:11:15.082366] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.11:3334. Returned -1073741996:lookup
+[178] [E 11:11:15.082686] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.11:3334. Returned -1073741996:lookup
+[10] [E 11:11:15.082644] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.11:3334. Returned -1073741996:lookup
+[322] [E 11:11:15.082731] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.11:3334. Returned -1073741996:lookup
+[240] [E 11:11:15.082873] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.1:3334. Returned -1073741996:lookup
+[425] [E 11:11:15.082908] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[408] [E 11:11:15.083234] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.1:3334. Returned -1073741996:lookup
+[442] [E 11:11:15.083528] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.11:3334. Returned -1073741996:lookup
+[96] [E 11:11:15.083597] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.1:3334. Returned -1073741996:lookup
+[360] [E 11:11:15.083578] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.1:3334. Returned -1073741996:lookup
+[72] [E 11:11:15.083763] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.1:3334. Returned -1073741996:lookup
+[120] [E 11:11:15.083695] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.1:3334. Returned -1073741996:lookup
+[312] [E 11:11:15.083745] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.1:3334. Returned -1073741996:lookup
+[384] [E 11:11:15.083710] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.1:3334. Returned -1073741996:lookup
+[456] [E 11:11:15.083800] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.1:3334. Returned -1073741996:lookup
+[312] [168] [E 11:11:15.084106] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.1:3334. Returned -1073741996:lookup
+[E 11:11:15.083847] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.1:3334. Returned -1073741996:lookup
+[264] [E 11:11:15.083979] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.1:3334. Returned -1073741996:lookup
+[432] [E 11:11:15.083978] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.1:3334. Returned -1073741996:lookup
+[144] [E 11:11:15.084046] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.1:3334. Returned -1073741996:lookup
+[75] [E 11:11:15.084368] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.4:3334. Returned -1073741996:lookup
+[89] [E 11:11:15.084474] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[401] [E 11:11:15.084881] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[51] [E 11:11:15.085210] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.4:3334. Returned -1073741996:lookup
+[459] [E 11:11:15.086866] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.4:3334. Returned -1073741996:lookup
+[123] [E 11:11:15.086893] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.4:3334. Returned -1073741996:lookup
+[339] [E 11:11:15.086945] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.4:3334. Returned -1073741996:lookup
+[13] [E 11:11:15.087149] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[335] [E 11:11:15.087309] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[99] [E 11:11:15.087600] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.4:3334. Returned -1073741996:lookup
+[219] [E 11:11:15.087859] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.4:3334. Returned -1073741996:lookup
+[23] [E 11:11:15.087897] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[157] [E 11:11:15.089091] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[229] [E 11:11:15.089215] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[449] [E 11:11:15.089384] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[445] [E 11:11:15.089717] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[373] [469] [E 11:11:15.089929] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[E 11:11:15.089844] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[325] [E 11:11:15.089812] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[65] [E 11:11:15.090382] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[47] [E 11:11:15.090425] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[359] [E 11:11:15.090670] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[263] [E 11:11:15.091754] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[287] [E 11:11:15.092110] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[145] [E 11:11:15.092999] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.2:3334. Returned -1073741996:lookup
+[73] [E 11:11:15.095743] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.2:3334. Returned -1073741996:lookup
+[121] [E 11:11:15.095762] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.2:3334. Returned -1073741996:lookup
+[385] [E 11:11:15.095951] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.2:3334. Returned -1073741996:lookup
+[49] [E 11:11:15.095881] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.2:3334. Returned -1073741996:lookup
+[241] [E 11:11:15.095952] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.2:3334. Returned -1073741996:lookup
+[361] [E 11:11:15.095931] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.2:3334. Returned -1073741996:lookup
+[433] [E 11:11:15.095951] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.2:3334. Returned -1073741996:lookup
+[169] [E 11:11:15.096055] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.2:3334. Returned -1073741996:lookup
+[1] [E 11:11:15.096220] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.2:3334. Returned -1073741996:lookup
+[289] [E 11:11:15.096225] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.2:3334. Returned -1073741996:lookup
+
+Co-locating OrangeFS (#server_ofs1=12, #server_ofs2=12), rep=1 finishes, sleep for 5 seconds...
+
+[423] [E 11:11:54.035017] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[91] [E 11:11:54.035183] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[236] [E 11:11:54.035321] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[304] [E 11:11:54.036144] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[228] [E 11:11:54.036100] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[36] [E 11:11:54.036320] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[420] [E 11:11:54.036631] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[184] [E 11:11:54.037106] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[324] [E 11:11:54.037152] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[108] [E 11:11:54.037317] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[254] [E 11:11:54.037850] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[93] [E 11:11:54.038049] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[429] [E 11:11:54.038271] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[278] [E 11:11:54.038281] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[422] [E 11:11:54.038190] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[326] [E 11:11:54.038367] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[86] [E 11:11:54.038468] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[255] [E 11:11:54.038452] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[351] [E 11:11:54.038586] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[350] [E 11:11:54.038644] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[213] [E 11:11:54.038875] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[302] [E 11:11:54.038625] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[115] [E 11:11:54.038898] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[165] [E 11:11:54.038979] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[382] [E 11:11:54.039098] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[111] [E 11:11:54.039178] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[94] [E 11:11:54.039229] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[45] [E 11:11:54.039683] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[327] [E 11:11:54.040398] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[165] [E 11:11:54.040717] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[381] [E 11:11:54.040966] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[21] [E 11:11:54.040945] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[45] [E 11:11:54.040919] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[252] [E 11:11:54.041071] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[383] [E 11:11:54.041115] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[479] [E 11:11:54.041175] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[407] [E 11:11:54.041395] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[471] [E 11:11:54.041553] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[236] [E 11:11:54.042548] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[372] [280] [E 11:11:54.042423] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[E 11:11:54.042590] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[36] [E 11:11:54.042532] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[136] [E 11:11:54.042728] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[399] [E 11:11:54.042686] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[424] [E 11:11:54.042766] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[231] [E 11:11:54.042730] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[87] [E 11:11:54.042755] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[12] [E 11:11:54.043046] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[356] [E 11:11:54.043514] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[139] [E 11:11:54.043628] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[228] [E 11:11:54.043685] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[452] [E 11:11:54.043456] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[188] [E 11:11:54.043666] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[260] [E 11:11:54.043558] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[92] [E 11:11:54.043771] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[116] [E 11:11:54.043671] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[215] [E 11:11:54.044540] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[158] [335] [E 11:11:54.044764] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[E 11:11:54.044699] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[69] [E 11:11:54.045014] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[38] [E 11:11:54.045076] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[380] [E 11:11:54.044975] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[110] [E 11:11:54.045063] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[476] [E 11:11:54.045273] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[381] [E 11:11:54.045498] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[71] [E 11:11:54.045375] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[431] [E 11:11:54.045412] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[455] [E 11:11:54.045377] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[261] [E 11:11:54.045732] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[167] [E 11:11:54.045758] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[207] [E 11:11:54.045741] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[286] [E 11:11:54.045965] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[284] [E 11:11:54.045887] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[372] [E 11:11:54.046347] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[132] [E 11:11:54.046362] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[180] [E 11:11:54.046527] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[12] [E 11:11:54.046562] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[383] [E 11:11:54.046850] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[39] [E 11:11:54.046899] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[398] [E 11:11:54.047107] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[308] [E 11:11:54.047773] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[67] [E 11:11:54.048560] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[163] [E 11:11:54.048728] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[230] [E 11:11:54.049132] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[206] [E 11:11:54.049396] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[449] [E 11:11:54.051006] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[309] [E 11:11:54.052569] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[137] [E 11:11:54.053475] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[47] [E 11:11:54.054204] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[237] [E 11:11:54.055075] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[357] [E 11:11:54.057394] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+
+Co-locating OrangeFS (#server_ofs1=12, #server_ofs2=12), rep=2 finishes, sleep for 5 seconds...
+
+[333] [E 11:12:33.015390] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[403] [E 11:12:33.015549] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[117] [E 11:12:33.015506] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[451] [E 11:12:33.015541] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[429] [E 11:12:33.015607] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[209] [427] [E 11:12:33.015663] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[E 11:12:33.015710] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[141] [E 11:12:33.015753] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[329] [E 11:12:33.015778] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[451] [E 11:12:33.015835] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[425] [E 11:12:33.015694] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[93] [E 11:12:33.015827] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[41] [E 11:12:33.015827] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[180] [E 11:12:33.016064] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[398] [E 11:12:33.016065] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[259] [E 11:12:33.016164] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[213] [E 11:12:33.015911] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[475] [E 11:12:33.016267] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[165] [139] [E 11:12:33.016249] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[E 11:12:33.016358] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[283] [E 11:12:33.016275] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[206] [E 11:12:33.016646] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[110] [E 11:12:33.016501] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[19] [E 11:12:33.016516] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[446] [E 11:12:33.016517] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[60] [E 11:12:33.016900] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[398] [E 11:12:33.016997] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[468] [E 11:12:33.017799] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[60] [E 11:12:33.018115] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[84] [E 11:12:33.018461] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[235] [E 11:12:33.018387] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[180] [E 11:12:33.018435] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[379] [E 11:12:33.018397] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[36] [E 11:12:33.018756] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[46] [E 11:12:33.018890] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[421] [E 11:12:33.018780] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[36] [E 11:12:33.018847] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[310] [E 11:12:33.019203] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[396] [E 11:12:33.019228] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[305] [E 11:12:33.019106] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[444] [E 11:12:33.019365] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[430] [E 11:12:33.019457] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[276] [E 11:12:33.019531] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[420] [E 11:12:33.019546] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[468] [E 11:12:33.019662] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[85] [E 11:12:33.019742] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[204] [E 11:12:33.019844] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[190] [E 11:12:33.020192] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[205] [157] [E 11:12:33.020250] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[E 11:12:33.020268] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[445] [277] [E 11:12:33.020364] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[E 11:12:33.020268] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[358] [E 11:12:33.020518] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[235] [E 11:12:33.020490] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[85] [325] [E 11:12:33.020373] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[E 11:12:33.020403] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[229] [E 11:12:33.020385] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[349] [E 11:12:33.020384] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[473] [E 11:12:33.021237] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[209] [E 11:12:33.021500] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[190] [E 11:12:33.021751] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[377] [E 11:12:33.021799] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[214] [E 11:12:33.022055] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[46] [118] [E 11:12:33.022216] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[E 11:12:33.022384] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[310] [E 11:12:33.022544] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[233] [E 11:12:33.022235] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[70] [E 11:12:33.022249] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[65] [E 11:12:33.022390] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[94] [E 11:12:33.022435] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[382] [E 11:12:33.022804] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[166] [E 11:12:33.026481] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[415] [E 11:12:33.035529] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.8:3334. Returned -1073741996:lookup
+[367] [E 11:12:33.035592] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.8:3334. Returned -1073741996:lookup
+[463] [E 11:12:33.035522] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.8:3334. Returned -1073741996:lookup
+[199] [E 11:12:33.035609] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.8:3334. Returned -1073741996:lookup
+[13] [E 11:12:33.039666] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[229] [E 11:12:33.039661] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[397] [E 11:12:33.039840] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[301] [E 11:12:33.041110] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[160] [E 11:12:33.041407] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[301] [E 11:12:33.041502] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[88] [E 11:12:33.041610] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[40] [E 11:12:33.042187] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[208] [E 11:12:33.042324] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[64] [E 11:12:33.042598] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[448] [E 11:12:33.042645] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[424] [E 11:12:33.042921] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[232] [E 11:12:33.043308] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[136] [E 11:12:33.044753] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[304] [E 11:12:33.044614] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[71] [E 11:12:33.047593] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[119] [E 11:12:33.047730] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[239] [E 11:12:33.047892] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[143] [E 11:12:33.049618] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[407] [E 11:12:33.053349] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+
+Co-locating OrangeFS (#server_ofs1=12, #server_ofs2=12), rep=3 finishes, sleep for 5 seconds...
+
+[358] [E 11:13:11.485428] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[214] [E 11:13:11.485603] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[396] [E 11:13:11.485805] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[111] [E 11:13:11.486001] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[135] [E 11:13:11.485940] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[398] [E 11:13:11.486198] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[262] [E 11:13:11.486653] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[468] [156] [E 11:13:11.486694] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[E 11:13:11.486783] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[60] [E 11:13:11.486747] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[228] [E 11:13:11.487025] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[108] [E 11:13:11.487161] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[444] [276] [E 11:13:11.487606] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[E 11:13:11.487520] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[348] [E 11:13:11.487487] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[334] [E 11:13:11.487883] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[430] [E 11:13:11.487875] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[406] [E 11:13:11.488100] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[118] [E 11:13:11.488237] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[374] [E 11:13:11.488435] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[351] [E 11:13:11.489046] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[285] [E 11:13:11.489417] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[309] [E 11:13:11.489334] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[142] [E 11:13:11.489714] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[159] [E 11:13:11.490101] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[189] [E 11:13:11.490775] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[302] [E 11:13:11.491097] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[206] [E 11:13:11.491184] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[62] [E 11:13:11.491429] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[158] [E 11:13:11.491507] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[302] [E 11:13:11.491456] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[158] [E 11:13:11.491852] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[232] [E 11:13:11.492235] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[110] [E 11:13:11.492376] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[446] [E 11:13:11.492345] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[38] [E 11:13:11.492400] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[300] [E 11:13:11.494722] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[84] [E 11:13:11.494684] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[400] [E 11:13:11.495275] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[468] [E 11:13:11.495432] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[163] [E 11:13:11.495554] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[475] [E 11:13:11.495685] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[353] [E 11:13:11.495646] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[427] [E 11:13:11.495760] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[84] [E 11:13:11.496532] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[331] [E 11:13:11.496890] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[185] [E 11:13:11.497038] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[43] [180] [E 11:13:11.497057] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[E 11:13:11.497064] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[259] [228] [E 11:13:11.497272] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[E 11:13:11.497221] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[420] [E 11:13:11.497201] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[372] [E 11:13:11.497390] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[89] [E 11:13:11.497417] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[283] [E 11:13:11.497430] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[17] [E 11:13:11.497451] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[257] [E 11:13:11.497753] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[36] [E 11:13:11.497620] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[233] [E 11:13:11.497855] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[451] [E 11:13:11.497971] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[305] [E 11:13:11.498212] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[113] [E 11:13:11.498406] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[377] [E 11:13:11.498250] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[209] [E 11:13:11.498583] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[401] [E 11:13:11.498604] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[329] [E 11:13:11.498845] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[188] [E 11:13:11.498707] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[139] [E 11:13:11.498869] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[380] [E 11:13:11.498691] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[445] [E 11:13:11.498985] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[68] [E 11:13:11.498833] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[425] [E 11:13:11.499163] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[325] [E 11:13:11.499560] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[12] [E 11:13:11.499661] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[281] [E 11:13:11.499711] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[452] [E 11:13:11.499812] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[325] [E 11:13:11.499845] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[20] [E 11:13:11.500013] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[137] [473] [E 11:13:11.500158] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[E 11:13:11.500116] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[181] [E 11:13:11.500487] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[13] [E 11:13:11.500556] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[308] [253] [E 11:13:11.500635] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[E 11:13:11.500835] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[283] [E 11:13:11.500567] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[373] [E 11:13:11.500460] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[421] [E 11:13:11.500785] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[92] [E 11:13:11.500660] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[301] [E 11:13:11.500576] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[476] [E 11:13:11.500981] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[260] [E 11:13:11.500806] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[211] [37] [E 11:13:11.500722] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[E 11:13:11.500664] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[469] [E 11:13:11.500782] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[116] [E 11:13:11.500950] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[253] [E 11:13:11.500643] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[380] [E 11:13:11.501201] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[445] [E 11:13:11.501112] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[284] [E 11:13:11.500918] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[277] [E 11:13:11.500800] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[332] [E 11:13:11.501437] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[37] [363] [E 11:13:11.501204] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[E 11:13:11.501584] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.4:3334. Returned -1073741996:lookup
+[44] [E 11:13:11.501114] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[181] [397] [E 11:13:11.501456] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[E 11:13:11.500632] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[387] [E 11:13:11.501613] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.4:3334. Returned -1073741996:lookup
+[116] [E 11:13:11.501888] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[140] [E 11:13:11.501335] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[205] [E 11:13:11.501627] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[404] [E 11:13:11.501291] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[421] [E 11:13:11.501860] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[428] [E 11:13:11.501831] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[236] [E 11:13:11.502302] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[236] [E 11:13:11.502299] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[157] [E 11:13:11.502543] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[109] [E 11:13:11.502570] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[349] [E 11:13:11.502801] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[229] [E 11:13:11.502886] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[397] [E 11:13:11.502967] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[85] [E 11:13:11.503075] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[68] [E 11:13:11.503061] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[205] [E 11:13:11.503140] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[133] [E 11:13:11.503298] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[260] [E 11:13:11.503196] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[373] [E 11:13:11.503049] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[157] [E 11:13:11.503219] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[212] [E 11:13:11.503565] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[85] [E 11:13:11.503272] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[92] [356] [E 11:13:11.503872] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[E 11:13:11.503699] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[140] [E 11:13:11.503797] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[452] [E 11:13:11.504046] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[188] [E 11:13:11.506639] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[20] [E 11:13:11.507038] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+
+Co-locating OrangeFS (#server_ofs1=12, #server_ofs2=12), rep=4 finishes, sleep for 5 seconds...
+
+[396] [E 11:13:49.666790] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[281] [E 11:13:49.667104] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[252] [E 11:13:49.666863] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[84] [E 11:13:49.667155] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[324] [E 11:13:49.667021] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[348] [E 11:13:49.667089] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[60] [E 11:13:49.667338] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[133] [E 11:13:49.667511] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[158] [E 11:13:49.667758] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[253] [E 11:13:49.667606] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[37] [E 11:13:49.667632] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[420] [E 11:13:49.667762] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[277] [E 11:13:49.667467] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[185] [E 11:13:49.668154] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[377] [E 11:13:49.668521] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[230] [E 11:13:49.668716] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[205] [E 11:13:49.668755] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[161] [E 11:13:49.669034] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[401] [E 11:13:49.669204] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[329] [E 11:13:49.669520] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[349] [E 11:13:49.669511] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[473] [E 11:13:49.669785] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[115] [E 11:13:49.669558] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[305] [E 11:13:49.669820] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[91] [E 11:13:49.669899] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[43] [E 11:13:49.669884] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[228] [E 11:13:49.669811] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[425] [E 11:13:49.670186] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[19] [E 11:13:49.670041] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[209] [E 11:13:49.670219] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[38] [E 11:13:49.670163] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[449] [E 11:13:49.670371] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[65] [E 11:13:49.670393] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[257] [E 11:13:49.670508] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[300] [E 11:13:49.670562] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[62] [E 11:13:49.671408] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[109] [E 11:13:49.671434] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[449] [139] [E 11:13:49.671466] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[E 11:13:49.671560] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[163] [E 11:13:49.671531] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[15] [E 11:13:49.671703] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[110] [E 11:13:49.671813] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[324] [E 11:13:49.671865] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[427] [E 11:13:49.671496] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[422] [E 11:13:49.671712] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[211] [E 11:13:49.671550] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[348] [235] [E 11:13:49.672007] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[E 11:13:49.671661] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[283] [E 11:13:49.671858] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[302] [E 11:13:49.672243] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[420] [E 11:13:49.672484] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[84] [E 11:13:49.673025] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[252] [E 11:13:49.673131] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[276] [E 11:13:49.673102] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[355] [E 11:13:49.673758] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[229] [E 11:13:49.680131] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.12:3334. Returned -1073741996:lookup
+[440] [E 11:13:49.693540] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.9:3334. Returned -1073741996:lookup
+[8] [E 11:13:49.694445] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.9:3334. Returned -1073741996:lookup
+[32] [E 11:13:49.694510] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.9:3334. Returned -1073741996:lookup
+[224] [E 11:13:49.697777] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.9:3334. Returned -1073741996:lookup
+[98] [E 11:13:49.709118] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.3:3334. Returned -1073741996:lookup
+[26] [E 11:13:49.709837] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.3:3334. Returned -1073741996:lookup
+[146] [E 11:13:49.709984] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.3:3334. Returned -1073741996:lookup
+[194] [E 11:13:49.710052] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.3:3334. Returned -1073741996:lookup
+[314] [E 11:13:49.710128] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.3:3334. Returned -1073741996:lookup
+[122] [E 11:13:49.710923] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.3:3334. Returned -1073741996:lookup
+[2] [E 11:13:49.710992] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.3:3334. Returned -1073741996:lookup
+[338] [E 11:13:49.711330] PVFS_isys_fs_add:Retrying BMI_addr_lookup for tcp://172.25.201.3:3334. Returned -1073741996:lookup
+
+Co-locating OrangeFS (#server_ofs1=12, #server_ofs2=12), rep=5 finishes, sleep for 5 seconds...
+
