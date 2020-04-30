@@ -65,7 +65,16 @@ gen_ofs_host_file()
   then
     cd ${OFS2_SCRIPT_DIR}
     rm -rf pvfs2*.conf
-    cat ${ALL_STOR_HOSTS} | head -n ${n_server_ofs2} > ${OFS2_SCRIPT_DIR}/servers
+    if [[ ${n_server_ofs1} -eq ${N_SERVER_TOTAL} || ${n_server_ofs2} -eq ${N_SERVER_TOTAL} ]]
+    then
+      cat ${ALL_STOR_HOSTS} | head -n ${n_server_ofs2} > ${OFS2_SCRIPT_DIR}/servers
+    else
+      ((n_server_in_use=${n_server_ofs1}+${n_server_ofs2}))
+      if [[ ${n_server_in_use} == ${N_SERVER_TOTAL} ]]
+      then
+        cat ${ALL_STOR_HOSTS} | tail -n ${n_server_ofs2} > ${OFS2_SCRIPT_DIR}/servers
+      fi
+    fi
     sed -i "s/STRIPE_SIZE=.*/STRIPE_SIZE=${OFS2_STRIPE_SIZE}/" env.sh
     ./genconfig.sh
   fi
