@@ -156,7 +156,7 @@ void write_mongo_sized(char *key_str,
       sprintf(sub_key_str, "%s_%d", key_str, count);
       insert = bson_new();
       BSON_APPEND_UTF8(insert, "_id", sub_key_str);
-      BSON_APPEND_UTF8(insert,"queryid", sub_key_str);
+      /*BSON_APPEND_UTF8(insert, "queryid", sub_key_str);*/
       bson_append_utf8(insert,
                        sub_key_str,
                        (int) strlen(sub_key_str),
@@ -177,7 +177,7 @@ void write_mongo_sized(char *key_str,
   } else {
     insert = bson_new();
     BSON_APPEND_UTF8(insert, "_id", key_str);
-    BSON_APPEND_UTF8(insert,"queryid", key_str);
+    /*BSON_APPEND_UTF8(insert, "queryid", key_str);*/
     bson_append_utf8(insert,
                      key_str,
                      (int) strlen(key_str),
@@ -199,8 +199,11 @@ void read_mongo_sized(char *key_str,
 {
   mongoc_cursor_t *cursor;
   const bson_t *doc;
+  const char *utf8_str;
+  char *json_str;
+  bson_iter_t iter;
   bson_t *query;
-  int count, i;
+  int count, i, str_len;
   char sub_key_str[1024];
 
   if (length > MAX_DOC_SIZE) {
@@ -210,9 +213,9 @@ void read_mongo_sized(char *key_str,
       sprintf(sub_key_str, "%s_%d", key_str, i);
       query = bson_new();
       BSON_APPEND_UTF8(query, "_id", sub_key_str);
-      cursor = mongoc_collection_find_with_opts (collection, query, NULL, NULL);
-      while (mongoc_cursor_next (cursor, &doc)) {
-        buf = bson_as_json (doc, NULL);
+      cursor = mongoc_collection_find_with_opts(collection, query, NULL, NULL);
+      while (mongoc_cursor_next(cursor, &doc)) {
+        buf = bson_as_canonical_extended_json(doc, NULL);
         debug_print(3, "sub res: %s\n", buf);
       }
       buf += MAX_DOC_SIZE;
@@ -220,17 +223,26 @@ void read_mongo_sized(char *key_str,
   } else {
     query = bson_new();
     BSON_APPEND_UTF8(query, "_id", key_str);
-    cursor = mongoc_collection_find_with_opts (collection, query, NULL, NULL);
-    // mongoc_cursor_next (cursor, &doc);
+    cursor = mongoc_collection_find_with_opts(collection, query, NULL, NULL);
+    // mongoc_cursor_next(cursor, &doc);
 
-    while (mongoc_cursor_next (cursor, &doc)) {
-      buf = bson_as_json (doc, NULL);
-      debug_print(3, "sub res: %s\n", buf);
+    while (mongoc_cursor_next(cursor, &doc)) {
+      /*json_str = bson_as_canonical_extended_json(doc, NULL);*/
+      /*debug_print(3, "res: %s\n", json_str);*/
+      /*bson_free(json_str);*/
+      if (bson_iter_init(&iter, doc)) {
+        while (bson_iter_next(&iter)) {
+          debug_print(3, "Found element key: %s\n", bson_iter_key(&iter));
+          utf8_str = bson_iter_utf8(&iter, &str_len);
+          strcpy(buf, utf8_str);
+          debug_print(3, "Data in doc: %s\n", buf);
+        }
+      }
       debug_print(2, "ok\n");
     }
   }
-  mongoc_cursor_destroy (cursor);
-  bson_destroy (query);
+  mongoc_cursor_destroy(cursor);
+  bson_destroy(query);
 }
 
 void create_symbios_metadata_mongo(symbios_metadata *metadata)

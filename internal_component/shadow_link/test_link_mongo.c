@@ -20,6 +20,7 @@ static struct argp_option options[] = {
   {"primary", 'p', NULL, false, "Primary copy of metadata."},
   {"shadow", 's', NULL, false, "Shadow copy of metadata."},
   {"target", 't', "TARGET", 0, "Target storage system in shadow copy of metadata."},
+  {"mode", 'm', "MODE", 0, "0 for write, 1 for read."},
   {0}
 };
 
@@ -28,6 +29,7 @@ struct arguments {
   bool primary;
   bool shadow;
   char *target;
+  int io_mode;
 };
 
 static error_t parse_opt(int key, char *arg, struct argp_state *state) {
@@ -47,6 +49,8 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state) {
       } else arguments->shadow = true; break;
     case 't':
       arguments->target = arg; break;
+    case 'm':
+      arguments->io_mode = atoi(arg); break;
 
     /*case ARGP_KEY_NO_ARGS:*/
       /*printf("no argument\n");*/
@@ -76,7 +80,7 @@ static struct argp argp = {options, parse_opt, args_doc, doc};
 // this mpi file test different insert size
 int main(int argc, char *argv[])
 {
-  int i, hostname_len, count;
+  int i, hostname_len, count, io_mode;
   char key[1024], key_base[1024], hostname[1024];
   bool primary, shadow;
   char *target;
@@ -99,17 +103,23 @@ int main(int argc, char *argv[])
   primary = arguments.primary;
   shadow = arguments.shadow;
   target = arguments.target;
+  io_mode = arguments.io_mode;
 
   MPI_Init(&argc, &argv);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &nprocs);
   if (rank == 1) {
     printf("Number of operations: %d\n", count);
-    if (primary)
-      printf("Metadata: primary\n");
-    else if (shadow) {
-      printf("Metadata: shadow\n");
-      printf("Target storage: %s\n", target);
+    if (io_mode == 0) {
+      printf("I/O mode: write\n");
+      if (primary)
+        printf("Metadata: primary\n");
+      else if (shadow) {
+        printf("Metadata: shadow\n");
+        printf("Target storage: %s\n", target);
+      }
+    } else if (io_mode == 1) {
+      printf("I/O mode: read\n");
     }
   }
 
@@ -125,24 +135,98 @@ int main(int argc, char *argv[])
   /* Set random seed */
   srand(rank + count + rank * count);
 
-  if (primary) {
+  if (io_mode == 0) {
+    if (primary) {
+      if (rank == 0)
+        printf("Test starts, "
+               "each rank creates %dx copies of primary metadata ...\n", count);
+
+      /* Create primary metadata */
+      clock_gettime(CLOCK_MONOTONIC, &start);
+      MPI_Barrier(MPI_COMM_WORLD);
+      for (i = 0; i < count; i++) {
+        sprintf(key, "%s_%d_%d_%d", key_base, rank, rand(), i);
+        // printf("%s\n", key);
+        metadata.primary = true;
+        metadata.data_id = key;
+        metadata.target_stor = UNKNOWN;
+        metadata.server = NULL;
+        metadata.port = -1;
+        metadata.offset = -1;
+        create_symbios_metadata_mongo(&metadata);
+      }
+      MPI_Barrier(MPI_COMM_WORLD);
+      clock_gettime(CLOCK_MONOTONIC, &end);
+
+      duration = timespec_substract(&start, &end);
+      MPI_Reduce(&duration,
+                 &duration_max,
+                 1,
+                 MPI_DOUBLE,
+                 MPI_MAX,
+                 0,
+                 MPI_COMM_WORLD);
+      if (rank == 0) printf("Test of primary metadata finishes ...\n");
+
+      /* Calculate time and throughput */
+      if (rank == 0) {
+        printf("Throughput of primary meda creation (MongoDB): %lf op/s\n",
+                count * nprocs / duration_max);
+        printf("Total wall time: %lf s\n", duration_max);
+      }
+    } else {
+      if (rank == 0)
+        printf("Test starts, "
+               "each rank creates %dx copies of shadow metadata "
+               "pointing to %s ...\n",
+                count, target);
+
+      /* Create shadow metadata */
+      clock_gettime(CLOCK_MONOTONIC, &start);
+      MPI_Barrier(MPI_COMM_WORLD);
+      for (i = 0; i < count; i++) {
+        sprintf(key, "%s_%d_%d_%d", key_base, rank, rand(), i);
+        // printf("%s\n", key);
+        metadata.primary = false;
+        metadata.data_id = key;
+        metadata.target_stor = PFS1;
+        metadata.server = "ares-stor-15";
+        metadata.port = 3334;
+        metadata.offset = count * 16384;
+        create_symbios_metadata_mongo(&metadata);
+      }
+      MPI_Barrier(MPI_COMM_WORLD);
+      clock_gettime(CLOCK_MONOTONIC, &end);
+
+      duration = timespec_substract(&start, &end);
+      MPI_Reduce(&duration,
+                 &duration_max,
+                 1,
+                 MPI_DOUBLE,
+                 MPI_MAX,
+                 0,
+                 MPI_COMM_WORLD);
+      if (rank == 0) printf("Test of shadow metadata finishes ...\n");
+
+      /* Calculate time and throughput */
+      if (rank == 0) {
+        printf("Throughput of shadow meda creation (MongoDB): %lf op/s\n",
+                count * nprocs / duration_max);
+        printf("Total wall time: %lf s\n", duration_max);
+      }
+    }
+  } else if (io_mode == 1) {
     if (rank == 0)
       printf("Test starts, "
-             "each rank creates %dx copies of primary metadata ...\n", count);
+             "each rank queries %dx copies of metadata ...\n", count);
 
-    /* Create primary metadata */
+    /* Query metadata */
     clock_gettime(CLOCK_MONOTONIC, &start);
     MPI_Barrier(MPI_COMM_WORLD);
     for (i = 0; i < count; i++) {
       sprintf(key, "%s_%d_%d_%d", key_base, rank, rand(), i);
-      // printf("%s\n", key);
-      metadata.primary = true;
-      metadata.data_id = key;
-      metadata.target_stor = UNKNOWN;
-      metadata.server = NULL;
-      metadata.port = -1;
-      metadata.offset = -1;
-      create_symbios_metadata_mongo(&metadata);
+      /*printf("%s\n", key);*/
+      query_symbios_metadata_by_id_mongo(key);
     }
     MPI_Barrier(MPI_COMM_WORLD);
     clock_gettime(CLOCK_MONOTONIC, &end);
@@ -155,55 +239,16 @@ int main(int argc, char *argv[])
                MPI_MAX,
                0,
                MPI_COMM_WORLD);
-    if (rank == 0) printf("Test of primary metadata finishes ...\n");
+    if (rank == 0) printf("Test of metadata query finishes ...\n");
 
     /* Calculate time and throughput */
     if (rank == 0) {
-      printf("Throughput of primary meda creation (MongoDB): %lf op/s\n",
-              count * nprocs / duration_max);
-      printf("Total wall time: %lf s\n", duration_max);
-    }
-  } else {
-    if (rank == 0)
-      printf("Test starts, "
-             "each rank creates %dx copies of shadow metadata "
-             "poining to %s ...\n",
-              count, target);
-
-    /* Create shadow metadata */
-    clock_gettime(CLOCK_MONOTONIC, &start);
-    MPI_Barrier(MPI_COMM_WORLD);
-    for (i = 0; i < count; i++) {
-      sprintf(key, "%s_%d_%d_%d", key_base, rank, rand(), i);
-      // printf("%s\n", key);
-      metadata.primary = false;
-      metadata.data_id = key;
-      metadata.target_stor = PFS1;
-      metadata.server = "ares-stor-15";
-      metadata.port = 3334;
-      metadata.offset = count * 16384;
-      create_symbios_metadata_mongo(&metadata);
-    }
-    MPI_Barrier(MPI_COMM_WORLD);
-    clock_gettime(CLOCK_MONOTONIC, &end);
-
-    duration = timespec_substract(&start, &end);
-    MPI_Reduce(&duration,
-               &duration_max,
-               1,
-               MPI_DOUBLE,
-               MPI_MAX,
-               0,
-               MPI_COMM_WORLD);
-    if (rank == 0) printf("Test of shadow metadata finishes ...\n");
-
-    /* Calculate time and throughput */
-    if (rank == 0) {
-      printf("Throughput of shadow meda creation (MongoDB): %lf op/s\n",
+      printf("Throughput of metadata query (MongoDB): %lf op/s\n",
               count * nprocs / duration_max);
       printf("Total wall time: %lf s\n", duration_max);
     }
   }
+
   /* Disconnect from MongoDB server */
   disconnectFromMongoDBServer();
 

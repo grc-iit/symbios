@@ -52,9 +52,9 @@ char *serialize_metadata(symbios_metadata *metadata)
   char temp[128];
 
   metadata_str = (char *) malloc(1024);
+  memset(metadata_str, 0, 1024);
 
   // data_id
-  memset(metadata_str, 0, 1024);
   strcpy(metadata_str, metadata->data_id);
   strcat(metadata_str, SERDE_MD_SEP);
   debug_print(2, "data_id serialized\n");
@@ -65,7 +65,7 @@ char *serialize_metadata(symbios_metadata *metadata)
   else
     strcat(metadata_str, "0");
   strcat(metadata_str, SERDE_MD_SEP);
-  debug_print(2, "primary serialized\n");
+  debug_print(2, "primary flag serialized\n");
 
   // target storage
   memset(temp, 0, 128);
@@ -84,6 +84,7 @@ char *serialize_metadata(symbios_metadata *metadata)
   memset(temp, 0, 128);
   sprintf(temp, "%d", metadata->port);
   strcat(metadata_str, temp);
+  strcat(metadata_str, SERDE_MD_SEP);
   debug_print(2, "port serialized\n");
 
   // offset
@@ -102,37 +103,57 @@ symbios_metadata *deserialize_metadata(char *metadata_str)
   symbios_metadata *metadata;
   char *token;
 
+  debug_print(3, "String to deserialize: %s\n", metadata_str);
+
   metadata = (symbios_metadata *) malloc(sizeof(symbios_metadata));
 
   // data_id
   token = strtok(metadata_str, SERDE_MD_SEP);
   metadata->data_id = token;
-  debug_print(1, "data_id: %s\n", metadata->data_id);
+  debug_print(2, "data_id deserialized\n");
+  debug_print(3, "data_id: %s\n", metadata->data_id);
 
   // primary flag
-  token = strtok(metadata_str, SERDE_MD_SEP);
+  token = strtok(NULL, SERDE_MD_SEP);
   metadata->primary = atoi(token);
-  debug_print(1, "primary: %d\n", metadata->primary);
+  debug_print(2, "primary flag deserialized\n");
+  debug_print(3, "primary: %d\n", metadata->primary);
 
-  // target storage
-  token = strtok(metadata_str, SERDE_MD_SEP);
-  metadata->primary = atoi(token);
-  debug_print(1, "primary: %d\n", metadata->primary);
+  if (metadata->primary == 1) {
+    metadata->target_stor = -1;
+    metadata->server = NULL;
+    metadata->port = -1;
+    metadata->offset = -1;
+  } else {
+    // target storage
+    token = strtok(NULL, SERDE_MD_SEP);
+    metadata->target_stor = atoi(token);
+    debug_print(2, "target_stor deserialized\n");
+    debug_print(3, "target_stor: %d\n", metadata->primary);
 
-  // server
-  token = strtok(metadata_str, SERDE_MD_SEP);
-  metadata->server = token;
-  debug_print(1, "server: %s\n", metadata->server);
+    // server
+    token = strtok(NULL, SERDE_MD_SEP);
+    metadata->server = token;
+    if (metadata->server != NULL) {
+      debug_print(2, "server deserialized\n");
+      debug_print(3, "server: %s\n", metadata->server);
+    }
 
-  // port
-  token = strtok(metadata_str, SERDE_MD_SEP);
-  metadata->port = atoi(token);
-  debug_print(1, "port: %d\n", metadata->port);
+    // port
+    token = strtok(NULL, SERDE_MD_SEP);
+    metadata->port = atoi(token);
+    debug_print(2, "port deserialized\n");
+    debug_print(3, "port: %d\n", metadata->port);
 
-  // offset
-  token = strtok(metadata_str, SERDE_MD_SEP);
-  metadata->offset = atoi(token);
-  debug_print(1, "offset: %d\n", metadata->offset);
+    if (metadata->target_stor == PFS1 || metadata->target_stor == PFS2) {
+      // offset
+      token = strtok(NULL, SERDE_MD_SEP);
+      metadata->offset = atoi(token);
+      debug_print(2, "offset deserialized\n");
+      debug_print(3, "offset: %d\n", metadata->offset);
+    } else
+      metadata->offset = -1;
+  }
 
   return metadata;
 }
