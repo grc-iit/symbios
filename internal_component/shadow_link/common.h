@@ -25,6 +25,7 @@
 #define KILO              1024
 #define MEGA              (1024 * 1024)
 #define MAX_REQ_SIZE      (256 * MEGA)
+#define SERDE_MD_SEP      "#"
 
 #define DEBUG             0
 #define debug_print(level, fmt, ...) \
@@ -64,7 +65,6 @@ typedef struct symbios_metadata_ {
   size_t   offset;
 } symbios_metadata;
 
-#define SERDE_MD_SEP      "#"
 char *serialize_metadata(symbios_metadata *metadata);
 symbios_metadata *deserialize_metadata(char *metadata_str);
 

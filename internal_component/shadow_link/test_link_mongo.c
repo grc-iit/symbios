@@ -197,8 +197,6 @@ int main(int argc, char *argv[])
 {
   int hostname_len;
   char key_base[1024], hostname[1024];
-  char *buf;
-  bson_error_t error;
   struct arguments conf;
 
   /* Set default configuration */
