@@ -1,7 +1,6 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include "doctest.h"
+#include <unistd.h>
 
-int main(int argc, char **argv) {
-	printf("SUCCESS\n");
-	exit(0);
+TEST_CASE("sleep a second") {
+	    CHECK(sleep(1) == 0);
 }

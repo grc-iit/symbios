@@ -1,1 +1,0 @@
-/usr/bin/c++    -rdynamic CMakeFiles/github_test.dir/github_test.cpp.o  -o github_test 
