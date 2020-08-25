@@ -1,0 +1,15 @@
+Stripe size:
+OFS1: 32KB
+OFS2: 512KB
+
+Request size:
+IOR1: 512KB
+IOR2: 8MB
+
+Block size:
+IOR1: 32MB
+IOR2: 32MB
+
+Colocation:
+OFS1: ares-stor-[01-12]
+OFS2: ares-stor-[13-16,22-29]
