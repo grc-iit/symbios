@@ -6,3 +6,8 @@
 clients
 servers
 data
+/.idea/deployment.xml
+/.idea/modules.xml
+/.idea/symbios.iml
+/.idea/vcs.xml
+/.idea/workspace.xml
