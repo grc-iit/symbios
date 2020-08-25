@@ -7,3 +7,4 @@ clients
 servers
 data
 
+build/*
