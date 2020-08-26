@@ -53,6 +53,7 @@ jobs:
         mkdir -p $SOFTWARE_DIR
         mkdir -p $SOFTWARE_DIR/source
         mkdir -p ${SOFTWARE_DIR}/install
+        echo "::add-path::${SOFTWARE_DIR}/install"
         cd $SOFTWARE_DIR/source
         wget http://www.mpich.org/static/downloads/3.3.2/mpich-3.3.2.tar.gz
         tar zxf mpich-3.3.2.tar.gz
@@ -61,7 +62,6 @@ jobs:
         #According to this, we have two cores. https://docs.github.com/en/actions/reference/virtual-environments-for-github-hosted-runners
         make -j 2
         make install
-        cd $CURRENT
         
         #    - name: Lint
         #      shell: bash
