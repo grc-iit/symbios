@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 project(symbios)
 set(INSTALL_DIR $ENV{INSTALL_DIR})
+message(info ${INSTALL_DIR})
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DH5_HAVE_DIRECT -w")
 set(INCLUDE_DIRS "-I${INSTALL_DIR}/include/ -L${INSTALL_DIR}/lib/")# -DRPCLIB_ENABLE_LOGGING -DRPCLIB_ASIO=clmdep_asio -DRPCLIB_FMT=clmdep_fmt")
