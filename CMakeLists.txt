@@ -28,7 +28,7 @@ add_library(symbios SHARED ${SYMBIOS_LIB_SRC})
 # TODO: add any required libraries
 
 # add symbios server
-set(SYMBIOS_SERVER_SRC ${SYMBIOS_COMMON_SRC} src/server/server.h src/server/main.cpp src/server/configuration_manager.h src/server/data_structures.h src/server/Daemon.cpp src/server/Daemon.h src/server/server.cpp)
+set(SYMBIOS_SERVER_SRC ${SYMBIOS_COMMON_SRC} src/server/server.h src/server/main.cpp)
 add_executable(symbios_server ${SYMBIOS_SERVER_SRC})
 add_dependencies(symbios_server symbios)
 # TODO: add any required libraries
