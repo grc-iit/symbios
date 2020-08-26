@@ -85,6 +85,7 @@ jobs:
       # Execute the build.  You can specify a specific target with "--target <NAME>"
       run: |
         export INSTALL_DIR=$HOME/work/software/install
+        export LD_LIBRARY_PATH=$HOME/work/software/install/lib
         cmake --build . --config $
     - name: Test
       working-directory: ${{runner.workspace}}/build
