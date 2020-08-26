@@ -17,7 +17,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DHERMES_TRACE")
 
 # Source files
 set(SYMBIOS_COMMON_SRC )
-set(SYMBIOS_LIB_SRC ${SYMBIOS_COMMON_SRC} include/symbios/client.h src/client/client.cpp)
+set(SYMBIOS_LIB_SRC ${SYMBIOS_COMMON_SRC} include/symbios/client.h src/client/client.cpp benchmark/include/benchmark/benchmark.h benchmark/src/redis.cpp benchmark/include/benchmark/redis.h benchmark/src/orangefs.cpp benchmark/include/benchmark/orangefs.h benchmark/src/mongo.cpp benchmark/include/benchmark/mongo.h benchmark/include/benchmark/io_client_factory.h benchmark/include/benchmark/io_client.h benchmark/include/benchmark/file.h)
 
 # add symbios lib
 add_library(symbios SHARED ${SYMBIOS_LIB_SRC})
