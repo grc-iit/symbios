@@ -9,7 +9,10 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${INCLUDE_DIRS}")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${INCLUDE_DIRS}")
 
 # External libraries hermes is dependent on.
-
+option(COMPILE_HCL "Compile and install HCL" OFF)
+if(COMPILE_HCL)
+    add_subdirectory(hcl)
+endif()
 
 # Debug flags
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DHERMES_DEBUG")
