@@ -91,6 +91,7 @@ int main(int argc, char **argv)
 
     int storage_service = args.GetIntOpt("-s");
     IOClientPtr io = IOClientFactory::Get(static_cast<IOClientType>(storage_service));
+    io->Connect(args.GetStringOpt("-caddr"), args.GetIntOpt("-cport"));
 
     int workload = args.GetIntOpt("-w");
     switch(static_cast<WorkloadType>(workload)) {
