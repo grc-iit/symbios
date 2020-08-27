@@ -53,13 +53,31 @@ jobs:
         mkdir -p $SOFTWARE_DIR
         mkdir -p $SOFTWARE_DIR/source
         mkdir -p ${SOFTWARE_DIR}/install
-        echo "::add-path::${SOFTWARE_DIR}/install"
+        
+        ###################### MPI ######################
         cd $SOFTWARE_DIR/source
         wget http://www.mpich.org/static/downloads/3.3.2/mpich-3.3.2.tar.gz
         tar zxf mpich-3.3.2.tar.gz
         cd ${SOFTWARE_DIR}/source/mpich-3.3.2/
         ./configure --prefix=${SOFTWARE_DIR}/install
         #According to this, we have two cores. https://docs.github.com/en/actions/reference/virtual-environments-for-github-hosted-runners
+        make -j 2
+        make install
+        ###################### Boost ######################
+        cd $SOFTWARE_DIR/source
+        wget https://dl.bintray.com/boostorg/release/1.74.0/source/boost_1_74_0.tar.gz
+        tar xvf boost_1_74_0.tar.gz
+        cd boost_1_74_0
+        ./bootstrap.sh --prefix=${SOFTWARE_DIR}/install
+        ./b2 install
+        ###################### RpcLib ######################
+        cd $SOFTWARE_DIR/source
+        wget https://github.com/rpclib/rpclib/archive/v2.2.1.tar.gz
+        tar -xvf v2.2.1.tar.gz
+        cd rpclib-2.2.1
+        mkdir build
+        cd build
+        cmake -DCMAKE_INSTALL_PREFIX=${SOFTWARE_DIR}/install ../
         make -j 2
         make install
         
