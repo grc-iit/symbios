@@ -23,7 +23,8 @@ private:
 
 public:
     void Usage(void) {
-        std::cout << "Usage: A tool for generating workloads" << std::endl;
+        std::cout << "Usage: ./benchmark -[param-id] [value] ..." << std::endl;
+        std::cout << "" << std::endl;
 
         std::cout << "-w [string]: Which workload to run" << std::endl;
         std::cout << "\tio-only-fs" << std::endl;
@@ -42,14 +43,9 @@ public:
         std::cout << "-caddr [string]: The local directory where the OrangeFS client is mounted" << std::endl;
         std::cout << "" << std::endl;
 
-        std::cout << "MongoDB Parameters" << std::endl;
+        std::cout << "Redis/MongoDB Parameters" << std::endl;
         std::cout << "-caddr [string]: The IP address of the MongoDB server." << std::endl;
         std::cout << "-cport [string]: The port the MongoDB server runs on." << std::endl;
-        std::cout << "" << std::endl;
-
-        std::cout << "Redis Parameters" << std::endl;
-        std::cout << "-caddr [string]: The IP address of the Redis server." << std::endl;
-        std::cout << "-cport [string]: The port the Redis server runs on." << std::endl;
         std::cout << "" << std::endl;
 
         std::cout << "io-only-fs workload parameters" << std::endl;

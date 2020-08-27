@@ -12,8 +12,6 @@ enum class ArgType {
     kNone, kString, kInt, kFloat, kSize
 };
 
-
-
 class Arg {
 private:
     ArgType type_ = ArgType::kNone;
@@ -90,7 +88,7 @@ protected:
     }
 
     void ArgIter(int argc, char **argv) {
-        for(int i = 0; i < argc; ++i) {
+        for(int i = 1; i < argc; ++i) {
             if(argv[i][0] != '-') {
                 Arg &arg = args_[""];
                 i += arg.Add(argv[i+1]);

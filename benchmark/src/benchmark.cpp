@@ -30,16 +30,16 @@ void io_kvs_workload(IOClientPtr &kvs, std::string path, float rfrac, float wfra
 
 void md_fs_workload(IOClientPtr &fs, int depth, int fcnt)
 {
-    /*std::string newdir = "/ex";
+    std::string newdir = "/ex";
     for(int i = 0; i < depth; ++i) {
         newdir += "/ex";
         fs->mkdir(newdir);
     }
     for(int i = 0; i < fcnt; ++i) {
-        std::string newfile = newdir + "/file" + i;
+        std::string newfile = newdir + "/file" + std::to_string(i);
         fs->open(newfile, "w");
     }
-    fs->rmdir("/ex");*/
+    fs->rmdir("/ex");
 }
 
 void md_file_workload(IOClientPtr &fs, std::string path)
