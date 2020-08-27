@@ -1,6 +1,8 @@
 
 /*
  * An application to generate different workloads to test a distributed storage system
+ *
+ * TODO: Add timers. Add CSV.
  * */
 
 #include <iostream>
