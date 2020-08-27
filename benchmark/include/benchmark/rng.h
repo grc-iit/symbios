@@ -5,6 +5,7 @@
 #ifndef SYMBIOS_RNG_H
 #define SYMBIOS_RNG_H
 
+#include <memory>
 #include <random>
 #include <memory>
 #include <chrono>
@@ -99,19 +100,19 @@ public:
     static DistributionPtr Get(DistributionType type) {
         switch(type) {
             case DistributionType::kNone: {
-                return std::unique_ptr<CountDistribution>(new CountDistribution());
+                return std::make_unique<CountDistribution>();
             }
             case DistributionType::kNormal: {
-                return std::unique_ptr<NormalDistribution>(new NormalDistribution());
+                return std::make_unique<NormalDistribution>();
             }
             case DistributionType::kGamma: {
-                return std::unique_ptr<GammaDistribution>(new GammaDistribution());
+                return std::make_unique<GammaDistribution>();
             }
             case DistributionType::kExponential: {
-                return std::unique_ptr<ExponentialDistribution>(new ExponentialDistribution());
+                return std::make_unique<ExponentialDistribution>();
             }
             case DistributionType::kUniform: {
-                return std::unique_ptr<UniformDistribution>(new UniformDistribution());
+                return std::make_unique<UniformDistribution>();
             }
         }
     }

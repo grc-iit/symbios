@@ -2,6 +2,7 @@
 #ifndef ARGUMENTS_H
 #define ARGUMENTS_H
 
+#include <memory>
 #include <string>
 #include <unordered_map>
 #include <list>
@@ -133,22 +134,22 @@ public:
     static ArgPtr Get(ArgType type) {
         switch (type) {
             case ArgType::kNone: {
-                return std::unique_ptr<Arg>(new Arg());
+                return std::make_unique<Arg>();
             }
             case ArgType::kString: {
-                return std::unique_ptr<StringArg>(new StringArg());
+                return std::make_unique<StringArg>();
             }
             case ArgType::kStringMap: {
-                return std::unique_ptr<StringMapArg>(new StringMapArg());
+                return std::make_unique<StringMapArg>();
             }
             case ArgType::kInt: {
-                return std::unique_ptr<IntArg>(new IntArg());
+                return std::make_unique<IntArg>();
             }
             case ArgType::kFloat: {
-                return std::unique_ptr<FloatArg>(new FloatArg());
+                return std::make_unique<FloatArg>();
             }
             case ArgType::kSize: {
-                return std::unique_ptr<SizeArg>(new SizeArg());
+                return std::make_unique<SizeArg>();
             }
         }
     }
