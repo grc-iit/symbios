@@ -11,10 +11,10 @@
 #include <benchmark/io_client.h>
 #include <benchmark/io_client_factory.h>
 
-class BenchmarkArgs : ArgMap {
+class BenchmarkArgs : public ArgMap {
 private:
     void VerifyArgs(void) {
-        if(!OpIsSet("-s")) {
+        if(!OptIsSet("-s")) {
             std::cout << "Must set storage service" << std::endl;
             Usage();
             exit(1);

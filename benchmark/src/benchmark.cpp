@@ -8,28 +8,38 @@
 #include <mpi.h>
 #include <benchmark/benchmark.h>
 
-void io_file_workload(IOClientPtr &fs, std::string path, float rfrac, float wfrac, size_t block_size, size_t file_size, int access_pattern)
+void io_file_workload(IOClientPtr &fs, std::string path, float rfrac, float wfrac, size_t block_size, size_t file_size, size_t total_io, int access_pattern)
 {
-    for(size_t i = 0; i <)
+    FilePtr fp = fs->open(path, "r+");
+    void *buffer = std::calloc(block_size, 1);
+
+    double write_io = wfrac*total_io;
+    for(size_t i = 0; i < write_io; i += block_size) {
+        fp->write(buffer, block_size);
+    }
+
+    double read_io = rfrac*total_io;
+    for(size_t i = 0; i < read_io; i += block_size) {
+        fp->read(buffer, block_size);
+    }
 }
 
-void io_kvs_workload(IOClientPtr &kvs, std::string path, float rfrac, float wfrac, size_t block_size, size_t file_size, int access_pattern)
+void io_kvs_workload(IOClientPtr &kvs, std::string path, float rfrac, float wfrac, size_t block_size, size_t file_size, size_t total_io, int access_pattern)
 {
 }
 
 void md_fs_workload(IOClientPtr &fs, int depth, int fcnt)
 {
-    std::string newdir = "/ex";
+    /*std::string newdir = "/ex";
     for(int i = 0; i < depth; ++i) {
         newdir += "/ex";
-        mkdir(newdir);
+        fs->mkdir(newdir);
     }
     for(int i = 0; i < fcnt; ++i) {
         std::string newfile = newdir + "/file" + i;
-        open(newfile, "w");
-        close();
+        fs->open(newfile, "w");
     }
-    rmdir("/ex");
+    fs->rmdir("/ex");*/
 }
 
 void md_file_workload(IOClientPtr &fs, std::string path)

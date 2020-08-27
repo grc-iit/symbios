@@ -17,7 +17,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DHERMES_TRACE")
 
 # Source files
 set(SYMBIOS_COMMON_SRC )
-set(SYMBIOS_LIB_SRC ${SYMBIOS_COMMON_SRC} include/symbios/client.h src/client/client.cpp benchmark/include/benchmark/benchmark.h benchmark/src/redis.cpp benchmark/include/benchmark/redis.h benchmark/src/orangefs.cpp benchmark/include/benchmark/orangefs.h benchmark/src/mongo.cpp benchmark/include/benchmark/mongo.h benchmark/include/benchmark/io_client_factory.h benchmark/include/benchmark/io_client.h benchmark/include/benchmark/file.h)
+set(SYMBIOS_LIB_SRC ${SYMBIOS_COMMON_SRC} include/symbios/client.h src/client/client.cpp benchmark/include/benchmark/benchmark.h benchmark/include/benchmark/redis.h benchmark/include/benchmark/orangefs.h benchmark/include/benchmark/mongo.h benchmark/include/benchmark/io_client_factory.h benchmark/include/benchmark/io_client.h benchmark/include/benchmark/file.h)
 
 # add symbios lib
 add_library(symbios SHARED ${SYMBIOS_LIB_SRC})
@@ -28,6 +28,9 @@ set(SYMBIOS_SERVER_SRC ${SYMBIOS_COMMON_SRC} src/server/server.h src/server/main
 add_executable(symbios_server ${SYMBIOS_SERVER_SRC})
 add_dependencies(symbios_server symbios)
 # TODO: add any required libraries
+
+# add benchmark tool
+add_subdirectory(benchmark)
 
 option(BUILD_TEST "Build the unit tests" ON)
 if(BUILD_TEST)
