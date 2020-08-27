@@ -20,12 +20,6 @@ md-fs-test
     End
     Remove Root Directory
 
-md-file-tests
-    (Preallocate File)
-    Fopen
-    Fseek
-    Fclose
-
 metadata-kvs-tests
     Add Key
     Check Key Existence

@@ -19,7 +19,9 @@ public:
     virtual void remove(std::string path) = 0;
     virtual void ls(std::string path) = 0;
     //virtual void stat() = 0;
+
     virtual void add_key(std::string key, std::string value) = 0;
+    //virtual bool has_key(std::string key) = 0;
     virtual std::string get_key(std::string key) = 0;
     virtual void rm_key(std::string key) = 0;
 };

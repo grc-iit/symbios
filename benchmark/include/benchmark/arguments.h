@@ -105,16 +105,16 @@ class SizeArg : public Arg {
 private:
     std::list<size_t> args_;
     size_t ToSize(std::string arg) {
-        if ((arg[arg.length() - 1] == 'k') || (arg[arg.length() - 1] == 'K')) {
+        char c = arg[arg.length() - 1];
+        if ((c == 'k') || (c == 'K')) {
             return std::stoul(arg) * (1ul<<10);
         }
-        else if ((arg[arg.length() - 1] == 'm') || (arg[arg.length() - 1] == 'M')) {
+        else if ((c == 'm') || (c == 'M')) {
             return std::stoul(arg) * (1ul<<20);
         }
-        else if ((arg[arg.length() - 1] == 'g') || (arg[arg.length() - 1] == 'G')) {
+        else if ((c == 'g') || (c == 'G')) {
             return std::stoul(arg) * (1ul<<30);
         }
-
         return std::stoul(arg);
     }
 public:
@@ -182,10 +182,6 @@ protected:
 
 public:
     ArgMap() = default;
-
-    bool HasOpt(std::string opt) {
-        return (args_.find(opt) == args_.end());
-    }
 
     bool OptIsSet(std::string opt) {
         return args_[opt]->IsSet();
