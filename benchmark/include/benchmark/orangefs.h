@@ -16,27 +16,50 @@
 #include <benchmark/io_client.h>
 #include <benchmark/file.h>
 
-class OrangefsIO : public IOClient, public File {
+class OrangefsFile : public File {
 private:
+    std::string path_;
     std::FILE *fp_ = nullptr;
-    std::string addr_;
-    int port_ = -1;
 
 public:
-    OrangefsIO() = default;
-    OrangefsIO(std::string path, std::string mode) {
+    OrangefsFile(std::string path, std::string &mode) : path_(std::move(path)) {
         fp_ = std::fopen(path.c_str(), mode.c_str());
         if(fp_ == nullptr) {
             throw 1;
         }
     }
 
+    void Read(void *buffer, size_t size) {
+        std::fread(buffer, 1, size, fp_);
+    }
+
+    void Write(void *buffer, size_t size) {
+        std::fwrite(buffer, 1, size, fp_);
+    }
+
+    void Seek(size_t off) {
+        std::fseek(fp_, off, SEEK_SET);
+    }
+
+    void Close(void) {
+        std::fclose(fp_);
+    }
+};
+
+class OrangefsIO : public IOClient {
+private:
+    std::string addr_;
+    int port_ = -1;
+
+public:
+    OrangefsIO() = default;
+
     void Connect(std::string addr, int port) {
         addr_ = addr;
     }
 
     FilePtr Open(std::string path, std::string mode) {
-        return std::make_unique<OrangefsIO>(addr_ + path, mode);
+        return std::make_unique<OrangefsFile>(addr_ + path, mode);
     }
 
     void Mkdir(std::string path) {
@@ -57,22 +80,6 @@ public:
             entries->emplace_back(p.path());
         }
         return std::move(entries);
-    }
-
-    void Read(void *buffer, size_t size) {
-        std::fread(buffer, 1, size, fp_);
-    }
-
-    void Write(void *buffer, size_t size) {
-        std::fwrite(buffer, 1, size, fp_);
-    }
-
-    void Seek(size_t off) {
-        std::fseek(fp_, off, SEEK_SET);
-    }
-
-    void Close(void) {
-        std::fclose(fp_);
     }
 };
 

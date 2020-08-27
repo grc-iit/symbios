@@ -14,8 +14,8 @@ include_directories(include)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
 
 # Source Files
-add_executable(benchmark src/benchmark.cpp include/benchmark/rng.h)
-target_link_libraries(benchmark -lmpi)
+add_executable(benchmark src/benchmark.cpp include/benchmark/rng.h include/benchmark/kvs.h)
+target_link_libraries(benchmark -lmpi -lredis++ -lhiredis -lmongocxx -lpthread)
 
 option(BUILD_TEST "Build the unit tests" ON)
 if(BUILD_TEST)

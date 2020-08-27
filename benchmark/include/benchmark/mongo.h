@@ -3,6 +3,7 @@
 //
 
 //http://mongocxx.org/mongocxx-v3/tutorial/
+//http://mongocxx.org/mongocxx-v3/installation/
 
 #ifndef SYMBIOS_MONGO_H
 #define SYMBIOS_MONGO_H
@@ -13,20 +14,20 @@
 
 #include <benchmark/io_client.h>
 #include <benchmark/file.h>
+#include <benchmark/kvs.h>
 
-class MongoIO : public IOClient, public File {
-private:
-    std::string addr_;
-    int port_ = -1;
-    size_t off_ = 0;
-    static const size_t kBlockSize = (1<<20);
+class MongoContext : public KVS {
+public:
+    MongoContext(std::string addr, int port) {
+        throw 1;
+    }
 
     void SetKey(std::string key, std::string value="") {
         throw 1;
     }
 
     bool HasKey(std::string key) {
-        return false;
+        throw 1;
     }
 
     void GetKey(std::string key, std::string &value) {
@@ -36,47 +37,27 @@ private:
     void RemoveKey(std::string key) {
         throw 1;
     }
+};
+
+class MongoFile : public File {
+private:
+    static const size_t kBlockSize = (1<<20);
+    std::string path_;
+    size_t off_ = 0;
+    std::shared_ptr<MongoContext> context_;
 
 public:
-    MongoIO() = default;
-    MongoIO(std::string path) : addr_(std::move(path)) {};
-
-    void Connect(std::string addr, int port) {
-        throw 1;
-    }
-
-    FilePtr Open(std::string path, std::string mode) {
-        if(!HasKey(path)) {
-            SetKey(path);
-        }
-        return std::make_unique<MongoIO>(path);
-    }
-
-    void Mkdir(std::string path) {
-        SetKey(path);
-    }
-
-    void Rmdir(std::string path) {
-        RemoveKey(path);
-    }
-
-    void Remove(std::string path) {
-        RemoveKey(path);
-    }
-
-    DirectoryListPtr Ls(std::string path) {
-        throw 1;
-    }
+    MongoFile(std::shared_ptr<MongoContext> context, std::string path) : context_(context), path_(std::move(path)) {}
 
     void Read(void *buffer, size_t size) {
         size_t suffix = off_/kBlockSize;
         size_t rem = off_ % kBlockSize;
-        std::string path = addr_ + std::to_string(suffix);
-        std::string block(kBlockSize, 0);
+        std::string path = path_ + std::to_string(suffix);
+        std::string block;
         for(size_t i = 0; i < size; i += kBlockSize) {
-            std::string path = addr_ + std::to_string(suffix++);
+            std::string path = path_ + std::to_string(suffix++);
             size_t buf_size = (i+kBlockSize)<size ? kBlockSize : size - i;
-            GetKey(path, block);
+            context_->GetKey(path, block);
             memcpy((char*)buffer + i, block.c_str() + rem, buf_size);
             rem = 0;
         }
@@ -86,13 +67,13 @@ public:
     void Write(void *buffer, size_t size) {
         size_t suffix = off_/kBlockSize;
         size_t rem = off_ % kBlockSize;
-        std::string path = addr_ + std::to_string(suffix);
-        std::string block(kBlockSize, 0);
+        std::string path = path_ + std::to_string(suffix);
+        std::string block;
         for(size_t i = 0; i < size; i += kBlockSize) {
-            std::string path = addr_ + std::to_string(suffix++);
+            std::string path = path_ + std::to_string(suffix++);
             size_t buf_size = (i+kBlockSize)<size ? kBlockSize : size - i;
             memcpy((void *) (block.c_str() + rem), (char*)buffer + i, buf_size);
-            GetKey(path, block);
+            context_->SetKey(path, block);
             rem = 0;
         }
         off_ += size;
@@ -103,6 +84,43 @@ public:
     }
 
     void Close(void) {}
+};
+
+class MongoIO : public IOClient {
+private:
+    std::string addr_;
+    int port_ = -1;
+    std::shared_ptr<MongoContext> context_;
+
+public:
+    MongoIO() = default;
+
+    void Connect(std::string addr, int port) {
+        context_ = std::make_shared<MongoContext>(addr, port);
+    }
+
+    FilePtr Open(std::string path, std::string mode) {
+        if(!context_->HasKey(path)) {
+            context_->SetKey(path);
+        }
+        return std::make_unique<MongoFile>(context_, path);
+    }
+
+    void Mkdir(std::string path) {
+        context_->SetKey(path);
+    }
+
+    void Rmdir(std::string path) {
+        context_->RemoveKey(path);
+    }
+
+    void Remove(std::string path) {
+        context_->RemoveKey(path);
+    }
+
+    DirectoryListPtr Ls(std::string path) {
+        throw 1;
+    }
 };
 
 #endif //SYMBIOS_MONGO_H
