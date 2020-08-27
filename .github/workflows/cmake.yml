@@ -53,6 +53,7 @@ jobs:
         mkdir -p $SOFTWARE_DIR
         mkdir -p $SOFTWARE_DIR/source
         mkdir -p ${SOFTWARE_DIR}/install
+        echo "::add-path::${SOFTWARE_DIR}/install"
         cd $SOFTWARE_DIR/source
         wget http://www.mpich.org/static/downloads/3.3.2/mpich-3.3.2.tar.gz
         tar zxf mpich-3.3.2.tar.gz
@@ -61,7 +62,6 @@ jobs:
         #According to this, we have two cores. https://docs.github.com/en/actions/reference/virtual-environments-for-github-hosted-runners
         make -j 2
         make install
-        cd $CURRENT
         
         #    - name: Lint
         #      shell: bash
@@ -77,15 +77,19 @@ jobs:
       # Note the current convention is to use the -S and -B options here to specify source 
       # and build directories, but this is only available with CMake 3.13 and higher.  
       # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
-      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+      run: |
+        export INSTALL_DIR=$HOME/work/software/install
+        export LD_LIBRARY_PATH=$HOME/work/software/install/lib
+        cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
 
     - name: Build
       working-directory: ${{runner.workspace}}/build
       shell: bash
       # Execute the build.  You can specify a specific target with "--target <NAME>"
-      run: cmake --build . --config $
-      
-
+      run: |
+        export INSTALL_DIR=$HOME/work/software/install
+        export LD_LIBRARY_PATH=$HOME/work/software/install/lib
+        cmake --build . --config $
     - name: Test
       working-directory: ${{runner.workspace}}/build
       shell: bash
