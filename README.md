@@ -42,9 +42,9 @@ A library for interacting with a Redis database in C++, located [here](https://g
 
 ### Mongodb C++ Driver
 
-> curl -OL https://github.com/mongodb/mongo-cxx-driver/releases/download/r3.6.0/mongo-cxx-driver-r3.6.0.tar.gz  
-> tar -xzf mongo-cxx-driver-r3.6.0.tar.gz    
-> cd mongo-cxx-driver-r3.6.0/build  
-> cmake .. -DCMAKE_PREFIX_PATH="/path/to/mongo-C-driver" -DCMAKE_INSTALL_PREFIX="/path/to/install/mongo-C++-driver" -DCMAKE_CXX_STANDARD=17 -DBSONCXX_POLY_USE_BOOST=1 -DCMAKE_BUILD_TYPE=Release     
+> curl -OL https://github.com/mongodb/mongo-cxx-driver/archive/r3.5.1.tar.gz  
+> tar -xzf r3.5.1.tar.gz    
+> cd mongo-cxx-driver-r3.5.1/build  
+> cmake .. -DCMAKE_PREFIX_PATH="/path/to/mongo-C-driver" -DBUILD_VERSION=3.5.1 -DCMAKE_INSTALL_PREFIX="/path/to/install/mongo-C++-driver" -DCMAKE_CXX_STANDARD=17 -DBSONCXX_POLY_USE_BOOST=1 -DCMAKE_BUILD_TYPE=Release     
 > make -j8  
 > sudo cmake --build . --target install  
