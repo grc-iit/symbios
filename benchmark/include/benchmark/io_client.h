@@ -9,6 +9,10 @@
 #include <string>
 #include <memory>
 
+class IOClient;
+typedef std::unique_ptr<IOClient> IOClientPtr;
+typedef std::unique_ptr<std::list<std::string>> DirectoryListPtr;
+
 class IOClient {
 public:
     IOClient() = default;
@@ -17,15 +21,8 @@ public:
     virtual void Mkdir(std::string path) = 0;
     virtual void Rmdir(std::string path) = 0;
     virtual void Remove(std::string path) = 0;
-    virtual void Ls(std::string path) = 0;
+    virtual DirectoryListPtr Ls(std::string path) = 0;
     //virtual void Stat() = 0;
-
-    virtual void AddKey(std::string key, std::string value) = 0;
-    //virtual bool HasKey(std::string key) = 0;
-    virtual std::string GetKey(std::string key) = 0;
-    virtual void RemoveKey(std::string key) = 0;
 };
-
-typedef std::shared_ptr<IOClient> IOClientPtr;
 
 #endif //SYMBIOS_IO_CLIENT_H

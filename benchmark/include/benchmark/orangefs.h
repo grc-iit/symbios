@@ -8,78 +8,71 @@
 #include <iostream>
 #include <string>
 #include <memory>
+#include <filesystem>
 
 #include <sys/stat.h>
 
+#include <cstdio>
 #include <benchmark/io_client.h>
 #include <benchmark/file.h>
 
 class OrangefsIO : public IOClient, public File {
 private:
+    std::FILE *fp_ = nullptr;
     std::string addr_;
     int port_ = -1;
 
 public:
     OrangefsIO() = default;
+    OrangefsIO(std::string path, std::string mode) {
+        fp_ = std::fopen(path.c_str(), mode.c_str());
+        if(fp_ == nullptr) {
+            throw 1;
+        }
+    }
 
     void Connect(std::string addr, int port) {
         addr_ = addr;
     }
 
     FilePtr Open(std::string path, std::string mode) {
-        return std::make_unique<OrangefsIO>();
+        return std::make_unique<OrangefsIO>(addr_ + path, mode);
     }
 
     void Mkdir(std::string path) {
-        throw 1;
+        std::filesystem::create_directory(path);
     }
 
     void Rmdir(std::string path) {
-        throw 1;
+        std::filesystem::remove_all(path);
     }
 
     void Remove(std::string path) {
-        throw 1;
+        std::filesystem::remove_all(path);
     }
 
-    void Ls(std::string path) {
-        throw 1;
+    DirectoryListPtr Ls(std::string path) {
+        DirectoryListPtr entries = std::make_unique<std::list<std::string>>();
+        for(auto &p : std::filesystem::directory_iterator(path)) {
+            entries->emplace_back(p.path());
+        }
+        return std::move(entries);
     }
 
     void Read(void *buffer, size_t size) {
-        throw 1;
+        std::fread(buffer, 1, size, fp_);
     }
 
     void Write(void *buffer, size_t size) {
-        throw 1;
+        std::fwrite(buffer, 1, size, fp_);
     }
 
     void Seek(size_t off) {
-        throw 1;
-    }
-
-    void Pread(void *buffer, size_t size, size_t off) {
-        throw 1;
-    }
-
-    void Pwrite(void *buffer, size_t size, size_t off) {
-        throw 1;
+        std::fseek(fp_, off, SEEK_SET);
     }
 
     void Close(void) {
-        throw 1;
-    }
-
-    void AddKey(std::string key, std::string value) {
-        throw 1;
-    }
-
-    std::string GetKey(std::string key) {
-        throw 1;
-    }
-
-    void RemoveKey(std::string key) {
-        throw 1;
+        std::fclose(fp_);
     }
 };
 

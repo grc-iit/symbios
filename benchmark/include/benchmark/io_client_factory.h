@@ -22,11 +22,11 @@ public:
     static IOClientPtr Get(IOClientType type) {
         switch(type) {
             case IOClientType::kMongo:
-                return std::make_shared<MongoIO>();
+                return std::make_unique<MongoIO>();
             case IOClientType::kOrangefs:
-                return std::make_shared<OrangefsIO>();
+                return std::make_unique<OrangefsIO>();
             case IOClientType::kRedis:
-                return std::make_shared<RedisIO>();
+                return std::make_unique<RedisIO>();
         }
     }
 };

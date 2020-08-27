@@ -44,21 +44,21 @@ void io_file_workload(IOClientPtr &fs, BenchmarkArgs &args)
     size_t total_io = args.GetSizeOpt("-tot");
     DistributionPtr dist;
 
-    FilePtr fp = fs->open(path, "r+");
+    FilePtr fp = fs->Open(path, "r+");
     void *buffer = std::calloc(block_size, 1);
 
     dist = create_dist(args, file_size, block_size);
     double write_io = wfrac*total_io;
     for(size_t i = 0; i < write_io; i += block_size) {
-        fp->write(buffer, block_size);
-        fp->seek(dist->GetSize());
+        fp->Write(buffer, block_size);
+        fp->Seek(dist->GetSize());
     }
 
     dist = create_dist(args, file_size, block_size);
     double read_io = rfrac*total_io;
     for(size_t i = 0; i < read_io; i += block_size) {
-        fp->read(buffer, block_size);
-        fp->seek(dist->GetSize());
+        fp->Read(buffer, block_size);
+        fp->Seek(dist->GetSize());
     }
 
     free(buffer);
@@ -72,23 +72,13 @@ void md_fs_workload(IOClientPtr &fs, BenchmarkArgs &args)
     std::string newdir;
     for(int i = 0; i < depth; ++i) {
         newdir += "/md-ex";
-        fs->mkdir(newdir);
+        fs->Mkdir(newdir);
     }
     for(int i = 0; i < fcnt; ++i) {
         std::string newfile = newdir + "/file" + std::to_string(i);
-        FilePtr fp = fs->open(newfile, "w");
+        FilePtr fp = fs->Open(newfile, "w");
     }
-    fs->rmdir("/md-ex");
-}
-
-void md_kvs_workload(IOClientPtr &kvs, BenchmarkArgs &args)
-{
-    int md_iter = args.GetIntOpt("-md_iter");
-    for(int i = 0; i < md_iter; ++i) {
-        std::string key = std::to_string(i);
-        kvs->add_key(key, "");
-        kvs->rm_key(key);
-    }
+    fs->Rmdir("/md-ex");
 }
 
 int main(int argc, char **argv)
@@ -110,10 +100,6 @@ int main(int argc, char **argv)
         }
         case WorkloadType::kMdFs: {
             md_fs_workload(io, args);
-            break;
-        }
-        case WorkloadType::kMdKvs: {
-            md_kvs_workload(io, args);
             break;
         }
     }

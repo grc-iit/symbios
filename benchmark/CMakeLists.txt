@@ -23,7 +23,6 @@ if(BUILD_TEST)
     include(CTest)
     add_test(NAME benchmark-usage COMMAND ${CMAKE_CURRENT_BINARY_DIR}/benchmark)
     add_test(NAME benchmark-prealloc COMMAND ${CMAKE_CURRENT_BINARY_DIR}/benchmark -w io-only -s orangefs -caddr ~/ -p 1m)
-    add_test(NAME benchmark-prealloc COMMAND ${CMAKE_CURRENT_BINARY_DIR}/benchmark -w io-only -s orangefs -caddr ~/ -p 1m)
 endif()
 
 
