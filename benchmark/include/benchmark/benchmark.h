@@ -11,6 +11,10 @@
 #include <benchmark/io_client.h>
 #include <benchmark/io_client_factory.h>
 
+enum class WorkloadType {
+    kIoOnlyFs, kIoOnlyKvs, kMdFs, kMdFile, kMdKvs
+};
+
 class BenchmarkArgs : public ArgMap {
 private:
     void VerifyArgs(void) {
@@ -73,8 +77,18 @@ public:
     }
 
     BenchmarkArgs(int argc, char **argv) {
-        AddOpt("-w", ArgType::kString);
-        AddOpt("-s", ArgType::kString);
+        AddOpt("-w", ArgType::kStringMap);
+        AddStringMapVal("-w", "io-only-fs", static_cast<int>(WorkloadType::kIoOnlyFs));
+        AddStringMapVal("-w", "io-only-kvs", static_cast<int>(WorkloadType::kIoOnlyKvs));
+        AddStringMapVal("-w", "md-fs", static_cast<int>(WorkloadType::kMdFs));
+        AddStringMapVal("-w", "md-file", static_cast<int>(WorkloadType::kMdFile));
+        AddStringMapVal("-w", "md-kvs", static_cast<int>(WorkloadType::kMdKvs));
+
+        AddOpt("-s", ArgType::kStringMap);
+        AddStringMapVal("-s", "orangefs", static_cast<int>(IOClientType::kOrangefs));
+        AddStringMapVal("-s", "mongodb", static_cast<int>(IOClientType::kMongo));
+        AddStringMapVal("-s", "redis", static_cast<int>(IOClientType::kRedis));
+
         AddOpt("-caddr", ArgType::kString);
         AddOpt("-cport", ArgType::kInt);
         AddOpt("-p", ArgType::kSize);
@@ -87,6 +101,7 @@ public:
         AddOpt("-md_depth", ArgType::kInt);
         AddOpt("-md_fcnt", ArgType::kInt);
         AddOpt("-md_iter", ArgType::kInt);
+
         ArgIter(argc, argv);
         VerifyArgs();
     }

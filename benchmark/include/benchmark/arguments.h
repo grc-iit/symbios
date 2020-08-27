@@ -8,22 +8,102 @@
 #include <memory>
 #include <variant>
 
+class Arg;
+class StringArg;
+class IntArg;
+class FloatArg;
+class SizeArg;
+
 enum class ArgType {
-    kNone, kString, kInt, kFloat, kSize
+    kNone, kString, kStringMap, kInt, kFloat, kSize
 };
 
 class Arg {
-private:
+protected:
     ArgType type_ = ArgType::kNone;
-    bool has_input_;
     bool is_set_ = false;
+public:
+    Arg() = default;
+    bool IsSet() const { return is_set_; }
+    virtual int Add(std::string arg) { throw 1; };
+    virtual void AddStringMapVal(std::string val, int id) { throw 1; };
+    virtual std::string &GetStringOpt() { throw 1; };
+    virtual std::list<std::string> &GetStringOpts() { throw 1; };
+    virtual int GetIntOpt() { throw 1; };
+    virtual std::list<int> &GetIntOpts() { throw 1; };
+    virtual float GetFloatOpt() { throw 1; };
+    virtual std::list<float> &GetFloatOpts() { throw 1; };
+    virtual size_t GetSizeOpt() { throw 1; };
+    virtual std::list<size_t> &GetSizeOpts() { throw 1; };
+};
 
-    //Would've used std::variant, but it requires C++17, which may be too new...
-    std::list<std::string> args_str_;
-    std::list<int> args_int_;
-    std::list<float> args_float_;
-    std::list<size_t> args_size_;
+typedef std::unique_ptr<Arg> ArgPtr;
 
+class StringArg : public Arg {
+private:
+    std::list<std::string> args_;
+
+public:
+    StringArg() { type_ = ArgType::kString; };
+    int Add(std::string arg) override {
+        args_.emplace_back(arg);
+        is_set_ = true;
+        return 1;
+    }
+    std::string &GetStringOpt() override { return args_.back(); }
+    std::list<std::string> &GetStringOpts() override {return args_; }
+};
+
+class StringMapArg : public Arg {
+private:
+    std::unordered_map<std::string, int> arg_map_;
+    std::list<int> args_;
+
+public:
+    StringMapArg() { type_ = ArgType::kStringMap; };
+    int Add(std::string arg) override {
+        args_.emplace_back(arg_map_[arg]);
+        is_set_ = true;
+        return 1;
+    }
+    void AddStringMapVal(std::string val, int id) override { arg_map_[val] = id; }
+    int GetIntOpt() override { return args_.back(); };
+    std::list<int> &GetIntOpts() override { return args_; };
+};
+
+class IntArg : public Arg {
+private:
+    std::list<int> args_;
+
+public:
+    IntArg() { type_ = ArgType::kInt; };
+    int Add(std::string arg) override {
+        args_.emplace_back(std::stoi(arg));
+        is_set_ = true;
+        return 1;
+    }
+    int GetIntOpt() override { return args_.back(); };
+    std::list<int> &GetIntOpts() override { return args_; };
+};
+
+class FloatArg : public Arg {
+private:
+    std::list<float> args_;
+
+public:
+    FloatArg() { type_ = ArgType::kFloat; };
+    int Add(std::string arg) override {
+        args_.emplace_back(std::stof(arg));
+        is_set_ = true;
+        return 1;
+    }
+    float GetFloatOpt() override { return args_.back(); };
+    std::list<float> &GetFloatOpts() override { return args_; };
+};
+
+class SizeArg : public Arg {
+private:
+    std::list<size_t> args_;
     size_t ToSize(std::string arg) {
         if ((arg[arg.length() - 1] == 'k') || (arg[arg.length() - 1] == 'K')) {
             return std::stoul(arg) * (1ul<<10);
@@ -37,65 +117,64 @@ private:
 
         return std::stoul(arg);
     }
-
 public:
-    Arg() = default;
-    Arg(ArgType type) : type_(type) {}
-    int Add(std::string arg) {
-        switch (type_) {
+    SizeArg() { type_ = ArgType::kSize; };
+    int Add(std::string arg) override {
+        args_.emplace_back(ToSize(arg));
+        is_set_ = true;
+        return 1;
+    }
+    size_t GetSizeOpt() override { return args_.back(); };
+    std::list<size_t> &GetSizeOpts() override { return args_; };
+};
+
+class ArgFactory {
+public:
+    static ArgPtr Get(ArgType type) {
+        switch (type) {
+            case ArgType::kNone: {
+                return std::unique_ptr<Arg>(new Arg());
+            }
             case ArgType::kString: {
-                args_str_.emplace_back(arg);
-                break;
+                return std::unique_ptr<StringArg>(new StringArg());
+            }
+            case ArgType::kStringMap: {
+                return std::unique_ptr<StringMapArg>(new StringMapArg());
             }
             case ArgType::kInt: {
-                args_int_.emplace_back(std::stoi(arg));
-                break;
+                return std::unique_ptr<IntArg>(new IntArg());
             }
             case ArgType::kFloat: {
-                args_float_.emplace_back(std::stof(arg));
-                break;
+                return std::unique_ptr<FloatArg>(new FloatArg());
             }
             case ArgType::kSize: {
-                args_size_.emplace_back(ToSize(arg));
-                break;
+                return std::unique_ptr<SizeArg>(new SizeArg());
             }
         }
-        is_set_ = true;
-        return (type_ != ArgType::kNone) ? 1 : 0;
     }
-    int Add(void) {
-        return Add(nullptr);
-    }
-    bool IsSet(void) {
-        return is_set_;
-    }
-    std::string &GetStringOpt(void) { return args_str_.back(); }
-    std::list<std::string> &GetStringOpts(void) { return args_str_; }
-    int GetIntOpt(void) { return args_int_.back(); }
-    std::list<int> &GetIntOpts(void) { return args_int_; }
-    float GetFloatOpt(void) { return args_float_.back(); }
-    std::list<float> &GetFloatOpts(void) { return args_float_; }
-    size_t GetSizeOpt(void) { return args_size_.back(); }
-    std::list<size_t> &GetSizeOpts(void) { return args_size_; }
 };
 
 class ArgMap {
 protected:
-    std::unordered_map<std::string, Arg> args_;
+    std::unordered_map<std::string, ArgPtr> args_;
 
     void AddOpt(std::string opt, ArgType type = ArgType::kNone) {
-        args_.emplace(opt, type);
+        args_.emplace(opt, std::move(ArgFactory::Get(type)));
+    }
+
+    void AddStringMapVal(std::string opt, std::string val, int id) {
+        args_[opt]->AddStringMapVal(val, id);
     }
 
     void ArgIter(int argc, char **argv) {
         for(int i = 1; i < argc; ++i) {
             if(argv[i][0] != '-') {
-                Arg &arg = args_[""];
-                i += arg.Add(argv[i+1]);
+                ArgPtr &arg = args_[""];
+                i += arg->Add(argv[i+1]);
                 continue;
             }
-            Arg &arg = args_[argv[i]];
-            i += arg.Add(argv[i+1]);
+            ArgPtr &arg = args_[argv[i]];
+            i += arg->Add(argv[i+1]);
         }
     }
 
@@ -109,17 +188,17 @@ public:
     }
 
     bool OptIsSet(std::string opt) {
-        return args_[opt].IsSet();
+        return args_[opt]->IsSet();
     }
 
-    std::string &GetStringOpt(std::string opt) { return args_[opt].GetStringOpt(); }
-    std::list<std::string> &GetStringOpts(std::string opt) { return args_[opt].GetStringOpts(); }
-    int GetIntOpt(std::string opt) { return args_[opt].GetIntOpt(); }
-    std::list<int> &GetIntOpts(std::string opt) { args_[opt].GetIntOpts(); }
-    float GetFloatOpt(std::string opt) { return args_[opt].GetFloatOpt(); }
-    std::list<float> &GetFloatOpts(std::string opt) { return args_[opt].GetFloatOpts(); }
-    size_t GetSizeOpt(std::string opt) { return args_[opt].GetSizeOpt(); }
-    std::list<size_t> &GetSizeOpts(std::string opt) { return args_[opt].GetSizeOpts(); }
+    std::string &GetStringOpt(std::string opt) { return args_[opt]->GetStringOpt(); }
+    std::list<std::string> &GetStringOpts(std::string opt) { return args_[opt]->GetStringOpts(); }
+    int GetIntOpt(std::string opt) { return args_[opt]->GetIntOpt(); }
+    std::list<int> &GetIntOpts(std::string opt) { args_[opt]->GetIntOpts(); }
+    float GetFloatOpt(std::string opt) { return args_[opt]->GetFloatOpt(); }
+    std::list<float> &GetFloatOpts(std::string opt) { return args_[opt]->GetFloatOpts(); }
+    size_t GetSizeOpt(std::string opt) { return args_[opt]->GetSizeOpt(); }
+    std::list<size_t> &GetSizeOpts(std::string opt) { return args_[opt]->GetSizeOpts(); }
 
     virtual void Usage(void) = 0;
 };
