@@ -14,78 +14,71 @@
 #include <benchmark/io_client.h>
 #include <benchmark/file.h>
 
-class OrangefsFile : public File {
-public:
-    OrangefsFile(std::string parent, std::string path, std::string mode) {
-        throw 1;
-    }
-
-    void read(void *buffer, size_t size) {
-        throw 1;
-    }
-
-    void write(void *buffer, size_t size) {
-        throw 1;
-    }
-
-    void seek(size_t off) {
-        throw 1;
-    }
-
-    void pread(void *buffer, size_t size, size_t off) {
-        throw 1;
-    }
-
-    void pwrite(void *buffer, size_t size, size_t off) {
-        throw 1;
-    }
-
-    void close(void) {
-        throw 1;
-    }
-};
-
-class Orangefs : public IOClient {
+class OrangefsIO : public IOClient, public File {
 private:
     std::string addr_;
     int port_ = -1;
 
 public:
-    Orangefs() = default;
+    OrangefsIO() = default;
 
-    void connect(std::string addr, int port) {
+    void Connect(std::string addr, int port) {
         addr_ = addr;
     }
 
-    FilePtr open(std::string path, std::string mode) {
-        return std::unique_ptr<OrangefsFile>(new OrangefsFile(addr_, path, mode));
+    FilePtr Open(std::string path, std::string mode) {
+        return std::make_unique<OrangefsIO>();
     }
 
-    void mkdir(std::string path) {
+    void Mkdir(std::string path) {
         throw 1;
     }
 
-    void rmdir(std::string path) {
+    void Rmdir(std::string path) {
         throw 1;
     }
 
-    void remove(std::string path) {
+    void Remove(std::string path) {
         throw 1;
     }
 
-    void ls(std::string path) {
+    void Ls(std::string path) {
         throw 1;
     }
 
-    void add_key(std::string key, std::string value) {
+    void Read(void *buffer, size_t size) {
         throw 1;
     }
 
-    std::string get_key(std::string key) {
+    void Write(void *buffer, size_t size) {
         throw 1;
     }
 
-    void rm_key(std::string key) {
+    void Seek(size_t off) {
+        throw 1;
+    }
+
+    void Pread(void *buffer, size_t size, size_t off) {
+        throw 1;
+    }
+
+    void Pwrite(void *buffer, size_t size, size_t off) {
+        throw 1;
+    }
+
+    void Close(void) {
+        throw 1;
+    }
+
+    void AddKey(std::string key, std::string value) {
+        throw 1;
+    }
+
+    std::string GetKey(std::string key) {
+        throw 1;
+    }
+
+    void RemoveKey(std::string key) {
         throw 1;
     }
 };

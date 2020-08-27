@@ -22,11 +22,11 @@ public:
     static IOClientPtr Get(IOClientType type) {
         switch(type) {
             case IOClientType::kMongo:
-                return std::unique_ptr<Mongo>(new Mongo());
+                return std::make_shared<MongoIO>();
             case IOClientType::kOrangefs:
-                return std::unique_ptr<Orangefs>(new Orangefs());
+                return std::make_shared<OrangefsIO>();
             case IOClientType::kRedis:
-                return std::unique_ptr<Redis>(new Redis());
+                return std::make_shared<RedisIO>();
         }
     }
 };

@@ -13,7 +13,7 @@
 #include <benchmark/io_client_factory.h>
 
 enum class WorkloadType {
-    kIoOnlyFs, kIoOnlyKvs, kMdFs, kMdFile, kMdKvs
+    kIoOnlyFs, kMdFs, kMdKvs
 };
 
 class BenchmarkArgs : public ArgMap {

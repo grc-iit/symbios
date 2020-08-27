@@ -12,20 +12,20 @@
 class IOClient {
 public:
     IOClient() = default;
-    virtual void connect(std::string addr, int port) = 0;
-    virtual FilePtr open(std::string path, std::string mode) = 0;
-    virtual void mkdir(std::string path) = 0;
-    virtual void rmdir(std::string path) = 0;
-    virtual void remove(std::string path) = 0;
-    virtual void ls(std::string path) = 0;
-    //virtual void stat() = 0;
+    virtual void Connect(std::string addr, int port) = 0;
+    virtual FilePtr Open(std::string path, std::string mode) = 0;
+    virtual void Mkdir(std::string path) = 0;
+    virtual void Rmdir(std::string path) = 0;
+    virtual void Remove(std::string path) = 0;
+    virtual void Ls(std::string path) = 0;
+    //virtual void Stat() = 0;
 
-    virtual void add_key(std::string key, std::string value) = 0;
-    //virtual bool has_key(std::string key) = 0;
-    virtual std::string get_key(std::string key) = 0;
-    virtual void rm_key(std::string key) = 0;
+    virtual void AddKey(std::string key, std::string value) = 0;
+    //virtual bool HasKey(std::string key) = 0;
+    virtual std::string GetKey(std::string key) = 0;
+    virtual void RemoveKey(std::string key) = 0;
 };
 
-typedef std::unique_ptr<IOClient> IOClientPtr;
+typedef std::shared_ptr<IOClient> IOClientPtr;
 
 #endif //SYMBIOS_IO_CLIENT_H
