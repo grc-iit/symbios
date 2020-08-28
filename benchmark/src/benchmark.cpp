@@ -6,10 +6,12 @@
  * */
 
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <mpi.h>
 #include <benchmark/benchmark.h>
 #include <benchmark/rng.h>
+#include <debug.h>
 
 DistributionPtr create_dist(BenchmarkArgs &args, size_t file_size, size_t block_size)
 {
@@ -36,7 +38,7 @@ DistributionPtr create_dist(BenchmarkArgs &args, size_t file_size, size_t block_
     return std::move(dist);
 }
 
-void io_file_workload(IOClientPtr &fs, BenchmarkArgs &args)
+size_t io_file_workload(IOClientPtr &fs, BenchmarkArgs &args)
 {
     std::string path = args.GetStringOpt("-path");
     float rfrac = args.GetFloatOpt("-rfrac");
@@ -64,9 +66,11 @@ void io_file_workload(IOClientPtr &fs, BenchmarkArgs &args)
     }
 
     free(buffer);
+
+    return total_io;
 }
 
-void md_fs_workload(IOClientPtr &fs, BenchmarkArgs &args)
+int md_fs_workload(IOClientPtr &fs, BenchmarkArgs &args)
 {
     int depth = args.GetIntOpt("-md_depth");
     int fcnt = args.GetIntOpt("-md_fcnt");
@@ -81,30 +85,77 @@ void md_fs_workload(IOClientPtr &fs, BenchmarkArgs &args)
         FilePtr fp = fs->Open(newfile, "w");
     }
     fs->Rmdir("/md-ex");
+
+    return depth + fcnt;
 }
 
 int main(int argc, char **argv)
 {
     MPI_Init(&argc,&argv);
     BenchmarkArgs args(argc, argv);
-    int rank;
+    int rank, nprocs = 1;
+    int ops_per_proc = 0;
+    size_t bytes_per_proc = 0;
 
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &nprocs);
 
+    //Create connection to database or whatever...
     int storage_service = args.GetIntOpt("-s");
     IOClientPtr io = IOClientFactory::Get(static_cast<IOClientType>(storage_service));
     io->Connect(args.GetStringOpt("-caddr"), args.GetIntOpt("-cport"));
 
+    //Run workloads
+    Timer t;
+    t.startTime();
     int workload = args.GetIntOpt("-w");
     switch(static_cast<WorkloadType>(workload)) {
         case WorkloadType::kIoOnlyFs: {
-            io_file_workload(io, args);
+            bytes_per_proc = io_file_workload(io, args);
             break;
         }
         case WorkloadType::kMdFs: {
-            md_fs_workload(io, args);
+            ops_per_proc = md_fs_workload(io, args);
             break;
         }
+    }
+    double local_end_time = t.endTime();
+    double local_std_msec;
+
+    //Get global statistics
+    double avg_msec, std_msec, min_msec, max_msec;
+    MPI_Allreduce(&local_end_time, &avg_msec, 1, MPI_FLOAT, MPI_SUM, MPI_COMM_WORLD);
+    local_std_msec = pow(local_end_time - avg_msec, 2);
+    MPI_Reduce(&local_std_msec, &std_msec, 1, MPI_FLOAT, MPI_SUM, 0, MPI_COMM_WORLD);
+    MPI_Reduce(&local_end_time, &min_msec, 1, MPI_FLOAT, MPI_MIN, 0, MPI_COMM_WORLD);
+    MPI_Reduce(&local_end_time, &max_msec, 1, MPI_FLOAT, MPI_MAX, 0, MPI_COMM_WORLD);
+    avg_msec = avg_msec/nprocs;
+    std_msec = std::sqrt(std_msec);
+
+    //Get average bandwidth and throughput
+    size_t tot_ops = ((size_t)ops_per_proc) * nprocs;
+    size_t tot_bytes = bytes_per_proc * nprocs;
+    double thrpt_kiops = ((double)tot_ops)/avg_msec;
+    double bw_kbps = ((double)tot_bytes)/avg_msec;
+
+    //Write to output CSV in root process
+    if(rank == 0 && args.OptIsSet("-out")) {
+        std::string output_path = args.GetStringOpt("-out");
+        bool exists = std::filesystem::exists(output_path);
+        std::ofstream out(output_path);
+        if(!exists) {
+            out << "avg_msec,std_msec,min_msec,max_msec,nprocs,tot_ops,tot_bytes,thrpt_kiops,bw_kbps" << std::endl;
+        }
+        out <<
+            avg_msec << "," <<
+            std_msec << "," <<
+            min_msec << "," <<
+            max_msec << "," <<
+            nprocs << "," <<
+            tot_ops << "," <<
+            tot_bytes << "," <<
+            thrpt_kiops << "," <<
+            bw_kbps << std::endl;
     }
 
     MPI_Finalize();

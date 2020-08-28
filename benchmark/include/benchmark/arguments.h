@@ -188,6 +188,22 @@ public:
         return args_[opt]->IsSet();
     }
 
+    void AssertOptIsSet(std::string opt) {
+        if(!OptIsSet(opt)) {
+            std::cout << opt << " is not set, but is required" << std::endl;
+            Usage();
+            exit(1);
+        }
+    }
+
+    void AssertOptIsNotSet(std::string opt) {
+        if(OptIsSet(opt)) {
+            std::cout << opt << " is not set, but is required" << std::endl;
+            Usage();
+            exit(1);
+        }
+    }
+
     std::string &GetStringOpt(std::string opt) { return args_[opt]->GetStringOpt(); }
     std::list<std::string> &GetStringOpts(std::string opt) { return args_[opt]->GetStringOpts(); }
     int GetIntOpt(std::string opt) { return args_[opt]->GetIntOpt(); }
