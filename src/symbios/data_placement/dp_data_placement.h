@@ -5,10 +5,20 @@
 #ifndef SYMBIOS_DP_DATA_PLACEMENT_H
 #define SYMBIOS_DP_DATA_PLACEMENT_H
 
+#include <symbios/data_placement/data_placement.h>
 
-class dp_data_placement {
+class DynamicProgrammingDDE: public DataDistributionEngine {
+public:
+    /*
+     * Constructor
+     */
+    DynamicProgrammingDDE(){}
+    /*
+     * Methods
+     */
 
+    // Select the target storages for the request by using dynamic programming DDE
+    std::vector<Distribution> Distribute(Data& request) override;
 };
-
 
 #endif //SYMBIOS_DP_DATA_PLACEMENT_H
