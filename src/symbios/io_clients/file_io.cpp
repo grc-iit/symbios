@@ -10,8 +10,8 @@
 #include <symbios/common/error_code.h>
 
 void FileIOClient::Read(Data &source, Data &destination) {
-    char* fileName = source.id_.c_str();
-    int fileFd = open(fileName, O_RDONLY);
+    const char* file_name = source.id_.c_str();
+    int fileFd = open(file_name, O_RDONLY);
     if(fileFd == -1){
         throw ErrorException(OPEN_FILE_FAILED);
     } else {
@@ -19,7 +19,7 @@ void FileIOClient::Read(Data &source, Data &destination) {
             close(fileFd);
             throw ErrorException(SEEK_FILE_FAILED);
         } else{
-            ssize_t data_size = read(fileFd, destination.buffer_ + destination.position, source.data_size_);
+            ssize_t data_size = read(fileFd, destination.buffer_ + destination.position_, source.data_size_);
             if (data_size == source.data_size_){
                 // read data from file successful
                 destination.data_size_ = data_size;
@@ -34,8 +34,8 @@ void FileIOClient::Read(Data &source, Data &destination) {
 }
 
 void FileIOClient::Write(Data &source, Data &destination) {
-    char* destFileName = destination.id_.c_str();
-    int fileFd = open (destFileName, O_RDWR | O_CREAT | O_APPEND, 0644);
+    const char* dest_file_name = destination.id_.c_str();
+    int fileFd = open (dest_file_name, O_RDWR | O_CREAT | O_APPEND, 0644);
     if(fileFd == -1){
         throw ErrorException(OPEN_FILE_FAILED);
     } else {
