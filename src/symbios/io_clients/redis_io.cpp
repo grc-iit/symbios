@@ -6,6 +6,7 @@
 #include <cstring>
 #include <basket/common/singleton.h>
 #include <symbios/common/configuration_manager.h>
+#include <symbios/common/error_codes.h>
 
 RedisIOClient::RedisIOClient() {
     ConfigurationManager conf = Singleton<ConfigurationManager>::GetInstance();
@@ -32,8 +33,9 @@ void RedisIOClient::Read(Data &source, Data &destination) {
                 memcpy(destination.buffer_, value.c_str() + source.position_, source.data_size_);
                 destination.data_size_ = source.data_size_;
             }
+        } else {
+            throw ErrorException(READ_REDIS_DATA_FAILED);
         }
-        throw ErrorException(READ_REDIS_DATA_FAILED);
     } catch (const Error &err){
         throw ErrorException(REDIS_SERVER_SIDE_FAILED);
     }

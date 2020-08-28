@@ -17,6 +17,9 @@ public:
     /*
      * Methods
      */
+    void LoadConfiguration(){
+
+    }
 
 public:
     /* Variables*/

@@ -7,7 +7,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <symbios/common/error_code.h>
+#include <symbios/common/error_codes.h>
 
 void FileIOClient::Read(Data &source, Data &destination) {
     const char* file_name = source.id_.c_str();

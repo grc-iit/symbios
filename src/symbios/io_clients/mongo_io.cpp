@@ -5,6 +5,7 @@
 #include <symbios/io_clients/mongo_io.h>
 #include <basket/common/singleton.h>
 #include <symbios/common/configuration_manager.h>
+#include <symbios/common/error_codes.h>
 #include <cstring>
 
 MongoIOClient::MongoIOClient() {

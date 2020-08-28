@@ -10,11 +10,11 @@
 #include <symbios/common/enumerations.h>
 
 typedef struct Data{
-    CharStruct id_; // for file_io, the id_ is the filename; for Key-Value store io, the id_ is the key.
-    long position_; // read or write start position
-    void* buffer_;  // data
-    long data_size_; // data size
-    IOClientType native_io_client_type_;
+    CharStruct id_; // for file io, the "id_" is the filename; for object store io, the "id_" is the key.
+    long position_; // read/write start position
+    void* buffer_;  // data content
+    long data_size_; // data size need to read/write
+    IOClientType native_io_client_type_; // io client type
 
     /*Define the default, copy and move constructor*/
     Data():id_(),position_(0),buffer_(),data_size_(0), native_io_client_type_(FILE_IO){}
@@ -35,5 +35,28 @@ typedef struct Data{
     }
 } Data;
 
+
+typedef struct Distribution{
+    Data source_data_; // memory buffer for write and file buffer for read
+    Data destination_data_; // file info for write and memory info for read
+    IOClientType io_client_type_; // native io client type
+
+    /*Define the default, copy and move constructor*/
+    Distribution():io_client_type_(FILE_IO){}
+    Distribution(const Distribution &other):source_data_(other.source_data_),
+        destination_data_(other.destination_data_), io_client_type_(other.io_client_type_){}
+    Distribution(Distribution &other):source_data_(other.source_data_),
+        destination_data_(other.destination_data_), io_client_type_(other.io_client_type_){}
+
+    /*Define Assignment Operator*/
+    Distribution &operator=(const Distribution &other){
+        source_data_ = other.source_data_;
+        destination_data_ = other.destination_data_;
+        io_client_type_ = other.io_client_type_;
+
+        return *this;
+    }
+
+} Distribution;
 #endif //SYMBIOS_DATA_STRUCTURE_H
 

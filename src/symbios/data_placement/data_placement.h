@@ -6,6 +6,7 @@
 #define SYMBIOS_DATA_PLACEMENT_H
 
 #include <symbios/common/data_structure.h>
+#include <vector>
 
 class DataDistributionEngine {
 public:
@@ -17,9 +18,8 @@ public:
      * Methods
      */
 
-    // select the target storage
-    //
-    virtual void Distribute(Data& request) = 0;
+    // select the target storages for the request
+    virtual std::vector<Distribution> Distribute(Data& request) = 0;
 };
 
 #endif //SYMBIOS_DATA_PLACEMENT_H
