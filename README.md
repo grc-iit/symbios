@@ -47,9 +47,12 @@ As a CMake project use:
 mkdir build
 cmake -DCMAKE_INSTALL_PREFIX:PATH=/wherever -DCOMPILE_HCL=true/false ..
 make
-make install```
+make install
+```
 
 ## Storage Interface Usage
+A simple example to show the usage of Storage Interface:
+```bash
 IOFactory io_factory;
 std::shared_ptr<IOClient> io_client = io_factory.GetIOClient(FILE_IO);
 /*
@@ -75,4 +78,4 @@ io_client.Write(source_data, destination_data);
 Data source_data_;
 Data destination_data_;
 io_client.Read(source_data_, destination_data_);
-
+```
