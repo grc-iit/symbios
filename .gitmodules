@@ -1,0 +1,3 @@
+[submodule "hcl"]
+	path = hcl
+	url = https://JCG95@bitbucket.org/scs-io/hcl.git
