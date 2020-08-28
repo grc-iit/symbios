@@ -52,7 +52,7 @@ make install
 
 ## Storage Interface Usage
 A simple example to show the usage of Storage Interface:
-```bash
+```c++
 IOFactory io_factory;
 std::shared_ptr<IOClient> io_client = io_factory.GetIOClient(FILE_IO);
 /*
