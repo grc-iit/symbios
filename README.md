@@ -92,7 +92,7 @@ tar -xzf 1.1.2.tar.gz
 cd redis-plus-plus*    
 mkdir build  
 cd build  
-cmake -DCMAKE_PREFIX_PATH=$DEP_INSTALL -DCMAKE_INSTALL_PREFIX=$DEP_INSTALL -DCMAKE_BUILD_TYPE=Release ../  
+cmake -DCMAKE_PREFIX_PATH=$DEP_INSTALL -DCMAKE_INSTALL_PREFIX=$DEP_INSTALL -DCMAKE_BUILD_TYPE=Release -DREDIS_PLUS_PLUS_CXX_STANDARD=17 ../  
 make
 make install  
 ```
