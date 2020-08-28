@@ -3,7 +3,6 @@
 
 ### Environment
 
-
 You can set this environment variable to copy-paste the installation instructions.
 You do not have to set it to ~/install, that's just an example.
 
@@ -14,7 +13,7 @@ export PATH=$DEP_INSTALL/bin:$DEP_INSTALL/include:$DEP_INSTALL/lib:$PATH
 export LD_LIBARY_PATH=$DEP_INSTALL/lib:$LD_LIBRARY_PATH
 export LIBRARY_PATH=$DEP_INSTALL/lib:$LD_LIBRARY_PATH
 export INCLUDE_PATH=$DEP_INSTALL/include:$INCLUDE
-export CPATH=\$DEP_INSTALL/include:\$CPATH
+export CPATH=$DEP_INSTALL/include:\$CPATH
 ```
 
 NOTE: If PATH, LD_LIBRARY_PATH, LIBRARY_PATH, INCLUDE, or CPATH are undefined,
