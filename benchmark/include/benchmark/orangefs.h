@@ -5,10 +5,13 @@
 #ifndef SYMBIOS_ORANGEFS_H
 #define SYMBIOS_ORANGEFS_H
 
+#define _GNU_SRC
 #include <iostream>
 #include <string>
 #include <memory>
 #include <filesystem>
+#include <unistd.h>
+#include <fcntl.h>
 
 #include <sys/stat.h>
 
@@ -19,30 +22,48 @@
 class OrangefsFile : public File {
 private:
     std::string path_;
-    std::FILE *fp_ = nullptr;
+    int fp_ = -1;
 
 public:
-    OrangefsFile(std::string path, std::string &mode) : path_(std::move(path)) {
-        fp_ = std::fopen(path.c_str(), mode.c_str());
-        if(fp_ == nullptr) {
+    OrangefsFile(std::string path, int mode) : path_(std::move(path)) {
+        int flags = 0;
+        if((mode & FileMode::kRead) && (mode & FileMode::kWrite)) { flags |= O_RDWR; }
+        else if(mode & FileMode::kRead) { flags |= O_RDONLY; }
+        else if(mode & FileMode::kWrite) { flags |= O_WRONLY; }
+        if(mode & FileMode::kCreate) { flags |= O_CREAT; }
+        if(mode & FileMode::kDirect) { flags |= O_DIRECT; }
+        if(mode & FileMode::kSync) { flags |= O_SYNC; }
+
+        fp_ = open(path_.c_str(), flags);
+        if(fp_ < 0) {
+            std::cout << "Could not open file: " << path_ << std::endl;
+            perror("open orangefs");
             throw 1;
         }
     }
 
+    ~OrangefsFile() {
+        close(fp_);
+    };
+
     void Read(void *buffer, size_t size) {
-        std::fread(buffer, 1, size, fp_);
+        int ret = read(fp_, buffer, size);
+        if(ret < 0) {
+            std::cout << "Failed to read data" << std::endl;
+            throw 1;
+        }
     }
 
     void Write(void *buffer, size_t size) {
-        std::fwrite(buffer, 1, size, fp_);
+        int ret = write(fp_, buffer, size);
+        if(ret < 0) {
+            std::cout << "Failed to write data" << std::endl;
+            throw 1;
+        }
     }
 
     void Seek(size_t off) {
-        std::fseek(fp_, off, SEEK_SET);
-    }
-
-    void Close(void) {
-        std::fclose(fp_);
+        lseek(fp_, off, SEEK_SET);
     }
 };
 
@@ -58,7 +79,7 @@ public:
         addr_ = addr;
     }
 
-    FilePtr Open(std::string path, std::string mode) {
+    FilePtr Open(std::string path, int mode) {
         return std::make_unique<OrangefsFile>(addr_ + path, mode);
     }
 

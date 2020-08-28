@@ -18,7 +18,6 @@ public:
     virtual void Read(void *buffer, size_t size) = 0;
     virtual void Write(void *buffer, size_t size) = 0;
     virtual void Seek(size_t off) = 0;
-    virtual void Close(void) = 0;
 };
 
 #endif //SYMBIOS_FILE_H

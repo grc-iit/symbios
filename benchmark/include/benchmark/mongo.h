@@ -82,8 +82,6 @@ public:
     void Seek(size_t off) {
         off_ = off;
     }
-
-    void Close(void) {}
 };
 
 class MongoIO : public IOClient {
@@ -99,7 +97,7 @@ public:
         context_ = std::make_shared<MongoContext>(addr, port);
     }
 
-    FilePtr Open(std::string path, std::string mode) {
+    FilePtr Open(std::string path, int mode) {
         if(!context_->HasKey(path)) {
             context_->SetKey(path);
         }

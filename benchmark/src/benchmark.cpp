@@ -48,14 +48,14 @@ size_t io_file_workload(IOClientPtr &fs, BenchmarkArgs &args)
     size_t total_io = args.GetSizeOpt("-tot");
     DistributionPtr dist;
 
-    FilePtr fp = fs->Open(path, "r+");
+    FilePtr fp = fs->Open(path, FileMode::kRead | FileMode::kWrite | FileMode::kCreate);
     void *buffer = std::calloc(block_size, 1);
 
     dist = create_dist(args, file_size, block_size);
     double write_io = wfrac*total_io;
     for(size_t i = 0; i < write_io; i += block_size) {
-        fp->Write(buffer, block_size);
         fp->Seek(dist->GetSize());
+        fp->Write(buffer, block_size);
     }
 
     dist = create_dist(args, file_size, block_size);
@@ -82,7 +82,7 @@ int md_fs_workload(IOClientPtr &fs, BenchmarkArgs &args)
     }
     for(int i = 0; i < fcnt; ++i) {
         std::string newfile = newdir + "/file" + std::to_string(i);
-        FilePtr fp = fs->Open(newfile, "w");
+        FilePtr fp = fs->Open(newfile, FileMode::kWrite | FileMode::kCreate);
     }
     fs->Rmdir("/md-ex");
 
@@ -103,7 +103,9 @@ int main(int argc, char **argv)
     //Create connection to database or whatever...
     int storage_service = args.GetIntOpt("-s");
     IOClientPtr io = IOClientFactory::Get(static_cast<IOClientType>(storage_service));
-    io->Connect(args.GetStringOpt("-caddr"), args.GetIntOpt("-cport"));
+    std::string addr = args.GetStringOpt("-caddr");
+    int port = args.GetIntOpt("-cport");
+    io->Connect(addr, port);
 
     //Run workloads
     Timer t;
@@ -124,11 +126,11 @@ int main(int argc, char **argv)
 
     //Get global statistics
     double avg_msec, std_msec, min_msec, max_msec;
-    MPI_Allreduce(&local_end_time, &avg_msec, 1, MPI_FLOAT, MPI_SUM, MPI_COMM_WORLD);
+    MPI_Allreduce(&local_end_time, &avg_msec, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
     local_std_msec = pow(local_end_time - avg_msec, 2);
-    MPI_Reduce(&local_std_msec, &std_msec, 1, MPI_FLOAT, MPI_SUM, 0, MPI_COMM_WORLD);
-    MPI_Reduce(&local_end_time, &min_msec, 1, MPI_FLOAT, MPI_MIN, 0, MPI_COMM_WORLD);
-    MPI_Reduce(&local_end_time, &max_msec, 1, MPI_FLOAT, MPI_MAX, 0, MPI_COMM_WORLD);
+    MPI_Reduce(&local_std_msec, &std_msec, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+    MPI_Reduce(&local_end_time, &min_msec, 1, MPI_DOUBLE, MPI_MIN, 0, MPI_COMM_WORLD);
+    MPI_Reduce(&local_end_time, &max_msec, 1, MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
     avg_msec = avg_msec/nprocs;
     std_msec = std::sqrt(std_msec);
 
@@ -142,7 +144,7 @@ int main(int argc, char **argv)
     if(rank == 0 && args.OptIsSet("-out")) {
         std::string output_path = args.GetStringOpt("-out");
         bool exists = std::filesystem::exists(output_path);
-        std::ofstream out(output_path);
+        std::ofstream out(output_path, std::ofstream::out | std::ofstream::app);
         if(!exists) {
             out << "avg_msec,std_msec,min_msec,max_msec,nprocs,tot_ops,tot_bytes,thrpt_kiops,bw_kbps" << std::endl;
         }

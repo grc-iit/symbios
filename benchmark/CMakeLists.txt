@@ -18,12 +18,19 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
 add_executable(benchmark src/benchmark.cpp include/benchmark/rng.h include/benchmark/kvs.h)
 target_link_libraries(benchmark -lmpi -lhiredis -lredis++ -lmongocxx -lpthread)
 
+#OrangeFS test cases
+add_custom_target(bm-usage COMMAND
+        ${CMAKE_CURRENT_BINARY_DIR}/benchmark)
+add_custom_target(bm-rw-test COMMAND
+        ${CMAKE_CURRENT_BINARY_DIR}/benchmark
+        -s orangefs -caddr /home/lukemartinlogan/ -path test.bin
+        -w io-only -bs 4k -fs 0k -tot 1g -wfrac .5 -rfrac .5
+        -out /home/lukemartinlogan/test.csv)
+
 option(BUILD_TEST "Build the unit tests" ON)
 if(BUILD_TEST)
     enable_testing()
     include(CTest)
-    add_test(NAME benchmark-usage COMMAND ${CMAKE_CURRENT_BINARY_DIR}/benchmark)
-    add_test(NAME benchmark-prealloc COMMAND ${CMAKE_CURRENT_BINARY_DIR}/benchmark -w io-only -s orangefs -caddr ~/ -p 1m)
 endif()
 
 
