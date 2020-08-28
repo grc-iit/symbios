@@ -12,6 +12,9 @@ set(INCLUDE_DIRS "-I${INSTALL_DIR}/include/ -L${INSTALL_DIR}/lib/") #-L${PROJECT
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${INCLUDE_DIRS}")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${INCLUDE_DIRS}")
 
+include_directories(include)
+include_directories(src)
+
 # External libraries hermes is dependent on.
 option(COMPILE_HCL "Compile and install HCL" ON)
 if(COMPILE_HCL)
@@ -26,7 +29,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DHERMES_TRACE")
 
 # Source files
 set(SYMBIOS_COMMON_SRC )
-set(SYMBIOS_LIB_SRC ${SYMBIOS_COMMON_SRC} include/symbios/client.h src/client/client.cpp)
+set(SYMBIOS_LIB_SRC ${SYMBIOS_COMMON_SRC} include/symbios/client/client.h src/symbios/client/client.cpp)
 
 # add symbios lib
 add_library(symbios SHARED ${SYMBIOS_LIB_SRC})
@@ -35,7 +38,9 @@ target_link_libraries(symbios basket)
 # TODO: add any required libraries
 
 # add symbios server
-set(SYMBIOS_SERVER_SRC ${SYMBIOS_COMMON_SRC} src/server/server.h src/server/main.cpp)
+set(SYMBIOS_SERVER_SRC ${SYMBIOS_COMMON_SRC} src/symbios/server/server.h src/symbios/server/main.cpp
+        src/symbios/io_clients/io.h src/symbios/io_clients/io_factory.h src/symbios/io_clients/file_io.h
+        src/symbios/io_clients/object_store_io.h src/symbios/io_clients/redis_io.h src/symbios/io_clients/mongo_io.h)
 add_executable(symbios_server ${SYMBIOS_SERVER_SRC})
 add_dependencies(symbios_server symbios)
 add_dependencies(symbios_server basket)
