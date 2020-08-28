@@ -74,7 +74,7 @@ wget https://github.com/redis/hiredis/archive/v1.0.0.tar.gz
 tar -xzf v1.0.0.tar.gz  
 cd hiredis*  
 make  PREFIX=$DEP_INSTALL
-sudo make PREFIX=$DEP_INSTALL install   
+make PREFIX=$DEP_INSTALL install   
 ```
 
 ### Redis-Plus-Plus
@@ -89,7 +89,7 @@ mkdir build
 cd build  
 cmake -DCMAKE_PREFIX_PATH=$DEP_INSTALL -DCMAKE_INSTALL_PREFIX=$DEP_INSTALL -DCMAKE_BUILD_TYPE=Release ../  
 make  
-sudo make install  
+make install  
 ```
 
 ### Mongodb C Driver
@@ -102,7 +102,7 @@ mkdir build
 cd build  
 cmake -DCMAKE_INSTALL_PREFIX=$DEP_INSTALL -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF ../  
 make -j8  
-sudo cmake --build . --target install  
+cmake --build . --target install  
 ```
 
 ### Mongodb C++ Driver
@@ -113,7 +113,7 @@ tar -xzf r3.5.1.tar.gz
 cd mongo-cxx-driver-r3.5.1/build  
 cmake .. -DCMAKE_PREFIX_PATH=$DEP_INSTALL -DBUILD_VERSION=3.5.1 -DCMAKE_INSTALL_PREFIX=$DEP_INSTALL -DCMAKE_CXX_STANDARD=17 -DBSONCXX_POLY_USE_BOOST=1 -DCMAKE_BUILD_TYPE=Release     
 make -j8  
-sudo cmake --build . --target install  
+cmake --build . --target install  
 ```
 
 
