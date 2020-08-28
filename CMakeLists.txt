@@ -8,6 +8,9 @@ set(INCLUDE_DIRS "-I${INSTALL_DIR}/include/ -L${INSTALL_DIR}/lib/")# -DRPCLIB_EN
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${INCLUDE_DIRS}")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${INCLUDE_DIRS}")
 
+include_directories(include)
+include_directories(src)
+
 # External libraries hermes is dependent on.
 
 
@@ -18,14 +21,14 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DHERMES_TRACE")
 
 # Source files
 set(SYMBIOS_COMMON_SRC )
-set(SYMBIOS_LIB_SRC ${SYMBIOS_COMMON_SRC} include/symbios/client.h src/client/client.cpp)
+set(SYMBIOS_LIB_SRC ${SYMBIOS_COMMON_SRC} include/symbios/client.h src/symbios/client/client.cpp)
 
 # add symbios lib
 add_library(symbios SHARED ${SYMBIOS_LIB_SRC})
 # TODO: add any required libraries
 
 # add symbios server
-set(SYMBIOS_SERVER_SRC ${SYMBIOS_COMMON_SRC} src/server/server.h src/server/main.cpp)
+set(SYMBIOS_SERVER_SRC ${SYMBIOS_COMMON_SRC} src/symbios/server/server.h src/symbios/server/main.cpp)
 add_executable(symbios_server ${SYMBIOS_SERVER_SRC})
 add_dependencies(symbios_server symbios)
 # TODO: add any required libraries
