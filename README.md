@@ -11,9 +11,9 @@ mkdir ~/install
 export DEP_INSTALL=~/install
 export PATH=${DEP_INSTALL}/bin:$DEP_INSTALL/include:$DEP_INSTALL/lib:$PATH
 export LD_LIBRARY_PATH=${DEP_INSTALL}/lib:$LD_LIBRARY_PATH
-export LIBRARY_PATH=${DEP_INSTALL}/lib:$LD_LIBRARY_PATH
+export LIBRARY_PATH=${DEP_INSTALL}/lib:$LIBRARY_PATH
 export INCLUDE_PATH=${DEP_INSTALL}/include:$INCLUDE
-export CPATH=${DEP_INSTALL}/include:\$CPATH
+export CPATH=${DEP_INSTALL}/include:$CPATH
 ```
 
 NOTE: If PATH, LD_LIBRARY_PATH, LIBRARY_PATH, INCLUDE, or CPATH are undefined,
@@ -91,7 +91,7 @@ tar -xzf 1.1.2.tar.gz
 cd redis-plus-plus*    
 mkdir build  
 cd build  
-cmake -DCMAKE_PREFIX_PATH=$DEP_INSTALL -DCMAKE_INSTALL_PREFIX=$DEP_INSTALL -DCMAKE_BUILD_TYPE=Release ../  
+cmake -DREDIS_PLUS_PLUS_CXX_STANDARD=17 -DCMAKE_PREFIX_PATH=$DEP_INSTALL -DCMAKE_INSTALL_PREFIX=$DEP_INSTALL -DCMAKE_BUILD_TYPE=Release ../  
 make
 make install  
 ```
