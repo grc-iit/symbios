@@ -1,0 +1,26 @@
+Workloads:
+
+Preallocate File:
+
+I/O - Only
+    (Preallocate File)
+    %Read
+    %Write
+    Block Size
+    File Size
+    Access Pattern
+    Total I/O
+
+md-fs-test
+    Nest Directories
+    In deepest directory, rep:
+        Create File
+        Seek file
+        Check File Existence
+    End
+    Remove Root Directory
+
+metadata-kvs-tests
+    Add Key
+    Check Key Existence
+    Remove Key

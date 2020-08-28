@@ -47,6 +47,9 @@ add_dependencies(symbios_server basket)
 target_link_libraries(symbios_server basket)
 # TODO: add any required libraries
 
+# add benchmark tool
+add_subdirectory(benchmark)
+
 option(BUILD_TEST "Build the unit tests" ON)
 if(BUILD_TEST)
     enable_testing()
