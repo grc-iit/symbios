@@ -35,7 +35,7 @@ make install
 
 ```bash
 wget http://www.mpich.org/static/downloads/3.3.2/mpich-3.3.2.tar.gz
-tar -xzf mpich-3.3.2.tar.gz -C $SRC
+tar -xzf mpich-3.3.2.tar.gz
 cd mpich-3.3.2
 ./configure --prefix=$DEP_INSTALL --enable-fast=03 --enable-shared --enable-romio --enable-threads --disable-fortran --disable-fc
 make -j8
