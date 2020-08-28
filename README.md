@@ -12,7 +12,7 @@ export DEP_INSTALL=~/install
 export PATH=$DEP_INSTALL/bin:$DEP_INSTALL/include:$DEP_INSTALL/lib:$PATH
 export LD_LIBARY_PATH=$DEP_INSTALL/lib:$LD_LIBRARY_PATH
 export LIBRARY_PATH=$DEP_INSTALL/lib:$LD_LIBRARY_PATH
-export INCLUDE=$DEP_INSTALL/include:$INCLUDE
+export INCLUDE_PATH=$DEP_INSTALL/include:$INCLUDE
 export CPATH=\$DEP_INSTALL/include:\$CPATH
 ```
 
@@ -68,14 +68,18 @@ cd boost_1_74_0
 ### Hireds
 
 A C library for interacting with Redis. Redis-plus-plus depends on it.
+These instructions assume that you have set the environment variables
+listed at the beginning of this section.
 
 ```bash
 wget https://github.com/redis/hiredis/archive/v1.0.0.tar.gz  
 tar -xzf v1.0.0.tar.gz  
 cd hiredis*  
-make  PREFIX=$DEP_INSTALL
-make PREFIX=$DEP_INSTALL install   
+make  
+make PREFIX="" install   
 ```
+
+Note, PREFIX="" is not a mistake.
 
 ### Redis-Plus-Plus
 
@@ -88,7 +92,7 @@ cd redis-plus-plus*
 mkdir build  
 cd build  
 cmake -DCMAKE_PREFIX_PATH=$DEP_INSTALL -DCMAKE_INSTALL_PREFIX=$DEP_INSTALL -DCMAKE_BUILD_TYPE=Release ../  
-make  
+make
 make install  
 ```
 
