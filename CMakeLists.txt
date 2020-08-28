@@ -29,7 +29,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DHERMES_TRACE")
 
 # Source files
 set(SYMBIOS_COMMON_SRC )
-set(SYMBIOS_LIB_SRC ${SYMBIOS_COMMON_SRC} include/symbios/client.h src/symbios/client/client.cpp)
+set(SYMBIOS_LIB_SRC ${SYMBIOS_COMMON_SRC} include/symbios/client/client.h src/symbios/client/client.cpp)
 
 # add symbios lib
 add_library(symbios SHARED ${SYMBIOS_LIB_SRC})
