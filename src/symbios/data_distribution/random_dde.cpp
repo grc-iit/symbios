@@ -5,18 +5,23 @@
 #include <symbios/data_distribution/random_dde.h>
 #include <cstdlib>
 #include <ctime>
+#include <symbios/common/configuration_manager.h>
 
 RandomDDE::RandomDDE() {
-    //srand((unsigned)time(NULL));
+    srand((unsigned) SYMBIOS_CONF->RANDOM_SEED);
 }
 
 std::vector<Distribution> RandomDDE::Distribute(Data& request) {
-    // get storage vector from the configurationManager
 
-    //int size = 5;
-    //int index = rand() % size;
-    // get the target storage in vector[index], and then return it.
-
-    return std::vector<Distribution>();
+    auto distributions = std::vector<Distribution>();
+    int16_t selected_solution_index = rand() % SYMBIOS_CONF->STORAGE_SOLUTIONS.size();
+    auto selected_solution = SYMBIOS_CONF->STORAGE_SOLUTIONS[selected_solution_index];
+    auto distribution = Distribution();
+    distribution.io_client_type_ = request.io_client_type_;
+    distribution.source_data_ = request;
+    distribution.destination_data_ = request;
+    distribution.io_client_type_ = distribution.io_client_type_;
+    distributions.push_back(distribution);
+    return distributions;
 }
 

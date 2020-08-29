@@ -75,6 +75,7 @@ namespace symbios {
         CharStruct SERVER_DIR;
         CharStruct CONFIGURATION_FILE;
         uint16_t SERVER_COUNT;
+        int RANDOM_SEED;
         std::unordered_map<uint16_t, std::shared_ptr<StorageSolution>> STORAGE_SOLUTIONS;
         DataDistributionPolicy DATA_DISTRIBUTION_POLICY;
 
@@ -85,6 +86,7 @@ namespace symbios {
                                  SERVER_DIR("/dev/shm/hari/symbios_server"),
                                  CONFIGURATION_FILE("/tmp/tmp.BUKlhPiLxF/conf/symbios.conf"),
                                  SERVER_COUNT(1),
+                                 RANDOM_SEED(100),
                                  STORAGE_SOLUTIONS(),
                                  DATA_DISTRIBUTION_POLICY(DataDistributionPolicy::RANDOM_POLICY){
             STORAGE_SOLUTIONS.insert({0, std::make_shared<FileStorageSolution>("") });
@@ -116,7 +118,7 @@ namespace symbios {
             config(doc, "SERVER_RPC_THREADS", SERVER_RPC_THREADS);
             config(doc, "SERVER_DIR", SERVER_DIR);
             /**
-             * TODO: add DATA_DISTRIBUTION_POLICY, solutions
+             * TODO: add DATA_DISTRIBUTION_POLICY, solutions, RANDOM_SEED
              */
             fclose(outfile);
         }
