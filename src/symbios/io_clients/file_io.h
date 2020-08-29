@@ -13,7 +13,8 @@ public:
     /**
      * Constructor
      */
-    FileIOClient(){}
+    FileIOClient(uint16_t storage_index):IOClient(storage_index){
+    }
 
     /*
      * Methods

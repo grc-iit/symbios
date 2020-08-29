@@ -8,18 +8,10 @@
 #include <symbios/common/configuration_manager.h>
 #include <symbios/common/error_codes.h>
 
-RedisIOClient::RedisIOClient() {
-
-
-    ConnectionOptions connectionOptions;
-    connectionOptions.host = SYMBIOS_CONF->REDIS_CLUSTER_HOST.c_str(); // redis_cluster ip
-    connectionOptions.port = SYMBIOS_CONF->REDIS_CLUSTER_PORT; // redis_cluster port
-
-    m_redisCluster = std::make_shared<RedisCluster>(connectionOptions);
-}
 
 void RedisIOClient::Read(Data &source, Data &destination) {
     try {
+
         auto resp = m_redisCluster->get(source.id_.c_str());
         if(resp){
             std::string value = *resp;

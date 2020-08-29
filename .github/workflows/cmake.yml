@@ -85,6 +85,7 @@ jobs:
         cd hcl
         git checkout -b release/0.0.4
         mkdir build
+        cd build
         cmake -DCMAKE_INSTALL_PREFIX:PATH=${SOFTWARE_DIR}/install -DBASKET_ENABLE_RPCLIB=true ..
         make -j 2
         make install

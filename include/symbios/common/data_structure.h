@@ -15,26 +15,87 @@ typedef struct Data{
     long position_; // read/write start position
     void* buffer_;  // data content
     long data_size_; // data size need to read/write
-    IOClientType native_io_client_type_; // io client type
+    IOClientType io_client_type_; // io client type
 
     /*Define the default, copy and move constructor*/
-    Data():id_(),position_(0),buffer_(),data_size_(0), native_io_client_type_(FILE_IO){}
-    Data(const Data &other):id_(other.id_), position_(other.position_),buffer_(other.buffer_),
-                            data_size_(other.data_size_), native_io_client_type_(other.native_io_client_type_) {}
+    Data(): id_(), position_(0), buffer_(), data_size_(0), io_client_type_(FILE_IO){}
+    Data(const Data &other): id_(other.id_), position_(other.position_), buffer_(other.buffer_),
+                             data_size_(other.data_size_), io_client_type_(other.io_client_type_) {}
     Data(Data &other): id_(other.id_), position_(other.position_), buffer_(other.buffer_),
-                       data_size_(other.data_size_), native_io_client_type_(other.native_io_client_type_) {}
+                       data_size_(other.data_size_), io_client_type_(other.io_client_type_) {}
 
     /*Define Assignment Operator*/
     Data &operator=(const Data &other){
         id_ = other.id_;
         position_ = other.position_;
-        memcpy(buffer_ + position_, other.buffer_ + other.position_, other.data_size_);
+        buffer_ = other.buffer_;
         data_size_ = other.data_size_;
-        native_io_client_type_ = other.native_io_client_type_;
+        io_client_type_ = other.io_client_type_;
 
         return *this;
     }
 } Data;
+
+typedef struct StorageSolution{
+    CharStruct end_point_;
+    IOClientType io_client_type_;
+    /*Define the default, copy and move constructor*/
+    StorageSolution(): end_point_(), io_client_type_(){}
+    StorageSolution(CharStruct end_point, IOClientType io_client_type): end_point_(end_point), io_client_type_(io_client_type){}
+    StorageSolution(const StorageSolution &other): end_point_(other.end_point_),
+                                                   io_client_type_(other.io_client_type_){}
+    StorageSolution(StorageSolution &other): end_point_(other.end_point_),
+                                             io_client_type_(other.io_client_type_){}
+
+    /*Define Assignment Operator*/
+    StorageSolution &operator=(const StorageSolution &other){
+        end_point_ = other.end_point_;
+        io_client_type_ = other.io_client_type_;
+        return *this;
+    }
+} StorageSolution;
+
+typedef struct FileSS: public StorageSolution{
+    /*Define the default, copy and move constructor*/
+    FileSS(CharStruct end_point): StorageSolution(end_point,IOClientType::FILE_IO){}
+    FileSS(const FileSS &other): StorageSolution(other){}
+    FileSS(FileSS &other): StorageSolution(other){}
+    /*Define Assignment Operator*/
+    FileSS &operator=(const FileSS &other){
+        StorageSolution::operator=(other);
+        return *this;
+    }
+}FileStorageSolution;
+
+typedef struct RedisSS: public StorageSolution{
+    uint16_t port_;
+    /*Define the default, copy and move constructor*/
+    RedisSS(CharStruct end_point,  uint16_t port):StorageSolution(end_point,IOClientType::REDIS_IO),port_(port){}
+    RedisSS(const RedisSS &other):StorageSolution(other),port_(other.port_){}
+    RedisSS(RedisSS &other):StorageSolution(other),port_(other.port_){}
+    /*Define Assignment Operator*/
+    RedisSS &operator=(const RedisSS &other){
+        StorageSolution::operator=(other);
+        port_=other.port_;
+        return *this;
+    }
+}RedisSS;
+
+typedef struct MongoSS: public StorageSolution{
+    CharStruct database_;
+    CharStruct collection_;
+    /*Define the default, copy and move constructor*/
+    MongoSS(CharStruct end_point,CharStruct database,CharStruct collection):StorageSolution(end_point,IOClientType::MONGO_IO),database_(database),collection_(collection){}
+    MongoSS(const MongoSS &other):StorageSolution(other),database_(other.database_),collection_(other.collection_){}
+    MongoSS(MongoSS &other):StorageSolution(other),database_(other.database_),collection_(other.collection_){}
+    /*Define Assignment Operator*/
+    MongoSS &operator=(const MongoSS &other){
+        StorageSolution::operator=(other);
+        database_=other.database_;
+        collection_=other.collection_;
+        return *this;
+    }
+}MongoSS;
 
 
 typedef struct Distribution{
@@ -57,8 +118,9 @@ typedef struct Distribution{
 
         return *this;
     }
-
 } Distribution;
+
+
 
 #include <rpc/msgpack.hpp>
 namespace clmdep_msgpack {
@@ -105,7 +167,7 @@ namespace clmdep_msgpack {
         }  // namespace adaptor
     }
 }  // namespace clmdep_msgpack
-
+std::ostream &operator<<(std::ostream &os, Data &data);
 
 #endif //SYMBIOS_DATA_STRUCTURE_H
 

@@ -2,8 +2,8 @@
 // Created by mani on 8/24/2020.
 //
 
-#ifndef SYMBIOS_DATA_PLACEMENT_H
-#define SYMBIOS_DATA_PLACEMENT_H
+#ifndef SYMBIOS_DATA_DISTRIBUTION_H
+#define SYMBIOS_DATA_DISTRIBUTION_H
 
 #include <symbios/common/data_structure.h>
 #include <vector>
@@ -22,4 +22,4 @@ public:
     virtual std::vector<Distribution> Distribute(Data& request) = 0;
 };
 
-#endif //SYMBIOS_DATA_PLACEMENT_H
+#endif //SYMBIOS_DATA_DISTRIBUTION_H

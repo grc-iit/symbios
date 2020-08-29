@@ -6,17 +6,25 @@
 #ifndef SYMBIOS_REDIS_IO_H
 #define SYMBIOS_REDIS_IO_H
 
-#include <symbios/io_clients/object_store_io.h>
+#include <symbios/io_clients/io.h>
 #include <sw/redis++/redis++.h>
 
 using namespace sw::redis;
 
-class RedisIOClient: public ObjectStoreIOClient {
+class RedisIOClient: public IOClient {
 public:
     /*
      * Constructor
      */
-    RedisIOClient();
+    RedisIOClient(uint16_t storage_index):IOClient(storage_index){
+        auto redis_solution = std::static_pointer_cast<RedisSS>(solution);
+
+        ConnectionOptions connectionOptions;
+        connectionOptions.host = redis_solution->end_point_.c_str(); // redis_cluster ip
+        connectionOptions.port = redis_solution->port_; // redis_cluster port
+
+        m_redisCluster = std::make_shared<RedisCluster>(connectionOptions);
+    }
     /*
      * Methods
      */

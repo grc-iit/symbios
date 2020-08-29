@@ -4,4 +4,6 @@
 
 #include <symbios/common/data_structure.h>
 
-std::ostream &operator<<(std::ostream &os, CharStruct const &m){     return os   << "{TYPE:CharStruct," << "value:" << m.c_str()<<"}"; }
+std::ostream &operator<<(std::ostream &os, Data const &data){
+    return os   << "{TYPE:Data," << "id_:" << data.id_<<"}";
+}

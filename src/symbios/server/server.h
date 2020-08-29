@@ -18,7 +18,8 @@ namespace symbios {
     public:
         void Run(std::future<void> futureObj);
         explicit Server();
-        int PosixRequest(Data req);
+        int StoreRequest(Data &request);
+        Data LocateRequest(Data &request);
     };
 }
 

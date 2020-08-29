@@ -20,7 +20,7 @@ int main(int argc, char * argv[]){
     data.position_=0;
     data.buffer_= (void *) "Hello";
     data.data_size_=strlen("Hello")+1;
-    client.send_request(data);
+    client.StoreRequest(data);
     MPI_Finalize();
     return 0;
 }

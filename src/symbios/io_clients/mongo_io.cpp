@@ -12,12 +12,6 @@
 #include <mongocxx/exception/query_exception.hpp>
 #include <mongocxx/exception/bulk_write_exception.hpp>
 
-MongoIOClient::MongoIOClient() {
-    instance = std::make_shared<mongocxx::instance>();
-    mongocxx::uri uri(SYMBIOS_CONF->MONGO_CLUSTER_URL.c_str());
-    mongocxx::client client(uri);
-    coll = client[SYMBIOS_CONF->MONGO_CLUSTER_DATABASE.c_str()][SYMBIOS_CONF->MONGO_CLUSTER_COLLECTION.c_str()];
-}
 
 void MongoIOClient::Read(Data &source, Data &destination) {
     // create the filter document and then call the find_one method to query data from mongodb
