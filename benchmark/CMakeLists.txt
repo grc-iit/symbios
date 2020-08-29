@@ -37,26 +37,44 @@ endif()
 
 #####ARES TEST CASES
 
+set(SCRIPT_ROOT ${CMAKE_SOURCE_DIR}/scripts/benchmark)
+
 #Allocate test nodes (Ares)
 add_custom_target(ares-alloc-client
-        COMMAND salloc --reservation=llogan_6 -w ${CMAKE_SOURCE_DIR}/scripts/hostfiles/hostfile_clients)
+        COMMAND salloc --reservation=llogan_6 -w ${SCRIPT_ROOT}/hostfiles/hostfile_clients)
 add_custom_target(ares-alloc-hdd-4
-        COMMAND salloc --reservation=llogan_6 -w ${CMAKE_SOURCE_DIR}/scripts/hostfiles/hostfile_servers_small)
+        COMMAND salloc --reservation=llogan_6 -w ${SCRIPT_ROOT}/hostfiles/hostfile_servers_small)
 add_custom_target(ares-alloc-hdd-24
-        COMMAND salloc --reservation=llogan_6 -w ${CMAKE_SOURCE_DIR}/scripts/hostfiles/hostfile_servers_big)
+        COMMAND salloc --reservation=llogan_6 -w ${SCRIPT_ROOT}/hostfiles/hostfile_servers_big)
 add_custom_target(ares-alloc-ssd-4
-        COMMAND salloc --reservation=llogan_6 -w ${CMAKE_SOURCE_DIR}/scripts/hostfiles/hostfile_servers_ssd)
+        COMMAND salloc --reservation=llogan_6 -w ${SCRIPT_ROOT}/hostfiles/hostfile_servers_ssd)
 add_custom_target(ares-alloc-nvme-4
-        COMMAND salloc --reservation=llogan_6 -w ${CMAKE_SOURCE_DIR}/scripts/hostfiles/hostfile_servers_nvme)
+        COMMAND salloc --reservation=llogan_6 -w ${SCRIPT_ROOT}/hostfiles/hostfile_servers_nvme)
 
 #Deploy OrangeFS
+add_custom_target(ares-deploy-hdd-4
+        COMMAND ${SCRIPT_ROOT}/deploy.sh
+            ${SCRIPT_ROOT}/orange/conf/basic.conf
+            /mnt/hdd/llogan/orangefs
+            /mnt/nvme/llogan/write/generic
+            ${SCRIPT_ROOT}/hostfiles/hostfile_servers_small
+            ${SCRIPT_ROOT})
+
+#Terminate OrangeFS
+add_custom_target(ares-terminate-hdd-4
+        COMMAND ${SCRIPT_ROOT}/deploy.sh
+        ${SCRIPT_ROOT}/orange/conf/basic.conf
+        /mnt/hdd/llogan/orangefs
+        /mnt/nvme/llogan/write/generic
+        ${SCRIPT_ROOT}/hostfiles/hostfile_servers_small
+        ${SCRIPT_ROOT})
 
 #OrangeFS test cases (ares)
-add_custom_target(ares_bm_bs-4k_fs-0k_tot-1g_wfrac-1_hdd-4 COMMAND
+add_custom_target(ares_bm_s_orangefs_bs_4k_fs_0k_tot_1g_wfrac_1_hdd_4 COMMAND
         mpirun -n 1 --host=${CMAKE_SOURCE_DIR}/scripts/hostfile_clients ${CMAKE_CURRENT_BINARY_DIR}/benchmark
-        -s orangefs -caddr /mnt/hdd/llogan/orangefs/data -path test.bin
+        -s orangefs -caddr /mnt/nvme/llogan/write/generic -path /test.bin
         -w io-only -bs 4k -fs 0k -tot 1g -wfrac 1 -rfrac 0
-        -out ~/test.csv)
+        -out ~/test_hdd4_basic)
 
 
 
