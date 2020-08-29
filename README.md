@@ -65,6 +65,14 @@ cd boost_1_74_0
 ./bootstrap.sh --prefix=$DEP_INSTALL
 ./b2 install
 ```
+### Redis
+To install the actual redis:
+```bash
+wget http://download.redis.io/releases/redis-6.0.6.tar.gz
+tar xvzf redis-stable.tar.gz
+cd redis-stable
+make PREFIX=$DEP_INSTALL install
+```
 
 ### Hireds
 
