@@ -15,14 +15,14 @@ typedef struct Data{
     long position_; // read/write start position
     void* buffer_;  // data content
     long data_size_; // data size need to read/write
-    IOClientType io_client_type_; // io client type
+    uint16_t storage_index_;
 
     /*Define the default, copy and move constructor*/
-    Data(): id_(), position_(0), buffer_(), data_size_(0), io_client_type_(FILE_IO){}
+    Data(): id_(), position_(0), buffer_(), data_size_(0), storage_index_(){}
     Data(const Data &other): id_(other.id_), position_(other.position_), buffer_(other.buffer_),
-                             data_size_(other.data_size_), io_client_type_(other.io_client_type_) {}
+                             data_size_(other.data_size_), storage_index_(other.storage_index_) {}
     Data(Data &other): id_(other.id_), position_(other.position_), buffer_(other.buffer_),
-                       data_size_(other.data_size_), io_client_type_(other.io_client_type_) {}
+                       data_size_(other.data_size_), storage_index_(other.storage_index_) {}
 
     /*Define Assignment Operator*/
     Data &operator=(const Data &other){
@@ -30,8 +30,7 @@ typedef struct Data{
         position_ = other.position_;
         buffer_ = other.buffer_;
         data_size_ = other.data_size_;
-        io_client_type_ = other.io_client_type_;
-
+        storage_index_ = other.storage_index_;
         return *this;
     }
 } Data;
@@ -101,21 +100,20 @@ typedef struct MongoSS: public StorageSolution{
 typedef struct Distribution{
     Data source_data_; // memory buffer for write and file buffer for read
     Data destination_data_; // file info for write and memory info for read
-    IOClientType io_client_type_; // native io client type
+    uint16_t storage_index_; // native io client type
 
     /*Define the default, copy and move constructor*/
-    Distribution():io_client_type_(FILE_IO){}
+    Distribution():storage_index_(){}
     Distribution(const Distribution &other):source_data_(other.source_data_),
-        destination_data_(other.destination_data_), io_client_type_(other.io_client_type_){}
+        destination_data_(other.destination_data_), storage_index_(other.storage_index_){}
     Distribution(Distribution &other):source_data_(other.source_data_),
-        destination_data_(other.destination_data_), io_client_type_(other.io_client_type_){}
+        destination_data_(other.destination_data_), storage_index_(other.storage_index_){}
 
     /*Define Assignment Operator*/
     Distribution &operator=(const Distribution &other){
         source_data_ = other.source_data_;
         destination_data_ = other.destination_data_;
-        io_client_type_ = other.io_client_type_;
-
+        storage_index_ = other.storage_index_;
         return *this;
     }
 } Distribution;
@@ -134,6 +132,7 @@ namespace clmdep_msgpack {
                     input.position_ = o.via.array.ptr[1].as<size_t>();
                     input.buffer_ = (void*)o.via.array.ptr[2].as<std::string>().c_str();
                     input.data_size_ = o.via.array.ptr[3].as<size_t>();
+                    input.storage_index_ = o.via.array.ptr[4].as<uint16_t>();
                     return o;
                 }
             };
@@ -142,11 +141,12 @@ namespace clmdep_msgpack {
             struct pack<Data> {
                 template<typename Stream>
                 packer <Stream> &operator()(mv1::packer <Stream> &o, Data const &input) const {
-                    o.pack_array(4);
+                    o.pack_array(5);
                     o.pack(input.id_);
                     o.pack(input.position_);
                     o.pack(std::string((char*)input.buffer_));
                     o.pack(input.data_size_);
+                    o.pack(input.storage_index_);
                     return o;
                 }
             };
@@ -155,13 +155,14 @@ namespace clmdep_msgpack {
             struct object_with_zone<Data> {
                 void operator()(mv1::object::with_zone &o, Data const &input) const {
                     o.type = type::ARRAY;
-                    o.via.array.size = 4;
+                    o.via.array.size = 5;
                     o.via.array.ptr = static_cast<clmdep_msgpack::object *>(o.zone.allocate_align(
                             sizeof(mv1::object) * o.via.array.size, MSGPACK_ZONE_ALIGNOF(mv1::object)));
                     o.via.array.ptr[0] = mv1::object(input.id_, o.zone);
                     o.via.array.ptr[1] = mv1::object(input.position_, o.zone);
                     o.via.array.ptr[2] = mv1::object(std::string((char*)input.buffer_), o.zone);
                     o.via.array.ptr[3] = mv1::object(input.data_size_, o.zone);
+                    o.via.array.ptr[4] = mv1::object(input.storage_index_, o.zone);
                 }
             };
         }  // namespace adaptor
