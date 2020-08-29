@@ -73,6 +73,8 @@ tar xvzf redis-stable.tar.gz
 cd redis-stable
 make PREFIX=$DEP_INSTALL install
 ```
+Manage local redis using the scripts in scripts/deploymnet. 
+redis_r.sh and redis_s.sh will run and stop redis respectively.
 
 ### Hireds
 
@@ -125,6 +127,14 @@ make install
 
 If the hiredis and redis-plus-plus are not colocated, then set 
 DCMAKE_PREFIX_PATH to be the path to where hiredis is installed.
+
+### MongoDB
+To install the actual MongoDB:
+```bash
+
+```
+Manage local redis using the scripts in scripts/deploymnet. 
+mongodb_r.sh and mongodb_s.sh will run and stop redis respectively.
 
 ### Mongodb C Driver
 
