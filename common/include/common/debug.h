@@ -31,31 +31,39 @@
 */
 
 
-#ifndef DEBUG_PROJECT_H
-#define DEBUG_PROJECT_H
+#ifndef COMMON_DEBUG_PROJECT_H
+#define COMMON_DEBUG_PROJECT_H
 
 #include <iostream>
 #include <csignal>
 #include <unistd.h>
 #include <execinfo.h>
 #include <sstream>
+#include <stack>
+#include <string>
+#include <iostream>
+#include <stdarg.h>
+#include <chrono>
+#include <mpi.h>
+#include <string>
+namespace common::debug{
 
-/**
+    /**
  * Handles signals and prints stack trace.
  *
  * @param sig
  */
-inline void handler(int sig) {
-    void *array[10];
-    size_t size;
-    // get void*'s for all entries on the stack
-    size = backtrace(array, 300);
-    int rank, comm_size;
-    // print out all the frames to stderr
-    fprintf(stderr, "Error: signal %d\n", sig);
-    backtrace_symbols_fd(array, size, STDERR_FILENO);
-    exit(0);
-}
+    static void handler(int sig) {
+        void *array[10];
+        size_t size;
+        // get void*'s for all entries on the stack
+        size = backtrace(array, 300);
+        int rank, comm_size;
+        // print out all the frames to stderr
+        fprintf(stderr, "Error: signal %d\n", sig);
+        backtrace_symbols_fd(array, size, STDERR_FILENO);
+        exit(0);
+    }
 
 
 /**
@@ -63,7 +71,7 @@ inline void handler(int sig) {
  */
 
 #ifdef DEBUG_MSG
-#define DBGVAR(var) \
+    #define DBGVAR(var) \
 std::cout << "DBG: " << __FILE__ << "(" << __LINE__ << ") "\
        << #var << " = [" << (var) << "]" << std::endl
 
@@ -91,55 +99,49 @@ std::cout << "DBG: " << __FILE__ << "(" << __LINE__ << ") "\
  * Time all functions and instrument it
  */
 
-#include <stack>
-#include <string>
-#include <iostream>
-#include <stdarg.h>
-#include <chrono>
-#include <mpi.h>
-#include <string>
 
-class Timer {
-public:
-    void startTime() {
-        t1 = std::chrono::high_resolution_clock::now();
-    }
-    double endTime(){
-        auto t2 = std::chrono::high_resolution_clock::now();
-        auto t =  std::chrono::duration_cast<std::chrono::nanoseconds>(
-                t2 - t1).count()/1000000.0;
-        return t;
-    }
-private:
-    std::chrono::high_resolution_clock::time_point t1;
-};
+
+    class Timer {
+    public:
+        void startTime() {
+            t1 = std::chrono::high_resolution_clock::now();
+        }
+        double endTime(){
+            auto t2 = std::chrono::high_resolution_clock::now();
+            auto t =  std::chrono::duration_cast<std::chrono::nanoseconds>(
+                    t2 - t1).count()/1000000.0;
+            return t;
+        }
+    private:
+        std::chrono::high_resolution_clock::time_point t1;
+    };
 /**
  * Implement Auto tracing Mechanism.
  */
-using namespace std;
-class AutoTrace
-{
-    Timer timer;
-    static int rank,item;
-
-public:
-    template <typename... Args>
-    AutoTrace(std::string string,Args... args):m_line(string)
+    using namespace std;
+    class AutoTrace
     {
-        char thread_name[256];
-        pthread_getname_np(pthread_self(), thread_name,256);
-        std::stringstream stream;
+        Timer timer;
+        static int rank,item;
 
-        if(rank == -1) MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    public:
+        template <typename... Args>
+        AutoTrace(std::string string,Args... args):m_line(string)
+        {
+            char thread_name[256];
+            pthread_getname_np(pthread_self(), thread_name,256);
+            std::stringstream stream;
+
+            if(rank == -1) MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 #if defined(DEBUG_TRACE) || defined(DEBUG_TIMER)
-        //stream << "\033[31m";
+            //stream << "\033[31m";
         stream <<++item<<";"<<thread_name<<";"<< rank << ";" <<m_line << ";";
 #endif
 #if  defined(DEBUG_TIMER)
-        stream <<";;";
+            stream <<";;";
 #endif
 #ifdef DEBUG_TRACE
-        auto args_obj = std::make_tuple(args...);
+            auto args_obj = std::make_tuple(args...);
         const ulong args_size = std::tuple_size<decltype(args_obj)>::value;
         stream << "args(";
         if(args_size == 0) stream << "Void";
@@ -151,39 +153,43 @@ public:
         stream << ");";
 #endif
 #if defined(DEBUG_TRACE) || defined(DEBUG_TIMER)
-        stream <<"start"<< endl;
+            stream <<"start"<< endl;
         stream << "\033[00m";
         cout << stream.str();
 #endif
 #ifdef DEBUG_TIMER
-        timer.startTime();
+            timer.startTime();
 #endif
-    }
+        }
 
-    ~AutoTrace()
-    {
-        std::stringstream stream;
-        char thread_name[256];
-        pthread_getname_np(pthread_self(), thread_name,256);
-        //stream << "\033[31m";
+        ~AutoTrace()
+        {
+            std::stringstream stream;
+            char thread_name[256];
+            pthread_getname_np(pthread_self(), thread_name,256);
+            //stream << "\033[31m";
 #if defined(DEBUG_TRACE) || defined(DEBUG_TIMER)
-        stream <<item-- <<";"<<std::string(thread_name)<<";"<< rank << ";" << m_line << ";";
+            stream <<item-- <<";"<<std::string(thread_name)<<";"<< rank << ";" << m_line << ";";
 #endif
 #if defined(DEBUG_TRACE)
-        stream  <<";";
+            stream  <<";";
 #endif
 #ifdef DEBUG_TIMER
-        double end_time=timer.endTime();
+            double end_time=timer.endTime();
         stream  <<end_time<<";msecs;";
 #endif
 #if defined(DEBUG_TRACE) || defined(DEBUG_TIMER)
-        stream  <<"finish"<< endl;
+            stream  <<"finish"<< endl;
         stream << "\033[00m";
         cout << stream.str();
 #endif
-    }
-private:
-    string m_line;
-};
+        }
+    private:
+        string m_line;
+    };
+    int AutoTrace::rank=0;
+    int AutoTrace::item=0;
+}
+
 
 #endif //DEBUG_DEBUG_H

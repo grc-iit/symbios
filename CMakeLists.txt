@@ -13,6 +13,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${INCLUDE_DIRS}")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${INCLUDE_DIRS}")
 
 include_directories(include)
+include_directories(common/include)
 include_directories(src)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -40,6 +41,12 @@ set(SYMBIOS_SERVER_SRC ${SYMBIOS_COMMON_SRC} src/symbios/server/main.cpp
         src/symbios/io_clients/object_store_io.h src/symbios/io_clients/object_store_io.cpp
         src/symbios/io_clients/redis_io.h src/symbios/io_clients/redis_io.cpp
         src/symbios/io_clients/mongo_io.h src/symbios/io_clients/mongo_io.cpp
+        src/symbios/data_distribution/data_distribution.h src/symbios/data_distribution/data_distribution_factory.h
+        src/symbios/data_distribution/dp_dde.h src/symbios/data_distribution/dp_dde.cpp
+        src/symbios/data_distribution/heuristics_dde.h src/symbios/data_distribution/heuristics_dde.cpp
+        src/symbios/data_distribution/random_dde.h src/symbios/data_distribution/random_dde.cpp
+        src/symbios/data_distribution/round_robin_dde.h src/symbios/data_distribution/round_robin_dde.cpp
+        src/symbios/metadata_orchestrator/metadata_orchestrator.h src/symbios/metadata_orchestrator/metadata_orchestrator.cpp
         src/symbios/server/daemon.cpp src/symbios/server/daemon.h)
 
 add_executable(symbios_server ${SYMBIOS_SERVER_SRC})

@@ -2,10 +2,10 @@
 // Created by mani on 8/24/2020.
 //
 
-#ifndef SYMBIOS_HEURISTICS_DATA_PLACEMENT_H
-#define SYMBIOS_HEURISTICS_DATA_PLACEMENT_H
+#ifndef SYMBIOS_HEURISTICS_DDE_H
+#define SYMBIOS_HEURISTICS_DDE_H
 
-#include <symbios/data_placement/data_placement.h>
+#include <symbios/data_distribution/data_distribution.h>
 
 class HeuristicsDDE: public DataDistributionEngine {
 public:
@@ -21,4 +21,4 @@ public:
     std::vector<Distribution> Distribute(Data& request) override;
 };
 
-#endif //SYMBIOS_HEURISTICS_DATA_PLACEMENT_H
+#endif //SYMBIOS_HEURISTICS_DDE_H

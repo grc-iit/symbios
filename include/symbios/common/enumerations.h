@@ -30,7 +30,7 @@ typedef enum DataPlacementPolicy{
     ROUND_ROBIN_POLICY = 1,
     HEURISTICS_POLICY = 2,
     DYNAMIC_PROGRAMMING_POLICY = 3
-} DataPlacementPolicy;
+} DataDistributionPolicy;
 
 #endif //SYMBIOS_ENUMERATIONS_H
 

@@ -18,7 +18,8 @@ namespace symbios{
                 std::shared_ptr<RPC> rpc;
             public:
                 Client();
-                void send_request(Data data);
+                void StoreRequest(Data &request);
+                void LocateRequest(Data &request);
             };
     }
 

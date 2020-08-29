@@ -11,7 +11,7 @@
 #include <mpi.h>
 #include <benchmark/benchmark.h>
 #include "rng.h"
-#include <debug.h>
+#include <common/debug.h>
 
 DistributionPtr create_dist(BenchmarkArgs &args, size_t file_size, size_t block_size)
 {
@@ -109,7 +109,7 @@ int main(int argc, char **argv)
     io->Connect(addr, port);
 
     //Run workloads
-    Timer t;
+    common::debug::Timer t;
     t.startTime();
     int workload = args.GetIntOpt("-w");
     switch(static_cast<WorkloadType>(workload)) {

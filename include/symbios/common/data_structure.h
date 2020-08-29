@@ -105,7 +105,7 @@ namespace clmdep_msgpack {
         }  // namespace adaptor
     }
 }  // namespace clmdep_msgpack
-
+std::ostream &operator<<(std::ostream &os, Data &data);
 
 #endif //SYMBIOS_DATA_STRUCTURE_H
 

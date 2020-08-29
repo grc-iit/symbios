@@ -5,7 +5,7 @@
 #ifndef SYMBIOS_RANDOMDATAPLACEMENT_H
 #define SYMBIOS_RANDOMDATAPLACEMENT_H
 
-#include <symbios/data_placement/data_placement.h>
+#include <symbios/data_distribution/data_distribution.h>
 
 class RandomDDE: public DataDistributionEngine {
 public:

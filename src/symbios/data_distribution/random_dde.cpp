@@ -2,7 +2,7 @@
 // Created by mani on 8/24/2020.
 //
 
-#include <symbios/data_placement/random_data_placement.h>
+#include <symbios/data_distribution/random_dde.h>
 #include <cstdlib>
 #include <ctime>
 
@@ -17,6 +17,6 @@ std::vector<Distribution> RandomDDE::Distribute(Data& request) {
     //int index = rand() % size;
     // get the target storage in vector[index], and then return it.
 
-    return nullptr;
+    return std::vector<Distribution>();
 }
 

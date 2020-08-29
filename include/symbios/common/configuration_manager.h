@@ -78,6 +78,7 @@ namespace symbios {
         CharStruct MONGO_CLUSTER_URL;
         CharStruct MONGO_CLUSTER_DATABASE;
         CharStruct MONGO_CLUSTER_COLLECTION;
+        DataDistributionPolicy DATA_DISTRIBUTION_POLICY;
 
         ConfigurationManager() : SERVER_LISTS("/tmp/tmp.BUKlhPiLxF/conf/server_lists/symbios_server"),
                                  CLIENT_LISTS("/tmp/tmp.BUKlhPiLxF/conf/server_lists/symbios_client"),
@@ -90,7 +91,8 @@ namespace symbios {
                                  REDIS_CLUSTER_PORT(6379),
                                  MONGO_CLUSTER_URL("mongodb://localhost:27017"),
                                  MONGO_CLUSTER_DATABASE("mydb"),
-                                 MONGO_CLUSTER_COLLECTION("test") {}
+                                 MONGO_CLUSTER_COLLECTION("test"),
+                                 DATA_DISTRIBUTION_POLICY(DataDistributionPolicy::RANDOM_POLICY){}
 
         void LoadConfiguration() {
             using namespace rapidjson;
@@ -119,6 +121,9 @@ namespace symbios {
             config(doc, "MONGO_CLUSTER_URL", MONGO_CLUSTER_URL);
             config(doc, "MONGO_CLUSTER_DATABASE", MONGO_CLUSTER_DATABASE);
             config(doc, "MONGO_CLUSTER_COLLECTION", MONGO_CLUSTER_COLLECTION);
+            /**
+             * TODO: add DATA_DISTRIBUTION_POLICY
+             */
             fclose(outfile);
         }
 

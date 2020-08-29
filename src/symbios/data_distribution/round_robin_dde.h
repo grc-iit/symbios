@@ -5,7 +5,7 @@
 #ifndef SYMBIOS_ROUNDROBINDATAPLACEMENT_H
 #define SYMBIOS_ROUNDROBINDATAPLACEMENT_H
 
-#include <symbios/data_placement/data_placement.h>
+#include <symbios/data_distribution/data_distribution.h>
 
 class RoundRobinDDE: public DataDistributionEngine {
 public:

@@ -7,8 +7,13 @@ symbios::Client::Client(){
     rpc=basket::Singleton<RPCFactory>::GetInstance()->GetRPC(BASKET_CONF->RPC_PORT);
 }
 
-void symbios::Client::send_request(Data data) {
+void symbios::Client::StoreRequest(Data &request) {
     int server = rand()% BASKET_CONF->NUM_SERVERS;
-    auto num_servers = rpc->call<RPCLIB_MSGPACK::object_handle>(server, "Posix_Request", data).as<int>();
+    auto num_servers = rpc->call<RPCLIB_MSGPACK::object_handle>(server, "StoreRequest", request).as<int>();
     printf("response from server %d\n",num_servers);
+}
+
+void symbios::Client::LocateRequest(Data &request) {
+    int server = rand()% BASKET_CONF->NUM_SERVERS;
+    request = rpc->call<RPCLIB_MSGPACK::object_handle>(server, "LocateRequest", request).as<Data>();
 }
