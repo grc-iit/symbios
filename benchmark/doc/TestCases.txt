@@ -4,10 +4,11 @@ salloc --reservation=llogan_6 -w ${CMAKE_SOURCE_DIR}/scripts/hostfiles/hostfile_
 
 sinfo: View status of all nodes
 squeue: View all my active jobs
+scontrol show res: View the nodes I have reserved
 scancel [job_id]: Remove my hold on node
 
-ssh llogan@ares-comp-[1-32]-40g
-ssh llogan@ares-stor-[1-32]-40g
+ssh llogan@ares-comp-[01-32]-40g
+ssh llogan@ares-stor-[01-32]-40g
 
 #Add ORANGEFS environment to ~/.bashrc
 
