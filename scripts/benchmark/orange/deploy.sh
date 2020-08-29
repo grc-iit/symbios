@@ -29,7 +29,7 @@ echo "tcp://${server_list[0]}:${comm_port}/${name} ${client_dir} pvfs2 defaults,
 #Server Setup
 for node in ${server_list[@]}
 do
-ssh ${node} /bin/bash << EOF
+ssh ${node} << EOF
 echo "Setting up server at ${node} "
 source ~/.bashrc
 rm -rf ${server_dir}*
@@ -42,7 +42,7 @@ done
 #Client Setup
 for node in ${client_list[@]}
 do
-ssh ${node} /bin/bash << EOF
+ssh ${node} << EOF
 echo "Starting client on ${node}"
 source ~/.bashrc
 sudo kill-pvfs2-client

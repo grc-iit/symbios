@@ -23,7 +23,7 @@ comm_port=3334  #TODO: Allow changing
 #Stop clients
 for node in ${client_list[@]}
 do
-ssh ${node} /bin/bash << EOF
+ssh ${node} << EOF
 echo "Stopping client on $node"
 source ~/.bashrc
 sudo /usr/sbin/kill-pvfs2-client
@@ -33,7 +33,7 @@ done
 #Stop servers
 for node in ${server_list[@]}
 do
-ssh ${node} /bin/bash << EOF
+ssh ${node} << EOF
 echo "Killing server at ${node} "
 source ~/.bashrc
 sudo /usr/sbin/kill-pvfs2-client
