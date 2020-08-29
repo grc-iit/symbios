@@ -10,7 +10,7 @@ conf_file=${1}
 server_dir=${2}
 client_dir=${3}
 server_hostfile=${4}
-if [ $# -gt 4]; then
+if [ $# -gt 4 ]; then
   script_root=${5}
 else
   script_root=$(pwd)
