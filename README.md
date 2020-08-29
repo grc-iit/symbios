@@ -235,3 +235,8 @@ Data source_data_;
 Data destination_data_;
 io_client.Read(source_data_, destination_data_);
 ```
+## Redis Cluster Local Script Usage
+```bash
+cd scripts/local
+./run_redis_cluster.sh redis_cluster_install_path redis_server_numbers
+```
