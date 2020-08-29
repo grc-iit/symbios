@@ -25,6 +25,7 @@ for node in ${client_list[@]}
 do
 ssh ${node} /bin/bash << EOF
 echo "Stopping client on $node"
+source ~/.bashrc
 sudo /usr/sbin/kill-pvfs2-client
 EOF
 done
@@ -34,6 +35,7 @@ for node in ${server_list[@]}
 do
 ssh ${node} /bin/bash << EOF
 echo "Killing server at ${node} "
+source ~/.bashrc
 sudo /usr/sbin/kill-pvfs2-client
 rm -rf ${server_dir}/*
 killall -s SIGKILL pvfs2-server

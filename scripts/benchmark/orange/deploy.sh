@@ -31,6 +31,7 @@ for node in ${server_list[@]}
 do
 ssh ${node} /bin/bash << EOF
 echo "Setting up server at ${node} "
+source ~/.bashrc
 rm -rf ${server_dir}*
 mkdir -p ${server_dir}
 pvfs2-server -f -a ${node} ${conf_file}
@@ -43,6 +44,7 @@ for node in ${client_list[@]}
 do
 ssh ${node} /bin/bash << EOF
 echo "Starting client on ${node}"
+source ~/.bashrc
 sudo kill-pvfs2-client
 mkdir -p ${client_dir} 
 sudo insmod ${ORANGEFS_KO}/pvfs2.ko
