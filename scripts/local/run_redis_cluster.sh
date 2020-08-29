@@ -1,8 +1,8 @@
 #!/bin/bash
 if [ $# -lt 2 ]
 then
-  echo "Usage: ./deploy.sh redis_cluster_install_path redis_server_numbers"
-  echo "e.g ./deploy.sh ~/redis_cluster 3"
+  echo "Usage: ./run_redis_cluster.sh redis_cluster_install_path redis_server_numbers"
+  echo "e.g ./run_redis_cluster.sh ~/redis_cluster 3"
   exit
 fi
 
