@@ -74,6 +74,7 @@ namespace symbios {
         uint16_t SERVER_RPC_THREADS;
         CharStruct SERVER_DIR;
         CharStruct CONFIGURATION_FILE;
+        CharStruct POSIX_MOUNT_POINT;
         uint16_t SERVER_COUNT;
         int RANDOM_SEED;
         std::unordered_map<uint16_t, std::shared_ptr<StorageSolution>> STORAGE_SOLUTIONS;
@@ -85,6 +86,7 @@ namespace symbios {
                                  SERVER_RPC_THREADS(4),
                                  SERVER_DIR("/dev/shm/hari/symbios_server"),
                                  CONFIGURATION_FILE("/tmp/tmp.BUKlhPiLxF/conf/symbios.conf"),
+                                 POSIX_MOUNT_POINT("/tmp/tmp.BUKlhPiLxF/conf/symbios.conf"),
                                  SERVER_COUNT(1),
                                  RANDOM_SEED(100),
                                  STORAGE_SOLUTIONS(),
@@ -117,6 +119,7 @@ namespace symbios {
             config(doc, "SYMBIOS_PORT", SYMBIOS_PORT);
             config(doc, "SERVER_RPC_THREADS", SERVER_RPC_THREADS);
             config(doc, "SERVER_DIR", SERVER_DIR);
+            config(doc, "POSIX_MOUNT_POINT", POSIX_MOUNT_POINT);
             /**
              * TODO: add DATA_DISTRIBUTION_POLICY, solutions, RANDOM_SEED
              */
