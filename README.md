@@ -149,6 +149,8 @@ change -DCMAKE_PREFIX_PATH to whatever directory the mongo C driver is....
 git clone https://github.com/Tencent/rapidjson
 cd rapidjson
 git checkout v1.1.0 -b v1.1.0
+mkdir build
+cd build
 cmake .. -DCMAKE_CXX_FLAGS:STRING="-Wno-error=class-memaccess -Wno-error=implicit-fallthrough="  -DCMAKE_INSTALL_PREFIX=$DEP_INSTALL -DINCLUDE_INSTALL_DIR=$DEP_INSTALL/include -DLIB_INSTALL_DIR=$DEP_INSTALL/lib -DCMAKE_INSTALL_DIR=$DEP_INSTALL/cmake -DDOC_INSTALL_DIR=$DEP_INSTALL/share/doc/RapidJSON
 make
 make -j8
