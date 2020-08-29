@@ -27,6 +27,7 @@ int symbios::Server::StoreRequest(Data &request){
     basket::Singleton<MetadataOrchestrator>::GetInstance()->Store(request,distributions);
     for(auto distribution:distributions){
         basket::Singleton<IOFactory>::GetInstance()->GetIOClient(distribution.destination_data_.io_client_type_)->Write(distribution.source_data_,distribution.destination_data_);
+        COMMON_DBGMSG("Storing data in "<<distribution.destination_data_.io_client_type_);
     }
     return SYMBIOS_CONF->SERVER_COUNT;
 }

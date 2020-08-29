@@ -71,28 +71,28 @@ namespace common::debug{
  */
 
 #ifdef DEBUG_MSG
-    #define DBGVAR(var) \
+    #define COMMON_DBGVAR(var) \
 std::cout << "DBG: " << __FILE__ << "(" << __LINE__ << ") "\
        << #var << " = [" << (var) << "]" << std::endl
 
-#define DBGVAR2(var1, var2) \
+#define COMMON_DBGVAR2(var1, var2) \
   std::cout << "DBG: " << __FILE__ << "(" << __LINE__ << ") "\
        << #var1 << " = [" << (var1) << "]"\
        << #var2 << " = [" << (var2) << "]"  << std::endl
-#define DBGVAR3(var1, var2, var3) \
+#define COMMON_DBGVAR3(var1, var2, var3) \
   std::cout << "DBG: " << __FILE__ << "(" << __LINE__ << ") "\
        << #var1 << " = [" << (var1) << "]"\
        << #var2 << " = [" << (var2) << "]"\
        << #var3 << " = [" << (var3) << "]"  << std::endl
 
-#define DBGMSG(msg) \
+#define COMMON_DBGMSG(msg) \
   std::cout << "DBG: " << __FILE__ << "(" << __LINE__ << ") " \
        << msg << std::endl
 #else
-#define DBGVAR(var)
-#define DBGVAR2(var1, var2)
-#define DBGVAR3(var1, var2, var3)
-#define DBGMSG(msg)
+#define COMMON_DBGVAR(var)
+#define COMMON_DBGVAR2(var1, var2)
+#define COMMON_DBGVAR3(var1, var2, var3)
+#define COMMON_DBGMSG(msg)
 #endif
 
 /**
@@ -187,8 +187,6 @@ std::cout << "DBG: " << __FILE__ << "(" << __LINE__ << ") "\
     private:
         string m_line;
     };
-    int AutoTrace::rank=0;
-    int AutoTrace::item=0;
 }
 
 

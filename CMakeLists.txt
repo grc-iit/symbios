@@ -19,12 +19,13 @@ include_directories(src)
 set(CMAKE_CXX_STANDARD 17)
 
 # Debug flags
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DDEBUG_MSG")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DHERMES_DEBUG")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DHERMES_TIMER")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DHERMES_TRACE")
 
 # Source files
-set(SYMBIOS_COMMON_SRC include/symbios/common/data_structure.h include/symbios/common/configuration_manager.h src/symbios/common/data_structure.cpp)
+set(SYMBIOS_COMMON_SRC include/symbios/common/data_structure.h include/symbios/common/configuration_manager.h src/symbios/common/data_structure.cpp common/src/common/debug.cpp common/include/common/debug.h)
 set(SYMBIOS_LIB_SRC ${SYMBIOS_COMMON_SRC} include/symbios/client/client.h src/symbios/client/client.cpp
         src/symbios/client/posix.cpp )
 

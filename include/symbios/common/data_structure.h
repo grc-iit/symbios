@@ -28,7 +28,7 @@ typedef struct Data{
     Data &operator=(const Data &other){
         id_ = other.id_;
         position_ = other.position_;
-        memcpy(buffer_ + position_, other.buffer_ + other.position_, other.data_size_);
+        buffer_ = other.buffer_;
         data_size_ = other.data_size_;
         io_client_type_ = other.io_client_type_;
 
