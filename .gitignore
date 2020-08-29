@@ -14,3 +14,7 @@ data
 /cmake-build-debug/*
 /.idea/misc.xml
 /.idea/other.xml
+/cmake-build-debug-remote-host/
+/cmake-build-debug/
+/.idea/.name
+/build/

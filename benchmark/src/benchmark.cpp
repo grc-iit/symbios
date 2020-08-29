@@ -144,7 +144,7 @@ int main(int argc, char **argv)
     //Write to output CSV in root process
     if(rank == 0 && args.OptIsSet("-out")) {
         std::string output_path = args.GetStringOpt("-out");
-        bool exists = std::filesystem::exists(output_path);
+        bool exists = boost::filesystem::exists(output_path);
         std::ofstream out(output_path, std::ofstream::out | std::ofstream::app);
         if(!exists) {
             out << "avg_msec,std_msec,min_msec,max_msec,nprocs,tot_ops,tot_bytes,thrpt_kiops,bw_kbps" << std::endl;
