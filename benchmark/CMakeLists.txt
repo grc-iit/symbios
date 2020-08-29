@@ -37,7 +37,7 @@ endif()
 
 #####ARES TEST CASES
 
-set(SCRIPT_ROOT ${CMAKE_SOURCE_DIR}/scripts/benchmark)
+set(SCRIPT_ROOT ${CMAKE_SOURCE_DIR}/scripts/benchmark/orange)
 
 #Allocate test nodes (Ares)
 add_custom_target(ares-alloc-client
