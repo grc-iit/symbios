@@ -6,13 +6,16 @@
 #define SYMBIOS_ROUNDROBINDATAPLACEMENT_H
 
 #include <symbios/data_distribution/data_distribution.h>
+#include <basket/sequencer/global_sequence.h>
 
 class RoundRobinDDE: public DataDistributionEngine {
+private:
+    basket::global_sequence sequence;
 public:
     /*
      * Constructor
      */
-    RoundRobinDDE(){}
+    RoundRobinDDE():sequence(){}
     /*
      * Methods
      */
