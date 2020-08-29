@@ -15,13 +15,6 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${INCLUDE_DIRS}")
 include_directories(include)
 include_directories(src)
 
-# External libraries hermes is dependent on.
-option(COMPILE_HCL "Compile and install HCL" ON)
-if(COMPILE_HCL)
-    add_subdirectory(hcl)
-    include_directories(hcl/include)
-endif()
-
 set(CMAKE_CXX_STANDARD 17)
 
 # Debug flags
@@ -36,8 +29,7 @@ set(SYMBIOS_LIB_SRC ${SYMBIOS_COMMON_SRC} include/symbios/client/client.h src/sy
 
 # add symbios lib
 add_library(symbios SHARED ${SYMBIOS_LIB_SRC})
-add_dependencies(symbios basket)
-target_link_libraries(symbios basket)
+target_link_libraries(symbios -lbasket -lrpc)
 # TODO: add any required libraries
 
 # add symbios server
@@ -52,9 +44,7 @@ set(SYMBIOS_SERVER_SRC ${SYMBIOS_COMMON_SRC} src/symbios/server/main.cpp
 
 add_executable(symbios_server ${SYMBIOS_SERVER_SRC})
 add_dependencies(symbios_server symbios)
-add_dependencies(symbios_server basket)
-target_link_libraries(symbios_server basket)
-target_link_libraries(symbios_server -lmpi -lhiredis -lredis++ -lmongoc-1.0 -lbson-1.0 -lbsoncxx -lboost_system -lboost_filesystem  -lmongocxx -lpthread)
+target_link_libraries(symbios_server -lmpi -lhiredis -lbasket -lrpc -lredis++ -lmongoc-1.0 -lbson-1.0 -lbsoncxx -lboost_system -lboost_filesystem  -lmongocxx -lpthread)
 # TODO: add any required libraries
 
 # add benchmark tool

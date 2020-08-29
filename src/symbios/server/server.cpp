@@ -2,6 +2,7 @@
 
 symbios::Server::Server(){
     SYMBIOS_CONF->ConfigureSymbiosServer();
+    auto basket=BASKET_CONF;
     rpc=basket::Singleton<RPCFactory>::GetInstance()->GetRPC(BASKET_CONF->RPC_PORT);
 
     std::function<bool(Data)> functionPosixRequest(std::bind(&Server::PosixRequest,this,std::placeholders::_1));
