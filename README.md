@@ -114,6 +114,9 @@ make
 make install  
 ```
 
+If the hiredis and redis-plus-plus are not colocated, then set 
+DCMAKE_PREFIX_PATH to be the path to where hiredis is installed.
+
 ### Mongodb C Driver
 
 ```bash
