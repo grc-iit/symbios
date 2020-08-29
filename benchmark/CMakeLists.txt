@@ -39,17 +39,9 @@ endif()
 
 set(SCRIPT_ROOT ${CMAKE_SOURCE_DIR}/scripts/benchmark/orange)
 
-#Allocate test nodes (Ares)
-add_custom_target(ares-alloc-client
-        COMMAND salloc --reservation=llogan_6 -w ${SCRIPT_ROOT}/hostfiles/hostfile_clients)
-add_custom_target(ares-alloc-hdd-4
-        COMMAND salloc --reservation=llogan_6 -w ${SCRIPT_ROOT}/hostfiles/hostfile_servers_small)
-add_custom_target(ares-alloc-hdd-24
-        COMMAND salloc --reservation=llogan_6 -w ${SCRIPT_ROOT}/hostfiles/hostfile_servers_big)
-add_custom_target(ares-alloc-ssd-4
-        COMMAND salloc --reservation=llogan_6 -w ${SCRIPT_ROOT}/hostfiles/hostfile_servers_ssd)
-add_custom_target(ares-alloc-nvme-4
-        COMMAND salloc --reservation=llogan_6 -w ${SCRIPT_ROOT}/hostfiles/hostfile_servers_nvme)
+#Allocate test nodes
+add_custom_target(ares-alloc
+        COMMAND salloc --reservation=llogan_6 -w ${SCRIPT_ROOT}/hostfiles/ares_hostfile)
 
 #Deploy OrangeFS
 add_custom_target(ares-deploy-hdd-4
