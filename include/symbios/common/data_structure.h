@@ -8,6 +8,7 @@
 
 #include <basket/common/data_structures.h>
 #include <symbios/common/enumerations.h>
+#include <rpc/msgpack.hpp>
 
 typedef struct Data{
     CharStruct id_; // for file io, the "id_" is the filename; for object store io, the "id_" is the key.
