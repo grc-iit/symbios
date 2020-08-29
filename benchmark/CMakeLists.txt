@@ -16,7 +16,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
 
 # Source Files
 add_executable(benchmark src/benchmark.cpp include/benchmark/rng.h include/benchmark/kvs.h)
-target_link_libraries(benchmark -lmpi -lhiredis -lredis++ -lmongocxx -lpthread)
+target_link_libraries(benchmark -lmpi -lhiredis -lredis++ -lmongoc-1.0 -lbson-1.0 -lbsoncxx  -lmongocxx -lpthread)
 
 #OrangeFS test cases
 add_custom_target(bm-usage COMMAND
