@@ -36,6 +36,67 @@ typedef struct Data{
     }
 } Data;
 
+typedef struct StorageSolution{
+    CharStruct end_point_;
+    IOClientType io_client_type_;
+    /*Define the default, copy and move constructor*/
+    StorageSolution(): end_point_(), io_client_type_(){}
+    StorageSolution(CharStruct end_point, IOClientType io_client_type): end_point_(end_point), io_client_type_(io_client_type){}
+    StorageSolution(const StorageSolution &other): end_point_(other.end_point_),
+                                                   io_client_type_(other.io_client_type_){}
+    StorageSolution(StorageSolution &other): end_point_(other.end_point_),
+                                             io_client_type_(other.io_client_type_){}
+
+    /*Define Assignment Operator*/
+    StorageSolution &operator=(const StorageSolution &other){
+        end_point_ = other.end_point_;
+        io_client_type_ = other.io_client_type_;
+        return *this;
+    }
+} StorageSolution;
+
+typedef struct FileSS: public StorageSolution{
+    /*Define the default, copy and move constructor*/
+    FileSS(CharStruct end_point): StorageSolution(end_point,IOClientType::FILE_IO){}
+    FileSS(const FileSS &other): StorageSolution(other){}
+    FileSS(FileSS &other): StorageSolution(other){}
+    /*Define Assignment Operator*/
+    FileSS &operator=(const FileSS &other){
+        StorageSolution::operator=(other);
+        return *this;
+    }
+}FileStorageSolution;
+
+typedef struct RedisSS: public StorageSolution{
+    uint16_t port_;
+    /*Define the default, copy and move constructor*/
+    RedisSS(CharStruct end_point,  uint16_t port):StorageSolution(end_point,IOClientType::REDIS_IO),port_(port){}
+    RedisSS(const RedisSS &other):StorageSolution(other),port_(other.port_){}
+    RedisSS(RedisSS &other):StorageSolution(other),port_(other.port_){}
+    /*Define Assignment Operator*/
+    RedisSS &operator=(const RedisSS &other){
+        StorageSolution::operator=(other);
+        port_=other.port_;
+        return *this;
+    }
+}RedisSS;
+
+typedef struct MongoSS: public StorageSolution{
+    CharStruct database_;
+    CharStruct collection_;
+    /*Define the default, copy and move constructor*/
+    MongoSS(CharStruct end_point,CharStruct database,CharStruct collection):StorageSolution(end_point,IOClientType::MONGO_IO),database_(database),collection_(collection){}
+    MongoSS(const MongoSS &other):StorageSolution(other),database_(other.database_),collection_(other.collection_){}
+    MongoSS(MongoSS &other):StorageSolution(other),database_(other.database_),collection_(other.collection_){}
+    /*Define Assignment Operator*/
+    MongoSS &operator=(const MongoSS &other){
+        StorageSolution::operator=(other);
+        database_=other.database_;
+        collection_=other.collection_;
+        return *this;
+    }
+}MongoSS;
+
 
 typedef struct Distribution{
     Data source_data_; // memory buffer for write and file buffer for read
@@ -57,8 +118,9 @@ typedef struct Distribution{
 
         return *this;
     }
-
 } Distribution;
+
+
 
 #include <rpc/msgpack.hpp>
 namespace clmdep_msgpack {

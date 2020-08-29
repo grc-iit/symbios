@@ -4,6 +4,7 @@
 #include <basket/common/singleton.h>
 #include <basket/common/typedefs.h>
 #include <symbios/common/enumerations.h>
+#include <symbios/common/data_structure.h>
 #include <basket/common/data_structures.h>
 #include <basket/common/macros.h>
 #include <rapidjson/document.h>
@@ -74,11 +75,7 @@ namespace symbios {
         CharStruct SERVER_DIR;
         CharStruct CONFIGURATION_FILE;
         uint16_t SERVER_COUNT;
-        CharStruct REDIS_CLUSTER_HOST;
-        uint16_t REDIS_CLUSTER_PORT;
-        CharStruct MONGO_CLUSTER_URL;
-        CharStruct MONGO_CLUSTER_DATABASE;
-        CharStruct MONGO_CLUSTER_COLLECTION;
+        std::unordered_map<uint16_t, std::shared_ptr<StorageSolution>> STORAGE_SOLUTIONS;
         DataDistributionPolicy DATA_DISTRIBUTION_POLICY;
 
         ConfigurationManager() : SERVER_LISTS("/tmp/tmp.BUKlhPiLxF/conf/server_lists/symbios_server"),
@@ -88,12 +85,13 @@ namespace symbios {
                                  SERVER_DIR("/dev/shm/hari/symbios_server"),
                                  CONFIGURATION_FILE("/tmp/tmp.BUKlhPiLxF/conf/symbios.conf"),
                                  SERVER_COUNT(1),
-                                 REDIS_CLUSTER_HOST("127.0.0.1"),
-                                 REDIS_CLUSTER_PORT(6379),
-                                 MONGO_CLUSTER_URL("mongodb://localhost:27017"),
-                                 MONGO_CLUSTER_DATABASE("mydb"),
-                                 MONGO_CLUSTER_COLLECTION("test"),
-                                 DATA_DISTRIBUTION_POLICY(DataDistributionPolicy::RANDOM_POLICY){}
+                                 STORAGE_SOLUTIONS(),
+                                 DATA_DISTRIBUTION_POLICY(DataDistributionPolicy::RANDOM_POLICY){
+            STORAGE_SOLUTIONS.insert({0, std::make_shared<FileStorageSolution>("") });
+            STORAGE_SOLUTIONS.insert({1, std::make_shared<RedisSS>("127.0.0.1", 6379) });
+            STORAGE_SOLUTIONS.insert({2, std::make_shared<MongoSS>("mongodb://localhost:27017", "mydb", "test") });
+
+        }
 
         void LoadConfiguration() {
             using namespace rapidjson;
@@ -117,13 +115,8 @@ namespace symbios {
             config(doc, "SYMBIOS_PORT", SYMBIOS_PORT);
             config(doc, "SERVER_RPC_THREADS", SERVER_RPC_THREADS);
             config(doc, "SERVER_DIR", SERVER_DIR);
-            config(doc, "REDIS_CLUSTER_HOST", REDIS_CLUSTER_HOST);
-            config(doc, "REDIS_CLUSTER_PORT", REDIS_CLUSTER_PORT);
-            config(doc, "MONGO_CLUSTER_URL", MONGO_CLUSTER_URL);
-            config(doc, "MONGO_CLUSTER_DATABASE", MONGO_CLUSTER_DATABASE);
-            config(doc, "MONGO_CLUSTER_COLLECTION", MONGO_CLUSTER_COLLECTION);
             /**
-             * TODO: add DATA_DISTRIBUTION_POLICY
+             * TODO: add DATA_DISTRIBUTION_POLICY, solutions
              */
             fclose(outfile);
         }

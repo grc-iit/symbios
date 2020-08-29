@@ -38,7 +38,6 @@ set(SYMBIOS_SERVER_SRC ${SYMBIOS_COMMON_SRC} src/symbios/server/main.cpp
         src/symbios/server/server.h src/symbios/server/server.cpp
         src/symbios/io_clients/io.h src/symbios/io_clients/io_factory.h
         src/symbios/io_clients/file_io.h src/symbios/io_clients/file_io.cpp
-        src/symbios/io_clients/object_store_io.h src/symbios/io_clients/object_store_io.cpp
         src/symbios/io_clients/redis_io.h src/symbios/io_clients/redis_io.cpp
         src/symbios/io_clients/mongo_io.h src/symbios/io_clients/mongo_io.cpp
         src/symbios/data_distribution/data_distribution.h src/symbios/data_distribution/data_distribution_factory.h

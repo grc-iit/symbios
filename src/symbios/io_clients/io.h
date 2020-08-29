@@ -7,9 +7,19 @@
 #define SYMBIOS_IO_H
 
 #include <symbios/common/data_structure.h>
+#include <symbios/common/configuration_manager.h>
 
 class IOClient {
+protected:
+    std::shared_ptr<StorageSolution> solution;
 public:
+    IOClient(uint16_t storage_index){
+        auto iter = SYMBIOS_CONF->STORAGE_SOLUTIONS.find(storage_index);
+        if(iter != SYMBIOS_CONF->STORAGE_SOLUTIONS.end()) solution = iter->second;
+        else{
+            //TODO: throw exception
+        }
+    }
     /**
      * Virtual Methods
      */
