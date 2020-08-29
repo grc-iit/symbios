@@ -79,12 +79,12 @@ namespace symbios {
         CharStruct MONGO_CLUSTER_DATABASE;
         CharStruct MONGO_CLUSTER_COLLECTION;
 
-        ConfigurationManager() : SERVER_LISTS("/home/hdevarajan/projects/chronolog/server_lists/journal"),
-                                 CLIENT_LISTS("/home/hdevarajan/projects/chronolog/server_lists/chronoplayer_client"),
+        ConfigurationManager() : SERVER_LISTS("/tmp/tmp.BUKlhPiLxF/conf/server_lists/symbios_server"),
+                                 CLIENT_LISTS("/tmp/tmp.BUKlhPiLxF/conf/server_lists/symbios_client"),
                                  SYMBIOS_PORT(8000),
                                  SERVER_RPC_THREADS(4),
-                                 SERVER_DIR("/dev/shm/hari/journal"),
-                                 CONFIGURATION_FILE("/home/hdevarajan/projects/chronolog/conf/config/chronolog.json"),
+                                 SERVER_DIR("/dev/shm/hari/symbios_server"),
+                                 CONFIGURATION_FILE("/tmp/tmp.BUKlhPiLxF/conf/symbios.conf"),
                                  SERVER_COUNT(1),
                                  REDIS_CLUSTER_HOST("127.0.0.1"),
                                  REDIS_CLUSTER_PORT(6379),
@@ -97,7 +97,7 @@ namespace symbios {
 
             FILE *outfile = fopen(CONFIGURATION_FILE.c_str(), "r");
             if (outfile == NULL) {
-                std::cout << "Symbios configuration not found" << std::endl;
+                printf("Symbios configuration not found %s \n",CONFIGURATION_FILE.c_str());
                 exit(EXIT_FAILURE);
             }
             char buf[65536];
@@ -114,13 +114,12 @@ namespace symbios {
             config(doc, "SYMBIOS_PORT", SYMBIOS_PORT);
             config(doc, "SERVER_RPC_THREADS", SERVER_RPC_THREADS);
             config(doc, "SERVER_DIR", SERVER_DIR);
-            config(doc, "SERVER_COUNT", SERVER_COUNT);
             config(doc, "REDIS_CLUSTER_HOST", REDIS_CLUSTER_HOST);
             config(doc, "REDIS_CLUSTER_PORT", REDIS_CLUSTER_PORT);
             config(doc, "MONGO_CLUSTER_URL", MONGO_CLUSTER_URL);
             config(doc, "MONGO_CLUSTER_DATABASE", MONGO_CLUSTER_DATABASE);
             config(doc, "MONGO_CLUSTER_COLLECTION", MONGO_CLUSTER_COLLECTION);
-            SERVER_COUNT = CountServers(SERVER_LISTS);
+            fclose(outfile);
         }
 
         void ConfigureSymbiosClient() {
@@ -132,8 +131,9 @@ namespace symbios {
         void ConfigureSymbiosServer() {
             LoadConfiguration();
             BASKET_CONF->RPC_THREADS = SERVER_RPC_THREADS;
-            BASKET_CONF->MEMORY_ALLOCATED = 1024ULL * 1024ULL * 1024ULL * 1ULL;
+            BASKET_CONF->MEMORY_ALLOCATED = 1024ULL * 1024ULL * 1ULL;
             BASKET_CONF->ConfigureDefaultServer(SERVER_LISTS.c_str());
+            SERVER_COUNT = BASKET_CONF->NUM_SERVERS;
             BASKET_CONF->RPC_PORT = SYMBIOS_PORT;
         }
     };

@@ -59,5 +59,53 @@ typedef struct Distribution{
     }
 
 } Distribution;
+
+#include <rpc/msgpack.hpp>
+namespace clmdep_msgpack {
+    MSGPACK_API_VERSION_NAMESPACE(MSGPACK_DEFAULT_API_NS) {
+        namespace adaptor {
+            namespace mv1 = clmdep_msgpack::v1;
+            template<>
+            struct convert<Data> {
+                mv1::object const &operator()(mv1::object const &o, Data &input) const {
+                    input.id_ = o.via.array.ptr[0].as<CharStruct>();
+                    input.position_ = o.via.array.ptr[1].as<size_t>();
+                    input.buffer_ = (void*)o.via.array.ptr[2].as<std::string>().c_str();
+                    input.data_size_ = o.via.array.ptr[3].as<size_t>();
+                    return o;
+                }
+            };
+
+            template<>
+            struct pack<Data> {
+                template<typename Stream>
+                packer <Stream> &operator()(mv1::packer <Stream> &o, Data const &input) const {
+                    o.pack_array(4);
+                    o.pack(input.id_);
+                    o.pack(input.position_);
+                    o.pack(std::string((char*)input.buffer_));
+                    o.pack(input.data_size_);
+                    return o;
+                }
+            };
+
+            template<>
+            struct object_with_zone<Data> {
+                void operator()(mv1::object::with_zone &o, Data const &input) const {
+                    o.type = type::ARRAY;
+                    o.via.array.size = 4;
+                    o.via.array.ptr = static_cast<clmdep_msgpack::object *>(o.zone.allocate_align(
+                            sizeof(mv1::object) * o.via.array.size, MSGPACK_ZONE_ALIGNOF(mv1::object)));
+                    o.via.array.ptr[0] = mv1::object(input.id_, o.zone);
+                    o.via.array.ptr[1] = mv1::object(input.position_, o.zone);
+                    o.via.array.ptr[2] = mv1::object(std::string((char*)input.buffer_), o.zone);
+                    o.via.array.ptr[3] = mv1::object(input.data_size_, o.zone);
+                }
+            };
+        }  // namespace adaptor
+    }
+}  // namespace clmdep_msgpack
+
+
 #endif //SYMBIOS_DATA_STRUCTURE_H
 
