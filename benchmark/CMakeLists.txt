@@ -52,7 +52,7 @@ add_custom_target(ares-deploy-hdd-4
             /mnt/hdd/llogan/orangefs
             /mnt/nvme/llogan/write/generic
             ${SCRIPT_ROOT}/hostfiles/hostfile_servers_small
-            ${SCRIPT_ROOT})
+            ${SCRIPT_ROOT}/hostfiles/hostfile_clients)
 
 #Terminate OrangeFS
 add_custom_target(ares-terminate-hdd-4
@@ -61,7 +61,7 @@ add_custom_target(ares-terminate-hdd-4
         /mnt/hdd/llogan/orangefs
         /mnt/nvme/llogan/write/generic
         ${SCRIPT_ROOT}/hostfiles/hostfile_servers_small
-        ${SCRIPT_ROOT})
+        ${SCRIPT_ROOT}/hostfiles/hostfile_clients)
 
 #OrangeFS test cases (ares)
 add_custom_target(ares_bm_s_orangefs_bs_4k_fs_0k_tot_1g_wfrac_1_hdd_4 COMMAND

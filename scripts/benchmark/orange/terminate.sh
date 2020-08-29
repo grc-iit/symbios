@@ -10,14 +10,10 @@ conf_file=${1}
 server_dir=${2}
 client_dir=${3}
 server_hostfile=${4}
-if [ $# -gt 4 ]; then
-  script_root=${5}
-else
-  script_root=$(pwd)
-fi
+client_hostfile=${5}
 
 #General Variables
-client_list=($(cat ${script_root}/hostfiles/hostfile_clients))
+client_list=($(cat ${client_hostfile}))
 server_list=($(cat ${server_hostfile}))
 
 #Config PFS
