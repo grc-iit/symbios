@@ -9,13 +9,14 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${INCLUDE_DIRS}")
 
 # Include directories
 include_directories(include)
+include_directories(src)
 include_directories(${CMAKE_SOURCE_DIR}/common/include)
 
 # Debug flags
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
 
 # Source Files
-add_executable(benchmark src/benchmark.cpp include/benchmark/rng.h include/benchmark/kvs.h)
+add_executable(benchmark src/benchmark/benchmark.cpp src/benchmark/rng.h src/benchmark/kvs.h src/benchmark/mongo.h src/benchmark/orangefs.h  src/benchmark/redis.h  src/benchmark/rng.h)
 target_link_libraries(benchmark -lmpi -lhiredis -lredis++ -lmongoc-1.0 -lbson-1.0 -lbsoncxx -lboost_system -lboost_filesystem  -lmongocxx -lpthread)
 
 #OrangeFS test cases (local)

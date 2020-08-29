@@ -10,7 +10,7 @@
 #include <string>
 #include <mpi.h>
 #include <benchmark/benchmark.h>
-#include <benchmark/rng.h>
+#include "rng.h"
 #include <debug.h>
 
 DistributionPtr create_dist(BenchmarkArgs &args, size_t file_size, size_t block_size)

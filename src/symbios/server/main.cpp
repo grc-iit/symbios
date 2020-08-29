@@ -5,7 +5,7 @@
 #include <mpi.h>
 #include <basket.h>
 #include <symbios/server/server.h>
-#include <symbios/server/Daemon.h>
+#include <symbios/server/daemon.h>
 #include <symbios/common/configuration_manager.h>
 
 int main(int argc, char* argv[]){

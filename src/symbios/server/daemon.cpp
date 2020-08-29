@@ -1,5 +1,5 @@
 #include <basket/common/singleton.h>
-#include <symbios/server/Daemon.h>
+#include <symbios/server/daemon.h>
 
 template<class T>
 [[noreturn]] symbios::Daemon<T>::Daemon(std::string main_log_file): main_log_file(main_log_file), jobManager() {

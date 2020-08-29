@@ -2,62 +2,52 @@
 // Created by lukemartinlogan on 8/25/20.
 //
 
-//https://github.com/redis/hiredis
-//https://github.com/sewenew/redis-plus-plus
+//http://mongocxx.org/mongocxx-v3/tutorial/
+//http://mongocxx.org/mongocxx-v3/installation/
 
-#ifndef SYMBIOS_REDIS_H
-#define SYMBIOS_REDIS_H
+#ifndef SYMBIOS_MONGO_H
+#define SYMBIOS_MONGO_H
 
 #include <string>
 #include <memory>
 #include <cstring>
-#include <utility>
-#include <sw/redis++/redis++.h>
 
-#include <benchmark/io_client.h>
-#include <benchmark/file.h>
-#include <benchmark/kvs.h>
+#include <benchmark/src/benchmark/io_client.h>
+#include <benchmark/src/benchmark/file.h>
+#include <benchmark/src/benchmark/kvs.h>
 
-class RedisContext : public KVS {
-private:
-    std::unique_ptr<sw::redis::RedisCluster> context_;
-
+class MongoContext : public KVS {
 public:
-    RedisContext(std::string addr, int port) {
-        sw::redis::ConnectionOptions connectionOptions;
-        connectionOptions.host = addr; // redis_cluster ip
-        connectionOptions.port = port; // redis_cluster port
-        context_ = std::make_unique<sw::redis::RedisCluster>(connectionOptions);
+    MongoContext(std::string addr, int port) {
+        throw 1;
     }
 
     void SetKey(std::string key, std::string value="") {
-        context_->set(key, value);
+        throw 1;
     }
 
     bool HasKey(std::string key) {
-        auto check = context_->get(key);
-        if(check) { return true; }
-        return false;
+        throw 1;
     }
 
     void GetKey(std::string key, std::string &value) {
-        value = std::move(*(context_->get(key)));
+        throw 1;
     }
 
     void RemoveKey(std::string key) {
-        context_->del(key);
+        throw 1;
     }
 };
 
-class RedisFile : public File {
+class MongoFile : public File {
 private:
     static const size_t kBlockSize = (1<<20);
     std::string path_;
     size_t off_ = 0;
-    std::shared_ptr<RedisContext> context_;
+    std::shared_ptr<MongoContext> context_;
 
 public:
-    RedisFile(std::shared_ptr<RedisContext> context, std::string path) : context_(context), path_(std::move(path)) {}
+    MongoFile(std::shared_ptr<MongoContext> context, std::string path) : context_(context), path_(std::move(path)) {}
 
     void Read(void *buffer, size_t size) {
         size_t suffix = off_/kBlockSize;
@@ -94,24 +84,24 @@ public:
     }
 };
 
-class RedisIO : public IOClient {
+class MongoIO : public IOClient {
 private:
     std::string addr_;
     int port_ = -1;
-    std::shared_ptr<RedisContext> context_;
+    std::shared_ptr<MongoContext> context_;
 
 public:
-    RedisIO() = default;
+    MongoIO() = default;
 
     void Connect(std::string addr, int port) {
-        context_ = std::make_shared<RedisContext>(addr, port);
+        context_ = std::make_shared<MongoContext>(addr, port);
     }
 
     FilePtr Open(std::string path, int mode) {
         if(!context_->HasKey(path)) {
             context_->SetKey(path);
         }
-        return std::make_unique<RedisFile>(context_, path);
+        return std::make_unique<MongoFile>(context_, path);
     }
 
     void Mkdir(std::string path) {
@@ -131,4 +121,4 @@ public:
     }
 };
 
-#endif //SYMBIOS_REDIS_H
+#endif //SYMBIOS_MONGO_H

@@ -1,4 +1,5 @@
 #include <symbios/client/client.h>
+#include <rpc/client.h>
 
 symbios::Client::Client(){
     SYMBIOS_CONF->ConfigureSymbiosClient();

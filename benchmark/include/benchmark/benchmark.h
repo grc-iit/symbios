@@ -6,11 +6,11 @@
 #define SYMBIOS_BENCHMARK_H
 
 #include <iostream>
-#include <benchmark/arguments.h>
-#include <benchmark/file.h>
-#include <benchmark/rng.h>
-#include <benchmark/io_client.h>
-#include <benchmark/io_client_factory.h>
+#include "../../src/benchmark/arguments.h"
+#include "../../src/benchmark/file.h"
+#include "../../src/benchmark/rng.h"
+#include "../../src/benchmark/io_client.h"
+#include "../../src/benchmark/io_client_factory.h"
 
 enum class WorkloadType {
     kIoOnlyFs, kMdFs

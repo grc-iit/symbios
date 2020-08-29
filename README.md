@@ -9,6 +9,7 @@ You do not have to set it to ~/install, that's just an example.
 ```bash
 mkdir ~/install
 export DEP_INSTALL=~/install
+export INSTALL_DIR=$DEP_INSTALL
 export PATH=${DEP_INSTALL}/bin:$DEP_INSTALL/include:$DEP_INSTALL/lib:$PATH
 export LD_LIBRARY_PATH=${DEP_INSTALL}/lib:$LD_LIBRARY_PATH
 export LIBRARY_PATH=${DEP_INSTALL}/lib:$LIBRARY_PATH
@@ -144,6 +145,16 @@ change -DCMAKE_PREFIX_PATH to whatever directory the mongo C driver is....
 
 
 ### RapidJson
+```bash
+git clone https://github.com/Tencent/rapidjson
+cd rapidjson
+git checkout v1.1.0 -b v1.1.0
+cmake .. -DCMAKE_CXX_FLAGS:STRING="-Wno-error=class-memaccess -Wno-error=implicit-fallthrough="  -DCMAKE_INSTALL_PREFIX=$DEP_INSTALL -DINCLUDE_INSTALL_DIR=$DEP_INSTALL/include -DLIB_INSTALL_DIR=$DEP_INSTALL/lib -DCMAKE_INSTALL_DIR=$DEP_INSTALL/cmake -DDOC_INSTALL_DIR=$DEP_INSTALL/share/doc/RapidJSON
+make
+make -j8
+make install
+```
+
 ### HCL
 HCL is dependendat upon:
 * glibc
