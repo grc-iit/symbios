@@ -1,26 +1,24 @@
-Workloads:
 
-Preallocate File:
+ssh llogan@ares.cs.iit.edu
+salloc --reservation=llogan_6 -w ${CMAKE_SOURCE_DIR}/scripts/hostfiles/hostfile_clients
 
-I/O - Only
-    (Preallocate File)
-    %Read
-    %Write
-    Block Size
-    File Size
-    Access Pattern
-    Total I/O
+sinfo: View status of all nodes
+squeue: View all my active jobs
+scancel [job_id]: Remove my hold on node
 
-md-fs-test
-    Nest Directories
-    In deepest directory, rep:
-        Create File
-        Seek file
-        Check File Existence
-    End
-    Remove Root Directory
+ssh llogan@ares-comp-[1-32]-40g
+ssh llogan@ares-stor-[1-32]-40g
 
-metadata-kvs-tests
-    Add Key
-    Check Key Existence
-    Remove Key
+#Add ORANGEFS environment to ~/.bashrc
+
+#Create directories on every storage/client node
+mkdir -p /mnt/hdd/llogan/orangefs/data
+mkdir -p /mnt/hdd/llogan/orangefs/meta
+mkdir -p /mnt/hdd/llogan/orangefs/pfs_log.log
+mkdir -p /mnt/ssd/llogan/orangefs/data
+mkdir -p /mnt/ssd/llogan/orangefs/meta
+mkdir -p /mnt/ssd/llogan/orangefs/pfs_log.log
+mkdir -p /mnt/nvme/llogan/orangefs/data
+mkdir -p /mnt/nvme/llogan/orangefs/meta
+mkdir -p /mnt/nvme/llogan/orangefs/pfs_log.log
+

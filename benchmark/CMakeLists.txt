@@ -27,18 +27,37 @@ add_custom_target(bm-rw-test COMMAND
         -w io-only -bs 4k -fs 0k -tot 1g -wfrac .5 -rfrac .5
         -out ~/test.csv)
 
-#OrangeFS test cases (ares)
-add_custom_target(ares-bm-w-4k-1g COMMAND
-        mpirun ${CMAKE_CURRENT_BINARY_DIR}/benchmark
-        -s orangefs -caddr ~/ -path test.bin
-        -w io-only -bs 4k -fs 0k -tot 1g -wfrac .5 -rfrac .5
-        -out ~/test.csv)
-
 option(BUILD_TEST "Build the unit tests" ON)
 if(BUILD_TEST)
     enable_testing()
     include(CTest)
 endif()
+
+
+
+#####ARES TEST CASES
+
+#Allocate test nodes (Ares)
+add_custom_target(ares-alloc-client
+        COMMAND salloc --reservation=llogan_6 -w ${CMAKE_SOURCE_DIR}/scripts/hostfiles/hostfile_clients)
+add_custom_target(ares-alloc-hdd-4
+        COMMAND salloc --reservation=llogan_6 -w ${CMAKE_SOURCE_DIR}/scripts/hostfiles/hostfile_servers_small)
+add_custom_target(ares-alloc-hdd-24
+        COMMAND salloc --reservation=llogan_6 -w ${CMAKE_SOURCE_DIR}/scripts/hostfiles/hostfile_servers_big)
+add_custom_target(ares-alloc-ssd-4
+        COMMAND salloc --reservation=llogan_6 -w ${CMAKE_SOURCE_DIR}/scripts/hostfiles/hostfile_servers_ssd)
+add_custom_target(ares-alloc-nvme-4
+        COMMAND salloc --reservation=llogan_6 -w ${CMAKE_SOURCE_DIR}/scripts/hostfiles/hostfile_servers_nvme)
+
+#Deploy OrangeFS
+
+#OrangeFS test cases (ares)
+add_custom_target(ares_bm_bs-4k_fs-0k_tot-1g_wfrac-1_hdd-4 COMMAND
+        mpirun -n 1 --host=${CMAKE_SOURCE_DIR}/scripts/hostfile_clients ${CMAKE_CURRENT_BINARY_DIR}/benchmark
+        -s orangefs -caddr /mnt/hdd/llogan/orangefs/data -path test.bin
+        -w io-only -bs 4k -fs 0k -tot 1g -wfrac 1 -rfrac 0
+        -out ~/test.csv)
+
 
 
 
