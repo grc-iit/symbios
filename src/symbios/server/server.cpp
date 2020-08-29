@@ -6,8 +6,6 @@ symbios::Server::Server(){
 
     std::function<bool(Data)> functionPosixRequest(std::bind(&Server::PosixRequest,this,std::placeholders::_1));
     rpc->bind("Posix_Request", functionPosixRequest);
-
-
 }
 
 void symbios::Server::RunInternal(std::future<void> futureObj) {
