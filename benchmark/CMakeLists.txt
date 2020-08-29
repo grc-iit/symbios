@@ -27,6 +27,13 @@ add_custom_target(bm-rw-test COMMAND
         -w io-only -bs 4k -fs 0k -tot 1g -wfrac .5 -rfrac .5
         -out ~/test.csv)
 
+#OrangeFS test cases (ares)
+add_custom_target(ares-bm-w-4k-1g COMMAND
+        mpirun ${CMAKE_CURRENT_BINARY_DIR}/benchmark
+        -s orangefs -caddr ~/ -path test.bin
+        -w io-only -bs 4k -fs 0k -tot 1g -wfrac .5 -rfrac .5
+        -out ~/test.csv)
+
 option(BUILD_TEST "Build the unit tests" ON)
 if(BUILD_TEST)
     enable_testing()
