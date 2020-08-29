@@ -14,9 +14,9 @@
 #include <utility>
 #include <sw/redis++/redis++.h>
 
-#include <benchmark/src/benchmark/io_client.h>
-#include <benchmark/src/benchmark/file.h>
-#include <benchmark/src/benchmark/kvs.h>
+#include <benchmark/io_client.h>
+#include <benchmark/file.h>
+#include <benchmark/kvs.h>
 
 class RedisContext : public KVS {
 private:

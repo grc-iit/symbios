@@ -16,7 +16,8 @@ namespace symbios {
 
         void RunInternal(std::future<void> futureObj);
     public:
-        explicit Server(std::future<void> futureObj);
+        void Run(std::future<void> futureObj);
+        explicit Server();
         int PosixRequest(Data req);
     };
 }

@@ -38,7 +38,6 @@ set(SYMBIOS_LIB_SRC ${SYMBIOS_COMMON_SRC} include/symbios/client/client.h src/sy
 add_library(symbios SHARED ${SYMBIOS_LIB_SRC})
 add_dependencies(symbios basket)
 target_link_libraries(symbios basket)
-target_link_libraries(symbios -lmpi -lhiredis -lredis++ -lmongoc-1.0 -lbson-1.0 -lbsoncxx -lboost_system -lboost_filesystem  -lmongocxx -lpthread)
 # TODO: add any required libraries
 
 # add symbios server
@@ -55,6 +54,7 @@ add_executable(symbios_server ${SYMBIOS_SERVER_SRC})
 add_dependencies(symbios_server symbios)
 add_dependencies(symbios_server basket)
 target_link_libraries(symbios_server basket)
+target_link_libraries(symbios_server -lmpi -lhiredis -lredis++ -lmongoc-1.0 -lbson-1.0 -lbsoncxx -lboost_system -lboost_filesystem  -lmongocxx -lpthread)
 # TODO: add any required libraries
 
 # add benchmark tool
