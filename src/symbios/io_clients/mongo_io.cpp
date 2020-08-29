@@ -9,12 +9,10 @@
 #include <cstring>
 
 MongoIOClient::MongoIOClient() {
-    ConfigurationManager conf = Singleton<ConfigurationManager>::GetInstance();
-
     instance = std::make_shared<mongocxx::instance>();
-    mongocxx::uri uri(conf.mongodb_cluster_url);
+    mongocxx::uri uri(SYMBIOS_CONF->MONGO_CLUSTER_URL.c_str());
     mongocxx::client client(uri);
-    coll = client[conf.mongodb_cluster_database][conf.mongodb_cluster_collection];
+    coll = client[SYMBIOS_CONF->MONGO_CLUSTER_DATABASE.c_str()][SYMBIOS_CONF->MONGO_CLUSTER_COLLECTION.c_str()];
 }
 
 void MongoIOClient::Read(Data &source, Data &destination) {
@@ -22,7 +20,7 @@ void MongoIOClient::Read(Data &source, Data &destination) {
 
     // may have the partial write /read
     try {
-        auto builder = bason::builder::stream::document{};
+        auto builder = bsoncxx::builder::stream::document{};
         bsoncxx::document::value query_doc_value = builder
                 << "_id" << source.id_.c_str()
                 << bsoncxx::builder::stream::finalize;

@@ -12,8 +12,9 @@
 #include <mongocxx/stdx.hpp>
 #include <mongocxx/uri.hpp>
 #include <mongocxx/instance.hpp>
+#include <memory>
 
-class ObjectStoreIOClient: public KeyValueStoreIO {
+class MongoIOClient: public ObjectStoreIOClient {
 public:
     /*
      * Constructor

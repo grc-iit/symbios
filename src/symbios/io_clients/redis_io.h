@@ -7,16 +7,16 @@
 #define SYMBIOS_REDIS_IO_H
 
 #include <symbios/io_clients/object_store_io.h>
-#include <redis-plus-plus/sw/redis++/redis++.h>
+#include <sw/redis++/redis++.h>
 
-using namespace sw::redis
+using namespace sw::redis;
 
-class ObjectStoreIOClient: public KeyValueStoreIO {
+class RedisIOClient: public ObjectStoreIOClient {
 public:
     /*
      * Constructor
      */
-    RedisIOClient()
+    RedisIOClient();
     /*
      * Methods
      */

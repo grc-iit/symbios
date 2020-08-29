@@ -22,6 +22,8 @@ if(COMPILE_HCL)
     include_directories(hcl/include)
 endif()
 
+set(CMAKE_CXX_STANDARD 17)
+
 # Debug flags
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DHERMES_DEBUG")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DHERMES_TIMER")
@@ -36,13 +38,18 @@ set(SYMBIOS_LIB_SRC ${SYMBIOS_COMMON_SRC} include/symbios/client/client.h src/sy
 add_library(symbios SHARED ${SYMBIOS_LIB_SRC})
 add_dependencies(symbios basket)
 target_link_libraries(symbios basket)
+target_link_libraries(symbios -lmpi -lhiredis -lredis++ -lmongoc-1.0 -lbson-1.0 -lbsoncxx -lboost_system -lboost_filesystem  -lmongocxx -lpthread)
 # TODO: add any required libraries
 
 # add symbios server
-set(SYMBIOS_SERVER_SRC ${SYMBIOS_COMMON_SRC} src/symbios/server/server.h src/symbios/server/main.cpp
-        src/symbios/server/server.cpp src/symbios/io_clients/io.h src/symbios/io_clients/io_factory.h
-        src/symbios/io_clients/file_io.h src/symbios/io_clients/object_store_io.h src/symbios/io_clients/redis_io.h
-        src/symbios/io_clients/mongo_io.h src/symbios/server/daemon.cpp src/symbios/server/daemon.h)
+set(SYMBIOS_SERVER_SRC ${SYMBIOS_COMMON_SRC} src/symbios/server/main.cpp
+        src/symbios/server/server.h src/symbios/server/server.cpp
+        src/symbios/io_clients/io.h src/symbios/io_clients/io_factory.h
+        src/symbios/io_clients/file_io.h src/symbios/io_clients/file_io.cpp
+        src/symbios/io_clients/object_store_io.h src/symbios/io_clients/object_store_io.cpp
+        src/symbios/io_clients/redis_io.h src/symbios/io_clients/redis_io.cpp
+        src/symbios/io_clients/mongo_io.h src/symbios/io_clients/mongo_io.cpp
+        src/symbios/server/daemon.cpp src/symbios/server/daemon.h)
 
 add_executable(symbios_server ${SYMBIOS_SERVER_SRC})
 add_dependencies(symbios_server symbios)

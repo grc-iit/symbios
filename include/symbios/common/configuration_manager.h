@@ -72,11 +72,11 @@ namespace symbios{
                 CharStruct SERVER_DIR;
                 CharStruct CONFIGURATION_FILE;
                 int SERVER_COUNT;
-//            std::string redis_cluster_host = "127.0.0.1";
-//            int redis_cluster_port = 6379;
-//            std::string mongodb_cluster_url = "mongodb://localhost:27017";
-//            std::string mongodb_cluster_database = "mydb";
-//            std::string mongodb_cluster_collection = "test";
+                CharStruct REDIS_CLUSTER_HOST;
+                int REDIS_CLUSTER_PORT;
+                CharStruct MONGO_CLUSTER_URL;
+                CharStruct MONGO_CLUSTER_DATABASE;
+                CharStruct MONGO_CLUSTER_COLLECTION;
 
                 ConfigurationManager(): SERVER_LISTS("/home/hdevarajan/projects/chronolog/server_lists/journal"),
                                         CLIENT_LISTS("/home/hdevarajan/projects/chronolog/server_lists/chronoplayer_client"),
@@ -84,7 +84,12 @@ namespace symbios{
                                         SERVER_RPC_THREADS(4),
                                         SERVER_DIR("/dev/shm/hari/journal"),
                                         CONFIGURATION_FILE("/home/hdevarajan/projects/chronolog/conf/config/chronolog.json"),
-                                        SERVER_COUNT(1){}
+                                        SERVER_COUNT(1),
+                                        REDIS_CLUSTER_HOST("127.0.0.1"),
+                                        REDIS_CLUSTER_PORT(6379),
+                                        MONGO_CLUSTER_URL("mongodb://localhost:27017"),
+                                        MONGO_CLUSTER_DATABASE("mydb"),
+                                        MONGO_CLUSTER_COLLECTION("test"){}
         
                 void LoadConfiguration(){
                         using namespace rapidjson;
