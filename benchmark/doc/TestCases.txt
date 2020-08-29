@@ -8,19 +8,11 @@ squeue: View all my active jobs
 scontrol show res: View the nodes I have reserved
 scancel [job_id]: Remove my hold on node
 
-ssh llogan@ares-comp-[01-32]-40g
-ssh llogan@ares-stor-[01-32]-40g
+ssh-copy-id llogan@ares-comp-01-40g
 
 #Add ORANGEFS environment to ~/.bashrc
 
 #Create directories on every storage/client node
-mkdir -p /mnt/hdd/llogan/orangefs/data
-mkdir -p /mnt/hdd/llogan/orangefs/meta
-mkdir -p /mnt/hdd/llogan/orangefs/pfs_log.log
-mkdir -p /mnt/ssd/llogan/orangefs/data
-mkdir -p /mnt/ssd/llogan/orangefs/meta
-mkdir -p /mnt/ssd/llogan/orangefs/pfs_log.log
-mkdir -p /mnt/nvme/llogan/orangefs/data
-mkdir -p /mnt/nvme/llogan/orangefs/meta
-mkdir -p /mnt/nvme/llogan/orangefs/pfs_log.log
+ssh llogan@ares-stor-08-40g mkdir -p /mnt/hdd/llogan/orangefs/data /mnt/hdd/llogan/orangefs/meta /mnt/hdd/llogan/orangefs/pfs_log.log /mnt/ssd/llogan/orangefs/data /mnt/ssd/llogan/orangefs/meta mkdir -p /mnt/ssd/llogan/orangefs/pfs_log.log
+ssh llogan@ares-comp-30-40g mkdir -p /mnt/nvme/llogan/orangefs/data /mnt/nvme/llogan/orangefs/meta /mnt/nvme/llogan/orangefs/pfs_log.log /mnt/nvme/llogan/write/generic
 

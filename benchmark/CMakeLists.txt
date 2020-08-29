@@ -48,7 +48,7 @@ add_custom_target(ares-alloc-storage
 #Deploy OrangeFS
 add_custom_target(ares-deploy-hdd-4
         COMMAND ${SCRIPT_ROOT}/deploy.sh
-            ${SCRIPT_ROOT}/orange/conf/basic.conf
+            ${SCRIPT_ROOT}/conf/basic.conf
             /mnt/hdd/llogan/orangefs
             /mnt/nvme/llogan/write/generic
             ${SCRIPT_ROOT}/hostfiles/hostfile_servers_small
@@ -65,7 +65,7 @@ add_custom_target(ares-terminate-hdd-4
 
 #OrangeFS test cases (ares)
 add_custom_target(ares_bm_s_orangefs_bs_4k_fs_0k_tot_1g_wfrac_1_hdd_4 COMMAND
-        mpirun -n 1 --host=${CMAKE_SOURCE_DIR}/scripts/hostfile_clients ${CMAKE_CURRENT_BINARY_DIR}/benchmark
+        mpirun -n 1 --host=${SCRIPT_ROOT}/hostfiles/hostfile_clients ${CMAKE_CURRENT_BINARY_DIR}/benchmark
         -s orangefs -caddr /mnt/nvme/llogan/write/generic -path /test.bin
         -w io-only -bs 4k -fs 0k -tot 1g -wfrac 1 -rfrac 0
         -out ~/test_hdd4_basic)
