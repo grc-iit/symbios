@@ -21,14 +21,13 @@ namespace symbios {
         std::thread worker;
         std::shared_ptr<T> jobManager;
 
-        Daemon(CharStruct main_log_file = "symbios_server.log"): jobManager() {
-            main_log_file = main_log_file;
+        Daemon(CharStruct main_log_file = "/tmp/tmp.BUKlhPiLxF/build/symbios_server.log"): jobManager() {
+            main_log_file = Daemon<T>::main_log_file;
             std::future<void> futureObj = exitSignal.get_future();
             jobManager=std::make_shared<T>();
             worker = std::thread(&T::Run, jobManager.get(), std::move(futureObj));
-            main_log_file = "Rhea_JobManager.log";
+            printf("Running\n");
             catchSignals();
-            while (true) sleep(1);
         }
 
         ~Daemon(){
@@ -48,6 +47,7 @@ namespace symbios {
                 case SIGTERM: {
                     logMessage(instance->main_log_file.c_str(), "terminate signal caught");
                     //finalize(); Handle by the destructor
+                    MPI_Finalize();
                     exit(0);
                 }
                 default: {
@@ -70,11 +70,11 @@ namespace symbios {
         }
 
         void catchSignals(){
-            signal(SIGTERM, this->signalHandler); /* catch kill signal */
-            signal(SIGHUP, this->signalHandler); /* catch hangup signal */
-            signal(SIGABRT, this->signalHandler); /* catch hangup signal */
-            signal(SIGSEGV, this->signalHandler); /* catch hangup signal */
-            signal(SIGBUS, this->signalHandler); /* catch hangup signal */
+            signal(SIGTERM, symbios::Daemon<T>::signalHandler); /* catch kill signal */
+            signal(SIGHUP, symbios::Daemon<T>::signalHandler); /* catch hangup signal */
+            signal(SIGABRT, symbios::Daemon<T>::signalHandler); /* catch hangup signal */
+            signal(SIGSEGV, symbios::Daemon<T>::signalHandler); /* catch hangup signal */
+            signal(SIGBUS, symbios::Daemon<T>::signalHandler); /* catch hangup signal */
             signal(SIGCHLD, SIG_IGN);              /* ignore child */
             signal(SIGTSTP, SIG_IGN);              /* ignore tty signals */
             signal(SIGTTOU, SIG_IGN);
