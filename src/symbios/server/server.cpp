@@ -1,6 +1,8 @@
 #include <symbios/server/server.h>
 #include <common/debug.h>
 #include <symbios/data_distribution/data_distribution_factory.h>
+#include <symbios/metadata_orchestrator/metadata_orchestrator.h>
+#include <symbios/io_clients/io_factory.h>
 
 symbios::Server::Server(){
     SYMBIOS_CONF->ConfigureSymbiosServer();
@@ -22,17 +24,19 @@ int symbios::Server::StoreRequest(Data &request){
     auto tracer=common::debug::AutoTrace(std::string("symbios::Server::StoreRequest"), request);
     auto dde = basket::Singleton<DataDistributionEngineFactory>::GetInstance()->GetDataDistributionEngine(SYMBIOS_CONF->DATA_DISTRIBUTION_POLICY);
     auto distributions = dde->Distribute(request);
-
-
-    return rand();
+    basket::Singleton<MetadataOrchestrator>::GetInstance()->Store(request,distributions);
+    for(auto distribution:distributions){
+        basket::Singleton<IOFactory>::GetInstance()->GetIOClient(distribution.destination_data_.io_client_type_)->Write(distribution.source_data_,distribution.destination_data_);
+    }
+    return SYMBIOS_CONF->SERVER_COUNT;
 }
 
 Data symbios::Server::LocateRequest(Data &request){
     auto tracer=common::debug::AutoTrace(std::string("symbios::Server::LocateRequest"), request);
-    auto dde = basket::Singleton<DataDistributionEngineFactory>::GetInstance()->GetDataDistributionEngine(SYMBIOS_CONF->DATA_DISTRIBUTION_POLICY);
-    auto distributions = dde->Distribute(request);
-
-
+    auto distributions = basket::Singleton<MetadataOrchestrator>::GetInstance()->Locate(request);
+    for(auto distribution:distributions){
+        basket::Singleton<IOFactory>::GetInstance()->GetIOClient(distribution.destination_data_.io_client_type_)->Read(distribution.source_data_,distribution.destination_data_);
+    }
     return request;
 }
 

@@ -11,3 +11,7 @@ void MetadataOrchestrator::Store(Data &original_request, std::vector<Distributio
 std::vector<Distribution> MetadataOrchestrator::Locate(Data &request) {
     return std::vector<Distribution>();
 }
+
+MetadataOrchestrator::MetadataOrchestrator() {
+
+}

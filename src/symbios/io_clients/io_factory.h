@@ -20,11 +20,11 @@ public:
     std::shared_ptr<IOClient> GetIOClient(IOClientType &type){
         switch (type){
             case IOClientType::FILE_IO:
-                return Singleton<FileIOClient>::GetInstance();
+                return basket::Singleton<FileIOClient>::GetInstance();
             case IOClientType::MONGO_IO:
-                return Singleton<MongoIOClient>::GetInstance();
+                return basket::Singleton<MongoIOClient>::GetInstance();
             case IOClientType::REDIS_IO:
-                return Singleton<RedisIOClient>::GetInstance();
+                return basket::Singleton<RedisIOClient>::GetInstance();
         }
     }
 };

@@ -3,6 +3,7 @@
 
 #include <basket/common/singleton.h>
 #include <basket/common/typedefs.h>
+#include <symbios/common/enumerations.h>
 #include <basket/common/data_structures.h>
 #include <basket/common/macros.h>
 #include <rapidjson/document.h>

@@ -12,7 +12,7 @@ public:
     /*
      * Constructor
      */
-    HeuristicsDDE(){}
+    HeuristicsDDE();
     /*
      * Methods
      */

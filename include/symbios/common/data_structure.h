@@ -15,14 +15,14 @@ typedef struct Data{
     long position_; // read/write start position
     void* buffer_;  // data content
     long data_size_; // data size need to read/write
-    IOClientType native_io_client_type_; // io client type
+    IOClientType io_client_type_; // io client type
 
     /*Define the default, copy and move constructor*/
-    Data():id_(),position_(0),buffer_(),data_size_(0), native_io_client_type_(FILE_IO){}
-    Data(const Data &other):id_(other.id_), position_(other.position_),buffer_(other.buffer_),
-                            data_size_(other.data_size_), native_io_client_type_(other.native_io_client_type_) {}
+    Data(): id_(), position_(0), buffer_(), data_size_(0), io_client_type_(FILE_IO){}
+    Data(const Data &other): id_(other.id_), position_(other.position_), buffer_(other.buffer_),
+                             data_size_(other.data_size_), io_client_type_(other.io_client_type_) {}
     Data(Data &other): id_(other.id_), position_(other.position_), buffer_(other.buffer_),
-                       data_size_(other.data_size_), native_io_client_type_(other.native_io_client_type_) {}
+                       data_size_(other.data_size_), io_client_type_(other.io_client_type_) {}
 
     /*Define Assignment Operator*/
     Data &operator=(const Data &other){
@@ -30,7 +30,7 @@ typedef struct Data{
         position_ = other.position_;
         memcpy(buffer_ + position_, other.buffer_ + other.position_, other.data_size_);
         data_size_ = other.data_size_;
-        native_io_client_type_ = other.native_io_client_type_;
+        io_client_type_ = other.io_client_type_;
 
         return *this;
     }
