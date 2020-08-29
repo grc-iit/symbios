@@ -48,7 +48,7 @@ add_custom_target(ares-alloc-storage
 #Deploy OrangeFS
 add_custom_target(ares-deploy-hdd-4
         COMMAND ${SCRIPT_ROOT}/deploy.sh
-            ${SCRIPT_ROOT}/conf/basic.conf
+            ${SCRIPT_ROOT}/conf/small/basic.conf
             /mnt/hdd/llogan/orangefs
             /mnt/nvme/llogan/write/generic
             ${SCRIPT_ROOT}/hostfiles/hostfile_servers_small
@@ -57,7 +57,7 @@ add_custom_target(ares-deploy-hdd-4
 #Terminate OrangeFS
 add_custom_target(ares-terminate-hdd-4
         COMMAND ${SCRIPT_ROOT}/deploy.sh
-        ${SCRIPT_ROOT}/orange/conf/basic.conf
+        ${SCRIPT_ROOT}/orange/conf/small/basic.conf
         /mnt/hdd/llogan/orangefs
         /mnt/nvme/llogan/write/generic
         ${SCRIPT_ROOT}/hostfiles/hostfile_servers_small
