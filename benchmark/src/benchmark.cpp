@@ -48,7 +48,8 @@ size_t io_file_workload(IOClientPtr &fs, BenchmarkArgs &args)
     size_t total_io = args.GetSizeOpt("-tot");
     DistributionPtr dist;
 
-    FilePtr fp = fs->Open(path, FileMode::kRead | FileMode::kWrite | FileMode::kCreate);
+    int direct = args.OptIsSet("-direct") ? FileMode::kDirect : 0;
+    FilePtr fp = fs->Open(path, FileMode::kRead | FileMode::kWrite | FileMode::kCreate | direct);
     void *buffer = std::calloc(block_size, 1);
 
     dist = create_dist(args, file_size, block_size);

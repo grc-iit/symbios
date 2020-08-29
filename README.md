@@ -3,18 +3,17 @@
 
 ### Environment
 
-
 You can set this environment variable to copy-paste the installation instructions.
 You do not have to set it to ~/install, that's just an example.
 
 ```bash
 mkdir ~/install
 export DEP_INSTALL=~/install
-export PATH=$DEP_INSTALL/bin:$DEP_INSTALL/include:$DEP_INSTALL/lib:$PATH
-export LD_LIBARY_PATH=$DEP_INSTALL/lib:$LD_LIBRARY_PATH
-export LIBRARY_PATH=$DEP_INSTALL/lib:$LD_LIBRARY_PATH
-export INCLUDE_PATH=$DEP_INSTALL/include:$INCLUDE
-export CPATH=\$DEP_INSTALL/include:\$CPATH
+export PATH=${DEP_INSTALL}/bin:$DEP_INSTALL/include:$DEP_INSTALL/lib:$PATH
+export LD_LIBRARY_PATH=${DEP_INSTALL}/lib:$LD_LIBRARY_PATH
+export LIBRARY_PATH=${DEP_INSTALL}/lib:$LIBRARY_PATH
+export INCLUDE_PATH=${DEP_INSTALL}/include:$INCLUDE
+export CPATH=${DEP_INSTALL}/include:$CPATH
 ```
 
 NOTE: If PATH, LD_LIBRARY_PATH, LIBRARY_PATH, INCLUDE, or CPATH are undefined,
@@ -70,7 +69,10 @@ cd boost_1_74_0
 
 A C library for interacting with Redis. Redis-plus-plus depends on it.
 These instructions assume that you have set the environment variables
-listed at the beginning of this section.
+listed at the beginning of this section. Note, this approach will ONLY
+work if you have your environment setup described as in the first
+section. You must have exactly one path in the INCLUDE_PATH 
+environment variable. Read the next approach if you don't like it.
 
 ```bash
 wget https://github.com/redis/hiredis/archive/v1.0.0.tar.gz  
@@ -80,7 +82,22 @@ make
 make PREFIX="" install   
 ```
 
-Note, PREFIX="" is not a mistake.
+Note, PREFIX="" is not a mistake.   
+
+A better way is as follows:
+
+```bash
+wget https://github.com/redis/hiredis/archive/v1.0.0.tar.gz  
+tar -xzf v1.0.0.tar.gz  
+cd hiredis*  
+make  
+nano Makefile
+#Set INSTALL_INCLUDE_PATH, INSTALL_LIBRARY_PATH, INSTALL_PKGCONF_PATH (lines 28-30) as follows:
+#INSTALL_INCLUDE_PATH=$(PREFIX)/include/hiredis
+#INSTALL_LIBRARY_PATH=$(PREFIX)/lib
+#INSTALL_PKGCONF_PATH=$(INSTALL_LIBRARY_PATH)/pkgconfig
+make PREFIX=$DEP_INSTALL install   
+```
 
 ### Redis-Plus-Plus
 
@@ -92,19 +109,20 @@ tar -xzf 1.1.2.tar.gz
 cd redis-plus-plus*    
 mkdir build  
 cd build  
-cmake -DCMAKE_PREFIX_PATH=$DEP_INSTALL -DCMAKE_INSTALL_PREFIX=$DEP_INSTALL -DCMAKE_BUILD_TYPE=Release -DREDIS_PLUS_PLUS_CXX_STANDARD=17 ../  
+cmake -DREDIS_PLUS_PLUS_CXX_STANDARD=17 -DCMAKE_PREFIX_PATH=$DEP_INSTALL -DCMAKE_INSTALL_PREFIX=$DEP_INSTALL -DCMAKE_BUILD_TYPE=Release ../  
 make
 make install  
 ```
+
+If the hiredis and redis-plus-plus are not colocated, then set 
+DCMAKE_PREFIX_PATH to be the path to where hiredis is installed.
 
 ### Mongodb C Driver
 
 ```bash
 wget https://github.com/mongodb/mongo-c-driver/releases/download/1.17.0/mongo-c-driver-1.17.0.tar.gz  
 tar -xzf mongo-c-driver-1.17.0.tar.gz    
-cd mongo-c-driver-1.17.0  
-mkdir build  
-cd build  
+cd mongo-c-driver-1.17.0/build 
 cmake -DCMAKE_INSTALL_PREFIX=$DEP_INSTALL -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF ../  
 make -j8  
 cmake --build . --target install  
@@ -121,6 +139,8 @@ make -j8
 cmake --build . --target install  
 ```
 
+If the C and C++ driver aren't being installed to the same place, then
+change -DCMAKE_PREFIX_PATH to whatever directory the mongo C driver is....
 
 
 ### RapidJson
