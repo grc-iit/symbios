@@ -97,6 +97,10 @@ public:
         std::cout << "Uniform Distribution Parameters" << std::endl;
         std::cout << "-seed [int]" << std::endl;
         std::cout << "" << std::endl;
+
+        std::cout << "Additional Params" << std::endl;
+        std::cout << "-direct: A flag that indicates whether or not to use direct I/O" << std::endl;
+        std::cout << "-out: The file to output statistics from tests to" << std::endl;
     }
 
     BenchmarkArgs(int argc, char **argv) {
@@ -121,6 +125,7 @@ public:
         AddStringMapVal("-ap", "uniform", static_cast<int>(DistributionType::kUniform));
         AddOpt("-md_depth", ArgType::kInt);
         AddOpt("-md_fcnt", ArgType::kInt);
+        AddOpt("-direct", ArgType::kNone);
         AddOpt("-out", ArgType::kString);
         ArgIter(argc, argv);
         VerifyArgs();
