@@ -1,7 +1,8 @@
 
 ssh llogan@ares.cs.iit.edu
-salloc --reservation=llogan_6 -w ${CMAKE_SOURCE_DIR}/scripts/hostfiles/hostfile_clients
 
+salloc --reservation=llogan_6 -p compute -w ares-comp-[29-30] --exclusive
+salloc --reservation=llogan_6 -p storage -w ares-stor-[01-08] --exclusive
 sinfo: View status of all nodes
 squeue: View all my active jobs
 scontrol show res: View the nodes I have reserved

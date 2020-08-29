@@ -40,8 +40,10 @@ endif()
 set(SCRIPT_ROOT ${CMAKE_SOURCE_DIR}/scripts/benchmark/orange)
 
 #Allocate test nodes
-add_custom_target(ares-alloc
-        COMMAND salloc --reservation=llogan_6 -w ${SCRIPT_ROOT}/hostfiles/ares_hostfile)
+add_custom_target(ares-alloc-compute
+        COMMAND salloc --reservation=llogan_6 -p compute -w ares-comp-[29-30] --exclusive)
+add_custom_target(ares-alloc-storage
+        COMMAND salloc --reservation=llogan_6 -p storage -w ares-stor-[01-08] --exclusive)
 
 #Deploy OrangeFS
 add_custom_target(ares-deploy-hdd-4
