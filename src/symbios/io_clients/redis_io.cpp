@@ -50,7 +50,7 @@ void RedisIOClient::Write(Data &source, Data &destination) {
             else
             {
                 // update the old_value
-                memcpy((void*)old_value.c_str(), source.buffer_ + source.position_, source.data_size_);
+                memcpy((void*)old_value.c_str(), (const void*)((char*)source.buffer_ + source.position_), source.data_size_);
                 // put the updated data back
                 bool result = m_redisCluster->set(destination.id_.c_str(), old_value);
                 if (!result) {
