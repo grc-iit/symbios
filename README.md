@@ -170,7 +170,9 @@ All information can be seen on https://bitbucket.org/scs-io/hcl/src/master/
 #### Compile and Install
 Basic Method:
 ```bash
-cd basket
+git clone https://bitbucket.org/scs-io/hcl
+cd hcl
+git checkout -b release/0.0.4
 mkdir build
 cmake -DCMAKE_INSTALL_PREFIX:PATH=/install_dir -DBASKET_ENABLE_RPCLIB=true ..
 make
