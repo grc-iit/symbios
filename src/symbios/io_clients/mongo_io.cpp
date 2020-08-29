@@ -7,6 +7,10 @@
 #include <symbios/common/configuration_manager.h>
 #include <symbios/common/error_codes.h>
 #include <cstring>
+#include <bsoncxx/builder/stream/helpers.hpp>
+#include <bsoncxx/builder/stream/document.hpp>
+#include <mongocxx/exception/query_exception.hpp>
+#include <mongocxx/exception/bulk_write_exception.hpp>
 
 MongoIOClient::MongoIOClient() {
     instance = std::make_shared<mongocxx::instance>();
@@ -21,13 +25,13 @@ void MongoIOClient::Read(Data &source, Data &destination) {
     // may have the partial write /read
     try {
         auto builder = bsoncxx::builder::stream::document{};
-        bsoncxx::document::value query_doc_value = builder
+        bsoncxx::view_or_value<bsoncxx::document::view, bsoncxx::document::value> query_doc_value = builder
                 << "_id" << source.id_.c_str()
                 << bsoncxx::builder::stream::finalize;
         bsoncxx::stdx::optional<bsoncxx::document::value> result = coll.find_one(query_doc_value);
         if(result){
             // get the result
-            std::string value = bsoncxx::to_json(*maybe_result);
+            std::string value = bsoncxx::to_json(result->view());
             std::string::size_type value_size = value.length();
             if(value_size == source.data_size_) {
                 // store the information in destination
@@ -49,11 +53,11 @@ void MongoIOClient::Write(Data &source, Data &destination) {
     // create the json document and then call the collection insert method to write data into mongodb
     try {
         std::string value = std::string((char*)source.buffer_, source.data_size_);
-        auto builder = bason::builder::stream::document{};
+        auto builder = bsoncxx::builder::stream::document{};
         bsoncxx::document::value insert_doc_value = builder
                 << "_id" << source.id_.c_str()
                 << "query_id" << source.id_.c_str()
-                << source.id_.c_str() << value
+                << std::string(source.id_.c_str()) << value
                 << bsoncxx::builder::stream::finalize;
         coll.insert_one(insert_doc_value.view());
     } catch (mongocxx::bulk_write_exception ex){

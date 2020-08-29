@@ -30,7 +30,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DHERMES_TIMER")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DHERMES_TRACE")
 
 # Source files
-set(SYMBIOS_COMMON_SRC include/symbios/common/data_structure.h include/symbios/common/configuration_manager.h)
+set(SYMBIOS_COMMON_SRC include/symbios/common/data_structure.h include/symbios/common/configuration_manager.h src/symbios/common/data_structure.cpp)
 set(SYMBIOS_LIB_SRC ${SYMBIOS_COMMON_SRC} include/symbios/client/client.h src/symbios/client/client.cpp
         src/symbios/client/posix.cpp )
 
