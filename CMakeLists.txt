@@ -38,9 +38,9 @@ target_link_libraries(symbios basket)
 # TODO: add any required libraries
 
 # add symbios server
-set(SYMBIOS_SERVER_SRC ${SYMBIOS_COMMON_SRC} src/symbios/server/server.h src/symbios/server/main.cpp
+set(SYMBIOS_SERVER_SRC ${SYMBIOS_COMMON_SRC} include/symbios/server/server.h src/symbios/server/main.cpp
         src/symbios/io_clients/io.h src/symbios/io_clients/io_factory.h src/symbios/io_clients/file_io.h
-        src/symbios/io_clients/object_store_io.h src/symbios/io_clients/redis_io.h src/symbios/io_clients/mongo_io.h)
+        src/symbios/io_clients/object_store_io.h src/symbios/io_clients/redis_io.h src/symbios/io_clients/mongo_io.h src/symbios/server/server.cpp)
 add_executable(symbios_server ${SYMBIOS_SERVER_SRC})
 add_dependencies(symbios_server symbios)
 add_dependencies(symbios_server basket)
