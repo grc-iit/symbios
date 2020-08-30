@@ -24,7 +24,10 @@ void time_stats(double local_time_spent, int nprocs, double &avg_msec, double &s
     std_msec = std::sqrt(std_msec);
 }
 
-void io_stats(BenchmarkArgs &args, int rank, double local_time_spent, int nprocs, size_t read_per_proc, size_t write_per_proc, size_t block_size)
+void io_stats(
+        BenchmarkArgs &args, int rank, double local_time_spent,
+        int nprocs, size_t read_per_proc, size_t write_per_proc,
+        size_t block_size, DistributionType ap)
 {
     //Get average time spent in application
     double avg_msec, std_msec, min_msec, max_msec;
@@ -44,7 +47,7 @@ void io_stats(BenchmarkArgs &args, int rank, double local_time_spent, int nprocs
         bool exists = boost::filesystem::exists(output_path);
         std::ofstream out(output_path, std::ofstream::out | std::ofstream::app);
         if(!exists) {
-            out << "avg_msec,std_msec,min_msec,max_msec,nprocs,block_size,tot_read,tot_write,tot_bytes,bw_read,bw_write,bw_kbps" << std::endl;
+            out << "avg_msec,std_msec,min_msec,max_msec,nprocs,block_size,ap,tot_read,tot_write,tot_bytes,bw_read,bw_write,bw_kbps" << std::endl;
         }
         out <<
             avg_msec << "," <<
@@ -53,6 +56,7 @@ void io_stats(BenchmarkArgs &args, int rank, double local_time_spent, int nprocs
             max_msec << "," <<
             nprocs << "," <<
             block_size << "," <<
+            static_cast<int>(ap) << "," <<
             tot_read << "," <<
             tot_write << "," <<
             tot_bytes << "," <<
@@ -91,9 +95,9 @@ void md_stats(BenchmarkArgs &args, int rank, double local_time_spent, int nprocs
     }
 }
 
-DistributionPtr create_dist(BenchmarkArgs &args, size_t file_size, size_t block_size)
+DistributionPtr create_dist(BenchmarkArgs &args, size_t file_size, size_t block_size, DistributionType &access_pattern)
 {
-    DistributionType access_pattern = DistributionType::kNone;
+    access_pattern = DistributionType::kNone;
     if(args.OptIsSet("-ap")) {
         access_pattern = static_cast<DistributionType>(args.GetIntOpt("-ap"));
     }
@@ -141,6 +145,7 @@ void io_file_workload(IOClientPtr &fs, int rank, int nprocs, BenchmarkArgs &args
     size_t block_size = args.GetSizeOpt("-bs");
     size_t file_size_per_proc = args.GetSizeOpt("-fs")/nprocs;
     size_t tot_bytes = args.GetSizeOpt("-tot");
+    DistributionType access_pattern;
     DistributionPtr dist;
 
     int direct = args.OptIsSet("-direct") ? FileMode::kDirect : 0;
@@ -152,7 +157,7 @@ void io_file_workload(IOClientPtr &fs, int rank, int nprocs, BenchmarkArgs &args
 
     //Write to file
     MPI_Barrier(MPI_COMM_WORLD);
-    dist = create_dist(args, file_size_per_proc, block_size);
+    dist = create_dist(args, file_size_per_proc, block_size, access_pattern);
     size_t write_per_proc = wfrac*tot_bytes/nprocs;
     for(size_t i = 0; i < write_per_proc; i += block_size) {
         fp->Seek(dist->GetSize());
@@ -161,7 +166,7 @@ void io_file_workload(IOClientPtr &fs, int rank, int nprocs, BenchmarkArgs &args
 
     //Read from file
     MPI_Barrier(MPI_COMM_WORLD);
-    dist = create_dist(args, file_size_per_proc, block_size);
+    dist = create_dist(args, file_size_per_proc, block_size, access_pattern);
     size_t read_per_proc = rfrac*tot_bytes/nprocs;
     for(size_t i = 0; i < read_per_proc; i += block_size) {
         fp->Seek(dist->GetSize());
@@ -173,7 +178,7 @@ void io_file_workload(IOClientPtr &fs, int rank, int nprocs, BenchmarkArgs &args
     free(buffer);
 
     //Get stats
-    io_stats(args, rank, local_time_spent, nprocs, read_per_proc, write_per_proc, block_size);
+    io_stats(args, rank, local_time_spent, nprocs, read_per_proc, write_per_proc, block_size, access_pattern);
 }
 
 void md_fs_workload(IOClientPtr &fs, int rank, int nprocs, BenchmarkArgs &args)
