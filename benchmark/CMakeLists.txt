@@ -62,21 +62,30 @@ add_custom_target(ares-terminate-hdd-4
         ${SCRIPT_ROOT}/hostfiles/hostfile_clients)
 
 #OrangeFS I/O-intensive test cases (ares)
-function(io_test nprocs storage_type cport block_size file_size total_io access_pattern config)
-    add_test(aresbm_${nprocs}_${storage_type}_${cport}_${block_size}_${file_size}_${total_io}_${access_pattern}_${config} COMMAND
+function(prealloc nprocs storage_type caddr cport file_size)
+    add_test(prealloc_${nprocs}_${storage_type}_${file_size} COMMAND
             mpirun -n ${nprocs} ${CMAKE_CURRENT_BINARY_DIR}/benchmark
-            -s ${storage_type} -caddr /mnt/nvme/llogan/write/generic -cport ${cport} -path /test.bin
-            -w io-only -ap ${access_pattern} -bs ${block_size} -fs ${file_size} -tot ${total_io} -wfrac 1 -rfrac 1
-            -out ~/test_${config}.csv; rm -rf /mnt/nvme/llogan/write/generic/*)
+            -s ${storage_type} -caddr ${caddr} -cport ${cport} -path /test.bin
+            -w prealloc -fs ${file_size})
+endfunction()
+function(io_test nprocs storage_type caddr cport block_size file_size total_io access_pattern wfrac rfrac config)
+    add_test(aresbm_${nprocs}_${storage_type}_${cport}_${block_size}_${file_size}_${total_io}_${access_pattern}_${wfrac}_${rfrac}_${config} COMMAND
+            mpirun -n ${nprocs} ${CMAKE_CURRENT_BINARY_DIR}/benchmark
+            -s ${storage_type} -caddr ${caddr} -cport ${cport} -path /test.bin
+            -w io-only -ap ${access_pattern} -bs ${block_size} -fs ${file_size} -tot ${total_io} -wfrac ${wfrac} -rfrac ${rfrac}
+            -out ~/test_${config}.csv)
 endfunction()
 
 set(PROCS 1 2 4 8 16 32 40)
 set(STORAGE_TYPES orangefs mongodb redis)
+set(ADDRS /mnt/nvme/llogan/write/generic 0 0)
 set(PORTS 0 0 0)
 set(BLOCK_SIZES 1b 64b 512b 1k 4k 64k 256k 512k 1m 2m 4m 8m 16m)
 set(FILE_SIZES 128g 128g 128g 128g 128g 128g 128g 128g 128g 128g 128g 128g 128g)
-set(TOTAL_IOS 256k 512k 1m 2m 128m 256m 512m 1g 4g 8g 64g 128g 256g)
+set(TOTAL_IOS 256k 512k 1m 2m 128m 2g 8g 16g 32g 128g 128g 128g 128g)
 set(ACCESS_PATTERNS seq uniform)
+set(WFRACS 1 .5 0)
+set(RFRACS 0 .5 1)
 set(CONFIGS hdd4_basic hdd4_read hdd4_write ssd4_basic ssd4_read ssd4_write nvme4_basic hdd24_basic)
 
 foreach(NPROC ${PROCS})
@@ -84,6 +93,7 @@ foreach(NPROC ${PROCS})
     math(EXPR STORAGE_TYPES_LAST "${STORAGE_TYPES_LEN} - 1")
     foreach(ST_IDX RANGE ${STORAGE_TYPES_LAST})
         list(GET STORAGE_TYPES ${ST_IDX} STORAGE_TYPE)
+        list(GET ADDRS ${ST_IDX} ADDR)
         list(GET PORTS ${ST_IDX} PORT)
         list(LENGTH BLOCK_SIZES BLOCK_SIZES_LEN)
         math(EXPR BLOCK_SIZES_LAST "${BLOCK_SIZES_LEN} - 1")
@@ -92,11 +102,28 @@ foreach(NPROC ${PROCS})
             list(GET FILE_SIZES ${BS_IDX} FILE_SIZE)
             list(GET TOTAL_IOS ${BS_IDX} TOTAL_IO)
             foreach(ACCESS_PATTERN ${ACCESS_PATTERNS})
-                foreach(CONFIG ${CONFIGS})
-                    io_test(${NPROC} ${STORAGE_TYPE} ${PORT} ${BLOCK_SIZE} ${FILE_SIZE} ${TOTAL_IO} ${ACCESS_PATTERN} ${CONFIG})
+                list(LENGTH WFRACS WFRACS_LEN)
+                math(EXPR WFRACS_LAST "${WFRACS_LEN} - 1")
+                foreach(WF_IDX RANGE ${WFRACS_LAST})
+                    list(GET WFRACS ${WF_IDX} WFRAC)
+                    list(GET RFRACS ${WF_IDX} RFRAC)
+                    foreach(CONFIG ${CONFIGS})
+                        io_test(${NPROC} ${STORAGE_TYPE} ${ADDR} ${PORT} ${BLOCK_SIZE} ${FILE_SIZE} ${TOTAL_IO} ${ACCESS_PATTERN} ${WFRAC} ${RFRAC} ${CONFIG})
+                    endforeach()
                 endforeach()
             endforeach()
         endforeach()
+    endforeach()
+endforeach()
+
+foreach(NPROC ${PROCS})
+    list(LENGTH STORAGE_TYPES STORAGE_TYPES_LEN)
+    math(EXPR STORAGE_TYPES_LAST "${STORAGE_TYPES_LEN} - 1")
+    foreach(ST_IDX RANGE ${STORAGE_TYPES_LAST})
+        list(GET STORAGE_TYPES ${ST_IDX} STORAGE_TYPE)
+        list(GET ADDRS ${ST_IDX} ADDR)
+        list(GET PORTS ${ST_IDX} PORT)
+        prealloc(${NPROC} ${STORAGE_TYPE} ${ADDR} ${PORT} 128g)
     endforeach()
 endforeach()
 

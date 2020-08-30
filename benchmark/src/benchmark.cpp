@@ -116,38 +116,52 @@ DistributionPtr create_dist(BenchmarkArgs &args, size_t file_size, size_t block_
     return std::move(dist);
 }
 
+void prealloc(IOClientPtr &fs, int rank, int nprocs, BenchmarkArgs &args)
+{
+    std::string path = args.GetStringOpt("-path") + std::to_string(rank);
+    size_t file_size = args.GetSizeOpt("-fs");
+    size_t block_size = (1<<24);
+
+    FilePtr fp = fs->Open(path, FileMode::kWrite | FileMode::kCreate);
+    void *buffer = std::calloc(block_size, 1);
+    size_t file_size_per_proc = file_size / nprocs;
+
+    for(size_t i = 0; i < file_size_per_proc; i += block_size) {
+        size_t write_size = (i+block_size)<=file_size_per_proc ? block_size : file_size_per_proc - i;
+        fp->Write(buffer, write_size);
+    }
+}
+
 void io_file_workload(IOClientPtr &fs, int rank, int nprocs, BenchmarkArgs &args)
 {
     Timer t;
-    t.startTime();
-
     std::string path = args.GetStringOpt("-path") + std::to_string(rank);
     float rfrac = args.GetFloatOpt("-rfrac");
     float wfrac = args.GetFloatOpt("-wfrac");
     size_t block_size = args.GetSizeOpt("-bs");
-    size_t file_size = args.GetSizeOpt("-fs");
+    size_t file_size_per_proc = args.GetSizeOpt("-fs")/nprocs;
     size_t tot_bytes = args.GetSizeOpt("-tot");
     DistributionPtr dist;
 
-    if(rfrac > wfrac) {
-        std::cout << "Error: you must write at least as much data as you read!" << std::endl;
-        throw 1;
-    }
-
     int direct = args.OptIsSet("-direct") ? FileMode::kDirect : 0;
-    FilePtr fp = fs->Open(path, FileMode::kRead | FileMode::kWrite | FileMode::kCreate | direct);
+    FilePtr fp = fs->Open(path, FileMode::kRead | FileMode::kWrite | direct);
     void *buffer = std::calloc(block_size, 1);
 
+    //Start Time
+    t.startTime();
+
+    //Write to file
     MPI_Barrier(MPI_COMM_WORLD);
-    dist = create_dist(args, file_size, block_size);
+    dist = create_dist(args, file_size_per_proc, block_size);
     size_t write_per_proc = wfrac*tot_bytes/nprocs;
     for(size_t i = 0; i < write_per_proc; i += block_size) {
         fp->Seek(dist->GetSize());
         fp->Write(buffer, block_size);
     }
 
+    //Read from file
     MPI_Barrier(MPI_COMM_WORLD);
-    dist = create_dist(args, file_size, block_size);
+    dist = create_dist(args, file_size_per_proc, block_size);
     size_t read_per_proc = rfrac*tot_bytes/nprocs;
     for(size_t i = 0; i < read_per_proc; i += block_size) {
         fp->Seek(dist->GetSize());
@@ -210,6 +224,10 @@ int main(int argc, char **argv)
     //Run workloads
     int workload = args.GetIntOpt("-w");
     switch(static_cast<WorkloadType>(workload)) {
+        case WorkloadType::kPrealloc: {
+            prealloc(io, rank, nprocs, args);
+            break;
+        }
         case WorkloadType::kIoOnlyFs: {
             io_file_workload(io, rank, nprocs, args);
             break;

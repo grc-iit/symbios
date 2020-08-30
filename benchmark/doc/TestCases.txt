@@ -13,3 +13,14 @@ scancel [job_id]: Remove my hold on node
 #Create directories on every storage/client node
 ssh ares-stor-08-40g mkdir -p /mnt/hdd/llogan/orangefs/data /mnt/hdd/llogan/orangefs/meta /mnt/hdd/llogan/orangefs/pfs_log.log /mnt/ssd/llogan/orangefs/data /mnt/ssd/llogan/orangefs/meta mkdir -p /mnt/ssd/llogan/orangefs/pfs_log.log
 ssh ares-comp-29-40g mkdir -p /mnt/nvme/llogan/orangefs/data /mnt/nvme/llogan/orangefs/meta /mnt/nvme/llogan/orangefs/pfs_log.log /mnt/nvme/llogan/write/generic
+
+#Preallocate files for particular NPROC
+ctest --verbose -R prealloc_${nprocs}_${storage_type}_${file_size}
+ctest --verbose -R prealloc_1_orangefs_*
+
+#Run all worklaods for particular NPROC
+ctest --verbose -R aresbm_${nprocs}_${storage_type}_${cport}_${block_size}_${file_size}_${total_io}_${access_pattern}_${wfrac}_${rfrac}_${config}
+ctest --verbose -R aresbm_1_orangefs_*_4k_*_*_seq_1_0_hdd4_basic
+
+#Remove all files
+rm -rf /mnt/nvme/llogan/write/generic/*

@@ -13,7 +13,7 @@
 #include <benchmark/io_client_factory.h>
 
 enum class WorkloadType {
-    kIoOnlyFs, kMdFs
+    kPrealloc, kIoOnlyFs, kMdFs
 };
 
 class BenchmarkArgs : public ArgMap {
@@ -36,6 +36,11 @@ private:
         AssertOptIsSet("-w");
         int workload = GetIntOpt("-w");
         switch(static_cast<WorkloadType>(workload)) {
+            case WorkloadType::kPrealloc: {
+                AssertOptIsSet("-path");
+                AssertOptIsSet("-fs");
+                break;
+            }
             case WorkloadType::kIoOnlyFs: {
                 AssertOptIsSet("-path");
                 AssertOptIsSet("-rfrac");
@@ -59,6 +64,7 @@ public:
         std::cout << "" << std::endl;
 
         std::cout << "-w [string]: Which workload to run" << std::endl;
+        std::cout << "   prealloc" << std::endl;
         std::cout << "   io-only" << std::endl;
         std::cout << "   md-fs" << std::endl;
 
@@ -105,6 +111,7 @@ public:
 
     BenchmarkArgs(int argc, char **argv) {
         AddOpt("-w", ArgType::kStringMap);
+        AddStringMapVal("-w", "prealloc", static_cast<int>(WorkloadType::kPrealloc));
         AddStringMapVal("-w", "io-only", static_cast<int>(WorkloadType::kIoOnlyFs));
         AddStringMapVal("-w", "md-fs", static_cast<int>(WorkloadType::kMdFs));
         AddOpt("-s", ArgType::kStringMap);
