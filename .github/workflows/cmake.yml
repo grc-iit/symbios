@@ -53,11 +53,12 @@ jobs:
         mkdir -p $SOFTWARE_DIR/source
         mkdir -p ${SOFTWARE_DIR}/install
 
-        export INSTALL_DIR=$HOME/work/software/install
-        export LD_LIBRARY_PATH=$HOME/work/software/install/lib
+        export INSTALL_DIR=${SOFTWARE_DIR}/install
+        export LD_LIBRARY_PATH=${INSTALL_DIR}/lib:${INSTALL_DIR}/lib64:${LD_LIBRARY_PATH}
+        export LDFLAGS="$LDFLAGS -L${INSTALL_DIR}/lib -L${INSTALL_DIR}/lib64"
         export PATH="${INSTALL_DIR}/bin:${INSTALL_DIR}/sbin:$PATH"
-        export CFLAGS="-I${SOFTWARE_DIR}/install $CFLAGS"
-        export CXXFLAGS="-I${SOFTWARE_DIR}/install $CXXFLAGS"
+        export CFLAGS="-I${INSTALL_DIR} $CFLAGS"
+        export CXXFLAGS="-I${INSTALL_DIR} $CXXFLAGS"
 
         ###################### RapidJson ######################
         git clone https://github.com/Tencent/rapidjson
@@ -65,7 +66,6 @@ jobs:
         mkdir build
         cd build
         cmake -DCMAKE_INSTALL_PREFIX=${SOFTWARE_DIR}/install ../
-        make
         make -j8
         make install
         ###################### MPI ######################
