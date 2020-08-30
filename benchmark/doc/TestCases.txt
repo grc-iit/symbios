@@ -12,4 +12,4 @@ scancel [job_id]: Remove my hold on node
 
 #Create directories on every storage/client node
 ssh ares-stor-08-40g mkdir -p /mnt/hdd/llogan/orangefs/data /mnt/hdd/llogan/orangefs/meta /mnt/hdd/llogan/orangefs/pfs_log.log /mnt/ssd/llogan/orangefs/data /mnt/ssd/llogan/orangefs/meta mkdir -p /mnt/ssd/llogan/orangefs/pfs_log.log
-ssh ares-comp-30-40g mkdir -p /mnt/nvme/llogan/orangefs/data /mnt/nvme/llogan/orangefs/meta /mnt/nvme/llogan/orangefs/pfs_log.log /mnt/nvme/llogan/write/generic
+ssh ares-comp-29-40g mkdir -p /mnt/nvme/llogan/orangefs/data /mnt/nvme/llogan/orangefs/meta /mnt/nvme/llogan/orangefs/pfs_log.log /mnt/nvme/llogan/write/generic

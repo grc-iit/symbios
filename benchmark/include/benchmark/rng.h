@@ -38,9 +38,9 @@ private:
     size_t count_ = 0;
 public:
     virtual void Shape(size_t inc) { inc_ = inc; }
-    virtual int GetInt() { count_+=inc_; return (int)count_; }
-    virtual size_t GetSize() { count_+=inc_; return (size_t)count_; };
-    virtual double GetDouble() { count_+=inc_; return (double)count_; };
+    virtual int GetInt() { int temp = count_; count_+=inc_; return temp; }
+    virtual size_t GetSize() { size_t temp = count_; count_+=inc_; return temp; };
+    virtual double GetDouble() { double temp = count_; count_+=inc_; return temp; };
 };
 
 class NormalDistribution : public Distribution {
