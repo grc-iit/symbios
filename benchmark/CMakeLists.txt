@@ -21,10 +21,24 @@ target_link_libraries(benchmark -lmpi -lhiredis -lredis++ -lmongoc-1.0 -lbson-1.
 #OrangeFS test cases (local)
 add_custom_target(bm-usage COMMAND
         ${CMAKE_CURRENT_BINARY_DIR}/benchmark)
-add_custom_target(bm-rw-test COMMAND
+add_custom_target(bm-prealloc COMMAND
         ${CMAKE_CURRENT_BINARY_DIR}/benchmark
         -s orangefs -caddr ~/ -path test.bin
-        -w io-only -bs 4k -fs 0k -tot 1g -wfrac .5 -rfrac .5
+        -w prealloc -fs 1)
+add_custom_target(bm-rw-test-seq COMMAND
+        ${CMAKE_CURRENT_BINARY_DIR}/benchmark
+        -s orangefs -caddr ~/ -path test.bin
+        -w io-only -bs 4k -fs 0k -tot 1g -wfrac .5 -rfrac .5 -ap uniform -seed 2542
+        -out ~/test.csv)
+add_custom_target(bm-rw-test-rand COMMAND
+        ${CMAKE_CURRENT_BINARY_DIR}/benchmark
+        -s orangefs -caddr ~/ -path test.bin
+        -w io-only -bs 4k -fs 0k -tot 1g -wfrac .5 -rfrac .5 -ap uniform -seed 2542
+        -out ~/test.csv)
+add_custom_target(bm-md-test COMMAND
+        ${CMAKE_CURRENT_BINARY_DIR}/benchmark
+        -s orangefs -caddr ~/ -path test.bin
+        -w md-test -md_depth 20 -md_fcnt 20
         -out ~/test.csv)
 
 option(BUILD_TEST "Build the unit tests" ON)

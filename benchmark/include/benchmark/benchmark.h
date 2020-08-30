@@ -134,6 +134,7 @@ public:
         AddOpt("-md_fcnt", ArgType::kInt);
         AddOpt("-direct", ArgType::kNone);
         AddOpt("-out", ArgType::kString);
+        AddOpt("-seed", ArgType::kInt);
         ArgIter(argc, argv);
         VerifyArgs();
     }

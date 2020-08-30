@@ -11,7 +11,7 @@
 #include <chrono>
 
 enum class DistributionType {
-    kNone, kNormal, kGamma, kExponential, kUniform
+    kNone=0, kNormal=1, kGamma=2, kExponential=3, kUniform=4
 };
 
 class Distribution {

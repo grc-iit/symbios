@@ -9,6 +9,9 @@ squeue: View all my active jobs
 scontrol show res: View the nodes I have reserved
 scancel [job_id]: Remove my hold on node
 
+#Helpful cmake
+ctest -N -R aresbm_1_orangefs_[a-zA-Z0-9]+_4k_[a-zA-Z0-9]+_[a-zA-Z0-9]+_uniform_1_0_hdd4_basic
+
 #Add ORANGEFS environment to ~/.bashrc
 
 #Create directories on every storage/client node
@@ -29,13 +32,12 @@ ls /mnt/nvme/llogan/write/generic
 
 #Preallocate files for particular NPROC
 ctest --verbose -R prealloc_${nprocs}_${storage_type}_${file_size}
-ctest --verbose -R prealloc_1_orangefs_*
-mpirun -n 1 /home/llogan/symbios/build/benchmark/benchmark -s orangefs -caddr /mnt/nvme/llogan/write/generic -cport 0 -path /test.bin -w prealloc -fs 128g
+ctest --output-on-failure --verbose -R prealloc_1_orangefs_*
 
 #Run all worklaods for particular NPROC
-ctest --verbose -R aresbm_${nprocs}_${storage_type}_${cport}_${block_size}_${file_size}_${total_io}_${access_pattern}_${wfrac}_${rfrac}_${config}
-ctest --verbose -R aresbm_1_orangefs_*_4k_*_*_seq_1_0_hdd4_basic
-ctest --verbose -R aresbm_1_orangefs_*_4k_*_*_uniform_1_0_hdd4_basic
+ctest --output-on-failure --verbose -R aresbm_${nprocs}_${storage_type}_${cport}_${block_size}_${file_size}_${total_io}_${access_pattern}_${wfrac}_${rfrac}_${config}
+ctest --output-on-failure --verbose -R aresbm_1_orangefs_[a-zA-Z0-9]+_4k_[a-zA-Z0-9]+_[a-zA-Z0-9]+_seq_1_0_hdd4_basic
+ctest --output-on-failure --verbose -R aresbm_1_orangefs_[a-zA-Z0-9]+_4k_[a-zA-Z0-9]+_[a-zA-Z0-9]+_uniform_1_0_hdd4_basic
 
 #Remove all files
 rm -rf /mnt/nvme/llogan/write/generic/*

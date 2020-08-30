@@ -166,15 +166,28 @@ protected:
         args_[opt]->AddStringMapVal(val, id);
     }
 
+    bool OptExists(std::string opt) {
+        return (args_.find(opt) != args_.end());
+    }
+
+    void AssertOptExists(std::string opt) {
+        if(!OptExists(opt)) {
+            std::cout << "Invalid argument: " << opt << std::endl;
+            throw 1;
+        }
+    }
+
     void ArgIter(int argc, char **argv) {
         for(int i = 1; i < argc; ++i) {
-            if(argv[i][0] != '-') {
+            if (argv[i][0] != '-') {
+                AssertOptExists("");
                 ArgPtr &arg = args_[""];
-                i += arg->Add(argv[i+1]);
+                i += arg->Add(argv[i + 1]);
                 continue;
             }
+            AssertOptExists(argv[i]);
             ArgPtr &arg = args_[argv[i]];
-            i += arg->Add(argv[i+1]);
+            i += arg->Add(argv[i + 1]);
         }
     }
 

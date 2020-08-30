@@ -36,8 +36,8 @@ public:
 
         fp_ = open(path_.c_str(), flags);
         if(fp_ < 0) {
-            std::cout << "Could not open file: " << path_ << std::endl;
-            perror("open orangefs");
+            std::cout << "Could not open file (OrangefsIO): " << path_ << std::endl;
+            perror("Open() (OrangefsIO)");
             throw 1;
         }
     }
