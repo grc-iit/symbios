@@ -242,3 +242,20 @@ io_client.Read(source_data_, destination_data_);
 cd scripts/local
 ./run_redis_cluster.sh redis_cluster_install_path redis_server_numbers
 ```
+
+## Local testing of Symbios
+
+- update conf/symbios.conf to correct the path of SERVER_LISTS, CLIENT_LISTS, and SERVER_DIR
+
+### start server in one terminal (or clion)
+```bash
+/tmp/tmp.BUKlhPiLxF/build/symbios_server /tmp/tmp.BUKlhPiLxF/conf/symbios.conf
+```
+
+### start client in another terminal (or clion)
+```bash
+/tmp/tmp.BUKlhPiLxF/build/test/unit/unit_client /home/hdevarajan/symbios.conf
+```
+
+NOTE:
+- you might need to set the LD_LIBRARY_PATH of all dependencies.
