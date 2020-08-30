@@ -26,17 +26,18 @@ int symbios::Server::StoreRequest(Data &request){
     auto distributions = dde->Distribute(request);
     basket::Singleton<MetadataOrchestrator>::GetInstance()->Store(request,distributions);
     for(auto distribution:distributions){
-        basket::Singleton<IOFactory>::GetInstance()->GetIOClient(distribution.destination_data_.io_client_type_)->Write(distribution.source_data_,distribution.destination_data_);
-        COMMON_DBGMSG("Storing data in "<<distribution.destination_data_.io_client_type_);
+        basket::Singleton<IOFactory>::GetInstance()->GetIOClient(distribution.destination_data_.storage_index_)->Write(distribution.source_data_, distribution.destination_data_);
+        COMMON_DBGMSG("Storing data in "<<distribution.destination_data_.storage_index_);
     }
     return SYMBIOS_CONF->SERVER_COUNT;
 }
 
 Data symbios::Server::LocateRequest(Data &request){
     auto tracer=common::debug::AutoTrace(std::string("symbios::Server::LocateRequest"), request);
-    auto distributions = basket::Singleton<MetadataOrchestrator>::GetInstance()->Locate(request);
+    Metadata primary_metadata;
+    auto distributions = basket::Singleton<MetadataOrchestrator>::GetInstance()->Locate(request, primary_metadata);
     for(auto distribution:distributions){
-        basket::Singleton<IOFactory>::GetInstance()->GetIOClient(distribution.destination_data_.io_client_type_)->Read(distribution.source_data_,distribution.destination_data_);
+        basket::Singleton<IOFactory>::GetInstance()->GetIOClient(distribution.destination_data_.storage_index_)->Read(distribution.source_data_,distribution.destination_data_);
     }
     return request;
 }
