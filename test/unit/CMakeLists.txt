@@ -32,3 +32,23 @@ foreach (test_file ${test_files})
     set_property(TEST ${test_name} APPEND PROPERTY ENVIRONMENT "HDF5_PLUGIN_PATH=$ENV{HDF5_PLUGIN_PATH}")
     set_property(TEST ${test_name} APPEND PROPERTY ENVIRONMENT "RUN_DIR=$ENV{RUN_DIR}")
 endforeach ()
+
+
+set(test_files  file_io
+                redis_io
+                mongo_io)
+foreach (test_file ${test_files})
+    set(exec unit_${test_file})
+    add_executable(${exec} io_clients/${test_file}/test.cpp)
+    add_dependencies(${exec} symbios)
+    target_include_directories(${exec} PRIVATE "${CMAKE_BINARY_DIR}/")
+    target_link_libraries(${exec} ${LIBS})
+    target_link_libraries(${exec} symbios)
+    set(test_parameters )
+    set(test_name ${test_file}_test)
+    add_test(NAME ${test_name} COMMAND ${CMAKE_BINARY_DIR}/test/unit/${exec} ${test_parameters})
+    set_tests_properties(${test_name} PROPERTIES WILL_FAIL false)
+    set_property(TEST ${test_name} APPEND PROPERTY ENVIRONMENT "LD_PRELOAD=${CMAKE_BINARY_DIR}/ares/datasets/libdatasets.so")
+    set_property(TEST ${test_name} APPEND PROPERTY ENVIRONMENT "HDF5_PLUGIN_PATH=$ENV{HDF5_PLUGIN_PATH}")
+    set_property(TEST ${test_name} APPEND PROPERTY ENVIRONMENT "RUN_DIR=$ENV{RUN_DIR}")
+endforeach ()

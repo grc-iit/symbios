@@ -15,7 +15,7 @@ std::vector<Distribution> RoundRobinDDE::Distribute(Data& request) {
     auto distribution = Distribution();
     distribution.storage_index_ = request.storage_index_;
     distribution.destination_data_ = request;
-    distribution.destination_data_ = request;
+    distribution.source_data_ = request;
     distribution.destination_data_.storage_index_ = selected_solution_index;
     distributions.push_back(distribution);
     return distributions;
