@@ -61,6 +61,7 @@ jobs:
         export CXXFLAGS="-I${INSTALL_DIR} $CXXFLAGS"
 
         ###################### RapidJson ######################
+        cd $SOFTWARE_DIR/source
         git clone https://github.com/Tencent/rapidjson
         cd rapidjson
         mkdir build
@@ -96,6 +97,7 @@ jobs:
         make -j 2
         make install
         ###################### HCL ######################
+        cd $SOFTWARE_DIR/source
         git clone https://bitbucket.org/scs-io/hcl
         cd hcl
         git checkout -b release/0.0.4
@@ -106,16 +108,17 @@ jobs:
         make install
         ###################### Redis Clients ######################
         ### CRedis ###
+        cd $SOFTWARE_DIR/source
         wget https://github.com/redis/hiredis/archive/v1.0.0.tar.gz
         tar -xzf v1.0.0.tar.gz
         cd hiredis*
         make
-        nano Makefile
         sed -i 's&INSTALL_INCLUDE_PATH= $(DESTDIR)$(PREFIX)/$(INCLUDE_PATH)&INSTALL_INCLUDE_PATH=$(PREFIX)/include/hiredis&g' ./Makefile
         sed -i 's&INSTALL_LIBRARY_PATH= $(DESTDIR)$(PREFIX)/$(LIBRARY_PATH)&INSTALL_LIBRARY_PATH=$(PREFIX)/lib&g' ./Makefile
         sed -i 's&INSTALL_PKGCONF_PATH= $(INSTALL_LIBRARY_PATH)/$(PKGCONF_PATH)&INSTALL_PKGCONF_PATH=$(INSTALL_LIBRARY_PATH)/pkgconfig&g' ./Makefile
         make PREFIX=${SOFTWARE_DIR}/install install
-        ### Mongodb C Driver ###
+        ### C++ Redis ###
+        cd $SOFTWARE_DIR/source
         wget https://github.com/sewenew/redis-plus-plus/archive/1.1.2.tar.gz
         tar -xzf 1.1.2.tar.gz
         cd redis-plus-plus*
@@ -126,6 +129,7 @@ jobs:
         make install
         ###################### Mongo Clients ######################
         ### Mongodb C Driver ###
+        cd $SOFTWARE_DIR/source
         wget https://github.com/mongodb/mongo-c-driver/releases/download/1.17.0/mongo-c-driver-1.17.0.tar.gz
         tar -xzf mongo-c-driver-1.17.0.tar.gz
         cd mongo-c-driver-1.17.0/build
@@ -133,6 +137,7 @@ jobs:
         make -j8
         cmake --build . --target install
         ### Mongodb C++ Driver ###
+        cd $SOFTWARE_DIR/source
         curl -OL https://github.com/mongodb/mongo-cxx-driver/archive/r3.5.1.tar.gz
         tar -xzf r3.5.1.tar.gz
         cd mongo-cxx-driver-r3.5.1/build
