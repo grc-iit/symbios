@@ -79,34 +79,14 @@ redis_r.sh and redis_s.sh will run and stop redis respectively.
 ### Hireds
 
 A C library for interacting with Redis. Redis-plus-plus depends on it.
-These instructions assume that you have set the environment variables
-listed at the beginning of this section. Note, this approach will ONLY
-work if you have your environment setup described as in the first
-section. You must have exactly one path in the INCLUDE_PATH 
-environment variable. Read the next approach if you don't like it.
-
 ```bash
 wget https://github.com/redis/hiredis/archive/v1.0.0.tar.gz  
 tar -xzf v1.0.0.tar.gz  
 cd hiredis*  
 make  
-make PREFIX="" install   
-```
-
-Note, PREFIX="" is not a mistake.   
-
-A better way is as follows:
-
-```bash
-wget https://github.com/redis/hiredis/archive/v1.0.0.tar.gz  
-tar -xzf v1.0.0.tar.gz  
-cd hiredis*  
-make  
-nano Makefile
-#Set INSTALL_INCLUDE_PATH, INSTALL_LIBRARY_PATH, INSTALL_PKGCONF_PATH (lines 28-30) as follows:
-#INSTALL_INCLUDE_PATH=$(PREFIX)/include/hiredis
-#INSTALL_LIBRARY_PATH=$(PREFIX)/lib
-#INSTALL_PKGCONF_PATH=$(INSTALL_LIBRARY_PATH)/pkgconfig
+sed -i 's&INSTALL_INCLUDE_PATH= $(DESTDIR)$(PREFIX)/$(INCLUDE_PATH)&INSTALL_INCLUDE_PATH=$(PREFIX)/include/hiredis&g' ./Makefile
+sed -i 's&INSTALL_LIBRARY_PATH= $(DESTDIR)$(PREFIX)/$(LIBRARY_PATH)&INSTALL_LIBRARY_PATH=$(PREFIX)/lib&g' ./Makefile
+sed -i 's&INSTALL_PKGCONF_PATH= $(INSTALL_LIBRARY_PATH)/$(PKGCONF_PATH)&INSTALL_PKGCONF_PATH=$(INSTALL_LIBRARY_PATH)/pkgconfig&g' ./Makefile
 make PREFIX=$DEP_INSTALL install   
 ```
 

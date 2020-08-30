@@ -52,14 +52,18 @@ jobs:
         mkdir -p $SOFTWARE_DIR
         mkdir -p $SOFTWARE_DIR/source
         mkdir -p ${SOFTWARE_DIR}/install
-        
+
+        export INSTALL_DIR=$HOME/work/software/install
+        export LD_LIBRARY_PATH=$HOME/work/software/install/lib
+        export PATH="${INSTALL_DIR}/bin:${INSTALL_DIR}/sbin:$PATH"
+        export CFLAGS="-I${SOFTWARE_DIR}/install $CFLAGS"
+        export CXXFLAGS="-I${SOFTWARE_DIR}/install $CXXFLAGS"
+
         ###################### MPI ######################
         cd $SOFTWARE_DIR/source
         wget http://www.mpich.org/static/downloads/3.3.2/mpich-3.3.2.tar.gz
         tar zxf mpich-3.3.2.tar.gz
         cd ${SOFTWARE_DIR}/source/mpich-3.3.2/
-        mkdir build
-        cd build
         ./configure --prefix=${SOFTWARE_DIR}/install
         #According to this, we have two cores. https://docs.github.com/en/actions/reference/virtual-environments-for-github-hosted-runners
         make -j 2
@@ -82,6 +86,16 @@ jobs:
         cmake -DCMAKE_INSTALL_PREFIX=${SOFTWARE_DIR}/install ../
         make -j 2
         make install
+        ###################### RapidJson ######################
+        git clone https://github.com/Tencent/rapidjson
+        cd rapidjson
+        git checkout v1.1.0 -b v1.1.0
+        mkdir build
+        cd build
+        cmake .. -DCMAKE_CXX_FLAGS:STRING="-Wno-error=class-memaccess -Wno-error=implicit-fallthrough="  -DCMAKE_INSTALL_PREFIX=${SOFTWARE_DIR}/install -DINCLUDE_INSTALL_DIR=${SOFTWARE_DIR}/install/include -DLIB_INSTALL_DIR=${SOFTWARE_DIR}/install/lib -DCMAKE_INSTALL_DIR=${SOFTWARE_DIR}/install/cmake -DDOC_INSTALL_DIR=${SOFTWARE_DIR}/install/share/doc/RapidJSON
+        make
+        make -j8
+        make install
         ###################### HCL ######################
         git clone https://bitbucket.org/scs-io/hcl
         cd hcl
@@ -91,6 +105,42 @@ jobs:
         cmake -DCMAKE_INSTALL_PREFIX:PATH=${SOFTWARE_DIR}/install -DBASKET_ENABLE_RPCLIB=true ..
         make -j 2
         make install
+        ###################### Redis Clients ######################
+        ### CRedis ###
+        wget https://github.com/redis/hiredis/archive/v1.0.0.tar.gz
+        tar -xzf v1.0.0.tar.gz
+        cd hiredis*
+        make
+        nano Makefile
+        sed -i 's&INSTALL_INCLUDE_PATH= $(DESTDIR)$(PREFIX)/$(INCLUDE_PATH)&INSTALL_INCLUDE_PATH=$(PREFIX)/include/hiredis&g' ./Makefile
+        sed -i 's&INSTALL_LIBRARY_PATH= $(DESTDIR)$(PREFIX)/$(LIBRARY_PATH)&INSTALL_LIBRARY_PATH=$(PREFIX)/lib&g' ./Makefile
+        sed -i 's&INSTALL_PKGCONF_PATH= $(INSTALL_LIBRARY_PATH)/$(PKGCONF_PATH)&INSTALL_PKGCONF_PATH=$(INSTALL_LIBRARY_PATH)/pkgconfig&g' ./Makefile
+        make PREFIX=${SOFTWARE_DIR}/install install
+        ### Mongodb C Driver ###
+        wget https://github.com/sewenew/redis-plus-plus/archive/1.1.2.tar.gz
+        tar -xzf 1.1.2.tar.gz
+        cd redis-plus-plus*
+        mkdir build
+        cd build
+        cmake -DREDIS_PLUS_PLUS_CXX_STANDARD=17 -DCMAKE_PREFIX_PATH=${SOFTWARE_DIR}/install -DCMAKE_INSTALL_PREFIX=${SOFTWARE_DIR}/install -DCMAKE_BUILD_TYPE=Release ../
+        make
+        make install
+        ###################### Mongo Clients ######################
+        ### Mongodb C Driver ###
+        wget https://github.com/mongodb/mongo-c-driver/releases/download/1.17.0/mongo-c-driver-1.17.0.tar.gz
+        tar -xzf mongo-c-driver-1.17.0.tar.gz
+        cd mongo-c-driver-1.17.0/build
+        cmake -DCMAKE_INSTALL_PREFIX=${SOFTWARE_DIR}/install -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF ../
+        make -j8
+        cmake --build . --target install
+        ### Mongodb C++ Driver ###
+        curl -OL https://github.com/mongodb/mongo-cxx-driver/archive/r3.5.1.tar.gz
+        tar -xzf r3.5.1.tar.gz
+        cd mongo-cxx-driver-r3.5.1/build
+        cmake .. -DCMAKE_PREFIX_PATH=${SOFTWARE_DIR}/install -DBUILD_VERSION=3.5.1 -DCMAKE_INSTALL_PREFIX=${SOFTWARE_DIR}/install -DCMAKE_CXX_STANDARD=17 -DBSONCXX_POLY_USE_BOOST=1 -DCMAKE_BUILD_TYPE=Release
+        make -j8
+        cmake --build . --target install
+
     - name: Configure CMake
       # Use a bash shell so we can use the same syntax for environment variable
       # access regardless of the host operating system
