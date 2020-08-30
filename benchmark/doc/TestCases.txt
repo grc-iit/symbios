@@ -9,8 +9,9 @@ squeue: View all my active jobs
 scontrol show res: View the nodes I have reserved
 scancel [job_id]: Remove my hold on node
 
-#Helpful cmake
+#Helpful others
 ctest -N -R aresbm_1_orangefs_[a-zA-Z0-9]+_4k_[a-zA-Z0-9]+_[a-zA-Z0-9]+_uniform_1_0_hdd4_basic
+ls -lh will list size of files
 
 #Add ORANGEFS environment to ~/.bashrc
 
@@ -37,7 +38,7 @@ ctest --output-on-failure --verbose -R prealloc_1_orangefs_*
 #Run all worklaods for particular NPROC
 ctest --output-on-failure --verbose -R aresbm_${nprocs}_${storage_type}_${cport}_${block_size}_${file_size}_${total_io}_${access_pattern}_${wfrac}_${rfrac}_${config}
 ctest --output-on-failure --verbose -R aresbm_1_orangefs_[a-zA-Z0-9]+_4k_[a-zA-Z0-9]+_[a-zA-Z0-9]+_seq_1_0_hdd4_basic
-ctest --output-on-failure --verbose -R aresbm_1_orangefs_[a-zA-Z0-9]+_4k_[a-zA-Z0-9]+_[a-zA-Z0-9]+_uniform_1_0_hdd4_basic
+ctest --output-on-failure --verbose -R aresbm_1_orangefs_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_hdd4_basic
 
 #Remove all files
 rm -rf /mnt/nvme/llogan/write/generic/*

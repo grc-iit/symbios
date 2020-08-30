@@ -19,23 +19,23 @@ add_executable(benchmark src/benchmark.cpp include/benchmark/rng.h include/bench
 target_link_libraries(benchmark -lmpi -lhiredis -lredis++ -lmongoc-1.0 -lbson-1.0 -lbsoncxx -lboost_system -lboost_filesystem  -lmongocxx -lpthread)
 
 #OrangeFS test cases (local)
-add_custom_target(bm-usage COMMAND
+add_custom_target(bm_usage COMMAND
         ${CMAKE_CURRENT_BINARY_DIR}/benchmark)
-add_custom_target(bm-prealloc COMMAND
+add_custom_target(bm_prealloc COMMAND
         ${CMAKE_CURRENT_BINARY_DIR}/benchmark
         -s orangefs -caddr ~/ -path test3.bin
         -w prealloc -fs 1b)
-add_custom_target(bm-rw-test-seq COMMAND
+add_custom_target(bm_rw_test_seq COMMAND
         ${CMAKE_CURRENT_BINARY_DIR}/benchmark
         -s orangefs -caddr ~/ -path test.bin
         -w io-only -bs 4k -fs 0k -tot 1g -wfrac .5 -rfrac .5 -ap uniform -seed 2542
         -out ~/test.csv)
-add_custom_target(bm-rw-test-rand COMMAND
+add_custom_target(bm_rw_test_rand COMMAND
         ${CMAKE_CURRENT_BINARY_DIR}/benchmark
         -s orangefs -caddr ~/ -path test.bin
         -w io-only -bs 4k -fs 0k -tot 1g -wfrac .5 -rfrac .5 -ap uniform -seed 2542
         -out ~/test.csv)
-add_custom_target(bm-md-test COMMAND
+add_custom_target(bm_md_test COMMAND
         ${CMAKE_CURRENT_BINARY_DIR}/benchmark
         -s orangefs -caddr ~/ -path test.bin
         -w md-test -md_depth 20 -md_fcnt 20
@@ -58,16 +58,30 @@ add_custom_target(ares-alloc-storage
         COMMAND salloc --reservation=llogan_6 -p storage -w ares-stor-[01-08] --exclusive)
 
 #Deploy OrangeFS
-add_custom_target(ares-deploy-hdd-4
+add_custom_target(ares_deploy_hdd_4_basic
         COMMAND ${SCRIPT_ROOT}/deploy.sh
             ${SCRIPT_ROOT}/conf/small/basic.conf
             /mnt/hdd/llogan/orangefs
             /mnt/nvme/llogan/write/generic
             ${SCRIPT_ROOT}/hostfiles/hostfile_servers_small
             ${SCRIPT_ROOT}/hostfiles/hostfile_clients)
+add_custom_target(ares_deploy_hdd_4_read
+        COMMAND ${SCRIPT_ROOT}/deploy.sh
+        ${SCRIPT_ROOT}/conf/small/read_optimize.conf
+        /mnt/hdd/llogan/orangefs
+        /mnt/nvme/llogan/write/generic
+        ${SCRIPT_ROOT}/hostfiles/hostfile_servers_small
+        ${SCRIPT_ROOT}/hostfiles/hostfile_clients)
+add_custom_target(ares_deploy_hdd_4_write
+        COMMAND ${SCRIPT_ROOT}/deploy.sh
+        ${SCRIPT_ROOT}/conf/small/write_optimize.conf
+        /mnt/hdd/llogan/orangefs
+        /mnt/nvme/llogan/write/generic
+        ${SCRIPT_ROOT}/hostfiles/hostfile_servers_small
+        ${SCRIPT_ROOT}/hostfiles/hostfile_clients)
 
 #Terminate OrangeFS
-add_custom_target(ares-terminate-hdd-4
+add_custom_target(ares_terminate_hdd_4
         COMMAND ${SCRIPT_ROOT}/deploy.sh
         ${SCRIPT_ROOT}/conf/small/basic.conf
         /mnt/hdd/llogan/orangefs
