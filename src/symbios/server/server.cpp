@@ -34,7 +34,8 @@ int symbios::Server::StoreRequest(Data &request){
 
 Data symbios::Server::LocateRequest(Data &request){
     auto tracer=common::debug::AutoTrace(std::string("symbios::Server::LocateRequest"), request);
-    auto distributions = basket::Singleton<MetadataOrchestrator>::GetInstance()->Locate(request);
+    Metadata primary_metadata;
+    auto distributions = basket::Singleton<MetadataOrchestrator>::GetInstance()->Locate(request, primary_metadata);
     for(auto distribution:distributions){
         basket::Singleton<IOFactory>::GetInstance()->GetIOClient(distribution.destination_data_.storage_index_)->Read(distribution.source_data_,distribution.destination_data_);
     }
