@@ -83,9 +83,12 @@ int main(int argc, char* argv[]){
     std::string config = args.GetStringOpt("-c");
     SYMBIOS_CONF->CONFIGURATION_FILE=config.data();
     BASKET_CONF->BACKED_FILE_DIR=SYMBIOS_CONF->SERVER_DIR;
+    SYMBIOS_CONF->ConfigureSymbiosServer();
     int dde_i = args.GetIntOpt("-p");
     SYMBIOS_CONF->DATA_DISTRIBUTION_POLICY = static_cast<DataDistributionPolicy>(dde_i);
     SYMBIOS_CONF->RANDOM_SEED = args.GetIntOpt("-seed");
+
+    auto basket = BASKET_CONF;
     int request_size = args.GetIntOpt("-s");
     int number_request = args.GetIntOpt("-n");
     auto distribution = DistributionFactory::Get(DistributionType::kUniform);
@@ -98,6 +101,8 @@ int main(int argc, char* argv[]){
     request.buffer_ = distribution.get();
     request.data_size_ = request_size;
     common::debug::Timer t;
+    ops_per_proc = number_request;
+    bytes_per_proc = ops_per_proc * request_size;
     for(int i=0;i<number_request;++i){
         request.id_ = "temp_" + std::to_string(i);
         t.resumeTime();
@@ -129,7 +134,7 @@ int main(int argc, char* argv[]){
         bool exists = boost::filesystem::exists(output_path);
         std::ofstream out(output_path, std::ofstream::out | std::ofstream::app);
         if(!exists) {
-            out << "avg_msec,std_msec,min_msec,max_msec,nprocs,tot_ops,tot_bytes,thrpt_kiops,bw_kbps" << std::endl;
+            out << "avg_msec,std_msec,min_msec,max_msec,nprocs,number_request,request_size,seed,tot_ops,tot_bytes,thrpt_kiops,bw_kbps,dde" << std::endl;
         }
         out <<
             avg_msec << "," <<
@@ -137,10 +142,14 @@ int main(int argc, char* argv[]){
             min_msec << "," <<
             max_msec << "," <<
             nprocs << "," <<
+            number_request << "," <<
+            request_size << "," <<
+            SYMBIOS_CONF->RANDOM_SEED << "," <<
             tot_ops << "," <<
             tot_bytes << "," <<
             thrpt_kiops << "," <<
-            bw_kbps << std::endl;
+            bw_kbps << "," <<
+            dde_i << std::endl;
     }
 
     MPI_Finalize();
