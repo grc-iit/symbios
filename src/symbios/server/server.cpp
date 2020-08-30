@@ -36,8 +36,16 @@ Data symbios::Server::LocateRequest(Data &request){
     auto tracer=common::debug::AutoTrace(std::string("symbios::Server::LocateRequest"), request);
     Metadata primary_metadata;
     auto distributions = basket::Singleton<MetadataOrchestrator>::GetInstance()->Locate(request, primary_metadata);
-    for(auto distribution:distributions){
+    int total_size= 0;
+    for(auto &distribution:distributions){
         basket::Singleton<IOFactory>::GetInstance()->GetIOClient(distribution.destination_data_.storage_index_)->Read(distribution.source_data_,distribution.destination_data_);
+        total_size+=distribution.destination_data_.data_size_;
+    }
+    request.buffer_=malloc(total_size);
+    long start=0;
+    for(auto &distribution:distributions){
+        memcpy(request.buffer_+start,distribution.destination_data_.buffer_+ distribution.destination_data_.position_, distribution.destination_data_.data_size_);
+        start+=distribution.destination_data_.data_size_;
     }
     return request;
 }

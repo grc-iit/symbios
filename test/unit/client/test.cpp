@@ -22,6 +22,9 @@ int main(int argc, char * argv[]){
     data.data_size_=strlen("Hello")+1;
     data.storage_index_=0;
     client.StoreRequest(data);
+    data.buffer_= std::string().data();
+    client.LocateRequest(data);
+    printf("Data recieved %s\n",(char*)data.buffer_);
     MPI_Finalize();
     return 0;
 }
