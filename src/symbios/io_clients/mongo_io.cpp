@@ -7,58 +7,87 @@
 #include <symbios/common/configuration_manager.h>
 #include <symbios/common/error_codes.h>
 #include <cstring>
+#include <bsoncxx/builder/stream/helpers.hpp>
+#include <bsoncxx/builder/stream/document.hpp>
+#include <mongocxx/exception/query_exception.hpp>
+#include <mongocxx/exception/bulk_write_exception.hpp>
 
-MongoIOClient::MongoIOClient() {
-    ConfigurationManager conf = Singleton<ConfigurationManager>::GetInstance();
-
-    instance = std::make_shared<mongocxx::instance>();
-    mongocxx::uri uri(conf.mongodb_cluster_url);
-    mongocxx::client client(uri);
-    coll = client[conf.mongodb_cluster_database][conf.mongodb_cluster_collection];
-}
 
 void MongoIOClient::Read(Data &source, Data &destination) {
-    // create the filter document and then call the find_one method to query data from mongodb
-
-    // may have the partial write /read
     try {
-        auto builder = bason::builder::stream::document{};
-        bsoncxx::document::value query_doc_value = builder
+        auto builder = bsoncxx::builder::stream::document{};
+        bsoncxx::view_or_value<bsoncxx::document::view, bsoncxx::document::value> query_doc_value = builder
                 << "_id" << source.id_.c_str()
                 << bsoncxx::builder::stream::finalize;
         bsoncxx::stdx::optional<bsoncxx::document::value> result = coll.find_one(query_doc_value);
         if(result){
             // get the result
-            std::string value = bsoncxx::to_json(*maybe_result);
+            std::string value = bsoncxx::to_json(result->view());
             std::string::size_type value_size = value.length();
-            if(value_size == source.data_size_) {
-                // store the information in destination
-                memcpy(destination.buffer_, value.c_str(), value_size);
-                destination.data_size_ = value_size;
-            } else {
-                throw ErrorException(READ_REDIS_POSITION_OR_SIZE_FAILED);
+            if(source.position_ + source.data_size_ > value_size){
+                throw ErrorException(READ_MONGO_POSITION_OR_SIZE_FAILED);
+            }
+            else {
+                // read data from mogodb to the memory buffer
+                memcpy(destination.buffer_, value.c_str() + source.position_, source.data_size_);
+                destination.data_size_ = source.data_size_;
             }
         } else {
-            throw ErrorException(READ_REDIS_POSITION_OR_SIZE_FAILED);
+            throw ErrorException(READ_MONGODB_DATA_FAILED);
         }
 
     } catch (mongocxx::query_exception ex){
-        throw ErrorException(READ_REDIS_POSITION_OR_SIZE_FAILED);
+        throw ErrorException(MONGODB_SERVER_SIDE_FAILED);
     }
 }
 
 void MongoIOClient::Write(Data &source, Data &destination) {
-    // create the json document and then call the collection insert method to write data into mongodb
     try {
-        std::string value = std::string((char*)source.buffer_, source.data_size_);
-        auto builder = bason::builder::stream::document{};
-        bsoncxx::document::value insert_doc_value = builder
+        auto builder = bsoncxx::builder::stream::document{};
+        bsoncxx::view_or_value<bsoncxx::document::view, bsoncxx::document::value> query_doc_value = builder
                 << "_id" << source.id_.c_str()
-                << "query_id" << source.id_.c_str()
-                << source.id_.c_str() << value
                 << bsoncxx::builder::stream::finalize;
-        coll.insert_one(insert_doc_value.view());
+        bsoncxx::stdx::optional<bsoncxx::document::value> result = coll.find_one(query_doc_value);
+        if(result){
+            // The key has been existed in Mongodb
+            std::string old_value = bsoncxx::to_json(result->view());
+            std::string::size_type old_value_size = old_value.length();
+            if (source.data_size_ >= old_value_size){
+                std::string new_value = std::string((char*)source.buffer_ + source.position_, source.data_size_);
+                auto builder = bsoncxx::builder::stream::document{};
+                bsoncxx::document::value insert_doc_value = builder
+                        << "_id" << source.id_.c_str()
+                        << std::string(source.id_.c_str()) << new_value
+                        << bsoncxx::builder::stream::finalize;
+                coll.insert_one(insert_doc_value.view());
+                destination.data_size_ = source.data_size_;
+            }
+            else {
+                // update the old_value
+                memcpy((void*)old_value.c_str(), (const void*)((char*)source.buffer_ + source.position_), source.data_size_);
+                // put the updated data back
+                auto builder = bsoncxx::builder::stream::document{};
+                bsoncxx::document::value insert_doc_value = builder
+                        << "_id" << source.id_.c_str()
+                        << std::string(source.id_.c_str()) << old_value
+                        << bsoncxx::builder::stream::finalize;
+                coll.insert_one(insert_doc_value.view());
+                destination.data_size_ = source.data_size_;
+            }
+        }
+        else {
+            // The key isn't exist in redis cluster
+            std::string value = std::string((char*)source.buffer_ + source.position_, source.data_size_);
+            auto builder = bsoncxx::builder::stream::document{};
+            bsoncxx::document::value insert_doc_value = builder
+                    << "_id" << source.id_.c_str()
+                    << std::string(source.id_.c_str()) << value
+                    << bsoncxx::builder::stream::finalize;
+            coll.insert_one(insert_doc_value.view());
+            destination.data_size_ = source.data_size_;
+        }
+
     } catch (mongocxx::bulk_write_exception ex){
-        throw ErrorException(READ_REDIS_POSITION_OR_SIZE_FAILED);
+        throw ErrorException(MONGODB_SERVER_SIDE_FAILED);
     }
 }

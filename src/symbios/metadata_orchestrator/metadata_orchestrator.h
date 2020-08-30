@@ -6,8 +6,13 @@
 #define SYMBIOS_METADATA_ORCHESTRATOR_H
 
 
-class metadata_orchestrator {
+#include <symbios/common/data_structure.h>
 
+class MetadataOrchestrator {
+public:
+    void Store(Data &original_request, std::vector<DataDistribution> &distributions);
+    std::vector<DataDistribution> Locate(Data &request, Metadata &primary_metadata);
+    MetadataOrchestrator();
 };
 
 

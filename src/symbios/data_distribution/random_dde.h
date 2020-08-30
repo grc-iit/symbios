@@ -5,7 +5,7 @@
 #ifndef SYMBIOS_RANDOMDATAPLACEMENT_H
 #define SYMBIOS_RANDOMDATAPLACEMENT_H
 
-#include <symbios/data_placement/data_placement.h>
+#include <symbios/data_distribution/data_distribution.h>
 
 class RandomDDE: public DataDistributionEngine {
 public:
@@ -18,7 +18,7 @@ public:
      */
 
     // Select the target storages for the request by using random data placement policy
-    std::vector<Distribution> Distribute(Data& request) override;
+    std::vector<DataDistribution> Distribute(Data& request) override;
 };
 
 #endif //SYMBIOS_RANDOMDATAPLACEMENT_H

@@ -8,20 +8,11 @@
 #include <symbios/common/configuration_manager.h>
 #include <symbios/common/error_codes.h>
 
-RedisIOClient::RedisIOClient() {
-    ConfigurationManager conf = Singleton<ConfigurationManager>::GetInstance();
-
-    ConnectionOptions connectionOptions;
-    connectionOptions.host = conf.redis_cluster_host; // redis_cluster ip
-    connectionOptions.port = conf.redis_cluster_port; // redis_cluster port
-
-    m_redisCluster = std::make_shared<RedisCluster>(connectionOptions);
-}
 
 void RedisIOClient::Read(Data &source, Data &destination) {
     try {
-        std::string key = std::string(source.id_.c_str());
-        auto resp = m_redisCluster.get(key);
+
+        auto resp = m_redisCluster->get(source.id_.c_str());
         if(resp){
             std::string value = *resp;
             std::string::size_type value_size = value.length();
@@ -43,15 +34,14 @@ void RedisIOClient::Read(Data &source, Data &destination) {
 
 void RedisIOClient::Write(Data &source, Data &destination) {
     try {
-        std::string key = std::string(destination.id_.c_str());
-        auto resp = m_redisCluster.get(key);
+        auto resp = m_redisCluster->get(destination.id_.c_str());
         if(resp) {
             // The key has been existed in redis cluster.
             std::string old_value = *resp;
             std::string::size_type old_value_size = old_value.length();
             if (source.data_size_ >= old_value_size){
                 std::string new_value = std::string((char*)(source.buffer_ + source.position_), source.data_size_);
-                bool result = m_redisCluster.set(key, new_value);
+                bool result = m_redisCluster->set(destination.id_.c_str(), new_value);
                 if (!result) {
                     throw ErrorException(WRITE_REDIS_DATA_FAILED);
                 }
@@ -60,9 +50,9 @@ void RedisIOClient::Write(Data &source, Data &destination) {
             else
             {
                 // update the old_value
-                memcpy((void*)old_value.c_str(), source.buffer_ + source.position_, source.data_size_);
+                memcpy((void*)old_value.c_str(), (const void*)((char*)source.buffer_ + source.position_), source.data_size_);
                 // put the updated data back
-                bool result = m_redisCluster.set(key, old_value);
+                bool result = m_redisCluster->set(destination.id_.c_str(), old_value);
                 if (!result) {
                     throw ErrorException(WRITE_REDIS_DATA_FAILED);
                 }
@@ -72,7 +62,7 @@ void RedisIOClient::Write(Data &source, Data &destination) {
         else {
             // The key isn't exist in redis cluster
             std::string value = std::string((char*)(source.buffer_ + source.position_), source.data_size_);
-            bool result = m_redisCluster.set(key, value);
+            bool result = m_redisCluster->set(destination.id_.c_str(), value);
             if (!result) {
                 throw ErrorException(WRITE_REDIS_DATA_FAILED);
             }

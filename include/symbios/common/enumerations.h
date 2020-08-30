@@ -25,12 +25,12 @@ typedef enum IOClientType{
 /**
  * DataPlacementPolicy defines various of DataPlacement policies supported by Symbios
  */
-typedef enum DataPlacementPolicy{
+typedef enum DataDistributionPolicy{
     RANDOM_POLICY = 0,
     ROUND_ROBIN_POLICY = 1,
     HEURISTICS_POLICY = 2,
     DYNAMIC_PROGRAMMING_POLICY = 3
-} DataPlacementPolicy;
+} DataDistributionPolicy;
 
 #endif //SYMBIOS_ENUMERATIONS_H
 

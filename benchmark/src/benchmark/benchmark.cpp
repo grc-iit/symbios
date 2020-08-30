@@ -9,8 +9,8 @@
 #include <string>
 #include <mpi.h>
 #include <benchmark/benchmark.h>
-#include <benchmark/rng.h>
-#include <debug.h>
+#include "common/rng.h"
+#include <common/debug.h>
 
 void time_stats(double local_time_spent, int nprocs, double &avg_msec, double &std_msec, double &min_msec, double &max_msec)
 {
@@ -138,7 +138,7 @@ void prealloc(IOClientPtr &fs, int rank, int nprocs, BenchmarkArgs &args)
 
 void io_file_workload(IOClientPtr &fs, int rank, int nprocs, BenchmarkArgs &args)
 {
-    Timer t;
+    common::debug::Timer t;
     std::string path = args.GetStringOpt("-path") + std::to_string(rank);
     float rfrac = args.GetFloatOpt("-rfrac");
     float wfrac = args.GetFloatOpt("-wfrac");
@@ -184,7 +184,7 @@ void io_file_workload(IOClientPtr &fs, int rank, int nprocs, BenchmarkArgs &args
 void md_fs_workload(IOClientPtr &fs, int rank, int nprocs, BenchmarkArgs &args)
 {
     //Start Time
-    Timer t;
+    common::debug::Timer t;
     t.startTime();
 
     int depth = args.GetIntOpt("-md_depth");

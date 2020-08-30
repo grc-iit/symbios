@@ -9,11 +9,12 @@ You do not have to set it to ~/install, that's just an example.
 ```bash
 mkdir ~/install
 export DEP_INSTALL=~/install
+export INSTALL_DIR=$DEP_INSTALL
 export PATH=${DEP_INSTALL}/bin:$DEP_INSTALL/include:$DEP_INSTALL/lib:$PATH
 export LD_LIBRARY_PATH=${DEP_INSTALL}/lib:$LD_LIBRARY_PATH
 export LIBRARY_PATH=${DEP_INSTALL}/lib:$LIBRARY_PATH
-export INCLUDE_PATH=${DEP_INSTALL}/include:INCLUDE_PATH
-export CPATH=${DEP_INSTALL}/include:$CPATH
+export INCLUDE_PATH=${DEP_INSTALL}/include/mongocxx/v_noabi:${DEP_INSTALL}/include/bsoncxx/v_noabi:${DEP_INSTALL}/include:INCLUDE_PATH
+export CPATH=${DEP_INSTALL}/include/mongocxx/v_noabi:${DEP_INSTALL}/include/bsoncxx/v_noabi:${DEP_INSTALL}/include:$CPATH
 ```
 
 NOTE: If PATH, LD_LIBRARY_PATH, LIBRARY_PATH, INCLUDE, or CPATH are undefined,
@@ -144,6 +145,17 @@ change -DCMAKE_PREFIX_PATH to whatever directory the mongo C driver is....
 
 
 ### RapidJson
+```bash
+git clone https://github.com/Tencent/rapidjson
+cd rapidjson
+git checkout v1.1.0 -b v1.1.0
+mkdir build
+cd build
+cmake .. -DCMAKE_CXX_FLAGS:STRING="-Wno-error=class-memaccess -Wno-error=implicit-fallthrough="  -DCMAKE_INSTALL_PREFIX=$DEP_INSTALL -DINCLUDE_INSTALL_DIR=$DEP_INSTALL/include -DLIB_INSTALL_DIR=$DEP_INSTALL/lib -DCMAKE_INSTALL_DIR=$DEP_INSTALL/cmake -DDOC_INSTALL_DIR=$DEP_INSTALL/share/doc/RapidJSON
+make -j8
+make install
+```
+
 ### HCL
 HCL is dependendat upon:
 * glibc
@@ -156,10 +168,20 @@ HCL was tested with mpich 3.3.1, boost 1.69.0, rpclib 2.2.1, mercury 1.0.1, and 
 
 All information can be seen on https://bitbucket.org/scs-io/hcl/src/master/
 
+### Redis Server
+```bash
+wget https://github.com/redis/redis/archive/6.0.6.tar.gz
+tar -xzf 6.0.6.tar.gz
+cd redis-6.0.6
+make PREFIX=$DEP_INSTALL install
+```
+
 #### Compile and Install
 Basic Method:
 ```bash
-cd basket
+git clone https://bitbucket.org/scs-io/hcl
+cd hcl
+git checkout -b release/0.0.4
 mkdir build
 cmake -DCMAKE_INSTALL_PREFIX:PATH=/install_dir -DBASKET_ENABLE_RPCLIB=true ..
 make
@@ -222,3 +244,25 @@ Data source_data_;
 Data destination_data_;
 io_client.Read(source_data_, destination_data_);
 ```
+## Redis Cluster Local Script Usage
+```bash
+cd scripts/local
+./run_redis_cluster.sh redis_cluster_config_path redis_server_numbers redis_cluster_install_path
+```
+
+## Local testing of Symbios
+
+- update conf/symbios.conf to correct the path of SERVER_LISTS, CLIENT_LISTS, and SERVER_DIR
+
+### start server in one terminal (or clion)
+```bash
+/tmp/tmp.BUKlhPiLxF/build/symbios_server /tmp/tmp.BUKlhPiLxF/conf/symbios.conf
+```
+
+### start client in another terminal (or clion)
+```bash
+/tmp/tmp.BUKlhPiLxF/build/test/unit/unit_client /home/hdevarajan/symbios.conf
+```
+
+NOTE:
+- you might need to set the LD_LIBRARY_PATH of all dependencies.
