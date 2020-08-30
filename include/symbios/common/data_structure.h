@@ -97,26 +97,26 @@ typedef struct MongoSS: public StorageSolution{
 }MongoSS;
 
 
-typedef struct Distribution{
+typedef struct DataDistribution{
     Data source_data_; // memory buffer for write and file buffer for read
     Data destination_data_; // file info for write and memory info for read
     uint16_t storage_index_; // native io client type
 
     /*Define the default, copy and move constructor*/
-    Distribution():storage_index_(),destination_data_(),source_data_(){}
-    Distribution(const Distribution &other):source_data_(other.source_data_),
-        destination_data_(other.destination_data_), storage_index_(other.storage_index_){}
-    Distribution(Distribution &other):source_data_(other.source_data_),
-        destination_data_(other.destination_data_), storage_index_(other.storage_index_){}
+    DataDistribution(): storage_index_(), destination_data_(), source_data_(){}
+    DataDistribution(const DataDistribution &other): source_data_(other.source_data_),
+                                                     destination_data_(other.destination_data_), storage_index_(other.storage_index_){}
+    DataDistribution(DataDistribution &other): source_data_(other.source_data_),
+                                               destination_data_(other.destination_data_), storage_index_(other.storage_index_){}
 
     /*Define Assignment Operator*/
-    Distribution &operator=(const Distribution &other){
+    DataDistribution &operator=(const DataDistribution &other){
         source_data_ = other.source_data_;
         destination_data_ = other.destination_data_;
         storage_index_ = other.storage_index_;
         return *this;
     }
-} Distribution;
+} DataDistribution;
 
 typedef struct Metadata{
     bool is_link_;

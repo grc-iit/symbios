@@ -9,7 +9,7 @@
 #include <symbios/common/error_definition.h>
 #include <common/debug.h>
 
-void MetadataOrchestrator::Store(Data &original_request, std::vector<Distribution> &distributions) {
+void MetadataOrchestrator::Store(Data &original_request, std::vector<DataDistribution> &distributions) {
     auto original_metadata = original_request;
     /**
      * Update primary index
@@ -17,7 +17,7 @@ void MetadataOrchestrator::Store(Data &original_request, std::vector<Distributio
     original_metadata.position_ = 0;
     auto primary_metadata = Metadata();
     bool exists;
-    auto existing_distributions = std::vector<Distribution>();
+    auto existing_distributions = std::vector<DataDistribution>();
     try {
         existing_distributions = Locate(original_request,primary_metadata);
         exists=true;
@@ -76,7 +76,7 @@ void MetadataOrchestrator::Store(Data &original_request, std::vector<Distributio
     }
 }
 
-std::vector<Distribution> MetadataOrchestrator::Locate(Data &request, Metadata &primary_metadata) {
+std::vector<DataDistribution> MetadataOrchestrator::Locate(Data &request, Metadata &primary_metadata) {
 
     Data original_metadata;
     original_metadata.id_ = request.id_ + "_meta";
@@ -95,7 +95,7 @@ std::vector<Distribution> MetadataOrchestrator::Locate(Data &request, Metadata &
         clmdep_msgpack::object_handle oh = clmdep_msgpack::unpack( (char*)original_metadata.buffer_,  original_metadata.data_size_);
         oh.get().convert(primary_metadata);
     }
-    auto distributions = std::vector<Distribution>();
+    auto distributions = std::vector<DataDistribution>();
     auto start_position = 0;
     for(auto link:primary_metadata.links_){
         if(link.first >= request.position_ && link.first <= request.position_ + request.data_size_){
@@ -104,7 +104,7 @@ std::vector<Distribution> MetadataOrchestrator::Locate(Data &request, Metadata &
                 dest_data.position_ = request.position_;
             if(request.position_ + request.data_size_ < link.first + link.second.data_size_)
                 link.second.data_size_ = request.data_size_;
-            auto distribution = Distribution();
+            auto distribution = DataDistribution();
             distribution.source_data_ = dest_data;
             distribution.destination_data_ = dest_data;
             distribution.storage_index_=distribution.destination_data_.storage_index_;

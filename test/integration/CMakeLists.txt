@@ -4,7 +4,7 @@ include_directories(${INSTALL_DIR}/include/)
 set(CMAKE_CXX_STANDARD 17)
 
 
-set(LIBS -L${INSTALL_DIR}/lib64 -L${INSTALL_DIR}/lib -L${INSTALL_DIR}/lib -lmpi -lpthread -ldl)
+set(LIBS -L${INSTALL_DIR}/lib64 -L${INSTALL_DIR}/lib -L${INSTALL_DIR}/lib -lmpi -lpthread -ldl  -lhiredis -lbasket -lrpc -lredis++ -lmongoc-1.0 -lbson-1.0 -lbsoncxx -lboost_system -lboost_filesystem  -lmongocxx -lpthread)
 include_directories(${CMAKE_SOURCE_DIR})
 set(CTEST_ENVIRONMENT "LD_LIBRARY_PATH=${CMAKE_BINARY_DIR}/")
 set($ENV{LD_PRELOAD} "$ENV{LD_PRELOAD} ${CMAKE_BINARY_DIR}")
@@ -18,9 +18,6 @@ foreach (test_file ${test_files})
     target_link_libraries(${exec} ${LIBS})
     target_link_libraries(${exec} symbios)
     set_target_properties(${exec} PROPERTIES FOLDER test/integration)
-    set(test_name ${test_file}_test)
-    add_test(NAME ${test_name} COMMAND ${CMAKE_BINARY_DIR}/test/integration/${exec} ${test_parameters})
-    set_tests_properties(${test_name} PROPERTIES WILL_FAIL false)
 endforeach ()
 
 
