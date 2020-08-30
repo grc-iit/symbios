@@ -84,7 +84,8 @@ int main(int argc, char* argv[]){
     SYMBIOS_CONF->CONFIGURATION_FILE=config.data();
     BASKET_CONF->BACKED_FILE_DIR=SYMBIOS_CONF->SERVER_DIR;
     if(rank == 0) SYMBIOS_CONF->ConfigureSymbiosServer();
-    else SYMBIOS_CONF->ConfigureSymbiosClient();
+    MPI_Barrier(MPI_COMM_WORLD);
+    if(rank != 0) SYMBIOS_CONF->ConfigureSymbiosClient();
     int dde_i = args.GetIntOpt("-p");
     SYMBIOS_CONF->DATA_DISTRIBUTION_POLICY = static_cast<DataDistributionPolicy>(dde_i);
     SYMBIOS_CONF->RANDOM_SEED = args.GetIntOpt("-seed");
@@ -92,14 +93,20 @@ int main(int argc, char* argv[]){
     auto basket = BASKET_CONF;
     int request_size = args.GetIntOpt("-s");
     int number_request = args.GetIntOpt("-n");
-    auto distribution = DistributionFactory::Get(DistributionType::kUniform);
-    distribution->Shape((double)request_size/sizeof(double));
+    //auto distribution = DistributionFactory::Get(DistributionType::kUniform);
+    //distribution->Shape((double)request_size/sizeof(double));
 
-    auto engine = basket::Singleton<DataDistributionEngineFactory>::GetInstance()->GetDataDistributionEngine(SYMBIOS_CONF->DATA_DISTRIBUTION_POLICY);
+    std::shared_ptr<DataDistributionEngine> engine;
+    if(rank == 0)
+        engine = basket::Singleton<DataDistributionEngineFactory>::GetInstance()->GetDataDistributionEngine(SYMBIOS_CONF->DATA_DISTRIBUTION_POLICY);
+    MPI_Barrier(MPI_COMM_WORLD);
+    if(rank != 0)
+        engine = basket::Singleton<DataDistributionEngineFactory>::GetInstance()->GetDataDistributionEngine(SYMBIOS_CONF->DATA_DISTRIBUTION_POLICY);
+    MPI_Barrier(MPI_COMM_WORLD);
     auto request = Data();
     request.position_ = 0;
     request.storage_index_ = 0;
-    request.buffer_ = distribution.get();
+    //request.buffer_ = distribution.get();
     request.data_size_ = request_size;
     common::debug::Timer t;
     ops_per_proc = number_request;
@@ -110,6 +117,7 @@ int main(int argc, char* argv[]){
         engine->Distribute(request);
         t.pauseTime();
     }
+    MPI_Barrier(MPI_COMM_WORLD);
     double local_end_time = t.endTime();
     double local_std_msec;
 

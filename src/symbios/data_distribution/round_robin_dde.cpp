@@ -8,9 +8,9 @@
 std::vector<DataDistribution> RoundRobinDDE::Distribute(Data& request) {
 
     auto distributions = std::vector<DataDistribution>();
-    uint16_t server_index = 0;
-    auto next_value = sequence.GetNextSequenceServer(server_index);
-    int16_t selected_solution_index = rand() % SYMBIOS_CONF->STORAGE_SOLUTIONS.size();
+    uint16_t index= 0;
+    auto next_value = sequence.GetNextSequence();
+    int16_t selected_solution_index = next_value % SYMBIOS_CONF->STORAGE_SOLUTIONS.size();
     auto selected_solution = SYMBIOS_CONF->STORAGE_SOLUTIONS[selected_solution_index];
     auto distribution = DataDistribution();
     distribution.storage_index_ = request.storage_index_;
