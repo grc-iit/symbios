@@ -63,7 +63,7 @@ add_custom_target(ares-terminate-hdd-4
 
 #OrangeFS I/O-intensive test cases (ares)
 function(io_test nprocs storage_type cport block_size file_size total_io access_pattern wfrac rfrac config)
-    add_custom_target(aresbm_${nprocs}_${storage_type}_${cport}_${block_size}_${file_size}_${total_io}_${access_pattern}_${wfrac}_${rfrac}_${config} COMMAND
+    add_test(aresbm_${nprocs}_${storage_type}_${cport}_${block_size}_${file_size}_${total_io}_${access_pattern}_${wfrac}_${rfrac}_${config} COMMAND
             mpirun -n ${nprocs} ${CMAKE_CURRENT_BINARY_DIR}/benchmark
             -s ${storage_type} -caddr /mnt/nvme/llogan/write/generic -cport ${cport} -path /test.bin
             -w io-only -ap ${access_pattern} -bs ${block_size} -fs ${file_size} -tot ${total_io} -wfrac ${wfrac} -rfrac ${rfrac}
