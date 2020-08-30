@@ -22,10 +22,10 @@ std::vector<Distribution> RandomDDE::Distribute(Data& request) {
     auto selected_solution = SYMBIOS_CONF->STORAGE_SOLUTIONS[selected_solution_index];
     COMMON_DBGVAR3(random_number,size,selected_solution->io_client_type_);
     auto distribution = Distribution();
-    distribution.io_client_type_ = request.io_client_type_;
+    distribution.storage_index_ = request.storage_index_;
     distribution.destination_data_ = request;
     distribution.source_data_ = std::move(request);
-    distribution.destination_data_.io_client_type_ = selected_solution->io_client_type_;
+    distribution.destination_data_.storage_index_ = selected_solution_index;
     distributions.push_back(distribution);
     return distributions;
 }
