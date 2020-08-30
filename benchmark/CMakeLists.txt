@@ -69,7 +69,11 @@ add_custom_target(ares_bm_s_orangefs_bs_4k_fs_0k_tot_1g_wfrac_1_hdd_4 COMMAND
         -s orangefs -caddr /mnt/nvme/llogan/write/generic -path /test.bin
         -w io-only -bs 4k -fs 0k -tot 1g -wfrac 1 -rfrac 0
         -out ~/test_hdd4_basic)
-
+add_custom_target(ares_bm_s_orangefs_bs_64k_fs_0k_tot_1g_wfrac_1_hdd_4 COMMAND
+        mpirun -n 1 ${CMAKE_CURRENT_BINARY_DIR}/benchmark
+        -s orangefs -caddr /mnt/nvme/llogan/write/generic -path /test.bin
+        -w io-only -bs 4k -fs 0k -tot 1g -wfrac 1 -rfrac 0
+        -out ~/test_hdd4_basic)
 
 
 
