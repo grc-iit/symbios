@@ -8,9 +8,9 @@
 #include <fstream>
 #include <string>
 #include <mpi.h>
-#include <benchmark/benchmark.h>
-#include "common/rng.h"
+#include <common/rng.h>
 #include <common/debug.h>
+#include "benchmark.h"
 
 void time_stats(double local_time_spent, int nprocs, double &avg_msec, double &std_msec, double &min_msec, double &max_msec)
 {

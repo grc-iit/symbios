@@ -14,7 +14,7 @@
 #include <symbios/metadata_orchestrator/metadata_orchestrator.h>
 
 
-class BenchmarkArgs : public ArgMap {
+class BenchmarkArgs : public common::args::ArgMap {
 private:
     void VerifyArgs(void) {
         AssertOptIsSet("-s");
@@ -38,10 +38,10 @@ public:
     }
 
     BenchmarkArgs(int argc, char **argv) {
-        AddOpt("-c", ArgType::kString);
-        AddOpt("-out", ArgType::kString);
-        AddOpt("-s", ArgType::kInt);
-        AddOpt("-n", ArgType::kInt);
+        AddOpt("-c", common::args::ArgType::kString);
+        AddOpt("-out", common::args::ArgType::kString);
+        AddOpt("-s", common::args::ArgType::kInt);
+        AddOpt("-n", common::args::ArgType::kInt);
         ArgIter(argc, argv);
         VerifyArgs();
     }

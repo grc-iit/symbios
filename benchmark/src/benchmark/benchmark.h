@@ -7,16 +7,16 @@
 
 #include <iostream>
 #include <common/arguments.h>
-#include "../../src/benchmark/file.h"
-#include "common/rng.h"
-#include "../../src/benchmark/io_client.h"
-#include "../../src/benchmark/io_client_factory.h"
+#include <common/rng.h>
+#include "io_client.h"
+#include "io_client_factory.h"
+#include "file.h"
 
 enum class WorkloadType {
     kPrealloc, kIoOnlyFs, kMdFs
 };
 
-class BenchmarkArgs : public ArgMap {
+class BenchmarkArgs : public common::args::ArgMap {
 private:
     void VerifyArgs(void) {
         AssertOptIsSet("-s");
@@ -110,31 +110,31 @@ public:
     }
 
     BenchmarkArgs(int argc, char **argv) {
-        AddOpt("-w", ArgType::kStringMap);
+        AddOpt("-w", common::args::ArgType::kStringMap);
         AddStringMapVal("-w", "prealloc", static_cast<int>(WorkloadType::kPrealloc));
         AddStringMapVal("-w", "io-only", static_cast<int>(WorkloadType::kIoOnlyFs));
         AddStringMapVal("-w", "md-fs", static_cast<int>(WorkloadType::kMdFs));
-        AddOpt("-s", ArgType::kStringMap);
+        AddOpt("-s", common::args::ArgType::kStringMap);
         AddStringMapVal("-s", "orangefs", static_cast<int>(IOClientType::kOrangefs));
         AddStringMapVal("-s", "mongodb", static_cast<int>(IOClientType::kMongo));
         AddStringMapVal("-s", "redis", static_cast<int>(IOClientType::kRedis));
-        AddOpt("-caddr", ArgType::kString);
-        AddOpt("-cport", ArgType::kInt);
-        AddOpt("-p", ArgType::kSize);
-        AddOpt("-path", ArgType::kString);
-        AddOpt("-rfrac", ArgType::kFloat);
-        AddOpt("-wfrac", ArgType::kFloat);
-        AddOpt("-bs", ArgType::kSize);
-        AddOpt("-fs", ArgType::kSize);
-        AddOpt("-tot", ArgType::kSize);
-        AddOpt("-ap", ArgType::kStringMap);
+        AddOpt("-caddr", common::args::ArgType::kString);
+        AddOpt("-cport", common::args::ArgType::kInt);
+        AddOpt("-p", common::args::ArgType::kSize);
+        AddOpt("-path", common::args::ArgType::kString);
+        AddOpt("-rfrac", common::args::ArgType::kFloat);
+        AddOpt("-wfrac", common::args::ArgType::kFloat);
+        AddOpt("-bs", common::args::ArgType::kSize);
+        AddOpt("-fs", common::args::ArgType::kSize);
+        AddOpt("-tot", common::args::ArgType::kSize);
+        AddOpt("-ap", common::args::ArgType::kStringMap);
         AddStringMapVal("-ap", "seq", static_cast<int>(DistributionType::kNone));
         AddStringMapVal("-ap", "uniform", static_cast<int>(DistributionType::kUniform));
-        AddOpt("-md_depth", ArgType::kInt);
-        AddOpt("-md_fcnt", ArgType::kInt);
-        AddOpt("-direct", ArgType::kNone);
-        AddOpt("-out", ArgType::kString);
-        AddOpt("-seed", ArgType::kInt);
+        AddOpt("-md_depth", common::args::ArgType::kInt);
+        AddOpt("-md_fcnt", common::args::ArgType::kInt);
+        AddOpt("-direct", common::args::ArgType::kNone);
+        AddOpt("-out", common::args::ArgType::kString);
+        AddOpt("-seed", common::args::ArgType::kInt);
         ArgIter(argc, argv);
         VerifyArgs();
     }

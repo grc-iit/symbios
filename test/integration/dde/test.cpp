@@ -13,7 +13,7 @@
 #include <boost/filesystem.hpp>
 
 
-class BenchmarkArgs : public ArgMap {
+class BenchmarkArgs : public common::args::ArgMap {
 private:
     void VerifyArgs(void) {
         AssertOptIsSet("-p");
@@ -56,16 +56,16 @@ public:
     }
 
     BenchmarkArgs(int argc, char **argv) {
-        AddOpt("-p", ArgType::kStringMap);
+        AddOpt("-p", common::args::ArgType::kStringMap);
         AddStringMapVal("-p", "RANDOM_POLICY", static_cast<int>(DataDistributionPolicy::RANDOM_POLICY));
         AddStringMapVal("-p", "ROUND_ROBIN_POLICY", static_cast<int>(DataDistributionPolicy::ROUND_ROBIN_POLICY));
         AddStringMapVal("-p", "HEURISTICS_POLICY", static_cast<int>(DataDistributionPolicy::HEURISTICS_POLICY));
         AddStringMapVal("-p", "DYNAMIC_PROGRAMMING_POLICY", static_cast<int>(DataDistributionPolicy::DYNAMIC_PROGRAMMING_POLICY));
-        AddOpt("-c", ArgType::kString);
-        AddOpt("-out", ArgType::kString);
-        AddOpt("-s", ArgType::kInt);
-        AddOpt("-n", ArgType::kInt);
-        AddOpt("-seed", ArgType::kInt);
+        AddOpt("-c", common::args::ArgType::kString);
+        AddOpt("-out", common::args::ArgType::kString);
+        AddOpt("-s", common::args::ArgType::kInt);
+        AddOpt("-n", common::args::ArgType::kInt);
+        AddOpt("-seed", common::args::ArgType::kInt);
         ArgIter(argc, argv);
         VerifyArgs();
     }

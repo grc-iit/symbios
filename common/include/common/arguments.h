@@ -9,6 +9,8 @@
 #include <memory>
 #include <iostream>
 
+namespace common::args {
+
 class Arg;
 class StringArg;
 class IntArg;
@@ -21,10 +23,12 @@ enum class ArgType {
 
 class Arg {
 protected:
+    std::string opt_name_;
     ArgType type_ = ArgType::kNone;
     bool is_set_ = false;
+    bool use_default_ = false;
 public:
-    Arg() = default;
+    Arg(std::string opt_name) : opt_name_(opt_name) {};
     bool IsSet() const { return is_set_; }
     virtual int Add(std::string arg) { throw 1; };
     virtual void AddStringMapVal(std::string val, int id) { throw 1; };
@@ -43,16 +47,25 @@ typedef std::unique_ptr<Arg> ArgPtr;
 class StringArg : public Arg {
 private:
     std::list<std::string> args_;
-
 public:
-    StringArg() { type_ = ArgType::kString; };
+    StringArg(std::string opt_name) : Arg(opt_name) { type_ = ArgType::kString; };
+    StringArg(std::string opt_name, std::string dval) : Arg(opt_name) {
+        type_ = ArgType::kString;
+        args_.emplace_back(dval);
+        is_set_ = true;
+        use_default_ = true;
+    };
     int Add(std::string arg) override {
+        if(use_default_) {
+            args_.pop_front();
+            use_default_ = false;
+        }
         args_.emplace_back(arg);
         is_set_ = true;
         return 1;
     }
-    std::string &GetStringOpt() override { return args_.back(); }
-    std::list<std::string> &GetStringOpts() override {return args_; }
+    std::string &GetStringOpt() override { if(is_set_) return args_.back(); else throw 1; }
+    std::list<std::string> &GetStringOpts() override { if(is_set_) return args_; else throw 1; }
 };
 
 class StringMapArg : public Arg {
@@ -61,45 +74,73 @@ private:
     std::list<int> args_;
 
 public:
-    StringMapArg() { type_ = ArgType::kStringMap; };
+    StringMapArg(std::string opt_name) : Arg(opt_name) { type_ = ArgType::kStringMap; };
+    StringMapArg(std::string opt_name, int dval) : Arg(opt_name) {
+        type_ = ArgType::kStringMap;
+        args_.emplace_back(dval);
+        is_set_ = true;
+        use_default_ = true;
+    };
     int Add(std::string arg) override {
+        if(use_default_) {
+            args_.pop_front();
+            use_default_ = false;
+        }
         args_.emplace_back(arg_map_[arg]);
         is_set_ = true;
         return 1;
     }
     void AddStringMapVal(std::string val, int id) override { arg_map_[val] = id; }
-    int GetIntOpt() override { return args_.back(); };
-    std::list<int> &GetIntOpts() override { return args_; };
+    int GetIntOpt() override { if(is_set_) return args_.back(); else throw 1; };
+    std::list<int> &GetIntOpts() override { if(is_set_) return args_; else throw 1; };
 };
 
 class IntArg : public Arg {
 private:
     std::list<int> args_;
-
 public:
-    IntArg() { type_ = ArgType::kInt; };
+    IntArg(std::string opt_name) : Arg(opt_name) { type_ = ArgType::kInt; };
+    IntArg(std::string opt_name, int dval) : Arg(opt_name) {
+        type_ = ArgType::kInt;
+        args_.emplace_back(dval);
+        is_set_ = true;
+        use_default_ = true;
+    };
     int Add(std::string arg) override {
+        if(use_default_) {
+            args_.pop_front();
+            use_default_ = false;
+        }
         args_.emplace_back(std::stoi(arg));
         is_set_ = true;
         return 1;
     }
-    int GetIntOpt() override { return args_.back(); };
-    std::list<int> &GetIntOpts() override { return args_; };
+    int GetIntOpt() override { if(is_set_) return args_.back(); else throw 1; };
+    std::list<int> &GetIntOpts() override { if(is_set_) return args_; else throw 1; };
 };
 
 class FloatArg : public Arg {
 private:
     std::list<float> args_;
-
 public:
-    FloatArg() { type_ = ArgType::kFloat; };
+    FloatArg(std::string opt_name) : Arg(opt_name) { type_ = ArgType::kFloat; };
+    FloatArg(std::string opt_name, float dval) : Arg(opt_name) {
+        type_ = ArgType::kFloat;
+        args_.emplace_back(dval);
+        is_set_ = true;
+        use_default_ = true;
+    };
     int Add(std::string arg) override {
+        if(use_default_) {
+            args_.pop_front();
+            use_default_ = false;
+        }
         args_.emplace_back(std::stof(arg));
         is_set_ = true;
         return 1;
     }
-    float GetFloatOpt() override { return args_.back(); };
-    std::list<float> &GetFloatOpts() override { return args_; };
+    float GetFloatOpt() override { if(is_set_) return args_.back(); else throw 1; };
+    std::list<float> &GetFloatOpts() override { if(is_set_) return args_; else throw 1; };
 };
 
 class SizeArg : public Arg {
@@ -119,37 +160,48 @@ private:
         return std::stoul(arg);
     }
 public:
-    SizeArg() { type_ = ArgType::kSize; };
+    SizeArg(std::string opt_name) : Arg(opt_name) { type_ = ArgType::kSize; };
+    SizeArg(std::string opt_name, size_t dval) : Arg(opt_name) {
+        type_ = ArgType::kSize;
+        args_.emplace_back(dval);
+        is_set_ = true;
+        use_default_ = true;
+    };
     int Add(std::string arg) override {
+        if(use_default_) {
+            args_.pop_front();
+            use_default_ = false;
+        }
         args_.emplace_back(ToSize(arg));
         is_set_ = true;
         return 1;
     }
-    size_t GetSizeOpt() override { return args_.back(); };
-    std::list<size_t> &GetSizeOpts() override { return args_; };
+    size_t GetSizeOpt() override { if(is_set_) return args_.back(); else throw 1; };
+    std::list<size_t> &GetSizeOpts() override { if(is_set_) return args_; else throw 1; };
 };
 
 class ArgFactory {
 public:
-    static ArgPtr Get(ArgType type) {
+    template<typename ...Args>
+    static ArgPtr Get(std::string opt_name, ArgType type, Args... args) {
         switch (type) {
             case ArgType::kNone: {
-                return std::make_unique<Arg>();
+                return std::make_unique<Arg>(opt_name, args...);
             }
             case ArgType::kString: {
-                return std::make_unique<StringArg>();
+                return std::make_unique<StringArg>(opt_name, args...);
             }
             case ArgType::kStringMap: {
-                return std::make_unique<StringMapArg>();
+                return std::make_unique<StringMapArg>(opt_name, args...);
             }
             case ArgType::kInt: {
-                return std::make_unique<IntArg>();
+                return std::make_unique<IntArg>(opt_name, args...);
             }
             case ArgType::kFloat: {
-                return std::make_unique<FloatArg>();
+                return std::make_unique<FloatArg>(opt_name, args...);
             }
             case ArgType::kSize: {
-                return std::make_unique<SizeArg>();
+                return std::make_unique<SizeArg>(opt_name, args...);
             }
         }
     }
@@ -159,23 +211,14 @@ class ArgMap {
 protected:
     std::unordered_map<std::string, ArgPtr> args_;
 
-    void AddOpt(std::string opt, ArgType type = ArgType::kNone) {
-        args_.emplace(opt, std::move(ArgFactory::Get(type)));
+    template<typename ...Args>
+    void AddOpt(std::string opt, ArgType type = ArgType::kNone, Args... args) {
+        args_.emplace(opt, std::move(ArgFactory::Get(opt, type, args...)));
     }
 
     void AddStringMapVal(std::string opt, std::string val, int id) {
+        AssertOptExists(opt);
         args_[opt]->AddStringMapVal(val, id);
-    }
-
-    bool OptExists(std::string opt) {
-        return (args_.find(opt) != args_.end());
-    }
-
-    void AssertOptExists(std::string opt) {
-        if(!OptExists(opt)) {
-            std::cout << "Invalid argument: " << opt << std::endl;
-            throw 1;
-        }
     }
 
     void ArgIter(int argc, char **argv) {
@@ -197,15 +240,30 @@ protected:
 public:
     ArgMap() = default;
 
+    bool OptExists(std::string opt) {
+        return (args_.find(opt) != args_.end());
+    }
+
+    void AssertOptExists(std::string opt) {
+        if(!OptExists(opt)) {
+            std::cout << "Invalid argument: " << opt << std::endl;
+            throw 1;
+        }
+    }
+
     bool OptIsSet(std::string opt) {
+        if(!OptExists(opt)) {
+            return false;
+        }
         return args_[opt]->IsSet();
     }
 
     void AssertOptIsSet(std::string opt) {
+        AssertOptExists(opt);
         if(!OptIsSet(opt)) {
             std::cout << opt << " is not set, but is required" << std::endl;
             Usage();
-            exit(1);
+            throw 1;
         }
     }
 
@@ -213,20 +271,22 @@ public:
         if(OptIsSet(opt)) {
             std::cout << opt << " is not set, but is required" << std::endl;
             Usage();
-            exit(1);
+            throw 1;
         }
     }
 
-    std::string &GetStringOpt(std::string opt) { return args_[opt]->GetStringOpt(); }
-    std::list<std::string> &GetStringOpts(std::string opt) { return args_[opt]->GetStringOpts(); }
-    int GetIntOpt(std::string opt) { return args_[opt]->GetIntOpt(); }
-    std::list<int> &GetIntOpts(std::string opt) { args_[opt]->GetIntOpts(); }
-    float GetFloatOpt(std::string opt) { return args_[opt]->GetFloatOpt(); }
-    std::list<float> &GetFloatOpts(std::string opt) { return args_[opt]->GetFloatOpts(); }
-    size_t GetSizeOpt(std::string opt) { return args_[opt]->GetSizeOpt(); }
-    std::list<size_t> &GetSizeOpts(std::string opt) { return args_[opt]->GetSizeOpts(); }
+    std::string &GetStringOpt(std::string opt) { AssertOptIsSet(opt); return args_[opt]->GetStringOpt(); }
+    std::list<std::string> &GetStringOpts(std::string opt) { AssertOptIsSet(opt); return args_[opt]->GetStringOpts(); }
+    int GetIntOpt(std::string opt) { AssertOptIsSet(opt); return args_[opt]->GetIntOpt(); }
+    std::list<int> &GetIntOpts(std::string opt) { AssertOptIsSet(opt); args_[opt]->GetIntOpts(); }
+    float GetFloatOpt(std::string opt) { AssertOptIsSet(opt); return args_[opt]->GetFloatOpt(); }
+    std::list<float> &GetFloatOpts(std::string opt) { AssertOptIsSet(opt); return args_[opt]->GetFloatOpts(); }
+    size_t GetSizeOpt(std::string opt) { AssertOptIsSet(opt); return args_[opt]->GetSizeOpt(); }
+    std::list<size_t> &GetSizeOpts(std::string opt) { AssertOptIsSet(opt); return args_[opt]->GetSizeOpts(); }
 
     virtual void Usage(void) = 0;
 };
+
+}
 
 #endif
