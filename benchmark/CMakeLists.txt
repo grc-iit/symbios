@@ -23,8 +23,8 @@ add_custom_target(bm-usage COMMAND
         ${CMAKE_CURRENT_BINARY_DIR}/benchmark)
 add_custom_target(bm-prealloc COMMAND
         ${CMAKE_CURRENT_BINARY_DIR}/benchmark
-        -s orangefs -caddr ~/ -path test.bin
-        -w prealloc -fs 1)
+        -s orangefs -caddr ~/ -path test3.bin
+        -w prealloc -fs 1b)
 add_custom_target(bm-rw-test-seq COMMAND
         ${CMAKE_CURRENT_BINARY_DIR}/benchmark
         -s orangefs -caddr ~/ -path test.bin

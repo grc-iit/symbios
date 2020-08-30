@@ -34,7 +34,7 @@ public:
         if(mode & FileMode::kDirect) { flags |= O_DIRECT; }
         if(mode & FileMode::kSync) { flags |= O_SYNC; }
 
-        fp_ = open(path_.c_str(), flags);
+        fp_ = open(path_.c_str(), flags, 0666);
         if(fp_ < 0) {
             std::cout << "Could not open file (OrangefsIO): " << path_ << std::endl;
             perror("Open() (OrangefsIO)");
