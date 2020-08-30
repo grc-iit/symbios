@@ -1,6 +1,7 @@
 
 ssh llogan@ares.cs.iit.edu
 
+#Basic slurm commands
 salloc --reservation=llogan_6 -p compute -w ares-comp-[29-30] --exclusive
 salloc --reservation=llogan_6 -p storage -w ares-stor-[01-08] --exclusive
 sinfo: View status of all nodes
@@ -11,12 +12,25 @@ scancel [job_id]: Remove my hold on node
 #Add ORANGEFS environment to ~/.bashrc
 
 #Create directories on every storage/client node
+ssh ares-stor-01-40g mkdir -p /mnt/hdd/llogan/orangefs/data /mnt/hdd/llogan/orangefs/meta /mnt/hdd/llogan/orangefs/pfs_log.log /mnt/ssd/llogan/orangefs/data /mnt/ssd/llogan/orangefs/meta mkdir -p /mnt/ssd/llogan/orangefs/pfs_log.log
+ssh ares-stor-02-40g mkdir -p /mnt/hdd/llogan/orangefs/data /mnt/hdd/llogan/orangefs/meta /mnt/hdd/llogan/orangefs/pfs_log.log /mnt/ssd/llogan/orangefs/data /mnt/ssd/llogan/orangefs/meta mkdir -p /mnt/ssd/llogan/orangefs/pfs_log.log
+ssh ares-stor-03-40g mkdir -p /mnt/hdd/llogan/orangefs/data /mnt/hdd/llogan/orangefs/meta /mnt/hdd/llogan/orangefs/pfs_log.log /mnt/ssd/llogan/orangefs/data /mnt/ssd/llogan/orangefs/meta mkdir -p /mnt/ssd/llogan/orangefs/pfs_log.log
+ssh ares-stor-04-40g mkdir -p /mnt/hdd/llogan/orangefs/data /mnt/hdd/llogan/orangefs/meta /mnt/hdd/llogan/orangefs/pfs_log.log /mnt/ssd/llogan/orangefs/data /mnt/ssd/llogan/orangefs/meta mkdir -p /mnt/ssd/llogan/orangefs/pfs_log.log
+ssh ares-stor-05-40g mkdir -p /mnt/hdd/llogan/orangefs/data /mnt/hdd/llogan/orangefs/meta /mnt/hdd/llogan/orangefs/pfs_log.log /mnt/ssd/llogan/orangefs/data /mnt/ssd/llogan/orangefs/meta mkdir -p /mnt/ssd/llogan/orangefs/pfs_log.log
+ssh ares-stor-06-40g mkdir -p /mnt/hdd/llogan/orangefs/data /mnt/hdd/llogan/orangefs/meta /mnt/hdd/llogan/orangefs/pfs_log.log /mnt/ssd/llogan/orangefs/data /mnt/ssd/llogan/orangefs/meta mkdir -p /mnt/ssd/llogan/orangefs/pfs_log.log
+ssh ares-stor-07-40g mkdir -p /mnt/hdd/llogan/orangefs/data /mnt/hdd/llogan/orangefs/meta /mnt/hdd/llogan/orangefs/pfs_log.log /mnt/ssd/llogan/orangefs/data /mnt/ssd/llogan/orangefs/meta mkdir -p /mnt/ssd/llogan/orangefs/pfs_log.log
 ssh ares-stor-08-40g mkdir -p /mnt/hdd/llogan/orangefs/data /mnt/hdd/llogan/orangefs/meta /mnt/hdd/llogan/orangefs/pfs_log.log /mnt/ssd/llogan/orangefs/data /mnt/ssd/llogan/orangefs/meta mkdir -p /mnt/ssd/llogan/orangefs/pfs_log.log
 ssh ares-comp-29-40g mkdir -p /mnt/nvme/llogan/orangefs/data /mnt/nvme/llogan/orangefs/meta /mnt/nvme/llogan/orangefs/pfs_log.log /mnt/nvme/llogan/write/generic
+ssh ares-comp-30-40g mkdir -p /mnt/nvme/llogan/orangefs/data /mnt/nvme/llogan/orangefs/meta /mnt/nvme/llogan/orangefs/pfs_log.log /mnt/nvme/llogan/write/generic
+
+#Deploy OrangeFS
+make ares-deploy-hdd-4
+ls /mnt/nvme/llogan/write/generic
 
 #Preallocate files for particular NPROC
 ctest --verbose -R prealloc_${nprocs}_${storage_type}_${file_size}
 ctest --verbose -R prealloc_1_orangefs_*
+mpirun -n 1 /home/llogan/symbios/build/benchmark/benchmark -s orangefs -caddr /mnt/nvme/llogan/write/generic -cport 0 -path /test.bin -w prealloc -fs 128g
 
 #Run all worklaods for particular NPROC
 ctest --verbose -R aresbm_${nprocs}_${storage_type}_${cport}_${block_size}_${file_size}_${total_io}_${access_pattern}_${wfrac}_${rfrac}_${config}
@@ -24,3 +38,7 @@ ctest --verbose -R aresbm_1_orangefs_*_4k_*_*_seq_1_0_hdd4_basic
 
 #Remove all files
 rm -rf /mnt/nvme/llogan/write/generic/*
+
+#Kill OrangeFS
+make ares-terminate-hdd-4
+
