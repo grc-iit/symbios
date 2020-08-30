@@ -1,38 +1,47 @@
 #!/bin/bash
 if [ $# -lt 2 ]
 then
-  echo "Usage: ./run_redis_cluster.sh redis_cluster_install_path redis_server_numbers"
-  echo "e.g ./run_redis_cluster.sh ~/redis_cluster 3"
+  echo "Usage: ./run_redis_cluster.sh redis_cluster_config_path redis_server_numbers redis_install_path"
+  echo "e.g ./run_redis_cluster.sh ~/redis_config 3 ~/redis_install"
   exit
 fi
 
+
+#Input Variables
+REDIS_CLUSTER_DIR=${1}
+REDIS_SERVER_NUMS=${2}
+REDIS_INSTALL_DIR=${3}
+
 CWD=$(pwd)
 
-REDIS_SERVER_BIN=${CWD}/redis-6.0.6/src/redis-server
-REDIS_CLIENT_BIN=${CWD}/redis-6.0.6/src/redis-cli
+REDIS_SERVER_BIN=${REDIS_INSTALL_DIR}/bin/redis-server
+REDIS_CLIENT_BIN=${REDIS_INSTALL_DIR}/bin/redis-cli
 
 # download redis source and compile
 if [ ! -f "$REDIS_SERVER_BIN" -a ! -f "$REDIS_CLIENT_BIN" ]
 then
   echo "Downloading Redis source package....."
-  wget https://github.com/redis/redis/archive/6.0.6.tar.gz
-  tar -xzf 6.0.6.tar.gz
-  cd redis-6.0.6
-  make
-  cd -
-  echo "Finish compiling Redis source...."
+#  wget https://github.com/redis/redis/archive/6.0.6.tar.gz
+#  tar -xzf 6.0.6.tar.gz
+#  cd redis-6.0.6
+#  make PREFIX=${REDIS_INSTALL_DIR}
+#  cd -
+#  echo "Finish compiling Redis source...."
 fi
 
-#Input Variables
-REDIS_CLUSTER_DIR=${1}
-REDIS_SERVER_NUMS=${2}
 
 CONFIG_FILE=redis.conf
 PORT_BASE=6379
 
-if [ x"${REDIS_CLUSTER_DIR}" = x ]
+if [ x"${REDIS_INSTALL_DIR}" = x ]
 then
   echo "You must set a redis cluster install directory, exiting ..."
+  exit
+fi
+
+if [ x"${REDIS_CLUSTER_DIR}" = x ]
+then
+  echo "You must set a redis cluster config directory, exiting ..."
   exit
 fi
 
@@ -78,7 +87,7 @@ do
   redis_server_name="Redis_"${seq}
   redis_server_dir=${REDIS_CLUSTER_DIR}/${redis_server_name}
   # start the server
-   ${redis_server_dir}/redis-server ${redis_server_dir}/$CONFIG_FILE > /dev/null 2>&1 &
+   ${REDIS_SERVER_BIN} ${redis_server_dir}/$CONFIG_FILE > /dev/null 2>&1 &
 done
 # sleep 5 seconds to wait all the redis-server start ok
 sleep 5
