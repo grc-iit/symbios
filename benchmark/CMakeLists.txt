@@ -72,7 +72,7 @@ function(io_test nprocs storage_type caddr cport block_size file_size total_io a
     add_test(NAME aresbm_${nprocs}_${storage_type}_${cport}_${block_size}_${file_size}_${total_io}_${access_pattern}_${wfrac}_${rfrac}_${config} COMMAND
             mpirun -n ${nprocs} ${CMAKE_CURRENT_BINARY_DIR}/benchmark
             -s ${storage_type} -caddr ${caddr} -cport ${cport} -path /test.bin
-            -w io-only -ap ${access_pattern} -bs ${block_size} -fs ${file_size} -tot ${total_io} -wfrac ${wfrac} -rfrac ${rfrac}
+            -w io-only -ap ${access_pattern} -bs ${block_size} -fs ${file_size} -tot ${total_io} -wfrac ${wfrac} -rfrac ${rfrac} -seed 2542
             -out ~/test_${config}.csv)
 endfunction()
 
