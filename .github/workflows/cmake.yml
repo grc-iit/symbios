@@ -59,6 +59,16 @@ jobs:
         export CFLAGS="-I${SOFTWARE_DIR}/install $CFLAGS"
         export CXXFLAGS="-I${SOFTWARE_DIR}/install $CXXFLAGS"
 
+        ###################### RapidJson ######################
+        git clone https://github.com/Tencent/rapidjson
+        cd rapidjson
+        git checkout v1.1.0 -b v1.1.0
+        mkdir build
+        cd build
+        cmake -DCMAKE_INSTALL_PREFIX=${SOFTWARE_DIR}/install ../
+        make
+        make -j8
+        make install
         ###################### MPI ######################
         cd $SOFTWARE_DIR/source
         wget http://www.mpich.org/static/downloads/3.3.2/mpich-3.3.2.tar.gz
@@ -85,16 +95,6 @@ jobs:
         cd build
         cmake -DCMAKE_INSTALL_PREFIX=${SOFTWARE_DIR}/install ../
         make -j 2
-        make install
-        ###################### RapidJson ######################
-        git clone https://github.com/Tencent/rapidjson
-        cd rapidjson
-        git checkout v1.1.0 -b v1.1.0
-        mkdir build
-        cd build
-        cmake .. -DCMAKE_CXX_FLAGS:STRING="-Wno-error=class-memaccess -Wno-error=implicit-fallthrough="  -DCMAKE_INSTALL_PREFIX=${SOFTWARE_DIR}/install -DINCLUDE_INSTALL_DIR=${SOFTWARE_DIR}/install/include -DLIB_INSTALL_DIR=${SOFTWARE_DIR}/install/lib -DCMAKE_INSTALL_DIR=${SOFTWARE_DIR}/install/cmake -DDOC_INSTALL_DIR=${SOFTWARE_DIR}/install/share/doc/RapidJSON
-        make
-        make -j8
         make install
         ###################### HCL ######################
         git clone https://bitbucket.org/scs-io/hcl
