@@ -126,25 +126,32 @@ void io_file_workload(IOClientPtr &fs, int rank, int nprocs, BenchmarkArgs &args
     float wfrac = args.GetFloatOpt("-wfrac");
     size_t block_size = args.GetSizeOpt("-bs");
     size_t file_size = args.GetSizeOpt("-fs");
-    size_t bytes_per_proc = args.GetSizeOpt("-tot");
+    size_t tot_bytes = args.GetSizeOpt("-tot");
     DistributionPtr dist;
+
+    if(rfrac > wfrac) {
+        std::cout << "Error: you must write at least as much data as you read!" << std::endl;
+        throw 1;
+    }
 
     int direct = args.OptIsSet("-direct") ? FileMode::kDirect : 0;
     FilePtr fp = fs->Open(path, FileMode::kRead | FileMode::kWrite | FileMode::kCreate | direct);
     void *buffer = std::calloc(block_size, 1);
 
+    MPI_Barrier(MPI_COMM_WORLD);
     dist = create_dist(args, file_size, block_size);
-    size_t write_per_proc = wfrac*bytes_per_proc;
+    size_t write_per_proc = wfrac*tot_bytes/nprocs;
     for(size_t i = 0; i < write_per_proc; i += block_size) {
         fp->Seek(dist->GetSize());
         fp->Write(buffer, block_size);
     }
 
+    MPI_Barrier(MPI_COMM_WORLD);
     dist = create_dist(args, file_size, block_size);
-    size_t read_per_proc = rfrac*bytes_per_proc;
+    size_t read_per_proc = rfrac*tot_bytes/nprocs;
     for(size_t i = 0; i < read_per_proc; i += block_size) {
-        fp->Read(buffer, block_size);
         fp->Seek(dist->GetSize());
+        fp->Read(buffer, block_size);
     }
 
     //End Time
