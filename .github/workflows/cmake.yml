@@ -62,7 +62,6 @@ jobs:
         ###################### RapidJson ######################
         git clone https://github.com/Tencent/rapidjson
         cd rapidjson
-        git checkout v1.1.0 -b v1.1.0
         mkdir build
         cd build
         cmake -DCMAKE_INSTALL_PREFIX=${SOFTWARE_DIR}/install ../
