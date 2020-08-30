@@ -128,12 +128,36 @@ make install
 If the hiredis and redis-plus-plus are not colocated, then set 
 DCMAKE_PREFIX_PATH to be the path to where hiredis is installed.
 
+### Python
+Python 3 is a prerequirement of Mongodb, to install from source:
+```bash
+wget --no-check-certificate https://www.python.org/ftp/python/3.7.9/Python-3.7.9.tgz
+xz -d Python-3.7.9.tgz
+tar -xzvf Python-3.7.9.tgz
+cd Python-3.7.9/
+./configure --prefix=$DEP_INSTALL --enable-optimizations
+make && make install
+
+curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+python get-pip.py
+```
+
 ### MongoDB
+MongoDB installation is based on SCons a python module and therefore python3 must be installed.
 To install the actual MongoDB:
 ```bash
-
+wget https://github.com/mongodb/mongo/archive/r4.4.0.tar.gz
+tar -xzf r4.4.0.tar.gz
+cd mongo-r4.4.0/
+python3 -m pip install -r etc/pip/compile-requirements.txt
+python3 buildscripts/scons.py DESTDIR=$DEP_INSTALL install-mongod
 ```
-Manage local redis using the scripts in scripts/deploymnet. 
+
+According to the documentation, there might be a need to use:
+```bash
+python3 buildscripts/scons.py install-mongod --disable-warnings-as-errors
+```
+Manage local mongodb using the scripts in scripts/deploymnet. 
 mongodb_r.sh and mongodb_s.sh will run and stop redis respectively.
 
 ### Mongodb C Driver
