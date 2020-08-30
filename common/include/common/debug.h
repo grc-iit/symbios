@@ -103,17 +103,32 @@ std::cout << "DBG: " << __FILE__ << "(" << __LINE__ << ") "\
 
     class Timer {
     public:
+        Timer():time_elapsed(0){}
         void startTime() {
+            t1 = std::chrono::high_resolution_clock::now();
+            time_elapsed=0;
+        }
+        void pauseTime() {
+            auto t2 = std::chrono::high_resolution_clock::now();
+            time_elapsed +=  std::chrono::duration_cast<std::chrono::nanoseconds>(
+                    t2 - t1).count()/1000000.0;
+        }
+        void resumeTime() {
             t1 = std::chrono::high_resolution_clock::now();
         }
         double endTime(){
             auto t2 = std::chrono::high_resolution_clock::now();
-            auto t =  std::chrono::duration_cast<std::chrono::nanoseconds>(
+            time_elapsed +=  std::chrono::duration_cast<std::chrono::nanoseconds>(
                     t2 - t1).count()/1000000.0;
-            return t;
+            return time_elapsed;
+        }
+
+        double getTimeElapsed(){
+            return time_elapsed;
         }
     private:
         std::chrono::high_resolution_clock::time_point t1;
+        double time_elapsed;
     };
 /**
  * Implement Auto tracing Mechanism.

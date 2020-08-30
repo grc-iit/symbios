@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include <list>
 #include <memory>
+#include <iostream>
 
 class Arg;
 class StringArg;

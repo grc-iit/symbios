@@ -15,7 +15,10 @@ void symbios::Client::StoreRequest(Data &request) {
 
 void symbios::Client::LocateRequest(Data &request) {
     int server = rand()% BASKET_CONF->NUM_SERVERS;
-    request = rpc->call<RPCLIB_MSGPACK::object_handle>(server, "LocateRequest", request).as<Data>();
+    auto ret = rpc->call<RPCLIB_MSGPACK::object_handle>(server, "LocateRequest", request).as<Data>();
+    request.buffer_=malloc(ret.data_size_);
+    memcpy(request.buffer_,ret.buffer_,ret.data_size_);
+    request.data_size_ = ret.data_size_;
 }
 
 bool symbios::Client::addOrUpdateFileDescriptorPool(FILE* fh, CharStruct filename) {

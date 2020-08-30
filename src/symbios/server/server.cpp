@@ -12,6 +12,13 @@ symbios::Server::Server(){
     std::function<Data(Data&)> functionLocateRequest(std::bind(&Server::LocateRequest, this, std::placeholders::_1));
     rpc->bind("StoreRequest", functionStoreRequest);
     rpc->bind("LocateRequest", functionLocateRequest);
+    /**
+     * Preload classes.
+     */
+    basket::Singleton<DataDistributionEngineFactory>::GetInstance()->GetDataDistributionEngine(SYMBIOS_CONF->DATA_DISTRIBUTION_POLICY);
+    basket::Singleton<MetadataOrchestrator>::GetInstance();
+    basket::Singleton<IOFactory>::GetInstance();
+
 }
 
 void symbios::Server::RunInternal(std::future<void> futureObj) {
@@ -26,17 +33,26 @@ int symbios::Server::StoreRequest(Data &request){
     auto distributions = dde->Distribute(request);
     basket::Singleton<MetadataOrchestrator>::GetInstance()->Store(request,distributions);
     for(auto distribution:distributions){
-        basket::Singleton<IOFactory>::GetInstance()->GetIOClient(distribution.destination_data_.io_client_type_)->Write(distribution.source_data_,distribution.destination_data_);
-        COMMON_DBGMSG("Storing data in "<<distribution.destination_data_.io_client_type_);
+        basket::Singleton<IOFactory>::GetInstance()->GetIOClient(distribution.destination_data_.storage_index_)->Write(distribution.source_data_, distribution.destination_data_);
+        COMMON_DBGMSG("Storing data in "<<distribution.destination_data_.storage_index_);
     }
     return SYMBIOS_CONF->SERVER_COUNT;
 }
 
 Data symbios::Server::LocateRequest(Data &request){
     auto tracer=common::debug::AutoTrace(std::string("symbios::Server::LocateRequest"), request);
-    auto distributions = basket::Singleton<MetadataOrchestrator>::GetInstance()->Locate(request);
-    for(auto distribution:distributions){
-        basket::Singleton<IOFactory>::GetInstance()->GetIOClient(distribution.destination_data_.io_client_type_)->Read(distribution.source_data_,distribution.destination_data_);
+    Metadata primary_metadata;
+    auto distributions = basket::Singleton<MetadataOrchestrator>::GetInstance()->Locate(request, primary_metadata);
+    int total_size= 0;
+    for(auto &distribution:distributions){
+        basket::Singleton<IOFactory>::GetInstance()->GetIOClient(distribution.destination_data_.storage_index_)->Read(distribution.source_data_,distribution.destination_data_);
+        total_size+=distribution.destination_data_.data_size_;
+    }
+    request.buffer_=malloc(total_size);
+    long start=0;
+    for(auto &distribution:distributions){
+        memcpy(request.buffer_+start,distribution.destination_data_.buffer_+ distribution.destination_data_.position_, distribution.destination_data_.data_size_);
+        start+=distribution.destination_data_.data_size_;
     }
     return request;
 }

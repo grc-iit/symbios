@@ -15,10 +15,15 @@ void FileIOClient::Read(Data &source, Data &destination) {
     if(fileFd == -1){
         throw ErrorException(OPEN_FILE_FAILED);
     } else {
+        auto file_size = lseek(fileFd, 0L, SEEK_END);
         if(lseek(fileFd, source.position_, SEEK_SET) == -1){
             close(fileFd);
             throw ErrorException(SEEK_FILE_FAILED);
         } else{
+            if(source.data_size_ == 0){
+                source.data_size_ = file_size - source.position_;
+            }
+            destination.buffer_ = malloc(source.data_size_);
             ssize_t data_size = read(fileFd, destination.buffer_ + destination.position_, source.data_size_);
             if (data_size == source.data_size_){
                 // read data from file successful

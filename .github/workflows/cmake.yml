@@ -58,6 +58,8 @@ jobs:
         wget http://www.mpich.org/static/downloads/3.3.2/mpich-3.3.2.tar.gz
         tar zxf mpich-3.3.2.tar.gz
         cd ${SOFTWARE_DIR}/source/mpich-3.3.2/
+        mkdir build
+        cd build
         ./configure --prefix=${SOFTWARE_DIR}/install
         #According to this, we have two cores. https://docs.github.com/en/actions/reference/virtual-environments-for-github-hosted-runners
         make -j 2
@@ -85,6 +87,7 @@ jobs:
         cd hcl
         git checkout -b release/0.0.4
         mkdir build
+        cd build
         cmake -DCMAKE_INSTALL_PREFIX:PATH=${SOFTWARE_DIR}/install -DBASKET_ENABLE_RPCLIB=true ..
         make -j 2
         make install
