@@ -42,7 +42,7 @@ jobs:
     - name: Create Build Environment
       env:
         GITHUB_WORKSPACE: ${{runner.workspace}}
-      run: |
+      run: | 
         echo "GITHUB_WORKSPACE: ${GITHUB_WORKSPACE}"
         echo "runner.workspace: ${{runner.workspace}}"
         echo "INSTALL_DIR: ${INSTALL_DIR}"
