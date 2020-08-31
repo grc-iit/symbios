@@ -54,11 +54,11 @@ jobs:
         mkdir -p $SOFTWARE_DIR/source
         mkdir -p ${INSTALL_DIR}
 
-        export LD_LIBRARY_PATH=${INSTALL_DIR}/lib:${INSTALL_DIR}/lib64:${LD_LIBRARY_PATH}
-        export LDFLAGS="$LDFLAGS -L${INSTALL_DIR}/lib -L${INSTALL_DIR}/lib64"
         export PATH="${INSTALL_DIR}/bin:${INSTALL_DIR}/sbin:$PATH"
-        export CFLAGS="-I${INSTALL_DIR} $CFLAGS"
-        export CXXFLAGS="-I${INSTALL_DIR} $CXXFLAGS"
+        export LD_LIBRARY_PATH=${INSTALL_DIR}/lib:${INSTALL_DIR}/lib64:${LD_LIBRARY_PATH}
+        export CFLAGS="-I${INSTALL_DIR}/include $CFLAGS"
+        export CXXFLAGS="-I${INSTALL_DIR}/include $CXXFLAGS"
+        export LDFLAGS="$LDFLAGS -L${INSTALL_DIR}/lib -L${INSTALL_DIR}/lib64"
 
         ###################### RapidJson ######################
         cd $SOFTWARE_DIR/source
