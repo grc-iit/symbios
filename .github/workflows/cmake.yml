@@ -68,6 +68,7 @@ jobs:
         source_dir=${GITHUB_WORKSPACE}
         log_dir=${HOME}/work/log
         mkdir -p $log_dir
+        mkdir -p /home/runner/work/symbios_server
         echo "${source_dir}/build/symbios_server ${source_dir}/conf/symbios.conf"
         echo "${source_dir}/build/symbios_server ${source_dir}/conf/symbios.conf" > ${log_dir}/server.log
         nohup ${source_dir}/build/symbios_server ${source_dir}/conf/symbios.conf >> ${log_dir}/server.log 2>&1 &
