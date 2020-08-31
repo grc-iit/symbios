@@ -1,0 +1,3 @@
+FROM jcernuda/symbios:1.0.0
+
+RUN apt-get update

@@ -14,7 +14,8 @@ int main(int argc, char* argv[]){
     MPI_Barrier(MPI_COMM_WORLD);
     if(argc > 1) SYMBIOS_CONF->CONFIGURATION_FILE=argv[1];
     BASKET_CONF->BACKED_FILE_DIR=SYMBIOS_CONF->SERVER_DIR;
-    CharStruct log = "/tmp/tmp.BUKlhPiLxF/build/symbios_server.log";
+    CharStruct log = "/root/symbios/symbios_server/symbios_server.log";
     auto daemon = basket::Singleton<symbios::Daemon<symbios::Server>>::GetInstance(log);
-    while(true) sleep(1);
+    daemon->Run();
+    return 0;
 }
