@@ -145,11 +145,11 @@ foreach(NPROC ${PROCS})
 endforeach()
 
 #OrangeFS metadata-intensive test cases (ares)
-function(md_test nprocs storage_type caddr cport md_fcnt md_dir config)
-    add_test(NAME aresbm_md_${nprocs}_${storage_type}_${cport}_${md_dir}_${md_fcnt}_${config} COMMAND
+function(md_test nprocs storage_type caddr cport md_fcnt md_depth config)
+    add_test(NAME aresbm_md_${nprocs}_${storage_type}_${cport}_${md_depth}_${md_fcnt}_${config} COMMAND
             mpirun -n ${nprocs} ${CMAKE_CURRENT_BINARY_DIR}/benchmark
             -s ${storage_type} -caddr ${caddr} -cport ${cport} -path /
-            -w md-fs -md_fcnt ${md_fcnt} -md_dir ${md_dir}
+            -w md-fs -md_fcnt ${md_fcnt} -md_depth ${md_depth}
             -out /home/llogan/md_test_${config}.csv)
 endfunction()
 
@@ -159,7 +159,7 @@ set(ADDRS /mnt/nvme/llogan/write/generic 0 0)
 set(PORTS 0 0 0)
 set(FILE_SIZE 128g)
 set(MD_FCNT 256k)
-set(MD_DIRS 1 8 32 64 128)
+set(MD_DEPTHS 1 8 32 64 128)
 
 foreach(NPROC ${PROCS})
     list(LENGTH STORAGE_TYPES STORAGE_TYPES_LEN)
@@ -170,9 +170,9 @@ foreach(NPROC ${PROCS})
         list(GET PORTS ${ST_IDX} PORT)
         list(LENGTH BLOCK_SIZES BLOCK_SIZES_LEN)
         math(EXPR BLOCK_SIZES_LAST "${BLOCK_SIZES_LEN} - 1")
-        foreach(MD_DIR ${MD_DIRS})
+        foreach(MD_DEPTH ${MD_DEPTHS})
             foreach(CONFIG ${CONFIGS})
-                md_test(${NPROC} ${STORAGE_TYPE} ${ADDR} ${PORT} ${MD_FCNT} ${MD_DIR} ${CONFIG})
+                md_test(${NPROC} ${STORAGE_TYPE} ${ADDR} ${PORT} ${MD_FCNT} ${MD_DEPTH} ${CONFIG})
             endforeach()
         endforeach()
     endforeach()
@@ -189,8 +189,10 @@ set(SERVER_HOST_FILES
         ${SCRIPT_ROOT}/hostfiles/hostfile_servers_small ${SCRIPT_ROOT}/hostfiles/hostfile_servers_small ${SCRIPT_ROOT}/hostfiles/hostfile_servers_small
         ${SCRIPT_ROOT}/hostfiles/hostfile_servers_ssd ${SCRIPT_ROOT}/hostfiles/hostfile_servers_ssd ${SCRIPT_ROOT}/hostfiles/hostfile_servers_ssd
         ${SCRIPT_ROOT}/hostfiles/hostfile_servers_nvme ${SCRIPT_ROOT}/hostfiles/hostfile_servers_big)
-set(CLIENT_HOST_FILE
-        ${SCRIPT_ROOT}/hostfiles/hostfile_clients)
+set(CLIENT_HOST_FILES
+        ${SCRIPT_ROOT}/hostfiles/hostfile_clients ${SCRIPT_ROOT}/hostfiles/hostfile_clients2)
+set(CLIENT_HOST_FILE_IDS
+        clients1 clients2)
 
 list(LENGTH CONFIGS CONFIGS_LEN)
 math(EXPR CONFIGS_LAST "${CONFIGS_LEN} - 1")
@@ -199,6 +201,12 @@ foreach(CONFIG_IDX RANGE ${CONFIGS_LAST})
     list(GET CONFIGS ${CONFIG_IDX} CONFIG)
     list(GET CONF_FILES ${CONFIG_IDX} CONF_FILE)
     list(GET SERVER_HOST_FILES ${CONFIG_IDX} SERVER_HOST_FILE)
-    add_custom_target(run_bms_${CONFIG} COMMAND
+    list(LENGTH CLIENT_HOST_FILES CLIENT_HOST_FILES_LEN)
+    math(EXPR CLIENT_HOST_FILES_LAST "${CLIENT_HOST_FILES_LEN} - 1")
+    foreach(CLIENT_HOST_IDX RANGE ${CLIENT_HOST_FILES_LAST})
+        list(GET CLIENT_HOST_FILES ${CLIENT_HOST_IDX} CLIENT_HOST_FILE)
+        list(GET CLIENT_HOST_FILE_IDS ${CLIENT_HOST_IDX} CLIENT_HOST_FILE_ID)
+        add_custom_target(run_bms_${CONFIG}_${CLIENT_HOST_FILE_ID} COMMAND
             bash ${SCRIPT_ROOT}/experiments.sh ${DEV_TYPE} ${CONFIG} ${CONF_FILE} ${SERVER_HOST_FILE} ${CLIENT_HOST_FILE} ${SCRIPT_ROOT} ${CMAKE_BINARY_DIR})
+    endforeach()
 endforeach()

@@ -187,7 +187,7 @@ void io_file_workload(IOClientPtr &fs, int rank, int nprocs, BenchmarkArgs &args
 
 void md_fs_workload(IOClientPtr &fs, int rank, int nprocs, BenchmarkArgs &args)
 {
-    int fcnt = args.GetSizeOpt("-md_fcnt")/nprocs;
+    size_t fcnt = args.GetSizeOpt("-md_fcnt")/nprocs;
     int depth = args.GetIntOpt("-md_depth");
     std::string path = args.GetStringOpt("-path");
 
