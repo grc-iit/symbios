@@ -21,7 +21,7 @@ namespace symbios{
                 bool addOrUpdateFileDescriptorPool(FILE* fh, CharStruct filename);
                 bool isFileDescriptorTracked(FILE* fh);
                 bool deleteFileDescriptorFromPool(FILE* fh);
-                std::pair<bool, CharStruct> getFileNameFromMap(FILE* fh)
+                std::pair<bool, CharStruct> getFileNameFromMap(FILE* fh);
             };
     }
 
