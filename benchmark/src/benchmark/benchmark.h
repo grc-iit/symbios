@@ -35,6 +35,7 @@ private:
 
         AssertOptIsSet("-w");
         int workload = GetIntOpt("-w");
+        std::cout << "-w " << workload <<  std::endl;
         switch(static_cast<WorkloadType>(workload)) {
             case WorkloadType::kPrealloc: {
                 AssertOptIsSet("-path");
@@ -53,6 +54,7 @@ private:
             case WorkloadType::kMdFs: {
                 AssertOptIsSet("-md_depth");
                 AssertOptIsSet("-md_fcnt");
+                AssertOptIsSet("-path");
                 break;
             }
         }
@@ -97,7 +99,8 @@ public:
 
         std::cout << "md-fs workload parameters" << std::endl;
         std::cout << "-md_depth [int]: The number of directories to nest" << std::endl;
-        std::cout << "-md_fcnt [int]: The number of files to open/close in the deepest directory" << std::endl;
+        std::cout << "-md_fcnt [size]: The number of files to open/close in the deepest directory" << std::endl;
+        std::cout << "-path [string]: The directory to begin creating files/directories" << std::endl;
         std::cout << "" << std::endl;
 
         std::cout << "Uniform Distribution Parameters" << std::endl;
@@ -119,7 +122,7 @@ public:
         AddStringMapVal("-s", "mongodb", static_cast<int>(IOClientType::kMongo));
         AddStringMapVal("-s", "redis", static_cast<int>(IOClientType::kRedis));
         AddOpt("-caddr", common::args::ArgType::kString);
-        AddOpt("-cport", common::args::ArgType::kInt);
+        AddOpt("-cport", common::args::ArgType::kInt, 0);
         AddOpt("-p", common::args::ArgType::kSize);
         AddOpt("-path", common::args::ArgType::kString);
         AddOpt("-rfrac", common::args::ArgType::kFloat);
@@ -131,7 +134,7 @@ public:
         AddStringMapVal("-ap", "seq", static_cast<int>(DistributionType::kNone));
         AddStringMapVal("-ap", "uniform", static_cast<int>(DistributionType::kUniform));
         AddOpt("-md_depth", common::args::ArgType::kInt);
-        AddOpt("-md_fcnt", common::args::ArgType::kInt);
+        AddOpt("-md_fcnt", common::args::ArgType::kSize);
         AddOpt("-direct", common::args::ArgType::kNone);
         AddOpt("-out", common::args::ArgType::kString);
         AddOpt("-seed", common::args::ArgType::kInt);

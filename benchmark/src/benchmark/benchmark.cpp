@@ -66,14 +66,16 @@ void io_stats(
     }
 }
 
-void md_stats(BenchmarkArgs &args, int rank, double local_time_spent, int nprocs, size_t ops_per_proc)
+void md_stats(BenchmarkArgs &args, int rank, double local_time_spent, int nprocs, size_t md_fcnt_per_proc, size_t md_dir_per_proc)
 {
     //Get average time spent in application
     double avg_msec, std_msec, min_msec, max_msec;
     time_stats(local_time_spent, nprocs, avg_msec, std_msec, min_msec, max_msec);
 
     //Get average bandwidth and throughput
-    size_t tot_ops = ops_per_proc * nprocs;
+    size_t md_fcnt = md_fcnt_per_proc * nprocs;
+    size_t md_dir = md_dir_per_proc * nprocs;
+    size_t tot_ops = md_fcnt + md_dir;
     double thrpt_kiops = ((double)tot_ops)/avg_msec;
 
     //Write to output CSV in root process
@@ -82,7 +84,7 @@ void md_stats(BenchmarkArgs &args, int rank, double local_time_spent, int nprocs
         bool exists = boost::filesystem::exists(output_path);
         std::ofstream out(output_path, std::ofstream::out | std::ofstream::app);
         if(!exists) {
-            out << "avg_msec,std_msec,min_msec,max_msec,nprocs,tot_ops,thrpt_kiops" << std::endl;
+            out << "avg_msec,std_msec,min_msec,max_msec,nprocs,md_fcnt,md_dir,tot_ops,thrpt_kiops" << std::endl;
         }
         out <<
             avg_msec << "," <<
@@ -90,6 +92,8 @@ void md_stats(BenchmarkArgs &args, int rank, double local_time_spent, int nprocs
             min_msec << "," <<
             max_msec << "," <<
             nprocs << "," <<
+            md_fcnt << "," <<
+            md_dir << "," <<
             tot_ops << "," <<
             thrpt_kiops << std::endl;
     }
@@ -183,31 +187,31 @@ void io_file_workload(IOClientPtr &fs, int rank, int nprocs, BenchmarkArgs &args
 
 void md_fs_workload(IOClientPtr &fs, int rank, int nprocs, BenchmarkArgs &args)
 {
+    int fcnt = args.GetSizeOpt("-md_fcnt")/nprocs;
+    int depth = args.GetIntOpt("-md_depth");
+    std::string path = args.GetStringOpt("-path");
+
     //Start Time
     common::debug::Timer t;
     t.startTime();
 
-    int depth = args.GetIntOpt("-md_depth");
-    int fcnt = args.GetIntOpt("-md_fcnt");
-    size_t ops_per_proc = depth + fcnt;
-
     std::string dirstr = "/md-ex" + std::to_string(rank);
-    std::string newdir;
+    std::string newdir = path;
     for(int i = 0; i < depth; ++i) {
-        newdir += "/md-ex";
+        newdir += dirstr;
         fs->Mkdir(newdir);
     }
     for(int i = 0; i < fcnt; ++i) {
         std::string newfile = newdir + "/file" + std::to_string(i);
         FilePtr fp = fs->Open(newfile, FileMode::kWrite | FileMode::kCreate);
     }
-    fs->Rmdir(dirstr);
+    fs->Rmdir(path + dirstr);
 
     //End Time
     double local_time_spent = t.endTime();
 
     //Get stats
-    md_stats(args, rank, local_time_spent, nprocs, ops_per_proc);
+    md_stats(args, rank, local_time_spent, nprocs, fcnt, depth);
 }
 
 int main(int argc, char **argv)

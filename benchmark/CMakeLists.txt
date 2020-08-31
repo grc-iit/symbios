@@ -19,34 +19,37 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
 add_executable(benchmark src/benchmark/benchmark.cpp ${CMAKE_SOURCE_DIR}/common/include/common/rng.h src/benchmark/kvs.h src/benchmark/mongo.h src/benchmark/orangefs.h  src/benchmark/redis.h ../common/include/common/rng.h)
 target_link_libraries(benchmark -lmpi -lhiredis -lredis++ -lmongoc-1.0 -lbson-1.0 -lbsoncxx -lboost_system -lboost_filesystem  -lmongocxx -lpthread)
 
-#OrangeFS test cases (local)
-add_custom_target(bm_usage COMMAND
-        ${CMAKE_CURRENT_BINARY_DIR}/benchmark)
-add_custom_target(bm_prealloc COMMAND
-        ${CMAKE_CURRENT_BINARY_DIR}/benchmark
-        -s orangefs -caddr ~/ -path test.bin
-        -w prealloc -fs 1b)
-add_custom_target(bm_rw_test_seq COMMAND
-        ${CMAKE_CURRENT_BINARY_DIR}/benchmark
-        -s orangefs -caddr ~/ -path test.bin
-        -w io-only -bs 4k -fs 0k -tot 1g -wfrac .5 -rfrac .5 -ap uniform -seed 2542
-        -out ~/test.csv)
-add_custom_target(bm_rw_test_rand COMMAND
-        ${CMAKE_CURRENT_BINARY_DIR}/benchmark
-        -s orangefs -caddr ~/ -path test.bin
-        -w io-only -bs 4k -fs 0k -tot 1g -wfrac .5 -rfrac .5 -ap uniform -seed 2542
-        -out ~/test.csv)
-add_custom_target(bm_md_test COMMAND
-        ${CMAKE_CURRENT_BINARY_DIR}/benchmark
-        -s orangefs -caddr ~/ -path test.bin
-        -w md-test -md_depth 20 -md_fcnt 20
-        -out ~/test.csv)
-
+# Enable tests
 option(BUILD_TEST "Build the unit tests" ON)
 if(BUILD_TEST)
     enable_testing()
     include(CTest)
 endif()
+
+#####LOCAL TEST CASES
+
+add_test(NAME bm_usage COMMAND
+        ${CMAKE_CURRENT_BINARY_DIR}/benchmark)
+add_test(NAME bm_prealloc COMMAND
+        ${CMAKE_CURRENT_BINARY_DIR}/benchmark
+        -s orangefs -caddr /home/lukemartinlogan/ -path test.bin
+        -w prealloc -fs 1b)
+add_test(NAME bm_rw_test_seq COMMAND
+        ${CMAKE_CURRENT_BINARY_DIR}/benchmark
+        -s orangefs -caddr /home/lukemartinlogan/ -path test.bin
+        -w io-only -bs 4k -fs 0k -tot 1g -wfrac .5 -rfrac .5 -ap uniform -seed 2542
+        -out ~/io_test.csv)
+add_test(NAME bm_rw_test_rand COMMAND
+        ${CMAKE_CURRENT_BINARY_DIR}/benchmark
+        -s orangefs -caddr /home/lukemartinlogan/ -path test.bin
+        -w io-only -bs 4k -fs 0k -tot 1g -wfrac .5 -rfrac .5 -ap uniform -seed 2542
+        -out ~/io_test.csv)
+add_test(NAME bm_md_test COMMAND
+        ${CMAKE_CURRENT_BINARY_DIR}/benchmark
+        -s orangefs -caddr /home/lukemartinlogan/ -path /test
+        -w md-fs -md_depth 128 -md_fcnt 400
+        -out ~/md_test.csv)
+
 
 #####ARES TEST CASES
 
@@ -82,7 +85,7 @@ add_custom_target(ares_deploy_hdd_4_write
         ${SCRIPT_ROOT}/hostfiles/hostfile_clients)
 
 #Terminate OrangeFS
-add_custom_target(ares_terminate_hdd_4
+add_custom_target(ares_terminate_hdd_4_basic
         COMMAND ${SCRIPT_ROOT}/deploy.sh
         ${SCRIPT_ROOT}/conf/small/basic.conf
         /mnt/hdd/llogan/orangefs
@@ -98,11 +101,11 @@ function(prealloc nprocs storage_type caddr cport file_size)
             -w prealloc -fs ${file_size})
 endfunction()
 function(io_test nprocs storage_type caddr cport block_size file_size total_io access_pattern wfrac rfrac config)
-    add_test(NAME aresbm_${nprocs}_${storage_type}_${cport}_${block_size}_${file_size}_${total_io}_${access_pattern}_${wfrac}_${rfrac}_${config} COMMAND
+    add_test(NAME aresbm_io_${nprocs}_${storage_type}_${cport}_${block_size}_${file_size}_${total_io}_${access_pattern}_${wfrac}_${rfrac}_${config} COMMAND
             mpirun -n ${nprocs} ${CMAKE_CURRENT_BINARY_DIR}/benchmark
             -s ${storage_type} -caddr ${caddr} -cport ${cport} -path /test.bin
             -w io-only -ap ${access_pattern} -bs ${block_size} -fs ${file_size} -tot ${total_io} -wfrac ${wfrac} -rfrac ${rfrac} -seed 2542
-            -out /home/llogan/test_${config}.csv)
+            -out /home/llogan/io_test_${config}.csv)
 endfunction()
 
 set(PROCS 1 2 4 8 16 32 40)
@@ -116,6 +119,17 @@ set(ACCESS_PATTERNS seq uniform)
 set(WFRACS 1 .5 0)
 set(RFRACS 0 .5 1)
 set(CONFIGS hdd4_basic hdd4_read hdd4_write ssd4_basic ssd4_read ssd4_write nvme4_basic hdd24_basic)
+
+foreach(NPROC ${PROCS})
+    list(LENGTH STORAGE_TYPES STORAGE_TYPES_LEN)
+    math(EXPR STORAGE_TYPES_LAST "${STORAGE_TYPES_LEN} - 1")
+    foreach(ST_IDX RANGE ${STORAGE_TYPES_LAST})
+        list(GET STORAGE_TYPES ${ST_IDX} STORAGE_TYPE)
+        list(GET ADDRS ${ST_IDX} ADDR)
+        list(GET PORTS ${ST_IDX} PORT)
+        prealloc(${NPROC} ${STORAGE_TYPE} ${ADDR} ${PORT} 128g)
+    endforeach()
+endforeach()
 
 foreach(NPROC ${PROCS})
     list(LENGTH STORAGE_TYPES STORAGE_TYPES_LEN)
@@ -145,6 +159,18 @@ foreach(NPROC ${PROCS})
     endforeach()
 endforeach()
 
+#OrangeFS metadata-intensive test cases (ares)
+function(md_test nprocs storage_type caddr cport md_fcnt md_dir config)
+    add_test(NAME aresbm_md_${nprocs}_${storage_type}_${cport}_${md_dir}_${md_fcnt}_${config} COMMAND
+            mpirun -n ${nprocs} ${CMAKE_CURRENT_BINARY_DIR}/benchmark
+            -s ${storage_type} -caddr ${caddr} -cport ${cport} -path /
+            -w md-fs -md_fcnt ${md_fcnt} -md_dir ${md_dir}
+            -out /home/llogan/md_test_${config}.csv)
+endfunction()
+
+set(MD_FCNT 512k)
+set(MD_DIRS 1 2 4 8 16 32 64)
+
 foreach(NPROC ${PROCS})
     list(LENGTH STORAGE_TYPES STORAGE_TYPES_LEN)
     math(EXPR STORAGE_TYPES_LAST "${STORAGE_TYPES_LEN} - 1")
@@ -152,9 +178,14 @@ foreach(NPROC ${PROCS})
         list(GET STORAGE_TYPES ${ST_IDX} STORAGE_TYPE)
         list(GET ADDRS ${ST_IDX} ADDR)
         list(GET PORTS ${ST_IDX} PORT)
-        prealloc(${NPROC} ${STORAGE_TYPE} ${ADDR} ${PORT} 128g)
+        list(LENGTH BLOCK_SIZES BLOCK_SIZES_LEN)
+        math(EXPR BLOCK_SIZES_LAST "${BLOCK_SIZES_LEN} - 1")
+        foreach(MD_FCNT ${MD_FCNTS})
+            foreach(MD_DIR ${MD_DIRS})
+                foreach(CONFIG ${CONFIGS})
+                    md_test(${NPROC} ${STORAGE_TYPE} ${ADDR} ${PORT} ${MD_FCNT} ${MD_DIR} ${CONFIG})
+                endforeach()
+            endforeach()
+        endforeach()
     endforeach()
 endforeach()
-
-#OrangeFS metadata-intensive test cases (ares)
-

@@ -89,11 +89,18 @@ public:
         is_set_ = true;
         use_default_ = true;
     };
+    void AssertArgExists(std::string &arg) {
+        if(arg_map_.find(arg) == arg_map_.end()) {
+            std::cout << "Invalid input to " << opt_name_ << ": " << arg << std::endl;
+            throw 1;
+        }
+    }
     int Add(std::string arg) override {
         if(use_default_) {
             args_.pop_front();
             use_default_ = false;
         }
+        AssertArgExists(arg);
         args_.emplace_back(arg_map_[arg]);
         is_set_ = true;
         return 1;
@@ -313,7 +320,7 @@ public:
 
     void AssertOptIsNotSet(std::string opt) {
         if(OptIsSet(opt)) {
-            std::cout << opt << " is not set, but is required" << std::endl;
+            std::cout << opt << " is set, but is not supposed to be" << std::endl;
             Usage();
             throw 1;
         }

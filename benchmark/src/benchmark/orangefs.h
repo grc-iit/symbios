@@ -84,15 +84,15 @@ public:
     }
 
     void Mkdir(std::string path) {
-        boost::filesystem::create_directory(path);
+        boost::filesystem::create_directory(addr_ + path);
     }
 
     void Rmdir(std::string path) {
-        boost::filesystem::remove_all(path);
+        boost::filesystem::remove_all(addr_ + path);
     }
 
     void Remove(std::string path) {
-        boost::filesystem::remove_all(path);
+        boost::filesystem::remove_all(addr_ + path);
     }
 
     DirectoryListPtr Ls(std::string path) {
