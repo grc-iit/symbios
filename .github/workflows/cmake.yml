@@ -154,7 +154,7 @@ jobs:
       # and build directories, but this is only available with CMake 3.13 and higher.  
       # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
       run: |
-        export INSTALL_DIR=$HOME/work/software/install
+        export INSTALL_DIR=${SOFTWARE_DIR}/install
         export PATH="${INSTALL_DIR}/bin:${INSTALL_DIR}/sbin:$PATH"
         export LD_LIBRARY_PATH=${INSTALL_DIR}/lib:${INSTALL_DIR}/lib64:${LD_LIBRARY_PATH}
         export CFLAGS="-I${INSTALL_DIR}/include $CFLAGS"
@@ -168,7 +168,7 @@ jobs:
       shell: bash
       # Execute the build.  You can specify a specific target with "--target <NAME>"
       run: |
-        export INSTALL_DIR=$HOME/work/software/install
+        export INSTALL_DIR=${SOFTWARE_DIR}/install
         export PATH="${INSTALL_DIR}/bin:${INSTALL_DIR}/sbin:$PATH"
         export LD_LIBRARY_PATH=${INSTALL_DIR}/lib:${INSTALL_DIR}/lib64:${LD_LIBRARY_PATH}
         export CFLAGS="-I${INSTALL_DIR}/include $CFLAGS"
@@ -182,7 +182,7 @@ jobs:
       # Execute tests defined by the CMake configuration.  
       # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
       run: |
-        export INSTALL_DIR=$HOME/work/software/install
+        export INSTALL_DIR=${SOFTWARE_DIR}/install
         export PATH="${INSTALL_DIR}/bin:${INSTALL_DIR}/sbin:$PATH"
         export LD_LIBRARY_PATH=${INSTALL_DIR}/lib:${INSTALL_DIR}/lib64:${LD_LIBRARY_PATH}
         export CFLAGS="-I${INSTALL_DIR}/include $CFLAGS"
