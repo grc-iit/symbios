@@ -11,6 +11,7 @@
 #include <rapidjson/filereadstream.h>
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/reader.h>
+#include <regex>
 
 #define SYMBIOS_CONF basket::Singleton<symbios::ConfigurationManager>::GetInstance()
 namespace symbios {
@@ -32,7 +33,61 @@ namespace symbios {
         void config(rapidjson::Document &doc, const char *member, CharStruct &variable) {
             assert(doc.HasMember(member));
             assert(doc[member].IsString());
-            variable = doc[member].GetString();
+            std::string temp_variable = doc[member].GetString();
+            std::cout << "Input string from conf: " << temp_variable << std::endl;
+            regex regexp("{.+}");
+            smatch m;
+            if (regex_match (temp_variable, regexp)) {
+                regex_search(temp_variable, m, regexp);
+                for(unsigned i=0; i<m.size(); ++i) {
+                    auto unrolled = std::getenv(m[i].str().substr(1, m[i].str().size() - 2).c_str());
+                    temp_variable.replace(m.position(i), m.length(i), unrolled);
+                }
+            }
+            variable = CharStruct(temp_variable);
+            std::cout << "Output string from conf: " << variable << std::endl;
+        }
+
+        void config(rapidjson::Document &doc, const char *member,
+                    std::unordered_map<uint16_t, std::shared_ptr<StorageSolution>>&variable) {
+            assert(doc.HasMember(member));
+            rapidjson::Value& results = doc[member];
+            assert(results.IsArray());
+            for (rapidjson::SizeType i = 0; i < results.Size(); i++) {
+                std::shared_ptr<StorageSolution> ss;
+
+                if(results[i].GetString() == "POSIX"){
+                    ss = static_cast<const shared_ptr<StorageSolution>>(new FileStorageSolution(
+                            results[i]["MOUNT"].GetString()));
+                }
+                else if(results[i].GetString() == "REDIS"){
+                    ss = static_cast<const shared_ptr<StorageSolution>>(new RedisSS (
+                            results[i]["IP"].GetString(),
+                            results[i]["PORT"].GetInt()));
+                }
+                else if(results[i].GetString() == "MONGO"){
+                    ss = static_cast<const shared_ptr<StorageSolution>>(new MongoSS(
+                            results[i]["IP"].GetString(),
+                             results[i]["DATABASE"].GetString(),
+                            results[i]["COLLECTION"].GetString()));
+                }
+                else{
+                    std::cerr << "Incorrect configuration on Storage Solutions" << std::endl;
+                }
+
+                variable.insert(std::pair<uint16_t, std::shared_ptr<StorageSolution>>(i, ss));
+            }
+        }
+
+        void config(rapidjson::Document &doc, const char *member, DataDistributionPolicy &variable) {
+            assert(doc.HasMember(member));
+            assert(doc[member].IsString());
+            std::string distr_string = doc[member].GetString();
+            if(distr_string == "RANDOM_POLICY") variable=RANDOM_POLICY;
+            else if(distr_string == "ROUND_ROBIN_POLICY") variable=ROUND_ROBIN_POLICY;
+            else if(distr_string == "HEURISTICS_POLICY") variable=HEURISTICS_POLICY;
+            else if(distr_string == "DYNAMIC_PROGRAMMING_POLICY") variable=DYNAMIC_PROGRAMMING_POLICY;
+            else std::cerr << "Incorrect configuration on Data Distribution Policy" << std::endl;
         }
 
         int CountServers(CharStruct server_list_path) {
@@ -76,7 +131,7 @@ namespace symbios {
         CharStruct CONFIGURATION_FILE;
         CharStruct POSIX_MOUNT_POINT;
         uint16_t SERVER_COUNT;
-        int RANDOM_SEED;
+        uint16_t RANDOM_SEED;
         std::unordered_map<uint16_t, std::shared_ptr<StorageSolution>> STORAGE_SOLUTIONS;
         DataDistributionPolicy DATA_DISTRIBUTION_POLICY;
 
@@ -120,9 +175,9 @@ namespace symbios {
             config(doc, "SERVER_RPC_THREADS", SERVER_RPC_THREADS);
             config(doc, "SERVER_DIR", SERVER_DIR);
             config(doc, "POSIX_MOUNT_POINT", POSIX_MOUNT_POINT);
-            /**
-             * TODO: add DATA_DISTRIBUTION_POLICY, solutions, RANDOM_SEED
-             */
+            config(doc, "RANDOM_SEED", RANDOM_SEED);
+            config(doc, "STORAGE_SOLUTIONS", STORAGE_SOLUTIONS);
+            config(doc, "DATA_DISTRIBUTION_POLICY", DATA_DISTRIBUTION_POLICY);
             fclose(outfile);
         }
 

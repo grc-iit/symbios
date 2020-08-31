@@ -12,7 +12,7 @@ namespace symbios{
         class Client {
             private:
                 std::shared_ptr<RPC> rpc;
-                basket::unordered_map<FILE*,CharStruct> fileDescriptorMap;
+//                basket::unordered_map<FILE*,CharStruct> fileDescriptorMap;
             public:
                 Client();
                 void StoreRequest(Data &request);

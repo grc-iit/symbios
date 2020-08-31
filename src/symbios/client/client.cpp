@@ -1,7 +1,7 @@
 #include <symbios/client/client.h>
 #include <rpc/client.h>
-
-symbios::Client::Client(): fileDescriptorMap("FileDescriptors", BASKET_CONF->RPC_PORT){
+//: fileDescriptorMap("FileDescriptors", BASKET_CONF->RPC_PORT)
+symbios::Client::Client(){
     SYMBIOS_CONF->ConfigureSymbiosClient();
     auto basket=BASKET_CONF;
     rpc=basket::Singleton<RPCFactory>::GetInstance()->GetRPC(BASKET_CONF->RPC_PORT); //TODO: use another port?
@@ -21,26 +21,26 @@ void symbios::Client::LocateRequest(Data &request) {
     request.data_size_ = ret.data_size_;
 }
 
-bool symbios::Client::addOrUpdateFileDescriptorPool(FILE* fh, CharStruct filename) {
-    auto map_locator = fileDescriptorMap.Get(fh);
-    if (map_locator.first)
-        fileDescriptorMap.Erase(fh);
-    return fileDescriptorMap.Put(fh, filename);
-}
-
-bool symbios::Client::isFileDescriptorTracked(FILE* fh) {
-    auto map_locator=fileDescriptorMap.Get(fh);
-    return map_locator.first;
-}
-
-bool symbios::Client::deleteFileDescriptorFromPool(FILE* fh) {
-    auto map_locator = fileDescriptorMap.Get(fh);
-    if (map_locator.first)
-        return fileDescriptorMap.Erase(fh).first;
-    else
-        return map_locator.first;
-}
-
-std::pair<bool, CharStruct> symbios::Client::getFileNameFromMap(FILE* fh) {
-    return fileDescriptorMap.Get(fh);
-}
+//bool symbios::Client::addOrUpdateFileDescriptorPool(FILE* fh, CharStruct filename) {
+//    auto map_locator = fileDescriptorMap.Get(fh);
+//    if (map_locator.first)
+//        fileDescriptorMap.Erase(fh);
+//    return fileDescriptorMap.Put(fh, filename);
+//}
+//
+//bool symbios::Client::isFileDescriptorTracked(FILE* fh) {
+//    auto map_locator=fileDescriptorMap.Get(fh);
+//    return map_locator.first;
+//}
+//
+//bool symbios::Client::deleteFileDescriptorFromPool(FILE* fh) {
+//    auto map_locator = fileDescriptorMap.Get(fh);
+//    if (map_locator.first)
+//        return fileDescriptorMap.Erase(fh).first;
+//    else
+//        return map_locator.first;
+//}
+//
+//std::pair<bool, CharStruct> symbios::Client::getFileNameFromMap(FILE* fh) {
+//    return fileDescriptorMap.Get(fh);
+//}
