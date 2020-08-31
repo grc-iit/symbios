@@ -42,7 +42,9 @@ jobs:
     - name: Create Build Environment
       env:
         GITHUB_WORKSPACE: ${{runner.workspace}}
-      run: | 
+      run: |
+        export CXXFLAGS="$CXXFLAGS -I/software/install/include/mongocxx/v_noabi -I/software/install/include/bsoncxx/v_noabi"
+        export CFLAGS="$CFLAGS -I/software/install/include/mongocxx/v_noabi -I/software/install/include/bsoncxx/v_noabi"
         echo "GITHUB_WORKSPACE: ${GITHUB_WORKSPACE}"
         echo "runner.workspace: ${{runner.workspace}}"
         echo "INSTALL_DIR: ${INSTALL_DIR}"
