@@ -16,5 +16,6 @@ int main(int argc, char* argv[]){
     BASKET_CONF->BACKED_FILE_DIR=SYMBIOS_CONF->SERVER_DIR;
     CharStruct log = "/tmp/tmp.BUKlhPiLxF/build/symbios_server.log";
     auto daemon = basket::Singleton<symbios::Daemon<symbios::Server>>::GetInstance(log);
-    while(true) sleep(1);
+    daemon->Run();
+    return 0;
 }
