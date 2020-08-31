@@ -32,6 +32,9 @@ ssh ares-comp-29-40g mkdir -p /mnt/nvme/llogan/orangefs/data /mnt/nvme/llogan/or
 ssh ares-comp-30-40g mkdir -p /mnt/nvme/llogan/orangefs/data /mnt/nvme/llogan/orangefs/meta /mnt/nvme/llogan/orangefs/pfs_log.log /mnt/nvme/llogan/write/generic
 
 #Deploy OrangeFS
+echo "ORANGFS_KO=${ORANGEFS_KO}"
+echo "ORANGFS_PATH=${ORANGEFS_PATH}"
+export PVFS2TAB_FILE=$(pwd)/pvfs2tab
 make ares_deploy_orangefs_hdd_4_basic
 make ares_deploy_orangefs_ssd_4_basic
 
