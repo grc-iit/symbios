@@ -201,11 +201,13 @@ void md_fs_workload(IOClientPtr &fs, int rank, int nprocs, BenchmarkArgs &args)
         newdir += dirstr;
         fs->Mkdir(newdir);
     }
+    std::string newfile = newdir + "/file" + std::to_string(rank);
     for(int i = 0; i < fcnt; ++i) {
-        std::string newfile = newdir + "/file";
         FilePtr fp = fs->Open(newfile, FileMode::kWrite | FileMode::kCreate);
     }
-    fs->Rmdir(path + dirstr);
+    if(depth > 0) {
+        fs->Rmdir(path + dirstr);
+    }
 
     //End Time
     double local_time_spent = t.endTime();

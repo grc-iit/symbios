@@ -13,30 +13,29 @@
 #include <rapidjson/filewritestream.h>
 #include <rapidjson/writer.h>
 
-class storage_cost_predictor {
-/*
+template<size_t size>
+class StorageCostPredictor {
+private:
+    typedef dlib::matrix<double, 1, 1> input_vector;
+    typedef dlib::matrix<double, 1, 1> parameter_vector;
+    typedef std::pair<input_vector, parameter_vector> LSQ_ARG;
+    typedef std::vector<LSQ_ARG> LSQ_ARG_VEC;
 
-typedef dlib::matrix<double, 1, 1> input_vector;
-typedef dlib::matrix<double, 1, 1> parameter_vector;
-typedef std::pair<input_vector, parameter_vector> LSQ_ARG;
-typedef std::vector<LSQ_ARG> LSQ_ARG_VEC;
+    typedef struct JSONCompressionMetrics {
+        int type;
+        int alg;
+        uint64_t S;
+        double r;
+        double tc;
+    } JsonCompressionMetrics;
 
-typedef struct JSONCompressionMetrics {
-    int type;
-    int alg;
-    uint64_t S;
-    double r;
-    double tc;
-} JsonCompressionMetrics;
+    typedef struct JSONDecompressionMetrics {
+        int type;
+        int alg;
+        uint64_t S;
+        double td;
+    } JSONDecompressionMetrics;
 
-typedef struct JSONDecompressionMetrics {
-    int type;
-    int alg;
-    uint64_t S;
-    double td;
-} JSONDecompressionMetrics;
-
-class CompressionMetricsManager {
 private:
     double placement_meta[NUM_ARES_DATA_TYPES][NUM_ARES_LIBRARIES][3];
     LSQ_ARG_VEC tc_dataset[NUM_ARES_DATA_TYPES][NUM_ARES_LIBRARIES];
@@ -62,16 +61,7 @@ private:
     }
 
 public:
-    CompressionMetricsManager():compressed_sizes() {
-        LoadMetrics(ARES_FILTER_CONF->metrics_file);
-        comp_metrics_commit = comp_metrics.size();
-        decomp_metrics_commit = decomp_metrics.size();
-        FitData();
-    }
-
-    ~CompressionMetricsManager() {
-        CommitMetrics(ARES_FILTER_CONF->metrics_file);
-    }
+    StorageCostPredictor() {}
 
     void AddCompressionMetrics(int64_t type, int64_t alg, uint64_t S, double r, double tc) {
         //std::cout << "CompressionMetricsManager::AddCompressionMetrics-{" << tc << "}-{" << r << "}-{" << S << "}-{" << alg << "}\n";

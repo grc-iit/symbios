@@ -181,6 +181,7 @@ endforeach()
 #Deploy nodes, and execute all tests for a particular configuration
 set(DEV_TYPES hdd hdd hdd ssd ssd ssd nvme hdd)
 set(CONFIGS hdd4_basic hdd4_read hdd4_write ssd4_basic ssd4_read ssd4_write nvme4_basic hdd24_basic)
+set(CLEINT_DIR /mnt/nvme/${USER}/write/generic)
 set(CONF_FILES
         ${SCRIPT_ROOT}/conf/small/basic.conf ${SCRIPT_ROOT}/conf/small/read_optimize.conf ${SCRIPT_ROOT}/conf/small/write_optimize.conf
         ${SCRIPT_ROOT}/conf/ssd/basic.conf ${SCRIPT_ROOT}/conf/ssd/read_optimize.conf ${SCRIPT_ROOT}/conf/ssd/write_optimize.conf
@@ -206,7 +207,11 @@ foreach(CONFIG_IDX RANGE ${CONFIGS_LAST})
     foreach(CLIENT_HOST_IDX RANGE ${CLIENT_HOST_FILES_LAST})
         list(GET CLIENT_HOST_FILES ${CLIENT_HOST_IDX} CLIENT_HOST_FILE)
         list(GET CLIENT_HOST_FILE_IDS ${CLIENT_HOST_IDX} CLIENT_HOST_FILE_ID)
+        add_custom_target(ares_deploy_${CONFIG}_${CLIENT_HOST_FILE_ID} COMMAND
+                bash ${SCRIPT_ROOT}/deploy.sh ${CONF_FILE} /mnt/${DEV_TYPE}/llogan/orangefs ${CLEINT_DIR} ${SERVER_HOST_FILE} ${CLIENT_HOST_FILE})
         add_custom_target(run_bms_${CONFIG}_${CLIENT_HOST_FILE_ID} COMMAND
             bash ${SCRIPT_ROOT}/experiments.sh ${DEV_TYPE} ${CONFIG} ${CONF_FILE} ${SERVER_HOST_FILE} ${CLIENT_HOST_FILE} ${SCRIPT_ROOT} ${CMAKE_BINARY_DIR})
+        add_custom_target(ares_terminate_${CONFIG}_${CLIENT_HOST_FILE_ID} COMMAND
+                bash ${SCRIPT_ROOT}/terminate.sh ${CONF_FILE} /mnt/${DEV_TYPE}/llogan/orangefs ${CLEINT_DIR} ${SERVER_HOST_FILE} ${CLIENT_HOST_FILE})
     endforeach()
 endforeach()
