@@ -80,13 +80,18 @@ int main(int argc, char* argv[]){
 
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &nprocs);
+    if(rank==0){
+        printf("%d ready for attach\n", BASKET_CONF->COMM_SIZE);
+        fflush(stdout);
+        getchar();
+    }
+    MPI_Barrier(MPI_COMM_WORLD);
     std::string config = args.GetStringOpt("-c");
     SYMBIOS_CONF->CONFIGURATION_FILE=config.data();
-    SYMBIOS_CONF->LoadConfiguration();
-    BASKET_CONF->BACKED_FILE_DIR=SYMBIOS_CONF->SERVER_DIR;
     if(rank == 0) SYMBIOS_CONF->ConfigureSymbiosServer();
     MPI_Barrier(MPI_COMM_WORLD);
     if(rank != 0) SYMBIOS_CONF->ConfigureSymbiosClient();
+    BASKET_CONF->BACKED_FILE_DIR=SYMBIOS_CONF->SERVER_DIR;
     int dde_i = args.GetIntOpt("-p");
     SYMBIOS_CONF->DATA_DISTRIBUTION_POLICY = static_cast<DataDistributionPolicy>(dde_i);
     SYMBIOS_CONF->RANDOM_SEED = args.GetIntOpt("-seed");
