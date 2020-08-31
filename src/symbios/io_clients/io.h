@@ -33,6 +33,11 @@ public:
       *
       */
      virtual void Write(Data &source, Data &destination) = 0;
+    /**
+     * Remove
+     *
+     */
+    virtual void Remove(Data &source) = 0;
 };
 
 

@@ -14,7 +14,17 @@
 
 
 void MongoIOClient::Read(Data &source, Data &destination) {
-    ReadInternal(source,destination);
+    mongocxx::collection file = client[mongo_solution->database_.c_str()].collection(mongo_solution->collection_.c_str());
+    bsoncxx::stdx::optional<bsoncxx::document::value> maybe_result =
+            file.find_one(bsoncxx::builder::stream::document{} << "key" << std::string(source.id_.c_str()) << bsoncxx::builder::stream::finalize);
+    if(maybe_result) {
+        std::string_view value = maybe_result.value().view()["value"].get_value().get_utf8().value.to_string();
+        destination.buffer_=malloc(value.size()+1);
+        memcpy(destination.buffer_,value.data(),value.size()+1);
+        destination.data_size_=value.size()+1;
+    }else{
+        throw ErrorException(READ_REDIS_DATA_FAILED);
+    }
 }
 
 void MongoIOClient::Write(Data &source, Data &destination) {
@@ -22,23 +32,44 @@ void MongoIOClient::Write(Data &source, Data &destination) {
     mongocxx::collection file = client[mongo_solution->database_.c_str()].collection(mongo_solution->collection_.c_str());
     bool exists=false;
     Data read_source;
-    std::string_view id;
     try{
         read_source.id_=destination.id_;
-        id = ReadInternal(read_source,read_source);
+        Read(read_source,read_source);
         exists=true;
     }catch(const std::exception& e){
         exists=false;
     }
     if(exists){
+        char* old_value = (char*)read_source.buffer_;
+        size_t old_value_size = read_source.data_size_;
+        if (source.data_size_ >= old_value_size || source.data_size_ + destination.position_ >= old_value_size) {
+            char *new_val = (char *) malloc(destination.position_ + source.data_size_);
+            if (destination.position_ > 0) {
+                memcpy(new_val, old_value, destination.position_ - 1);
+            }
+            memcpy(new_val + destination.position_, source.buffer_ + source.position_, source.data_size_);
+            delete(old_value);
+            delete(source.buffer_);
+            source.data_size_= destination.position_ + source.data_size_;
+            source.buffer_=new_val;
+            source.position_=0;
+            destination.data_size_ = source.data_size_;
+        } else {
+            // update the old_value
+            memcpy(old_value + destination.position_,
+                   (const void *) ((char *) source.buffer_ + source.position_),
+                   source.data_size_);
+            delete(source.buffer_);
+            source.data_size_ = source.data_size_;
+            source.position_=0;
+            source.buffer_ = old_value;
+            destination.data_size_ = source.data_size_;
+        }
         file.delete_many(bsoncxx::builder::basic::make_document(bsoncxx::builder::basic::kvp("key", std::string(destination.id_.c_str()))));
-        /**
-         * TODO check if deleted.
-         */
     }
     auto document = bsoncxx::builder::basic::document{};
     using bsoncxx::builder::basic::kvp;
-    std::string data((const char*)source.buffer_,source.data_size_);
+    std::string data((const char*)source.buffer_+source.position_,source.data_size_);
     std::string keyName(destination.id_.c_str());
     //std::cout<<"KeyName :"<<keyName<<"\n";
     document.append(kvp("key",keyName),kvp("value",data));
@@ -56,20 +87,7 @@ void MongoIOClient::Write(Data &source, Data &destination) {
 
 }
 
-std::string_view MongoIOClient::ReadInternal(Data &source, Data &destination) {
-
+void MongoIOClient::Remove(Data &source) {
     mongocxx::collection file = client[mongo_solution->database_.c_str()].collection(mongo_solution->collection_.c_str());
-    bsoncxx::stdx::optional<bsoncxx::document::value> maybe_result =
-            file.find_one(bsoncxx::builder::stream::document{} << "key" << std::string(source.id_.c_str()) << bsoncxx::builder::stream::finalize);
-    if(maybe_result) {
-        std::string_view value = maybe_result.value().view()["value"].get_value().get_utf8().value.to_string();
-        destination.buffer_=malloc(value.size()+1);
-        memcpy(destination.buffer_,value.data(),value.size()+1);
-        destination.data_size_=value.size()+1;
-        std::cout << bsoncxx::to_json(*maybe_result) << "\n";
-        std::string_view id = maybe_result.value().view()["_id"].get_oid().value.to_string();
-        return id;
-    }else{
-        throw ErrorException(READ_REDIS_DATA_FAILED);
-    }
+    file.delete_many(bsoncxx::builder::basic::make_document(bsoncxx::builder::basic::kvp("key", std::string(source.id_.c_str()))));
 }

@@ -68,11 +68,11 @@ public:
      */
     void Write(Data &source, Data &destination) override;
 
+    void Remove(Data &source) override;
+
 private:
     mongocxx::client client;
     std::shared_ptr<MongoSS> mongo_solution;
-
-    std::string_view ReadInternal(Data &source, Data &destination);
 };
 
 #endif //SYMBIOS_MONGO_IO_H

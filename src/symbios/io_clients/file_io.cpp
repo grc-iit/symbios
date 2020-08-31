@@ -58,3 +58,7 @@ void FileIOClient::Write(Data &source, Data &destination) {
         }
     }
 }
+
+void FileIOClient::Remove(Data &source) {
+
+}
