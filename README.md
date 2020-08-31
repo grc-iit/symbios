@@ -265,5 +265,15 @@ cd scripts/local
 /tmp/tmp.BUKlhPiLxF/build/test/unit/unit_client /home/hdevarajan/symbios.conf
 ```
 
+### run symbios-server as service
+NOTE: ensure paths are correct with the service file.
+```bash
+sudo cp scripts/service/symbios.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl start symbios.service
+systemctl status symbios.service
+
+```
+
 NOTE:
 - you might need to set the LD_LIBRARY_PATH of all dependencies.
