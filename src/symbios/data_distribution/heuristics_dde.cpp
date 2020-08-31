@@ -8,6 +8,6 @@ HeuristicsDDE::HeuristicsDDE() {
 
 }
 
-std::vector<Distribution> HeuristicsDDE::Distribute(Data &request) {
-    return std::vector<Distribution>();
+std::vector<DataDistribution> HeuristicsDDE::Distribute(Data &request) {
+    return std::vector<DataDistribution>();
 }

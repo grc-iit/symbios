@@ -18,7 +18,7 @@ public:
      */
 
     // Select the target storages for the request by using random data placement policy
-    std::vector<Distribution> Distribute(Data& request) override;
+    std::vector<DataDistribution> Distribute(Data& request) override;
 };
 
 #endif //SYMBIOS_RANDOMDATAPLACEMENT_H

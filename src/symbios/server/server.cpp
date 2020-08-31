@@ -12,6 +12,13 @@ symbios::Server::Server(){
     std::function<Data(Data&)> functionLocateRequest(std::bind(&Server::LocateRequest, this, std::placeholders::_1));
     rpc->bind("StoreRequest", functionStoreRequest);
     rpc->bind("LocateRequest", functionLocateRequest);
+    /**
+     * Preload classes.
+     */
+    basket::Singleton<DataDistributionEngineFactory>::GetInstance()->GetDataDistributionEngine(SYMBIOS_CONF->DATA_DISTRIBUTION_POLICY);
+    basket::Singleton<MetadataOrchestrator>::GetInstance();
+    basket::Singleton<IOFactory>::GetInstance();
+
 }
 
 void symbios::Server::RunInternal(std::future<void> futureObj) {

@@ -4,6 +4,6 @@
 
 #include <symbios/data_distribution/dp_dde.h>
 
-std::vector<Distribution> DynamicProgrammingDDE::Distribute(Data &request) {
-    return std::vector<Distribution>();
+std::vector<DataDistribution> DynamicProgrammingDDE::Distribute(Data &request) {
+    return std::vector<DataDistribution>();
 }

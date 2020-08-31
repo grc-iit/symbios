@@ -169,6 +169,14 @@ HCL was tested with mpich 3.3.1, boost 1.69.0, rpclib 2.2.1, mercury 1.0.1, and 
 
 All information can be seen on https://bitbucket.org/scs-io/hcl/src/master/
 
+### Redis Server
+```bash
+wget https://github.com/redis/redis/archive/6.0.6.tar.gz
+tar -xzf 6.0.6.tar.gz
+cd redis-6.0.6
+make PREFIX=$DEP_INSTALL install
+```
+
 #### Compile and Install
 Basic Method:
 ```bash
@@ -240,7 +248,7 @@ io_client.Read(source_data_, destination_data_);
 ## Redis Cluster Local Script Usage
 ```bash
 cd scripts/local
-./run_redis_cluster.sh redis_cluster_install_path redis_server_numbers
+./run_redis_cluster.sh redis_cluster_config_path redis_server_numbers redis_cluster_install_path
 ```
 
 ## Local testing of Symbios

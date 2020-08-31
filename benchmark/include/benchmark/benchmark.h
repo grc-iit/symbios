@@ -6,9 +6,9 @@
 #define SYMBIOS_BENCHMARK_H
 
 #include <iostream>
-#include "../../src/benchmark/arguments.h"
+#include <common/arguments.h>
 #include "../../src/benchmark/file.h"
-#include "../../src/benchmark/rng.h"
+#include "common/rng.h"
 #include "../../src/benchmark/io_client.h"
 #include "../../src/benchmark/io_client_factory.h"
 
