@@ -154,6 +154,7 @@ cmake --build . --target install
 ### Mongodb C++ Driver
 
 ```bash
+sudo apt-get install libssl-dev
 curl -OL https://github.com/mongodb/mongo-cxx-driver/archive/r3.5.1.tar.gz  
 tar -xzf r3.5.1.tar.gz    
 cd mongo-cxx-driver-r3.5.1/build  
