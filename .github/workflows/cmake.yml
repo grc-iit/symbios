@@ -15,6 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: jcernuda/symbios:1.0.0
+      ports: 
+        - 9000:9000
     strategy:
       matrix:
         mongodb-version: [4.4]
@@ -74,7 +76,9 @@ jobs:
         echo "sleeping for 5 seconds"
         sleep 5
         echo "$source_dir/build/test/unit/unit_client ${source_dir}/conf/symbios.conf"
-        $source_dir/build/test/unit/unit_client ${source_dir}/conf/symbios.conf
+        nohup $source_dir/build/test/unit/unit_client ${source_dir}/conf/symbios.conf >> ${log_dir}/client.log 2>&1 &
+        sleep 5
+        cat ${log_dir}/server.log
         echo "Killing server"
         kill `cat ${log_dir}/server.lock`
         rm ${log_dir}/server.lock
