@@ -1,46 +1,23 @@
 #!/bin/bash
 
-CWD=$(pwd)
-SEARCH_DIR=$CWD/conf/
+dev_type=$1
+conf_id=$2
+conf_file=$3
+server_hostfile=$4
+script_root=$5
+build_dir=$6
 
 client_dir=/mnt/nvme/${USER}/write/generic
+PROCS=(1 2 4 8 16 32 40)
 
-# HDD 4 nodes
-for entry in "$SEARCH_DIR"/small/*
-do
-  ${CWD}/deploy.sh ${entry} /mnt/hdd/${USER}/orangefs ${client_dir} ${CWD}/hostfiles/hostfile_servers_small
-
-
-
-  ${CWD}/terminate.sh ${entry} /mnt/hdd/${USER}/orangefs ${client_dir} ${CWD}/hostfiles/hostfile_servers_small
+bash ${script_root}/deploy.sh ${conf_file} /mnt/${dev_type}/${USER}/orangefs ${client_dir} ${server_hostfile}
+cd ${build_dir}
+for PROC in ${PROCS[@]}; do
+  ctest --verbose -R prealloc_${PROC}_orangefs_*
+  ctest --verbose -R aresbm_io_${PROC}_orangefs_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_${conf_id}
+  ctest --verbose -R aresbm_md_${PROC}_orangefs_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_${conf_id}
+  #ctest -N -R prealloc_${PROC}_orangefs_*
+  #ctest -N -R aresbm_io_${PROC}_orangefs_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_${conf_id}
+  #ctest -N -R aresbm_md_${PROC}_orangefs_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_${conf_id}
 done
-
-#HDD 24 nodes
-for entry in "$SEARCH_DIR"/big/*
-do
-  ${CWD}/deploy.sh ${entry} /mnt/hdd/${USER}/orangefs ${client_dir} ${CWD}/hostfiles/hostfile_servers_big
-
-
-
-  ${CWD}/terminate.sh ${entry} /mnt/hdd/${USER}/orangefs ${client_dir} ${CWD}/hostfiles/hostfile_servers_big
-done
-
-#SSD 4 nodes
-for entry in "$SEARCH_DIR"/ssd/*
-do
-  ${CWD}/deploy.sh ${entry} /mnt/ssd/${USER}/orangefs ${client_dir} ${CWD}/hostfiles/hostfile_servers_ssd
-
-
-
-  ${CWD}/terminate.sh ${entry} /mnt/ssd/${USER}/orangefs ${client_dir} ${CWD}/hostfiles/hostfile_servers_ssd
-done
-
-#NVME 4 nodes
-for entry in "$SEARCH_DIR"/nvme/*
-do
-  ${CWD}/deploy.sh ${entry} /mnt/nvme/${USER}/orangefs ${client_dir} ${CWD}/hostfiles/hostfile_servers_nvme
-
-
-
-  ${CWD}/terminate.sh ${entry} /mnt/nvme/${USER}/orangefs ${client_dir} ${CWD}/hostfiles/hostfile_servers_nvme
-done
+bash ${script_root}/terminate.sh ${conf_file} /mnt/${dev_type}/${USER}/orangefs ${client_dir} ${server_hostfile}

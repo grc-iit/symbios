@@ -28,21 +28,39 @@ ssh ares-comp-29-40g mkdir -p /mnt/nvme/llogan/orangefs/data /mnt/nvme/llogan/or
 ssh ares-comp-30-40g mkdir -p /mnt/nvme/llogan/orangefs/data /mnt/nvme/llogan/orangefs/meta /mnt/nvme/llogan/orangefs/pfs_log.log /mnt/nvme/llogan/write/generic
 
 #Deploy OrangeFS
-make ares-deploy-hdd-4
-ls /mnt/nvme/llogan/write/generic
+make ares_deploy_orangefs_hdd_4_basic
+make ares_deploy_orangefs_ssd_4_basic
 
+#ssh into compute node
+ssh ares-comp-29-40g
+ssh ares-comp-30-40g
+
+#Execute tests
+----------------------THE NEW WAY--------------------------------
+make run_bms_hdd4_basic
+make run_bms_hdd4_read
+make run_bms_hdd4_write
+make run_bms_ssd4_basic
+make run_bms_ssd4_read
+make run_bms_ssd4_write
+make run_bms_nvme4_basic
+make run_bms_hdd24_basic
+----------------------THE NEW WAY--------------------------------
+
+----------------------THE OLD WAY--------------------------------
 #Preallocate files for particular NPROC
 ctest --verbose -R prealloc_${nprocs}_${storage_type}_${file_size}
 ctest --verbose -R prealloc_2_orangefs_*
 
 #Run all worklaods for particular NPROC
-ctest --verbose -R aresbm_${nprocs}_${storage_type}_${cport}_${block_size}_${file_size}_${total_io}_${access_pattern}_${wfrac}_${rfrac}_${config}
-ctest --verbose -R aresbm_2_orangefs_[a-zA-Z0-9]+_4k_[a-zA-Z0-9]+_[a-zA-Z0-9]+_seq_1_0_hdd4_basic
-ctest --verbose -R aresbm_2_orangefs_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_hdd4_basic
+ctest --verbose -R aresbm_io_${nprocs}_${storage_type}_${cport}_${block_size}_${file_size}_${total_io}_${access_pattern}_${wfrac}_${rfrac}_${config}
+ctest --verbose -R aresbm_io_2_orangefs_[a-zA-Z0-9]+_4k_[a-zA-Z0-9]+_[a-zA-Z0-9]+_seq_1_0_hdd4_basic
+ctest --verbose -R aresbm_io_2_orangefs_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_hdd4_basic
+ctest --verbose -R aresbm_md_${nprocs}_${storage_type}_${cport}_${md_dir}_${md_fcnt}_${config}
 
 #Remove all files
 rm -rf /mnt/nvme/llogan/write/generic/*
 
 #Kill OrangeFS
 make ares-terminate-hdd-4
-
+----------------------THE OLD WAY--------------------------------

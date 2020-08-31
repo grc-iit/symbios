@@ -61,30 +61,16 @@ add_custom_target(ares_alloc_compute
 add_custom_target(ares_alloc_storage
         COMMAND salloc --reservation=llogan_6 -p storage -w ares-stor-[01-08] --exclusive)
 
-#Deploy OrangeFS
-add_custom_target(ares_deploy_hdd_4_basic
+#Deploy OrangeFS (example)
+add_custom_target(ares_deploy_orangefs_hdd_4_basic
         COMMAND ${SCRIPT_ROOT}/deploy.sh
             ${SCRIPT_ROOT}/conf/small/basic.conf
             /mnt/hdd/llogan/orangefs
             /mnt/nvme/llogan/write/generic
             ${SCRIPT_ROOT}/hostfiles/hostfile_servers_small
             ${SCRIPT_ROOT}/hostfiles/hostfile_clients)
-add_custom_target(ares_deploy_hdd_4_read
-        COMMAND ${SCRIPT_ROOT}/deploy.sh
-        ${SCRIPT_ROOT}/conf/small/read_optimize.conf
-        /mnt/hdd/llogan/orangefs
-        /mnt/nvme/llogan/write/generic
-        ${SCRIPT_ROOT}/hostfiles/hostfile_servers_small
-        ${SCRIPT_ROOT}/hostfiles/hostfile_clients)
-add_custom_target(ares_deploy_hdd_4_write
-        COMMAND ${SCRIPT_ROOT}/deploy.sh
-        ${SCRIPT_ROOT}/conf/small/write_optimize.conf
-        /mnt/hdd/llogan/orangefs
-        /mnt/nvme/llogan/write/generic
-        ${SCRIPT_ROOT}/hostfiles/hostfile_servers_small
-        ${SCRIPT_ROOT}/hostfiles/hostfile_clients)
 
-#Terminate OrangeFS
+#Terminate OrangeFS (example)
 add_custom_target(ares_terminate_hdd_4_basic
         COMMAND ${SCRIPT_ROOT}/deploy.sh
         ${SCRIPT_ROOT}/conf/small/basic.conf
@@ -167,6 +153,11 @@ function(md_test nprocs storage_type caddr cport md_fcnt md_dir config)
             -out /home/llogan/md_test_${config}.csv)
 endfunction()
 
+set(PROCS 1 2 4 8 16 32 40)
+set(STORAGE_TYPES orangefs mongodb redis)
+set(ADDRS /mnt/nvme/llogan/write/generic 0 0)
+set(PORTS 0 0 0)
+set(FILE_SIZE 128g)
 set(MD_FCNT 256k)
 set(MD_DIRS 1 8 32 64 128)
 
@@ -179,12 +170,33 @@ foreach(NPROC ${PROCS})
         list(GET PORTS ${ST_IDX} PORT)
         list(LENGTH BLOCK_SIZES BLOCK_SIZES_LEN)
         math(EXPR BLOCK_SIZES_LAST "${BLOCK_SIZES_LEN} - 1")
-        foreach(MD_FCNT ${MD_FCNTS})
-            foreach(MD_DIR ${MD_DIRS})
-                foreach(CONFIG ${CONFIGS})
-                    md_test(${NPROC} ${STORAGE_TYPE} ${ADDR} ${PORT} ${MD_FCNT} ${MD_DIR} ${CONFIG})
-                endforeach()
+        foreach(MD_DIR ${MD_DIRS})
+            foreach(CONFIG ${CONFIGS})
+                md_test(${NPROC} ${STORAGE_TYPE} ${ADDR} ${PORT} ${MD_FCNT} ${MD_DIR} ${CONFIG})
             endforeach()
         endforeach()
     endforeach()
+endforeach()
+
+#Deploy nodes, and execute all tests for a particular configuration
+set(DEV_TYPES hdd hdd hdd ssd ssd ssd nvme hdd)
+set(CONFIGS hdd4_basic hdd4_read hdd4_write ssd4_basic ssd4_read ssd4_write nvme4_basic hdd24_basic)
+set(CONF_FILES
+        ${SCRIPT_ROOT}/conf/small/basic.conf ${SCRIPT_ROOT}/conf/small/read_optimize.conf ${SCRIPT_ROOT}/conf/small/write_optimize.conf
+        ${SCRIPT_ROOT}/conf/ssd/basic.conf ${SCRIPT_ROOT}/conf/ssd/read_optimize.conf ${SCRIPT_ROOT}/conf/ssd/write_optimize.conf
+        ${SCRIPT_ROOT}/conf/nvme/basic.conf ${SCRIPT_ROOT}/conf/big/basic.conf)
+set(HOST_FILES
+        ${SCRIPT_ROOT}/hostfiles/hostfile_small ${SCRIPT_ROOT}/hostfiles/hostfile_small ${SCRIPT_ROOT}/hostfiles/hostfile_small
+        ${SCRIPT_ROOT}/hostfiles/hostfile_ssd ${SCRIPT_ROOT}/hostfiles/hostfile_ssd ${SCRIPT_ROOT}/hostfiles/hostfile_ssd
+        ${SCRIPT_ROOT}/hostfiles/hostfile_nvme ${SCRIPT_ROOT}/hostfiles/hostfile_big)
+
+list(LENGTH CONFIGS CONFIGS_LEN)
+math(EXPR CONFIGS_LAST "${CONFIGS_LEN} - 1")
+foreach(CONFIG_IDX RANGE ${CONFIGS_LAST})
+    list(GET DEV_TYPES ${CONFIG_IDX} DEV_TYPE)
+    list(GET CONFIGS ${CONFIG_IDX} CONFIG)
+    list(GET CONF_FILES ${CONFIG_IDX} CONF_FILE)
+    list(GET HOST_FILES ${CONFIG_IDX} HOST_FILE)
+    add_custom_target(run_bms_${CONFIG} COMMAND
+            bash ${SCRIPT_ROOT}/experiments.sh ${DEV_TYPE} ${CONFIG} ${CONF_FILE} ${HOST_FILE} ${SCRIPT_ROOT} ${CMAKE_BINARY_DIR})
 endforeach()
