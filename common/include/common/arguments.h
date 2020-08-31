@@ -42,6 +42,7 @@ public:
     virtual std::list<float> &GetFloatOpts() { throw 1; };
     virtual size_t GetSizeOpt() { throw 1; };
     virtual std::list<size_t> &GetSizeOpts() { throw 1; };
+    virtual ~Arg() = default;
 };
 
 typedef std::unique_ptr<Arg> ArgPtr;
