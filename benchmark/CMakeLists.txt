@@ -56,9 +56,9 @@ add_test(NAME bm_md_test COMMAND
 set(SCRIPT_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/scripts/benchmark/orange)
 
 #Allocate test nodes
-add_custom_target(ares-alloc-compute
+add_custom_target(ares_alloc_compute
         COMMAND salloc --reservation=llogan_6 -p compute -w ares-comp-[29-30] --exclusive)
-add_custom_target(ares-alloc-storage
+add_custom_target(ares_alloc_storage
         COMMAND salloc --reservation=llogan_6 -p storage -w ares-stor-[01-08] --exclusive)
 
 #Deploy OrangeFS
