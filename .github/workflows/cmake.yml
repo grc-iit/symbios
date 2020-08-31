@@ -15,6 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: jcernuda/symbios:1.0.0
+      ports: 
+        - 9000:9000
     strategy:
       matrix:
         mongodb-version: [4.4]
@@ -42,7 +44,9 @@ jobs:
     - name: Create Build Environment
       env:
         GITHUB_WORKSPACE: ${{runner.workspace}}
-      run: | 
+      run: |
+        export CXXFLAGS="$CXXFLAGS -I/software/install/include/mongocxx/v_noabi -I/software/install/include/bsoncxx/v_noabi"
+        export CFLAGS="$CFLAGS -I/software/install/include/mongocxx/v_noabi -I/software/install/include/bsoncxx/v_noabi"
         echo "GITHUB_WORKSPACE: ${GITHUB_WORKSPACE}"
         echo "runner.workspace: ${{runner.workspace}}"
         echo "INSTALL_DIR: ${INSTALL_DIR}"
@@ -57,21 +61,23 @@ jobs:
         cmake --build . --config $
     
     - name: Test
-      working-directory: ${{runner.workspace}}/build
       shell: bash
       # Execute tests defined by the CMake configuration.  
       # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
       run: |
-        source_dir=${GITHUB_WORKSPACE}
-        log_dir=${HOME}/work/log
-        mkdir -p $log_dir
-
-        echo "${source_dir}/build/symbios_server ${source_dir}/conf/symbios.conf" > ${log_dir}/server.log
-        nohup ${source_dir}/build/symbios_server ${source_dir}/conf/symbios.conf >> ${log_dir}/server.log 2>&1 &
-        SERVER_PID=$!
-        echo $SERVER_PID > ${log_dir}/server.lock
-        sleep 5
-        $source_dir/build/test/unit/unit_client ${source_dir}/conf/symbios.conf
-
-        kill `cat ${log_dir}/server.lock`
-        rm ${log_dir}/server.lock
+        #source_dir=${GITHUB_WORKSPACE}
+        #log_dir=${HOME}/work/log
+        #mkdir -p $log_dir
+        #mkdir -p /home/runner/work/symbios_server
+        #echo "${source_dir}/build/symbios_server ${source_dir}/conf/symbios.conf"
+        #echo "${source_dir}/build/symbios_server ${source_dir}/conf/symbios.conf" > ${log_dir}/server.log
+        #{source_dir}/build/symbios_server ${source_dir}/conf/symbios.conf
+        #ERVER_PID=$!
+        #echo $SERVER_PID > ${log_dir}/server.lock
+        #echo "sleeping for 5 seconds"
+        #sleep 5
+        #echo "$source_dir/build/test/unit/unit_client ${source_dir}/conf/symbios.conf"
+        #$source_dir/build/test/unit/unit_client ${source_dir}/conf/symbios.conf
+        #echo "Killing server"
+        #kill `cat ${log_dir}/server.lock`
+        #rm ${log_dir}/server.lock
