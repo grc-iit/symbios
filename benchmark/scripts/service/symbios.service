@@ -1,9 +1,0 @@
-[Unit]
-Description=Symbios-server
-
-[Service]
-Environment=LD_LIBRARY_PATH=/home/hdevarajan/software/binary/symbios-dep/1.1.0/lib:/home/hdevarajan/software/binary/rapidjson/1.1.0/lib:/home/hdevarajan/software/binary/cmake/3.18.2/lib:/home/hdevarajan/software/binary/hcl/0.0.4/lib:/home/hdevarajan/software/binary/rpclib/2.2.1/lib:/home/hdevarajan/software/binary/mpich/3.3.2/lib:/home/hdevarajan/software/binary/mongo-cxx/3.5.1/lib:/home/hdevarajan/software/binary/boost/1.74.0/lib:/home/hdevarajan/software/binary/mongo-c/1.17.0/lib:/home/hdevarajan/software/binary/redis-plus-plus/1.1.2/lib:/home/hdevarajan/software/binary/hiredis/1.0.0/lib:/home/hdevarajan/software/binary/python/3.8.5/lib
-ExecStart=/tmp/tmp.BUKlhPiLxF/build/symbios_server /tmp/tmp.BUKlhPiLxF/conf/symbios.conf
-
-[Install]
-WantedBy=multi-user.target

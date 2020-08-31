@@ -53,7 +53,7 @@ add_test(NAME bm_md_test COMMAND
 
 #####ARES TEST CASES
 
-set(SCRIPT_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/scripts/benchmark/orange)
+set(SCRIPT_ROOT ${CMAKE_SOURCE_DIR}/scripts/benchmark/orange)
 
 #Allocate test nodes
 add_custom_target(ares_alloc_compute
