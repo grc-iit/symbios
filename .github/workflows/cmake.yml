@@ -46,14 +46,14 @@ jobs:
     - name: Install dependencies
       shell: bash
       run: |
-        echo $GITHUB_WORKSPACE
-        export SOFTWARE_DIR=$HOME/work/software
+        export SOFTWARE_DIR=$HOME/software
+        export INSTALL_DIR=${SOFTWARE_DIR}/install
         export CURRENT=`pwd`
+
         mkdir -p $SOFTWARE_DIR
         mkdir -p $SOFTWARE_DIR/source
-        mkdir -p ${SOFTWARE_DIR}/install
+        mkdir -p ${INSTALL_DIR}
 
-        export INSTALL_DIR=${SOFTWARE_DIR}/install
         export LD_LIBRARY_PATH=${INSTALL_DIR}/lib:${INSTALL_DIR}/lib64:${LD_LIBRARY_PATH}
         export LDFLAGS="$LDFLAGS -L${INSTALL_DIR}/lib -L${INSTALL_DIR}/lib64"
         export PATH="${INSTALL_DIR}/bin:${INSTALL_DIR}/sbin:$PATH"
@@ -84,7 +84,7 @@ jobs:
         tar xvf boost_1_74_0.tar.gz
         cd boost_1_74_0
         ./bootstrap.sh --prefix=${SOFTWARE_DIR}/install
-        ./b2 install
+        ./b2 -j4 install
         ###################### RpcLib ######################
         cd $SOFTWARE_DIR/source
         wget https://github.com/rpclib/rpclib/archive/v2.2.1.tar.gz
