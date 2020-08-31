@@ -71,7 +71,7 @@ jobs:
         mkdir -p /home/runner/work/symbios_server
         echo "${source_dir}/build/symbios_server ${source_dir}/conf/symbios.conf"
         echo "${source_dir}/build/symbios_server ${source_dir}/conf/symbios.conf" > ${log_dir}/server.log
-        nohup ${source_dir}/build/symbios_server ${source_dir}/conf/symbios.conf >> ${log_dir}/server.log 2>&1 &
+        ${source_dir}/build/symbios_server ${source_dir}/conf/symbios.conf
         SERVER_PID=$!
         echo $SERVER_PID > ${log_dir}/server.lock
         echo "sleeping for 5 seconds"
