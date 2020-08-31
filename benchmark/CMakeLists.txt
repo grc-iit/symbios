@@ -163,7 +163,7 @@ endforeach()
 #Deploy nodes, and execute all tests for a particular configuration
 set(DEV_TYPES hdd hdd hdd ssd ssd ssd nvme hdd)
 set(CONFIGS hdd4_basic hdd4_read hdd4_write ssd4_basic ssd4_read ssd4_write nvme4_basic hdd24_basic)
-set(CLEINT_DIR /mnt/nvme/${USER}/write/generic)
+set(CLEINT_DIR /mnt/nvme/llogan/write/generic)
 set(CONF_FILES
         ${SCRIPT_ROOT}/conf/small/basic.conf ${SCRIPT_ROOT}/conf/small/read_optimize.conf ${SCRIPT_ROOT}/conf/small/write_optimize.conf
         ${SCRIPT_ROOT}/conf/ssd/basic.conf ${SCRIPT_ROOT}/conf/ssd/read_optimize.conf ${SCRIPT_ROOT}/conf/ssd/write_optimize.conf
