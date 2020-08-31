@@ -75,9 +75,10 @@ jobs:
         echo $SERVER_PID > ${log_dir}/server.lock
         echo "sleeping for 5 seconds"
         sleep 5
-        cat ${log_dir}/server.log
         echo "$source_dir/build/test/unit/unit_client ${source_dir}/conf/symbios.conf"
-        $source_dir/build/test/unit/unit_client ${source_dir}/conf/symbios.conf
+        nohup $source_dir/build/test/unit/unit_client ${source_dir}/conf/symbios.conf >> ${log_dir}/client.log 2>&1 &
+        sleep 5
+        cat ${log_dir}/server.log
         echo "Killing server"
         kill `cat ${log_dir}/server.lock`
         rm ${log_dir}/server.lock
