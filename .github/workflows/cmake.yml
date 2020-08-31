@@ -14,7 +14,7 @@ jobs:
     # See: https://docs.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow#configuring-a-build-matrix
     runs-on: ubuntu-latest
     container:
-      image: jcernuda/test:4
+      image: jcernuda/test:5
     strategy:
       matrix:
         mongodb-version: [4.4]
