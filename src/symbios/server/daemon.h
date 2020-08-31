@@ -19,20 +19,34 @@ namespace symbios {
         static CharStruct main_log_file;
         std::promise<void> exitSignal;
         std::thread worker;
-        std::shared_ptr<T> jobManager;
+        std::shared_ptr<T> daemon_manager_;
+        bool spawn_thread_;
 
-        Daemon(CharStruct main_log_file = "/tmp/tmp.BUKlhPiLxF/build/symbios_server.log"): jobManager() {
+        Daemon(CharStruct main_log_file = "/tmp/tmp.BUKlhPiLxF/build/symbios_server.log",bool spawn_thread=false): daemon_manager_(),spawn_thread_(spawn_thread) {
+
+        }
+
+        void Run(){
             main_log_file = Daemon<T>::main_log_file;
             std::future<void> futureObj = exitSignal.get_future();
-            jobManager=std::make_shared<T>();
-            worker = std::thread(&T::Run, jobManager.get(), std::move(futureObj));
-            printf("Running\n");
+            daemon_manager_=std::make_shared<T>();
             catchSignals();
+            if(spawn_thread_) {
+                worker = std::thread(&T::Run, daemon_manager_.get(), std::move(futureObj));
+                printf("Running\n");
+                while(true) sleep(1);
+            }
+            else {
+                printf("Running\n");
+                daemon_manager_->Run(std::move(futureObj));
+            }
         }
 
         ~Daemon(){
-            exitSignal.set_value();
-            worker.join();
+            if(spawn_thread_){
+                exitSignal.set_value();
+                worker.join();
+            }
         }
 
     private:
