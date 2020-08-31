@@ -15,8 +15,6 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: jcernuda/symbios:1.0.1
-      env:
-        GITHUB_WORKSPACE:${HOME}/work/
     strategy:
       matrix:
         mongodb-version: [4.4]
@@ -63,13 +61,16 @@ jobs:
       # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
       run: |
         cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
-
+      env:
+        GITHUB_WORKSPACE: ${HOME}/work/
     - name: Build
       working-directory: ${{runner.workspace}}/build
       shell: bash
       # Execute the build.  You can specify a specific target with "--target <NAME>"
       run: |
         cmake --build . --config $
+      env:
+        GITHUB_WORKSPACE: ${HOME}/work/
     - name: Test
       working-directory: ${{runner.workspace}}/build
       shell: bash
