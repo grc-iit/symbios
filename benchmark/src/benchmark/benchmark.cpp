@@ -16,11 +16,11 @@ void time_stats(double local_time_spent, int nprocs, double &avg_msec, double &s
 {
     double local_std_msec;
     MPI_Allreduce(&local_time_spent, &avg_msec, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+    avg_msec = avg_msec/nprocs;
     local_std_msec = pow(local_time_spent - avg_msec, 2);
     MPI_Reduce(&local_std_msec, &std_msec, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
     MPI_Reduce(&local_time_spent, &min_msec, 1, MPI_DOUBLE, MPI_MIN, 0, MPI_COMM_WORLD);
     MPI_Reduce(&local_time_spent, &max_msec, 1, MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
-    avg_msec = avg_msec/nprocs;
     std_msec = std::sqrt(std_msec);
 }
 

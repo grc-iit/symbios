@@ -64,3 +64,6 @@ rm -rf /mnt/nvme/llogan/write/generic/*
 #Kill OrangeFS
 make ares-terminate-hdd-4
 ----------------------THE OLD WAY--------------------------------
+
+#Download test data
+scp llogan@ares.cs.iit.edu:/home/llogan/*.csv .
