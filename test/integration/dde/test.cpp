@@ -82,6 +82,7 @@ int main(int argc, char* argv[]){
     MPI_Comm_size(MPI_COMM_WORLD, &nprocs);
     std::string config = args.GetStringOpt("-c");
     SYMBIOS_CONF->CONFIGURATION_FILE=config.data();
+    SYMBIOS_CONF->LoadConfiguration();
     BASKET_CONF->BACKED_FILE_DIR=SYMBIOS_CONF->SERVER_DIR;
     if(rank == 0) SYMBIOS_CONF->ConfigureSymbiosServer();
     MPI_Barrier(MPI_COMM_WORLD);
