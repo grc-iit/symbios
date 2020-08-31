@@ -29,6 +29,7 @@ echo "tcp://${server_list[0]}:${comm_port}/${name} ${client_dir} pvfs2 defaults,
 #Server Setup
 for node in ${server_list[@]}
 do
+echo "Deploying orangefs server on ${node}"
 ssh ${node} << EOF
 echo "Setting up server at ${node} "
 source ~/.bashrc
@@ -42,6 +43,7 @@ done
 #Client Setup
 for node in ${client_list[@]}
 do
+echo "Deploying orangefs client on ${node}"
 ssh ${node} << EOF
 echo "Starting client on ${node}"
 source ~/.bashrc
