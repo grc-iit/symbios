@@ -80,7 +80,7 @@ public:
     }
 
     FilePtr Open(std::string path, int mode) {
-        return std::make_unique<OrangefsFile>(addr_ + path, mode);
+        return std::unique_ptr<OrangefsFile>(new OrangefsFile(addr_ + path, mode));
     }
 
     void Mkdir(std::string path) {

@@ -45,7 +45,7 @@ make run_bms_ssd4_read_clients2
 make run_bms_ssd4_write_clients2
 make run_bms_nvme4_basic_?
 make run_bms_hdd24_basic_?
-----------------------THE NEW WAY--------------------------------
+-----------------------------------------------------------------
 
 ----------------------THE OLD WAY--------------------------------
 #Preallocate files for particular NPROC
@@ -64,7 +64,7 @@ rm -rf /mnt/nvme/llogan/write/generic/*
 
 #Kill OrangeFS
 make ares-terminate-hdd-4
-----------------------THE OLD WAY--------------------------------
+----------------------------------------------------------------
 
 #Download test data
 scp llogan@ares.cs.iit.edu:/home/llogan/*.csv .
