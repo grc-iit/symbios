@@ -21,6 +21,7 @@ for PROC in ${PROCS[@]}; do
   ctest --verbose -R prealloc_${PROC}_orangefs_*
   ctest --verbose -R aresbm_io_${PROC}_orangefs_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_${conf_id}
   ctest --verbose -R aresbm_md_${PROC}_orangefs_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_${conf_id}
+  rm -rf ${client_dir}/*
   #ctest -N -R prealloc_${PROC}_orangefs_*
   #ctest -N -R aresbm_io_${PROC}_orangefs_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_${conf_id}
   #ctest -N -R aresbm_md_${PROC}_orangefs_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_${conf_id}
