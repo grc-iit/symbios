@@ -14,24 +14,24 @@ jobs:
     # See: https://docs.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow#configuring-a-build-matrix
     runs-on: ubuntu-latest
     container:
-      image: jcernuda/test:3
+      image: jcernuda/test:4
     strategy:
       matrix:
         mongodb-version: [4.4]
-    services:
+    #services:
           # Label used to access the service container
-          redis:
+          #redis:
             # Docker Hub image
-            image: redis
+            #image: redis
             # Set health checks to wait until redis has started
-            options: >-
-              --health-cmd "redis-cli ping"
-              --health-interval 10s
-              --health-timeout 5s
-              --health-retries 5
-            ports:
+            #options: >-
+              #--health-cmd "redis-cli ping"
+              #--health-interval 10s
+              #--health-timeout 5s
+              #--health-retries 5
+            #ports:
               # Maps port 6379 on service container to the host
-              - 6379:6379
+              #- 6379:6379
     steps:
     - uses: actions/checkout@v2
     - name: Create Build Environment
@@ -46,10 +46,10 @@ jobs:
         echo "LDFLAGS: ${LDFLAGS}"
         cmake -E make_directory ${{runner.workspace}}/build
       
-    - name: Start MongoDB
-      uses: supercharge/mongodb-github-action@1.3.0
-      with:
-        mongodb-version: ${{ matrix.mongodb-version }}
+    #- name: Start MongoDB
+      #uses: supercharge/mongodb-github-action@1.3.0
+      #with:
+        #mongodb-version: ${{ matrix.mongodb-version }}
 
     - name: Configure CMake
       # Use a bash shell so we can use the same syntax for environment variable
