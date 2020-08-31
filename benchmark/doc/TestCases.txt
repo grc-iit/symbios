@@ -57,7 +57,7 @@ ctest --verbose -R aresbm_io_${nprocs}_${storage_type}_${cport}_${block_size}_${
 ctest --verbose -R aresbm_io_2_orangefs_[a-zA-Z0-9]+_4k_[a-zA-Z0-9]+_[a-zA-Z0-9]+_seq_1_0_hdd4_basic
 ctest --verbose -R aresbm_io_2_orangefs_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_hdd4_basic
 ctest --verbose -R aresbm_md_${nprocs}_${storage_type}_${cport}_${md_dir}_${md_fcnt}_${config}
-ctest --verbose -R aresbm_md_2_orangefs_[a-zA-Z0-9]+_1_256k_hdd4_basic
+ctest --verbose -R aresbm_md_2_orangefs_[a-zA-Z0-9]+_1_16k_hdd4_basic
 
 #Remove all files
 rm -rf /mnt/nvme/llogan/write/generic/*

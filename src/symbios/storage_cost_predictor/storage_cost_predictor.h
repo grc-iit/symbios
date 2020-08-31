@@ -5,22 +5,16 @@
 #ifndef SYMBIOS_STORAGE_COST_PREDICTOR_H
 #define SYMBIOS_STORAGE_COST_PREDICTOR_H
 
-
-class storage_cost_predictor {
-/*
 #include <dlib/optimization.h>
 #include <vector>
-#include <ares/c++/common/enumerations.h>
 #include <boost/filesystem/operations.hpp>
 #include <rapidjson/filereadstream.h>
 #include <rapidjson/document.h>
 #include <rapidjson/filewritestream.h>
 #include <rapidjson/writer.h>
-#include <H5Ipublic.h>
-#include <H5Tpublic.h>
-#include <common/singleton.h>
-#include <ares/c++/common/time_counter.h>
-#include "configuration_manager.h"
+
+class storage_cost_predictor {
+/*
 
 typedef dlib::matrix<double, 1, 1> input_vector;
 typedef dlib::matrix<double, 1, 1> parameter_vector;
