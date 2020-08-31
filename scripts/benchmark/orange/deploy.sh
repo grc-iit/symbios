@@ -12,6 +12,10 @@ client_dir=${3}
 server_hostfile=${4}
 client_hostfile=${5}
 
+echo "ORANGFS_KO=${ORANGEFS_KO}"
+echo "ORANGFS_PATH=${ORANGEFS_PATH}"
+echo "PVFS2TAB_FILE=${$PVFS2TAB_FILE}"
+
 #General Variables
 client_list=($(cat ${client_hostfile}))
 server_list=($(cat ${server_hostfile}))

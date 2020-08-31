@@ -14,7 +14,7 @@ PROCS=(1 2 4 8 16 32 40)
 echo "Deploying"
 export PVFS2TAB_FILE=$(pwd)/pvfs2tab
 echo "${script_root}/deploy.sh ${conf_file} /mnt/${dev_type}/${USER}/orangefs ${client_dir} ${server_hostfile} ${client_hostfile}"
-${script_root}/deploy.sh ${conf_file} /mnt/${dev_type}/${USER}/orangefs ${client_dir} ${server_hostfile} ${client_hostfile}
+bash ${script_root}/deploy.sh ${conf_file} /mnt/${dev_type}/${USER}/orangefs ${client_dir} ${server_hostfile} ${client_hostfile}
 echo "Deployed"
 cd ${build_dir}
 for PROC in ${PROCS[@]}; do

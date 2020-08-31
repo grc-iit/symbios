@@ -13,6 +13,10 @@ scancel [job_id]: Remove my hold on node
 ctest -N -R aresbm_1_orangefs_[a-zA-Z0-9]+_4k_[a-zA-Z0-9]+_[a-zA-Z0-9]+_uniform_1_0_hdd4_basic
 ls -lh will list size of files
 
+#Reserve nodes
+make ares_alloc_compute
+make ares_alloc_storage
+
 #Add ORANGEFS environment to ~/.bashrc
 
 #Create directories on every storage/client node
