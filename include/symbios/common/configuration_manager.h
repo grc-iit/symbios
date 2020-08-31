@@ -140,6 +140,23 @@ namespace symbios {
             SERVER_COUNT = BASKET_CONF->NUM_SERVERS;
             BASKET_CONF->RPC_PORT = SYMBIOS_PORT;
         }
+
+        void ConfigureTest(CharStruct server_list, CharStruct client_list, unint16_t ):SERVER_LISTS(),CLIENT_LIST(),SYMBIOS_PORT(),SERVER_RPC_THREADS(4),
+                             SERVER_DIR("/dev/shm/hari/symbios_server"),SERVER_DIR("/dev/shm/hari/symbios_server"),
+                             CONFIGURATION_FILE("/tmp/tmp.BUKlhPiLxF/conf/symbios.conf"),
+                             POSIX_MOUNT_POINT("/tmp/tmp.BUKlhPiLxF/conf/symbios.conf"),
+                             SERVER_COUNT(1),RANDOM_SEED(100),DATA_DISTRIBUTION_POLICY(){}
     };
 }
 #endif //SYMBIOS_CONFIGURATION_MANAGER_H
+
+CharStruct SERVER_LISTS, CLIENT_LISTS;
+uint16_t SYMBIOS_PORT;
+uint16_t SERVER_RPC_THREADS;
+CharStruct SERVER_DIR;
+CharStruct CONFIGURATION_FILE;
+CharStruct POSIX_MOUNT_POINT;
+uint16_t SERVER_COUNT;
+int RANDOM_SEED;
+std::unordered_map<uint16_t, std::shared_ptr<StorageSolution>> STORAGE_SOLUTIONS;
+DataDistributionPolicy DATA_DISTRIBUTION_POLICY;

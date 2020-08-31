@@ -35,7 +35,6 @@ namespace symbios {
             worker.join();
         }
 
-
     private:
         static void signalHandler(int sig){
             auto instance = basket::Singleton<symbios::Daemon<T>>::GetInstance();
