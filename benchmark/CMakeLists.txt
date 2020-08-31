@@ -159,7 +159,7 @@ set(ADDRS /mnt/nvme/llogan/write/generic 0 0)
 set(PORTS 0 0 0)
 set(FILE_SIZE 128g)
 set(MD_FCNT 16k)
-set(MD_DEPTHS 1 4 8)
+set(MD_DEPTHS 0 1)
 
 foreach(NPROC ${PROCS})
     list(LENGTH STORAGE_TYPES STORAGE_TYPES_LEN)
