@@ -186,9 +186,9 @@ set(CONF_FILES
         ${SCRIPT_ROOT}/conf/ssd/basic.conf ${SCRIPT_ROOT}/conf/ssd/read_optimize.conf ${SCRIPT_ROOT}/conf/ssd/write_optimize.conf
         ${SCRIPT_ROOT}/conf/nvme/basic.conf ${SCRIPT_ROOT}/conf/big/basic.conf)
 set(SERVER_HOST_FILES
-        ${SCRIPT_ROOT}/hostfiles/hostfile_small ${SCRIPT_ROOT}/hostfiles/hostfile_small ${SCRIPT_ROOT}/hostfiles/hostfile_small
-        ${SCRIPT_ROOT}/hostfiles/hostfile_ssd ${SCRIPT_ROOT}/hostfiles/hostfile_ssd ${SCRIPT_ROOT}/hostfiles/hostfile_ssd
-        ${SCRIPT_ROOT}/hostfiles/hostfile_nvme ${SCRIPT_ROOT}/hostfiles/hostfile_big)
+        ${SCRIPT_ROOT}/hostfiles/hostfile_servers_small ${SCRIPT_ROOT}/hostfiles/hostfile_servers_small ${SCRIPT_ROOT}/hostfiles/hostfile_servers_small
+        ${SCRIPT_ROOT}/hostfiles/hostfile_servers_ssd ${SCRIPT_ROOT}/hostfiles/hostfile_servers_ssd ${SCRIPT_ROOT}/hostfiles/hostfile_servers_ssd
+        ${SCRIPT_ROOT}/hostfiles/hostfile_servers_nvme ${SCRIPT_ROOT}/hostfiles/hostfile_servers_big)
 set(CLIENT_HOST_FILE
         ${SCRIPT_ROOT}/hostfiles/hostfile_clients)
 
