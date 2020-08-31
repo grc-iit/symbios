@@ -31,16 +31,16 @@ ssh ares-stor-08-40g mkdir -p /mnt/hdd/llogan/orangefs/data /mnt/hdd/llogan/oran
 ssh ares-comp-29-40g mkdir -p /mnt/nvme/llogan/orangefs/data /mnt/nvme/llogan/orangefs/meta /mnt/nvme/llogan/orangefs/pfs_log.log /mnt/nvme/llogan/write/generic
 ssh ares-comp-30-40g mkdir -p /mnt/nvme/llogan/orangefs/data /mnt/nvme/llogan/orangefs/meta /mnt/nvme/llogan/orangefs/pfs_log.log /mnt/nvme/llogan/write/generic
 
-#Deploy OrangeFS
-echo "ORANGFS_KO=${ORANGEFS_KO}"
-echo "ORANGFS_PATH=${ORANGEFS_PATH}"
-export PVFS2TAB_FILE=$(pwd)/pvfs2tab
-make ares_deploy_orangefs_hdd_4_basic
-make ares_deploy_orangefs_ssd_4_basic
-
 #ssh into compute node
 ssh ares-comp-29-40g
 ssh ares-comp-30-40g
+
+#Deploy OrangeFS
+export PVFS2TAB_FILE=$(pwd)/pvfs2tab_c1
+#make ares_deploy_orangefs_hdd_4_basic
+
+export PVFS2TAB_FILE=$(pwd)/pvfs2tab_c2
+#make ares_deploy_orangefs_ssd_4_basic
 
 #Execute tests
 ----------------------THE NEW WAY--------------------------------
