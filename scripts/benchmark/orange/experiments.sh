@@ -4,7 +4,7 @@ dev_type=$1
 conf_id=$2
 conf_file=$3
 server_hostfile=$4
-server_hostfile=$5
+client_hostfile=$5
 script_root=$6
 build_dir=$7
 
