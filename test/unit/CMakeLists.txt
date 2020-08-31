@@ -4,7 +4,7 @@ include_directories(${INSTALL_DIR}/include/)
 set(CMAKE_CXX_STANDARD 17)
 
 
-set(LIBS -L${INSTALL_DIR}/lib64 -L${INSTALL_DIR}/lib -L${INSTALL_DIR}/lib -lmpi -lpthread -ldl -lbasket)
+set(LIBS -L${INSTALL_DIR}/lib64 -L${INSTALL_DIR}/lib -L${INSTALL_DIR}/lib -lmpi -lhiredis -lbasket -lrpc -lredis++ -lmongoc-1.0 -lbson-1.0 -lbsoncxx -lboost_system -lboost_filesystem  -lmongocxx -lpthread)
 include_directories(${CMAKE_SOURCE_DIR})
 set(CTEST_ENVIRONMENT "LD_LIBRARY_PATH=${CMAKE_BINARY_DIR}/")
 set($ENV{LD_PRELOAD} "$ENV{LD_PRELOAD} ${CMAKE_BINARY_DIR}")
@@ -39,7 +39,7 @@ set(test_files  file_io
                 mongo_io)
 foreach (test_file ${test_files})
     set(exec unit_${test_file})
-    add_executable(${exec} io_clients/${test_file}/test.cpp)
+    add_executable(${exec} io_clients/${test_file}/test.cpp ${SYMBIOS_SERVER_SRC})
     add_dependencies(${exec} symbios)
     target_include_directories(${exec} PRIVATE "${CMAKE_BINARY_DIR}/")
     target_link_libraries(${exec} ${LIBS})
