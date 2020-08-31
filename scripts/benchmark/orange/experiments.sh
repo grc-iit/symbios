@@ -18,6 +18,7 @@ echo "Deployed"
 cd ${build_dir}
 for PROC in ${PROCS[@]}; do
   echo "Tests for NPROCS=${PROC}"
+  rm -rf ${client_dir}/*
   ctest --verbose -R prealloc_${PROC}_orangefs_*
   ctest --verbose -R aresbm_io_${PROC}_orangefs_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_${conf_id}
   ctest --verbose -R aresbm_md_${PROC}_orangefs_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_${conf_id}
