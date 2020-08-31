@@ -47,7 +47,7 @@ add_test(NAME bm_rw_test_rand COMMAND
 add_test(NAME bm_md_test COMMAND
         ${CMAKE_CURRENT_BINARY_DIR}/benchmark
         -s orangefs -caddr /home/lukemartinlogan/ -path /test
-        -w md-fs -md_depth 1 -md_fcnt 256k
+        -w md-fs -md_depth 1 -md_fcnt 16k
         -out ~/md_test.csv)
 
 
@@ -158,7 +158,7 @@ set(STORAGE_TYPES orangefs mongodb redis)
 set(ADDRS /mnt/nvme/llogan/write/generic 0 0)
 set(PORTS 0 0 0)
 set(FILE_SIZE 128g)
-set(MD_FCNT 256k)
+set(MD_FCNT 16k)
 set(MD_DEPTHS 1 8 32 64 128)
 
 foreach(NPROC ${PROCS})
