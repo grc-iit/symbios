@@ -30,6 +30,7 @@ protected:
 public:
     Arg(std::string opt_name) : opt_name_(opt_name) {};
     bool IsSet() const { return is_set_; }
+    ArgType GetType() const { return type_; }
     virtual int Add(std::string arg) { throw 1; };
     virtual void AddStringMapVal(std::string val, int id) { throw 1; };
     virtual std::string &GetStringOpt() { throw 1; };
@@ -182,26 +183,56 @@ public:
 
 class ArgFactory {
 public:
-    template<typename ...Args>
-    static ArgPtr Get(std::string opt_name, ArgType type, Args... args) {
+    static ArgPtr Get(std::string opt_name, ArgType type) {
         switch (type) {
             case ArgType::kNone: {
-                return std::make_unique<Arg>(opt_name, args...);
+                return std::make_unique<Arg>(opt_name);
             }
             case ArgType::kString: {
-                return std::make_unique<StringArg>(opt_name, args...);
+                return std::make_unique<StringArg>(opt_name);
             }
             case ArgType::kStringMap: {
-                return std::make_unique<StringMapArg>(opt_name, args...);
+                return std::make_unique<StringMapArg>(opt_name);
             }
             case ArgType::kInt: {
-                return std::make_unique<IntArg>(opt_name, args...);
+                return std::make_unique<IntArg>(opt_name);
             }
             case ArgType::kFloat: {
-                return std::make_unique<FloatArg>(opt_name, args...);
+                return std::make_unique<FloatArg>(opt_name);
             }
             case ArgType::kSize: {
-                return std::make_unique<SizeArg>(opt_name, args...);
+                return std::make_unique<SizeArg>(opt_name);
+            }
+        }
+    }
+    static ArgPtr Get(std::string opt_name, ArgType type, std::string dval) {
+        switch(type) {
+            case ArgType::kString: {
+                return std::make_unique<StringArg>(opt_name, dval);
+            }
+        }
+    }
+    static ArgPtr Get(std::string opt_name, ArgType type, int dval) {
+        switch(type) {
+            case ArgType::kStringMap: {
+                return std::make_unique<StringMapArg>(opt_name, dval);
+            }
+            case ArgType::kInt: {
+                return std::make_unique<IntArg>(opt_name, dval);
+            }
+        }
+    }
+    static ArgPtr Get(std::string opt_name, ArgType type, float dval) {
+        switch(type) {
+            case ArgType::kFloat: {
+                return std::make_unique<FloatArg>(opt_name, dval);
+            }
+        }
+    }
+    static ArgPtr Get(std::string opt_name, ArgType type, size_t dval) {
+        switch(type) {
+            case ArgType::kSize: {
+                return std::make_unique<SizeArg>(opt_name, dval);
             }
         }
     }
@@ -226,12 +257,20 @@ protected:
             if (argv[i][0] != '-') {
                 AssertOptExists("");
                 ArgPtr &arg = args_[""];
-                i += arg->Add(argv[i + 1]);
+                if(arg->GetType() == ArgType::kNone || i+1 < argc) {
+                    i += arg->Add(argv[i + 1]);
+                } else {
+                    throw 1;
+                }
                 continue;
             }
             AssertOptExists(argv[i]);
             ArgPtr &arg = args_[argv[i]];
-            i += arg->Add(argv[i + 1]);
+            if(arg->GetType() == ArgType::kNone || i+1 < argc) {
+                i += arg->Add(argv[i + 1]);
+            } else {
+                throw 1;
+            }
         }
     }
 
