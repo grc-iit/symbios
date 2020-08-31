@@ -155,7 +155,12 @@ jobs:
       # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
       run: |
         export INSTALL_DIR=$HOME/work/software/install
-        export LD_LIBRARY_PATH=$HOME/work/software/install/lib
+        export PATH="${INSTALL_DIR}/bin:${INSTALL_DIR}/sbin:$PATH"
+        export LD_LIBRARY_PATH=${INSTALL_DIR}/lib:${INSTALL_DIR}/lib64:${LD_LIBRARY_PATH}
+        export CFLAGS="-I${INSTALL_DIR}/include $CFLAGS"
+        export CXXFLAGS="-I${INSTALL_DIR}/include $CXXFLAGS"
+        export LDFLAGS="$LDFLAGS -L${INSTALL_DIR}/lib -L${INSTALL_DIR}/lib64"
+
         cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
 
     - name: Build
@@ -164,8 +169,12 @@ jobs:
       # Execute the build.  You can specify a specific target with "--target <NAME>"
       run: |
         export INSTALL_DIR=$HOME/work/software/install
-        export LD_LIBRARY_PATH=$HOME/work/software/install/lib
         export PATH="${INSTALL_DIR}/bin:${INSTALL_DIR}/sbin:$PATH"
+        export LD_LIBRARY_PATH=${INSTALL_DIR}/lib:${INSTALL_DIR}/lib64:${LD_LIBRARY_PATH}
+        export CFLAGS="-I${INSTALL_DIR}/include $CFLAGS"
+        export CXXFLAGS="-I${INSTALL_DIR}/include $CXXFLAGS"
+        export LDFLAGS="$LDFLAGS -L${INSTALL_DIR}/lib -L${INSTALL_DIR}/lib64"
+
         cmake --build . --config $
     - name: Test
       working-directory: ${{runner.workspace}}/build
@@ -174,6 +183,10 @@ jobs:
       # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
       run: |
         export INSTALL_DIR=$HOME/work/software/install
-        export LD_LIBRARY_PATH=$HOME/work/software/install/lib
         export PATH="${INSTALL_DIR}/bin:${INSTALL_DIR}/sbin:$PATH"
+        export LD_LIBRARY_PATH=${INSTALL_DIR}/lib:${INSTALL_DIR}/lib64:${LD_LIBRARY_PATH}
+        export CFLAGS="-I${INSTALL_DIR}/include $CFLAGS"
+        export CXXFLAGS="-I${INSTALL_DIR}/include $CXXFLAGS"
+        export LDFLAGS="$LDFLAGS -L${INSTALL_DIR}/lib -L${INSTALL_DIR}/lib64"
+
         ctest -C $BUILD_TYPE
