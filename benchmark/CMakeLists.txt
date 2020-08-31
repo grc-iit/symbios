@@ -185,10 +185,12 @@ set(CONF_FILES
         ${SCRIPT_ROOT}/conf/small/basic.conf ${SCRIPT_ROOT}/conf/small/read_optimize.conf ${SCRIPT_ROOT}/conf/small/write_optimize.conf
         ${SCRIPT_ROOT}/conf/ssd/basic.conf ${SCRIPT_ROOT}/conf/ssd/read_optimize.conf ${SCRIPT_ROOT}/conf/ssd/write_optimize.conf
         ${SCRIPT_ROOT}/conf/nvme/basic.conf ${SCRIPT_ROOT}/conf/big/basic.conf)
-set(HOST_FILES
+set(SERVER_HOST_FILES
         ${SCRIPT_ROOT}/hostfiles/hostfile_small ${SCRIPT_ROOT}/hostfiles/hostfile_small ${SCRIPT_ROOT}/hostfiles/hostfile_small
         ${SCRIPT_ROOT}/hostfiles/hostfile_ssd ${SCRIPT_ROOT}/hostfiles/hostfile_ssd ${SCRIPT_ROOT}/hostfiles/hostfile_ssd
         ${SCRIPT_ROOT}/hostfiles/hostfile_nvme ${SCRIPT_ROOT}/hostfiles/hostfile_big)
+set(CLIENT_HOST_FILE
+        ${SCRIPT_ROOT}/hostfiles/hostfile_clients)
 
 list(LENGTH CONFIGS CONFIGS_LEN)
 math(EXPR CONFIGS_LAST "${CONFIGS_LEN} - 1")
@@ -196,7 +198,7 @@ foreach(CONFIG_IDX RANGE ${CONFIGS_LAST})
     list(GET DEV_TYPES ${CONFIG_IDX} DEV_TYPE)
     list(GET CONFIGS ${CONFIG_IDX} CONFIG)
     list(GET CONF_FILES ${CONFIG_IDX} CONF_FILE)
-    list(GET HOST_FILES ${CONFIG_IDX} HOST_FILE)
+    list(GET SERVER_HOST_FILES ${CONFIG_IDX} SERVER_HOST_FILE)
     add_custom_target(run_bms_${CONFIG} COMMAND
-            bash ${SCRIPT_ROOT}/experiments.sh ${DEV_TYPE} ${CONFIG} ${CONF_FILE} ${HOST_FILE} ${SCRIPT_ROOT} ${CMAKE_BINARY_DIR})
+            bash ${SCRIPT_ROOT}/experiments.sh ${DEV_TYPE} ${CONFIG} ${CONF_FILE} ${SERVER_HOST_FILE} ${CLIENT_HOST_FILE} ${SCRIPT_ROOT} ${CMAKE_BINARY_DIR})
 endforeach()
