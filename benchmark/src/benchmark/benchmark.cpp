@@ -202,7 +202,7 @@ void md_fs_workload(IOClientPtr &fs, int rank, int nprocs, BenchmarkArgs &args)
         fs->Mkdir(newdir);
     }
     for(int i = 0; i < fcnt; ++i) {
-        std::string newfile = newdir + "/file" + std::to_string(i);
+        std::string newfile = newdir + "/file";
         FilePtr fp = fs->Open(newfile, FileMode::kWrite | FileMode::kCreate);
     }
     fs->Rmdir(path + dirstr);
