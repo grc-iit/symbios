@@ -20,11 +20,15 @@ endif()
 
 # Add tests
 
-add_test(NAME arg_conv COMMAND
+add_test(NAME args_conv COMMAND
         ${CMAKE_CURRENT_BINARY_DIR}/arg_test -test arg_conv -a hello -b 24245 -c 35k -d 2.0)
-add_test(NAME arg_list COMMAND
+add_test(NAME args_list COMMAND
         ${CMAKE_CURRENT_BINARY_DIR}/arg_test -test arg_list -b 24245 -b 24245 -b 24245)
-add_test(NAME default_args COMMAND
+add_test(NAME args_default COMMAND
         ${CMAKE_CURRENT_BINARY_DIR}/arg_test -test default_args -e 24245 -e 24245 -e 24245)
-add_test(NAME invalid_args COMMAND
-        ${CMAKE_CURRENT_BINARY_DIR}/arg_test -test default_args -e 24245 -e 24245 -e 24245)
+add_test(NAME args_invalid COMMAND
+        ${CMAKE_CURRENT_BINARY_DIR}/arg_test -test invalid_args -asdf)
+add_test(NAME args_invalid2 COMMAND
+        ${CMAKE_CURRENT_BINARY_DIR}/arg_test -test invalid_args -e -e 24245 -e 24245)
+add_test(NAME args_no_params COMMAND
+        ${CMAKE_CURRENT_BINARY_DIR}/arg_test -test no_param_args -g -h)

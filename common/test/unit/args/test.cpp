@@ -6,13 +6,15 @@
  * String, StringMap, int, float, and size args
  * Option assertion
  * Default arguments
+ * Invalid arguments
+ * Empty param types
  * */
 
 #include <common/arguments.h>
 #include <assert.h>
 
 enum class TestCases {
-    kArgConv,kArgList,kDefaultArgs,kInvalidArgs
+    kArgConv,kArgList,kDefaultArgs,kInvalidArgs,kNoParamArgs
 };
 
 class ExampleArgs : public common::args::ArgMap {
@@ -57,6 +59,11 @@ private:
                 assert(f == 24245);
                 break;
             }
+            case TestCases::kNoParamArgs: {
+                AssertOptIsSet("-g");
+                AssertOptIsSet("-h");
+                break;
+            }
         }
     }
 
@@ -70,6 +77,7 @@ public:
         std::cout << "   arg_list" << std::endl;
         std::cout << "   default_args" << std::endl;
         std::cout << "   invalid_args" << std::endl;
+        std::cout << "   no_param_args" << std::endl;
         std::cout << "" << std::endl;
 
         std::cout << "-a hello" << std::endl;
@@ -85,12 +93,15 @@ public:
         AddStringMapVal("-test", "arg_list", static_cast<int>(TestCases::kArgList));
         AddStringMapVal("-test", "default_args", static_cast<int>(TestCases::kDefaultArgs));
         AddStringMapVal("-test", "invalid_args", static_cast<int>(TestCases::kInvalidArgs));
+        AddStringMapVal("-test", "no_param_args", static_cast<int>(TestCases::kNoParamArgs));
         AddOpt("-a", common::args::ArgType::kString);
         AddOpt("-b", common::args::ArgType::kInt);
         AddOpt("-c", common::args::ArgType::kSize);
         AddOpt("-d", common::args::ArgType::kFloat);
         AddOpt("-e", common::args::ArgType::kInt, 0);
         AddOpt("-f", common::args::ArgType::kInt, 24245);
+        AddOpt("-g");
+        AddOpt("-h");
         try {
             ArgIter(argc, argv);
         }

@@ -31,6 +31,7 @@ public:
     Arg(std::string opt_name) : opt_name_(opt_name) {};
     bool IsSet() const { return is_set_; }
     ArgType GetType() const { return type_; }
+    virtual int Add() { throw 1; };
     virtual int Add(std::string arg) { throw 1; };
     virtual void AddStringMapVal(std::string val, int id) { throw 1; };
     virtual std::string &GetStringOpt() { throw 1; };
@@ -44,6 +45,12 @@ public:
 };
 
 typedef std::unique_ptr<Arg> ArgPtr;
+
+class NoneArg : public Arg {
+public:
+    NoneArg(std::string opt_name) : Arg(opt_name) {}
+    int Add() { is_set_ = true; return 0; }
+};
 
 class StringArg : public Arg {
 private:
@@ -186,7 +193,7 @@ public:
     static ArgPtr Get(std::string opt_name, ArgType type) {
         switch (type) {
             case ArgType::kNone: {
-                return std::make_unique<Arg>(opt_name);
+                return std::make_unique<NoneArg>(opt_name);
             }
             case ArgType::kString: {
                 return std::make_unique<StringArg>(opt_name);
@@ -254,21 +261,19 @@ protected:
 
     void ArgIter(int argc, char **argv) {
         for(int i = 1; i < argc; ++i) {
+            std::string arg_str = argv[i];
             if (argv[i][0] != '-') {
-                AssertOptExists("");
-                ArgPtr &arg = args_[""];
-                if(arg->GetType() == ArgType::kNone || i+1 < argc) {
-                    i += arg->Add(argv[i + 1]);
-                } else {
-                    throw 1;
-                }
-                continue;
+                arg_str = "";
             }
-            AssertOptExists(argv[i]);
-            ArgPtr &arg = args_[argv[i]];
-            if(arg->GetType() == ArgType::kNone || i+1 < argc) {
+            AssertOptExists(arg_str);
+            ArgPtr &arg = args_[arg_str];
+            if((arg->GetType() != ArgType::kNone) && (i+1 < argc)) {
                 i += arg->Add(argv[i + 1]);
-            } else {
+            }
+            else if(arg->GetType() == ArgType::kNone) {
+                i += arg->Add();
+            }
+            else {
                 throw 1;
             }
         }
