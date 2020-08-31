@@ -80,12 +80,6 @@ int main(int argc, char* argv[]){
 
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &nprocs);
-    if(rank==0){
-        printf("%d ready for attach\n", BASKET_CONF->COMM_SIZE);
-        fflush(stdout);
-        getchar();
-    }
-    MPI_Barrier(MPI_COMM_WORLD);
     std::string config = args.GetStringOpt("-c");
     SYMBIOS_CONF->CONFIGURATION_FILE=config.data();
     if(rank == 0) SYMBIOS_CONF->ConfigureSymbiosServer();
