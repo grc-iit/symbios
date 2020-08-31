@@ -61,24 +61,6 @@ add_custom_target(ares_alloc_compute
 add_custom_target(ares_alloc_storage
         COMMAND salloc --reservation=llogan_6 -p storage -w ares-stor-[01-08] --exclusive)
 
-#Deploy OrangeFS (example)
-add_custom_target(ares_deploy_orangefs_hdd_4_basic
-        COMMAND ${SCRIPT_ROOT}/deploy.sh
-            ${SCRIPT_ROOT}/conf/small/basic.conf
-            /mnt/hdd/llogan/orangefs
-            /mnt/nvme/llogan/write/generic
-            ${SCRIPT_ROOT}/hostfiles/hostfile_servers_small
-            ${SCRIPT_ROOT}/hostfiles/hostfile_clients)
-
-#Terminate OrangeFS (example)
-add_custom_target(ares_terminate_hdd_4_basic
-        COMMAND ${SCRIPT_ROOT}/terminate.sh
-        ${SCRIPT_ROOT}/conf/small/basic.conf
-        /mnt/hdd/llogan/orangefs
-        /mnt/nvme/llogan/write/generic
-        ${SCRIPT_ROOT}/hostfiles/hostfile_servers_small
-        ${SCRIPT_ROOT}/hostfiles/hostfile_clients)
-
 #OrangeFS I/O-intensive test cases (ares)
 function(prealloc nprocs storage_type caddr cport file_size)
     add_test(NAME prealloc_${nprocs}_${storage_type}_${file_size} COMMAND
