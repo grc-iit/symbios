@@ -72,7 +72,7 @@ add_custom_target(ares_deploy_orangefs_hdd_4_basic
 
 #Terminate OrangeFS (example)
 add_custom_target(ares_terminate_hdd_4_basic
-        COMMAND ${SCRIPT_ROOT}/deploy.sh
+        COMMAND ${SCRIPT_ROOT}/terminate.sh
         ${SCRIPT_ROOT}/conf/small/basic.conf
         /mnt/hdd/llogan/orangefs
         /mnt/nvme/llogan/write/generic
