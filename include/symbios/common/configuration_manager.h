@@ -18,6 +18,19 @@ namespace symbios {
     class ConfigurationManager {
 
     private:
+        static std::string replaceEnvVariable(std::string temp_variable){
+            regex regexp("{.+}");
+            smatch m;
+            if (regex_match (temp_variable, regexp)) {
+                regex_search(temp_variable, m, regexp);
+                for(unsigned i=0; i<m.size(); ++i) {
+                    auto unrolled = std::getenv(m[i].str().substr(1, m[i].str().size() - 2).c_str());
+                    temp_variable.replace(m.position(i)-1, m.length(i), unrolled);
+                }
+            }
+            return temp_variable;
+        }
+
         void config(rapidjson::Document &doc, const char *member, uint16_t &variable) {
             assert(doc.HasMember(member));
             assert(doc[member].IsInt());
@@ -35,16 +48,7 @@ namespace symbios {
             assert(doc[member].IsString());
             std::string temp_variable = doc[member].GetString();
             std::cout << "Input string from conf: " << temp_variable << std::endl;
-            regex regexp("{.+}");
-            smatch m;
-            if (regex_match (temp_variable, regexp)) {
-                regex_search(temp_variable, m, regexp);
-                for(unsigned i=0; i<m.size(); ++i) {
-                    auto unrolled = std::getenv(m[i].str().substr(1, m[i].str().size() - 2).c_str());
-                    temp_variable.replace(m.position(i), m.length(i), unrolled);
-                }
-            }
-            variable = CharStruct(temp_variable);
+            variable = CharStruct(replaceEnvVariable(temp_variable));
             std::cout << "Output string from conf: " << variable << std::endl;
         }
 
@@ -57,8 +61,8 @@ namespace symbios {
                 std::shared_ptr<StorageSolution> ss;
 
                 if(results[i].GetString() == "POSIX"){
-                    ss = static_cast<const shared_ptr<StorageSolution>>(new FileStorageSolution(
-                            results[i]["MOUNT"].GetString()));
+                    auto mount = replaceEnvVariable(results[i]["MOUNT"].GetString());
+                    ss = static_cast<const shared_ptr<StorageSolution>>(new FileStorageSolution(mount));
                 }
                 else if(results[i].GetString() == "REDIS"){
                     ss = static_cast<const shared_ptr<StorageSolution>>(new RedisSS (
@@ -135,13 +139,13 @@ namespace symbios {
         std::unordered_map<uint16_t, std::shared_ptr<StorageSolution>> STORAGE_SOLUTIONS;
         DataDistributionPolicy DATA_DISTRIBUTION_POLICY;
 
-        ConfigurationManager() : SERVER_LISTS("/tmp/tmp.BUKlhPiLxF/conf/server_lists/symbios_server"),
-                                 CLIENT_LISTS("/tmp/tmp.BUKlhPiLxF/conf/server_lists/symbios_client"),
+        ConfigurationManager() : SERVER_LISTS("/tmp/tmp.BUKlhPiLxF/conf/server_lists/single_node_symbios_server"),
+                                 CLIENT_LISTS("/tmp/tmp.BUKlhPiLxF/conf/server_lists/single_node_symbios_client"),
                                  SYMBIOS_PORT(8000),
                                  SERVER_RPC_THREADS(4),
-                                 SERVER_DIR("/dev/shm/hari/symbios_server"),
-                                 CONFIGURATION_FILE("/tmp/tmp.BUKlhPiLxF/conf/symbios.conf"),
-                                 POSIX_MOUNT_POINT("/tmp/tmp.BUKlhPiLxF/conf/symbios.conf"),
+                                 SERVER_DIR("/dev/shm/hari/single_node_symbios_server"),
+                                 CONFIGURATION_FILE("/tmp/tmp.BUKlhPiLxF/conf/base_symbios.conf"),
+                                 POSIX_MOUNT_POINT("/tmp/tmp.BUKlhPiLxF/conf/base_symbios.conf"),
                                  SERVER_COUNT(1),
                                  RANDOM_SEED(100),
                                  STORAGE_SOLUTIONS(),
@@ -165,7 +169,7 @@ namespace symbios {
             Document doc;
             doc.ParseStream<kParseStopWhenDoneFlag>(instream);
             if (!doc.IsObject()) {
-                std::cout << "Symbios - Canfiguration JSON is invalid" << std::endl;
+                std::cout << "Symbios - Configuration JSON is invalid" << std::endl;
                 fclose(outfile);
                 exit(EXIT_FAILURE);
             }

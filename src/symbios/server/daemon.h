@@ -22,7 +22,7 @@ namespace symbios {
         std::shared_ptr<T> daemon_manager_;
         bool spawn_thread_;
 
-        Daemon(CharStruct main_log_file = "/tomp/tmp.BUKlhPiLxF/build/symbios_server.lg",bool spawn_thread=false): daemon_manager_(),spawn_thread_(spawn_thread) {
+        Daemon(CharStruct main_log_file = "/tomp/tmp.BUKlhPiLxF/build/single_node_symbios_server.lg",bool spawn_thread=false): daemon_manager_(),spawn_thread_(spawn_thread) {
 
         }
 
