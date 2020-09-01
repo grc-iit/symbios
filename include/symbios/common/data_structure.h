@@ -218,6 +218,8 @@ namespace clmdep_msgpack {
     }
 }  // namespace clmdep_msgpack
 std::ostream &operator<<(std::ostream &os, Data &data);
+std::ostream &operator<<(std::ostream &os, Metadata &d);
+std::ostream &operator<<(std::ostream &os, DataDistribution &m);
 
 #endif //SYMBIOS_DATA_STRUCTURE_H
 
