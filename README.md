@@ -245,6 +245,12 @@ Data destination_data_;
 io_client.Read(source_data_, destination_data_);
 ```
 
+## Mongo Local Script Usage
+```bash
+cd scripts/local
+./run_mongo.sh mongo_config_path mongo_install_path
+```
+
 ## Local testing of Symbios
 
 - update conf/symbios.conf to correct the path of SERVER_LISTS, CLIENT_LISTS, and SERVER_DIR

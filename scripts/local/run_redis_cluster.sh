@@ -1,5 +1,5 @@
 #!/bin/bash
-if [ $# -lt 2 ]
+if [ $# -lt 3 ]
 then
   echo "Usage: ./run_redis_cluster.sh redis_cluster_config_path redis_server_numbers redis_install_path"
   echo "e.g ./run_redis_cluster.sh ~/redis_config 3 ~/redis_install"

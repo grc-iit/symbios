@@ -46,8 +46,21 @@
 #include <chrono>
 #include <mpi.h>
 #include <string>
-namespace common::debug{
+#include <tuple>
 
+template <class Tup, class Func, std::size_t ...Is>
+constexpr void static_for_impl(Tup&& t, Func &&f, std::index_sequence<Is...> )
+{
+    ( f(std::integral_constant<std::size_t, Is>{}, std::get<Is>(t)),... );
+}
+
+template <class ... T, class Func >
+constexpr void static_for(std::tuple<T...>&t, Func &&f)
+{
+    static_for_impl(t, std::forward<Func>(f), std::make_index_sequence<sizeof...(T)>{});
+}
+
+namespace common::debug{
     /**
  * Handles signals and prints stack trace.
  *
@@ -70,7 +83,7 @@ namespace common::debug{
  * various macros to print variables and messages.
  */
 
-#ifdef DEBUG_MSG
+#ifdef COMMON_DEBUG_MSG
     #define COMMON_DBGVAR(var) \
 std::cout << "DBG: " << __FILE__ << "(" << __LINE__ << ") "\
        << #var << " = [" << (var) << "]" << std::endl
@@ -143,36 +156,37 @@ std::cout << "DBG: " << __FILE__ << "(" << __LINE__ << ") "\
         template <typename... Args>
         AutoTrace(std::string string,Args... args):m_line(string)
         {
+
             char thread_name[256];
             pthread_getname_np(pthread_self(), thread_name,256);
             std::stringstream stream;
 
             if(rank == -1) MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-#if defined(DEBUG_TRACE) || defined(DEBUG_TIMER)
+#if defined(COMMON_DEBUG_TRACE) || defined(COMMON_DEBUG_TIMER)
             //stream << "\033[31m";
         stream <<++item<<";"<<thread_name<<";"<< rank << ";" <<m_line << ";";
 #endif
-#if  defined(DEBUG_TIMER)
+#if  defined(COMMON_DEBUG_TIMER)
             stream <<";;";
 #endif
-#ifdef DEBUG_TRACE
+#ifdef COMMON_DEBUG_TRACE
             auto args_obj = std::make_tuple(args...);
         const ulong args_size = std::tuple_size<decltype(args_obj)>::value;
         stream << "args(";
         if(args_size == 0) stream << "Void";
         else{
-            static_for<args_size>( [&](auto w){
-                                       stream << std::get<w.n>(args_obj) << ", ";
-                                   });
+            static_for(args_obj, [&] (auto i, auto w) {
+                stream << w << ", ";
+            });
         }
         stream << ");";
 #endif
-#if defined(DEBUG_TRACE) || defined(DEBUG_TIMER)
+#if defined(COMMON_DEBUG_TRACE) || defined(COMMON_DEBUG_TIMER)
             stream <<"start"<< endl;
         stream << "\033[00m";
         cout << stream.str();
 #endif
-#ifdef DEBUG_TIMER
+#ifdef COMMON_DEBUG_TIMER
             timer.startTime();
 #endif
         }
@@ -183,17 +197,17 @@ std::cout << "DBG: " << __FILE__ << "(" << __LINE__ << ") "\
             char thread_name[256];
             pthread_getname_np(pthread_self(), thread_name,256);
             //stream << "\033[31m";
-#if defined(DEBUG_TRACE) || defined(DEBUG_TIMER)
+#if defined(COMMON_DEBUG_TRACE) || defined(COMMON_DEBUG_TIMER)
             stream <<item-- <<";"<<std::string(thread_name)<<";"<< rank << ";" << m_line << ";";
 #endif
-#if defined(DEBUG_TRACE)
+#if defined(COMMON_DEBUG_TRACE)
             stream  <<";";
 #endif
-#ifdef DEBUG_TIMER
+#ifdef COMMON_DEBUG_TIMER
             double end_time=timer.endTime();
         stream  <<end_time<<";msecs;";
 #endif
-#if defined(DEBUG_TRACE) || defined(DEBUG_TIMER)
+#if defined(COMMON_DEBUG_TRACE) || defined(COMMON_DEBUG_TIMER)
             stream  <<"finish"<< endl;
         stream << "\033[00m";
         cout << stream.str();

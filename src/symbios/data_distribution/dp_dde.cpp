@@ -2,8 +2,13 @@
 // Created by mani on 8/24/2020.
 //
 
+#include <common/debug.h>
+#include <string>
 #include <symbios/data_distribution/dp_dde.h>
 
 std::vector<DataDistribution> DynamicProgrammingDDE::Distribute(Data &request) {
-    return std::vector<DataDistribution>();
+  auto tracer = common::debug::AutoTrace(
+      std::string("DynamicProgrammingDDE::Distribute"), request);
+  COMMON_DBGVAR((char *)request.buffer_);
+  return std::vector<DataDistribution>();
 }
