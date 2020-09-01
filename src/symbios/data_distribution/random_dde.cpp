@@ -27,5 +27,6 @@ std::vector<DataDistribution> RandomDDE::Distribute(Data &request) {
   distribution.source_data_ = request;
   distribution.destination_data_.storage_index_ = selected_solution_index;
   distributions.push_back(distribution);
+  COMMON_DBGVAR((char *)request.buffer_);
   return distributions;
 }

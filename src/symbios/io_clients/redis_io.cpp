@@ -34,6 +34,8 @@ void RedisIOClient::Read(Data &source, Data &destination) {
   } catch (const Error &err) {
     throw ErrorException(REDIS_SERVER_SIDE_FAILED);
   }
+  COMMON_DBGVAR((char *)source.buffer_);
+  COMMON_DBGVAR((char *)destination.buffer_);
 }
 
 void RedisIOClient::Write(Data &source, Data &destination) {
@@ -89,6 +91,8 @@ void RedisIOClient::Write(Data &source, Data &destination) {
   } catch (const Error &err) {
     throw ErrorException(REDIS_SERVER_SIDE_FAILED);
   }
+  COMMON_DBGVAR((char *)source.buffer_);
+  COMMON_DBGVAR((char *)destination.buffer_);
 }
 
 void RedisIOClient::Remove(Data &source) {}

@@ -9,5 +9,6 @@
 std::vector<DataDistribution> DynamicProgrammingDDE::Distribute(Data &request) {
   auto tracer = common::debug::AutoTrace(
       std::string("DynamicProgrammingDDE::Distribute"), request);
+  COMMON_DBGVAR((char *)request.buffer_);
   return std::vector<DataDistribution>();
 }

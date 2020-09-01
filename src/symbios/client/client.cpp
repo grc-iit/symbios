@@ -18,6 +18,7 @@ void symbios::Client::StoreRequest(Data &request) {
       rpc->call<RPCLIB_MSGPACK::object_handle>(server, "StoreRequest", request)
           .as<int>();
   printf("response from server %d\n", num_servers);
+  COMMON_DBGVAR((char *)request.buffer_);
 }
 
 void symbios::Client::LocateRequest(Data &request) {
@@ -30,4 +31,5 @@ void symbios::Client::LocateRequest(Data &request) {
   request.buffer_ = malloc(ret.data_size_);
   memcpy(request.buffer_, ret.buffer_, ret.data_size_);
   request.data_size_ = ret.data_size_;
+  COMMON_DBGVAR((char *)request.buffer_);
 }

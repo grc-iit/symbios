@@ -10,6 +10,7 @@
 #include <cstring>
 #include <mongocxx/exception/bulk_write_exception.hpp>
 #include <mongocxx/exception/query_exception.hpp>
+#include <string>
 #include <symbios/common/configuration_manager.h>
 #include <symbios/common/error_codes.h>
 #include <symbios/io_clients/mongo_io.h>
@@ -38,6 +39,8 @@ void MongoIOClient::Read(Data &source, Data &destination) {
   } else {
     throw ErrorException(READ_REDIS_DATA_FAILED);
   }
+  COMMON_DBGVAR((char *)source.buffer_);
+  COMMON_DBGVAR((char *)destination.buffer_);
 }
 
 void MongoIOClient::Write(Data &source, Data &destination) {
@@ -111,12 +114,17 @@ void MongoIOClient::Write(Data &source, Data &destination) {
   } else
     std::cout << "Inserted id was not an OID type"
               << "\n";
+  COMMON_DBGVAR((char *)source.buffer_);
+  COMMON_DBGVAR((char *)destination.buffer_);
 }
 
 void MongoIOClient::Remove(Data &source) {
+  auto tracer =
+      common::debug::AutoTrace(std::string("MongoIOClient::Remove"), source);
   mongocxx::collection file =
       client[mongo_solution->database_.c_str()].collection(
           mongo_solution->collection_.c_str());
   file.delete_many(bsoncxx::builder::basic::make_document(
       bsoncxx::builder::basic::kvp("key", std::string(source.id_.c_str()))));
+  COMMON_DBGVAR((char *)source.buffer_);
 }

@@ -44,6 +44,8 @@ void FileIOClient::Read(Data &source, Data &destination) {
       }
     }
   }
+  COMMON_DBGVAR((char *)source.buffer_);
+  COMMON_DBGVAR((char *)destination.buffer_);
 }
 
 void FileIOClient::Write(Data &source, Data &destination) {
@@ -70,6 +72,8 @@ void FileIOClient::Write(Data &source, Data &destination) {
       close(fileFd);
     }
   }
+  COMMON_DBGVAR((char *)source.buffer_);
+  COMMON_DBGVAR((char *)destination.buffer_);
 }
 
 void FileIOClient::Remove(Data &source) {}

@@ -86,6 +86,7 @@ void MetadataOrchestrator::Store(Data &original_request,
       }
     }
   }
+  COMMON_DBGVAR((char *)original_request.buffer_);
 }
 
 std::vector<DataDistribution>
@@ -137,6 +138,7 @@ MetadataOrchestrator::Locate(Data &request, Metadata &primary_metadata) {
       distributions.push_back(distribution);
     }
   }
+  COMMON_DBGVAR((char *)request.buffer_);
   return distributions;
 }
 
