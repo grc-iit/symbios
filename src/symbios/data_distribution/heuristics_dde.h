@@ -8,6 +8,8 @@
 #include <symbios/data_distribution/data_distribution.h>
 
 class HeuristicsDDE: public DataDistributionEngine {
+private:
+    std::unordered_map<IOClientType, std::pair<uint16_t,std::shared_ptr<StorageSolution>>> maps;
 public:
     /*
      * Constructor

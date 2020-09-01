@@ -36,6 +36,7 @@ int symbios::Server::StoreRequest(Data &request){
         basket::Singleton<IOFactory>::GetInstance()->GetIOClient(distribution.destination_data_.storage_index_)->Write(distribution.source_data_, distribution.destination_data_);
         COMMON_DBGMSG("Storing data in "<<distribution.destination_data_.storage_index_);
     }
+
     return SYMBIOS_CONF->SERVER_COUNT;
 }
 
@@ -54,6 +55,9 @@ Data symbios::Server::LocateRequest(Data &request){
         memcpy(request.buffer_+start,distribution.destination_data_.buffer_+ distribution.destination_data_.position_, distribution.destination_data_.data_size_);
         start+=distribution.destination_data_.data_size_;
     }
+//    //printf("%s data sending\n",);
+//    std::string val(,request.data_size_);
+    COMMON_DBGVAR((char*)request.buffer_);
     return request;
 }
 
