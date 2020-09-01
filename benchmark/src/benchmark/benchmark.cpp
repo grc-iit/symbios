@@ -29,6 +29,10 @@ void io_stats(
         int nprocs, size_t read_per_proc, size_t write_per_proc,
         size_t block_size, DistributionType ap)
 {
+    if(!args.OptIsSet("-out")) {
+        return;
+    }
+
     //Get average time spent in application
     double avg_msec, std_msec, min_msec, max_msec;
     time_stats(local_time_spent, nprocs, avg_msec, std_msec, min_msec, max_msec);
@@ -42,12 +46,14 @@ void io_stats(
     double bw_kbps = ((double)tot_bytes)/avg_msec;
 
     //Write to output CSV in root process
-    if(rank == 0 && args.OptIsSet("-out")) {
+    if(rank == 0) {
+        std::string conf = args.GetStringOpt("-config");
         std::string output_path = args.GetStringOpt("-out");
         bool exists = boost::filesystem::exists(output_path);
         std::ofstream out(output_path, std::ofstream::out | std::ofstream::app);
+
         if(!exists) {
-            out << "avg_msec,std_msec,min_msec,max_msec,nprocs,block_size,ap,tot_read,tot_write,tot_bytes,bw_read,bw_write,bw_kbps" << std::endl;
+            out << "avg_msec,std_msec,min_msec,max_msec,nprocs,block_size,ap,tot_read,tot_write,tot_bytes,bw_read,bw_write,bw_kbps,conf" << std::endl;
         }
         out <<
             avg_msec << "," <<
@@ -62,12 +68,17 @@ void io_stats(
             tot_bytes << "," <<
             bw_read << "," <<
             bw_write << "," <<
-            bw_kbps << std::endl;
+            bw_kbps << "," <<
+            conf << std::endl;
     }
 }
 
 void md_stats(BenchmarkArgs &args, int rank, double local_time_spent, int nprocs, size_t md_fcnt_per_proc, size_t md_dir_per_proc)
 {
+    if(!args.OptIsSet("-out")) {
+        return;
+    }
+
     //Get average time spent in application
     double avg_msec, std_msec, min_msec, max_msec;
     time_stats(local_time_spent, nprocs, avg_msec, std_msec, min_msec, max_msec);
@@ -79,12 +90,13 @@ void md_stats(BenchmarkArgs &args, int rank, double local_time_spent, int nprocs
     double thrpt_kiops = ((double)tot_ops)/avg_msec;
 
     //Write to output CSV in root process
-    if(rank == 0 && args.OptIsSet("-out")) {
+    if(rank == 0) {
+        std::string conf = args.GetStringOpt("-config");
         std::string output_path = args.GetStringOpt("-out");
         bool exists = boost::filesystem::exists(output_path);
         std::ofstream out(output_path, std::ofstream::out | std::ofstream::app);
         if(!exists) {
-            out << "avg_msec,std_msec,min_msec,max_msec,nprocs,md_fcnt,md_dir,tot_ops,thrpt_kiops" << std::endl;
+            out << "avg_msec,std_msec,min_msec,max_msec,nprocs,md_fcnt,md_dir,tot_ops,thrpt_kiops,conf" << std::endl;
         }
         out <<
             avg_msec << "," <<
@@ -95,7 +107,8 @@ void md_stats(BenchmarkArgs &args, int rank, double local_time_spent, int nprocs
             md_fcnt << "," <<
             md_dir << "," <<
             tot_ops << "," <<
-            thrpt_kiops << std::endl;
+            thrpt_kiops << "," <<
+            conf << std::endl;
     }
 }
 

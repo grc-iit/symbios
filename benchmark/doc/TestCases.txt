@@ -51,9 +51,9 @@ make ares_terminate_ssd4_write_clients2
 make run_bms_hdd4_basic_clients1
 make run_bms_hdd4_read_clients1
 make run_bms_hdd4_write_clients1
-make run_bms_ssd4_basic_clients2
-make run_bms_ssd4_read_clients2
-make run_bms_ssd4_write_clients2
+make run_bms_ssd4_basic_clients1
+make run_bms_ssd4_read_clients1
+make run_bms_ssd4_write_clients1
 make run_bms_nvme4_basic_?
 make run_bms_hdd24_basic_?
 -----------------------------------------------------------------

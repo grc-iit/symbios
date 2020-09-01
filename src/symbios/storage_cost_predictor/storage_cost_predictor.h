@@ -6,6 +6,7 @@
 #define SYMBIOS_STORAGE_COST_PREDICTOR_H
 
 #include <dlib/optimization.h>
+#include <array>
 #include <vector>
 #include <math.h>
 #include <boost/filesystem/operations.hpp>
@@ -18,32 +19,36 @@
 template<size_t nparams>
 class StorageCostPredictor {
 private:
-    typedef dlib::matrix<double, 1, 1> input_vector, parameter_vector;
-    typedef std::pair<input_vector, parameter_vector> LSQ_ARG;
-    typedef std::vector<LSQ_ARG> LSQ_ARG_VEC;
-    typedef std::list<std::array<double, nparams + 1>> ObservationList;
-    typedef std::unique_ptr<std::list<std::array<double, nparams>>> CoeffArrayPtr;
+    typedef dlib::matrix<double, nparams, 1> input_vector, parameter_vector;
+    typedef std::pair<input_vector, double> LsqArg;
+    typedef std::list<LsqArg> LsqArgVec;
+    typedef std::array<double, nparams> CoeffArray, ObservationArray;
 
 private:
-    LSQ_ARG_VEC dataset;
+    LsqArgVec dataset_;
+    CoeffArray coeffs_;
 
     //Least Squares
-    static double Residual(const std::pair<input_vector, double> &data, const parameter_vector &params) {
-        double c1 = params(0);
-        input_vector &x = data.first;
-        float y = data.second;
+    static double Residual(const LsqArg &data, const parameter_vector &params) {
+        const input_vector &x = data.first;
+        double y = data.second;
+        double sum = 0;
         for(size_t i = 0; i < params.size(); ++i) {
-
+            sum += params(i) * x[i];
         }
-        return std::pow(c1 * S - tc, 2);
+        return std::pow(y - sum, 2);
     }
 
 public:
     StorageCostPredictor() {}
 
-    //y = c1*x1 + c2*x2 + ...
-    CoeffArrayPtr Fit(ObservationList &observations) {
-        CoeffArrayPtr coeffs;
+    void LoadMetrics() {
+    }
+
+    void CommitMetrics() {
+    }
+
+    void Fit(void) {
         AutoTrace trace = AutoTrace("StorageCostPredictor::FitData");
         if (observations.size() > 0) {
             dlib::parameter_vector params(nparams);
@@ -51,18 +56,18 @@ public:
                     dlib::objective_delta_stop_strategy(1e-7),
                     Residual,
                     dlib::derivative(Residual),
-                    dataset,
+                    dataset_,
                     params);
             for (int i = 0; i < nparams; ++i) {
-                coeffs->set(params(0));
+                coeffs_[i] = params(0);
             }
         }
-        return std::move(coeffs);
     }
 
-    void Feedback(void) {
+    template<typename ...Args>
+    void Feedback(double y, Args ...args) {
         AutoTrace trace = AutoTrace("StorageCostPredictor::Feedback");
-
+        input_vector observation = {args...};
     }
 };
 

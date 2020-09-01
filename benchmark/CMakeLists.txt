@@ -71,7 +71,7 @@ endfunction()
 function(io_test nprocs storage_type caddr cport block_size file_size total_io access_pattern wfrac rfrac config)
     add_test(NAME aresbm_io_${nprocs}_${storage_type}_${cport}_${block_size}_${file_size}_${total_io}_${access_pattern}_${wfrac}_${rfrac}_${config} COMMAND
             mpirun -n ${nprocs} ${CMAKE_CURRENT_BINARY_DIR}/benchmark
-            -s ${storage_type} -caddr ${caddr} -cport ${cport} -path /test.bin
+            -s ${storage_type} -caddr ${caddr} -cport ${cport} -config ${config}_${storage_type} -path /test.bin
             -w io-only -ap ${access_pattern} -bs ${block_size} -fs ${file_size} -tot ${total_io} -wfrac ${wfrac} -rfrac ${rfrac} -seed 2542
             -out /home/llogan/io_test_${config}.csv)
 endfunction()
@@ -130,7 +130,7 @@ endforeach()
 function(md_test nprocs storage_type caddr cport md_fcnt md_depth config)
     add_test(NAME aresbm_md_${nprocs}_${storage_type}_${cport}_${md_depth}_${md_fcnt}_${config} COMMAND
             mpirun -n ${nprocs} ${CMAKE_CURRENT_BINARY_DIR}/benchmark
-            -s ${storage_type} -caddr ${caddr} -cport ${cport} -path /
+            -s ${storage_type} -caddr ${caddr} -cport ${cport} -config ${config}_${storage_type} -path /
             -w md-fs -md_fcnt ${md_fcnt} -md_depth ${md_depth}
             -out /home/llogan/md_test_${config}.csv)
 endfunction()

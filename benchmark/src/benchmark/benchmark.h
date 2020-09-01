@@ -49,12 +49,18 @@ private:
                 AssertOptIsSet("-bs");
                 AssertOptIsSet("-fs");
                 AssertOptIsSet("-tot");
+                if(OptIsSet("-out")) {
+                    AssertOptIsSet("-config");
+                }
                 break;
             }
             case WorkloadType::kMdFs: {
                 AssertOptIsSet("-md_depth");
                 AssertOptIsSet("-md_fcnt");
                 AssertOptIsSet("-path");
+                if(OptIsSet("-out")) {
+                    AssertOptIsSet("-config");
+                }
                 break;
             }
         }
@@ -86,7 +92,7 @@ public:
         std::cout << "" << std::endl;
 
         std::cout << "io-only workload parameters" << std::endl;
-        std::cout << "-path [string]: The path to the file. Default: /symbios-test-file.bin." << std::endl;
+        std::cout << "-path [string]: The path to the file." << std::endl;
         std::cout << "-rfrac [float]: The percent of I/O to dedicate to reads" << std::endl;
         std::cout << "-wfrac [float]: The percent of I/O to dedicate to writes" << std::endl;
         std::cout << "-bs [size]: The unit of I/O ops" << std::endl;
@@ -110,6 +116,7 @@ public:
         std::cout << "Additional Params" << std::endl;
         std::cout << "-direct: A flag that indicates whether or not to use direct I/O" << std::endl;
         std::cout << "-out: The file to output statistics from tests to" << std::endl;
+        std::cout << "-config [string]: The configuration used for this test." << std::endl;
     }
 
     BenchmarkArgs(int argc, char **argv) {
@@ -125,6 +132,7 @@ public:
         AddOpt("-cport", common::args::ArgType::kInt, 0);
         AddOpt("-p", common::args::ArgType::kSize);
         AddOpt("-path", common::args::ArgType::kString);
+        AddOpt("-config", common::args::ArgType::kString);
         AddOpt("-rfrac", common::args::ArgType::kFloat);
         AddOpt("-wfrac", common::args::ArgType::kFloat);
         AddOpt("-bs", common::args::ArgType::kSize);
