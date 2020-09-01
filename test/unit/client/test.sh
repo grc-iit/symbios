@@ -6,7 +6,7 @@ CONFIG_PATH="${SOURCE_DIR}/conf/test.conf"
 HOSTFILE_PATH="${SOURCE_DIR}/conf/server_list/"
 LOG_PATH="${SOURCE_DIR}/test/server.lock"
 SERVER_PATH="${SOURCE_DIR}/build/symbios_server"
-CLIENT_PATH="${SOURCE_DIR}/test/unit/unit_client"
+CLIENT_PATH="${SOURCE_DIR}/build/test/unit/unit_client"
 
 PROCESSES=(1 2)
 IO_MODE=(0) #0 is file, 1 is redis, 2 is mongo
@@ -30,17 +30,19 @@ do
           do
             echo "Test ${TEST_COUNT}: IO_MODE: ${io_mode}, IO_OPERATION: ${io_operation}, REQUEST_SIZE: ${request_size}, REQUEST_NUMBER: ${request_number}, DISTRIBUTION_MODE: ${distribution_mode}"
 
+            echo "localhost:${n_processes}" > "${HOSTFILE_PATH}"/single_node_symbios_client
+
             echo "Starting Server"
             echo "${SERVER_PATH} ${CONFIG_PATH}"
             "${SERVER_PATH}" "${CONFIG_PATH}"
             SERVER_PID=$!
-            echo $SERVER_PID > "${LOG_PATH}"
+            echo $SERVER_PID > "${LOG_PATH}" #TODO: how to run this multi-threaded
             echo "sleeping for 5 seconds"
             sleep 5
 
             echo "Starting Client"
-            echo "mpirun -n ${n_processes} --hostfile ${HOSTFILE_PATH} ./test/unit/unit_client ${CONFIG_PATH} ${io_mode} ${io_operation} ${distribution_mode} ${request_size} ${request_number}"
-            mpirun -n "${n_processes}" --hostfile "${HOSTFILE_PATH}" "${CLIENT_PATH}" "${CONFIG_PATH}" "${io_mode}" "${io_operation}" "${distribution_mode}" "${request_size}" "${request_number}"
+            echo "mpirun -n ${n_processes} --hostfile ${HOSTFILE_PATH}/single_node_symbios_client ./test/unit/unit_client ${CONFIG_PATH} ${io_mode} ${io_operation} ${distribution_mode} ${request_size} ${request_number}"
+            mpirun -n "${n_processes}" --hostfile "${HOSTFILE_PATH}"/single_node_symbios_client "${CLIENT_PATH}" "${CONFIG_PATH}" "${io_mode}" "${io_operation}" "${distribution_mode}" "${request_size}" "${request_number}"
 
             echo "Stopping Server"
             kill "$(cat "${LOG_PATH}")"

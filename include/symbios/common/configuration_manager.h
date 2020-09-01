@@ -48,7 +48,7 @@ namespace symbios {
             assert(doc[member].IsString());
             std::string temp_variable = doc[member].GetString();
             std::cout << "Input string from conf: " << temp_variable << std::endl;
-            variable = CharStruct(replaceEnvVariable(temp_variable));
+            variable = CharStruct(temp_variable);//replaceEnvVariable(temp_variable));
             std::cout << "Output string from conf: " << variable << std::endl;
         }
 
@@ -139,13 +139,13 @@ namespace symbios {
         std::unordered_map<uint16_t, std::shared_ptr<StorageSolution>> STORAGE_SOLUTIONS;
         DataDistributionPolicy DATA_DISTRIBUTION_POLICY;
 
-        ConfigurationManager() : SERVER_LISTS("/tmp/tmp.BUKlhPiLxF/conf/server_lists/single_node_symbios_server"),
-                                 CLIENT_LISTS("/tmp/tmp.BUKlhPiLxF/conf/server_lists/single_node_symbios_client"),
+        ConfigurationManager() : SERVER_LISTS("/home/user/symbios/conf/server_lists/single_node_symbios_server"),
+                                 CLIENT_LISTS("/home/user/symbios/conf/server_lists/single_node_symbios_client"),
                                  SYMBIOS_PORT(8000),
                                  SERVER_RPC_THREADS(4),
                                  SERVER_DIR("/dev/shm/hari/single_node_symbios_server"),
-                                 CONFIGURATION_FILE("/tmp/tmp.BUKlhPiLxF/conf/base_symbios.conf"),
-                                 POSIX_MOUNT_POINT("/tmp/tmp.BUKlhPiLxF/conf/base_symbios.conf"),
+                                 CONFIGURATION_FILE("/home/user/symbios/conf/base_symbios.conf"),
+                                 POSIX_MOUNT_POINT("/home/user/symbios/conf/base_symbios.conf"),
                                  SERVER_COUNT(1),
                                  RANDOM_SEED(100),
                                  STORAGE_SOLUTIONS(),
@@ -180,8 +180,8 @@ namespace symbios {
             config(doc, "SERVER_DIR", SERVER_DIR);
             config(doc, "POSIX_MOUNT_POINT", POSIX_MOUNT_POINT);
             config(doc, "RANDOM_SEED", RANDOM_SEED);
-            config(doc, "STORAGE_SOLUTIONS", STORAGE_SOLUTIONS);
-            config(doc, "DATA_DISTRIBUTION_POLICY", DATA_DISTRIBUTION_POLICY);
+//            config(doc, "STORAGE_SOLUTIONS", STORAGE_SOLUTIONS);
+//            config(doc, "DATA_DISTRIBUTION_POLICY", DATA_DISTRIBUTION_POLICY);
             fclose(outfile);
         }
 
