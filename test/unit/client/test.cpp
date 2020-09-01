@@ -22,8 +22,9 @@ int main(int argc, char * argv[]){
     }
     BASKET_CONF->BACKED_FILE_DIR=SYMBIOS_CONF->SERVER_DIR;
     auto client = symbios::Client();
+    printf("Client Setup\n");
     MPI_Barrier(MPI_COMM_WORLD);
-    //change configuration
+    printf("Changing Conf\n");
     auto solution = SYMBIOS_CONF->STORAGE_SOLUTIONS[ioMode];
     auto newSSMap = std::unordered_map<uint16_t, std::shared_ptr<StorageSolution>>();
     auto new_SS = std::pair<uint16_t, std::shared_ptr<StorageSolution>>(0, solution);
@@ -37,17 +38,20 @@ int main(int argc, char * argv[]){
     else std::cerr << "Incorrect configuration on Data Distribution Policy" << std::endl;
 
     MPI_Barrier(MPI_COMM_WORLD);
-
+    printf("Done Conf\n");
     for(int i=0; i < requestNumber; i++){
         auto data = Data();
         if(ioOperation == 0 || ioOperation == 2){
+            printf("Sending Data\n");
             data.id_="filename2";
             data.position_=0;
             data.buffer_ = std::string(requestSize, '*');
             data.storage_index_=0;
             client.StoreRequest(data);
+            printf("Data Sent %s\n",data.buffer_.data());
         }
         if(ioOperation == 0 || ioOperation == 2){
+            printf("Reading Data\n");
             data.id_="filename2";
             data.position_=0;
             data.buffer_ = std::string(requestSize, '*');

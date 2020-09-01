@@ -200,8 +200,8 @@ change -DCMAKE_PREFIX_PATH to whatever directory the mongo C driver is....
 
 For reasons unbeknownst to me (Jaime) you need to add the following:
 ```bash
-export CFLAGS="-I${INSTALL_DIR}/include/mongocxx/v_noabi -I${INSTALL_DIR}/include/bsoncxx/v_noabi $CFLAGS"
-export CXXFLAGS="-I/${INSTALL_DIR}/include/mongocxx/v_noabi -I${INSTALL_DIR}/include/bsoncxx/v_noabi $CXXFLAGS"
+export CFLAGS="-I${DEP_INSTALL}/include/mongocxx/v_noabi -I${DEP_INSTALL}/include/bsoncxx/v_noabi $CFLAGS"
+export CXXFLAGS="-I/${DEP_INSTALL}/include/mongocxx/v_noabi -I${DEP_INSTALL}/include/bsoncxx/v_noabi $CXXFLAGS"
 ```
 
 ## Compile Symbios

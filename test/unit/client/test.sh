@@ -1,9 +1,9 @@
 #!/bin/bash
 
-SOURCE_DIR=${HOME}/symbios/
+SOURCE_DIR=${HOME}/symbios
 
 CONFIG_PATH="${SOURCE_DIR}/conf/test.conf"
-HOSTFILE_PATH="${SOURCE_DIR}/conf/server_list/"
+HOSTFILE_PATH="${SOURCE_DIR}/conf/server_lists"
 LOG_PATH="${SOURCE_DIR}/test/server.lock"
 SERVER_PATH="${SOURCE_DIR}/build/symbios_server"
 CLIENT_PATH="${SOURCE_DIR}/build/test/unit/unit_client"
