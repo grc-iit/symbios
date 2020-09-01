@@ -46,6 +46,7 @@
 #include <chrono>
 #include <mpi.h>
 #include <string>
+#include <tuple>
 namespace common::debug{
 
     /**
@@ -70,7 +71,7 @@ namespace common::debug{
  * various macros to print variables and messages.
  */
 
-#ifdef DEBUG_MSG
+#ifdef COMMON_DEBUG_MSG
     #define COMMON_DBGVAR(var) \
 std::cout << "DBG: " << __FILE__ << "(" << __LINE__ << ") "\
        << #var << " = [" << (var) << "]" << std::endl
@@ -148,14 +149,14 @@ std::cout << "DBG: " << __FILE__ << "(" << __LINE__ << ") "\
             std::stringstream stream;
 
             if(rank == -1) MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-#if defined(DEBUG_TRACE) || defined(DEBUG_TIMER)
+#if defined(COMMON_DEBUG_TRACE) || defined(COMMON_DEBUG_TIMER)
             //stream << "\033[31m";
         stream <<++item<<";"<<thread_name<<";"<< rank << ";" <<m_line << ";";
 #endif
-#if  defined(DEBUG_TIMER)
+#if  defined(COMMON_DEBUG_TIMER)
             stream <<";;";
 #endif
-#ifdef DEBUG_TRACE
+#ifdef COMMON_DEBUG_TRACE
             auto args_obj = std::make_tuple(args...);
         const ulong args_size = std::tuple_size<decltype(args_obj)>::value;
         stream << "args(";
@@ -167,12 +168,12 @@ std::cout << "DBG: " << __FILE__ << "(" << __LINE__ << ") "\
         }
         stream << ");";
 #endif
-#if defined(DEBUG_TRACE) || defined(DEBUG_TIMER)
+#if defined(COMMON_DEBUG_TRACE) || defined(COMMON_DEBUG_TIMER)
             stream <<"start"<< endl;
         stream << "\033[00m";
         cout << stream.str();
 #endif
-#ifdef DEBUG_TIMER
+#ifdef COMMON_DEBUG_TIMER
             timer.startTime();
 #endif
         }
@@ -183,17 +184,17 @@ std::cout << "DBG: " << __FILE__ << "(" << __LINE__ << ") "\
             char thread_name[256];
             pthread_getname_np(pthread_self(), thread_name,256);
             //stream << "\033[31m";
-#if defined(DEBUG_TRACE) || defined(DEBUG_TIMER)
+#if defined(COMMON_DEBUG_TRACE) || defined(COMMON_DEBUG_TIMER)
             stream <<item-- <<";"<<std::string(thread_name)<<";"<< rank << ";" << m_line << ";";
 #endif
-#if defined(DEBUG_TRACE)
+#if defined(COMMON_DEBUG_TRACE)
             stream  <<";";
 #endif
-#ifdef DEBUG_TIMER
+#ifdef COMMON_DEBUG_TIMER
             double end_time=timer.endTime();
         stream  <<end_time<<";msecs;";
 #endif
-#if defined(DEBUG_TRACE) || defined(DEBUG_TIMER)
+#if defined(COMMON_DEBUG_TRACE) || defined(COMMON_DEBUG_TIMER)
             stream  <<"finish"<< endl;
         stream << "\033[00m";
         cout << stream.str();
