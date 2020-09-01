@@ -35,14 +35,16 @@ ssh ares-comp-30-40g mkdir -p /mnt/nvme/llogan/orangefs/data /mnt/nvme/llogan/or
 ssh ares-comp-29-40g
 ssh ares-comp-30-40g
 
-#Deploy/terminate OrangeFS (Optional)
+#Terminate OrangeFS (Optional)
 export PVFS2TAB_FILE=$(pwd)/pvfs2tab_c1
-make ares_deploy_hdd4_basic_clients1
 make ares_terminate_hdd4_basic_clients1
+make ares_terminate_hdd4_read_clients1
+make ares_terminate_hdd4_write_clients1
 
 export PVFS2TAB_FILE=$(pwd)/pvfs2tab_c2
-make ares_deploy_ssd4_basic_clients2
 make ares_terminate_ssd4_basic_clients2
+make ares_terminate_ssd4_read_clients2
+make ares_terminate_ssd4_write_clients2
 
 #Execute tests
 ----------------------THE NEW WAY--------------------------------
@@ -59,14 +61,19 @@ make run_bms_hdd24_basic_?
 ----------------------THE OLD WAY--------------------------------
 #Preallocate files for particular NPROC
 ctest --verbose -R prealloc_${nprocs}_${storage_type}_${file_size}
-ctest --verbose -R prealloc_2_orangefs_*
+ctest --verbose -R prealloc_8_orangefs_*
 
 #Run all worklaods for particular NPROC
+ctest --verbose -R prealloc_${nprocs}_${storage_type}_${file_size}
+ctest --verbose -R prealloc_8_orangefs_4g
+
 ctest --verbose -R aresbm_io_${nprocs}_${storage_type}_${cport}_${block_size}_${file_size}_${total_io}_${access_pattern}_${wfrac}_${rfrac}_${config}
-ctest --verbose -R aresbm_io_2_orangefs_[a-zA-Z0-9]+_4k_[a-zA-Z0-9]+_[a-zA-Z0-9]+_seq_1_0_hdd4_basic
+ctest --verbose -R aresbm_io_8_orangefs_[a-zA-Z0-9]+_4k_[a-zA-Z0-9]+_[a-zA-Z0-9]+_seq_1_0_hdd4_basic
+ctest --verbose -R aresbm_io_8_orangefs_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_hdd4_read
+
 ctest --verbose -R aresbm_io_2_orangefs_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_[a-zA-Z0-9]+_hdd4_basic
 ctest --verbose -R aresbm_md_${nprocs}_${storage_type}_${cport}_${md_dir}_${md_fcnt}_${config}
-ctest --verbose -R aresbm_md_2_orangefs_[a-zA-Z0-9]+_1_16k_hdd4_basic
+ctest --verbose -R aresbm_md_8_orangefs_[a-zA-Z0-9]+_1_16k_hdd4_read
 
 #Remove all files
 rm -rf /mnt/nvme/llogan/write/generic/*
