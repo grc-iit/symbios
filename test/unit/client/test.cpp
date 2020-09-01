@@ -25,7 +25,9 @@ int main(int argc, char * argv[]){
     MPI_Barrier(MPI_COMM_WORLD);
     //change configuration
     auto solution = SYMBIOS_CONF->STORAGE_SOLUTIONS[ioMode];
-    auto newSSMap = std::unordered_map<uint16_t, std::shared_ptr<StorageSolution>>(std::pair<uint16_t, std::shared_ptr<StorageSolution>(0, solution))
+    auto newSSMap = std::unordered_map<uint16_t, std::shared_ptr<StorageSolution>>();
+    auto new_SS = std::pair<uint16_t, std::shared_ptr<StorageSolution>>(0, solution);
+    newSSMap.insert(new_SS);
     SYMBIOS_CONF->STORAGE_SOLUTIONS = newSSMap;
 
     if(distributionMode == "RANDOM_POLICY") SYMBIOS_CONF->DATA_DISTRIBUTION_POLICY=RANDOM_POLICY;
