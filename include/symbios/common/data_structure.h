@@ -13,23 +13,21 @@
 typedef struct Data{
     CharStruct id_; // for file io, the "id_" is the filename; for object store io, the "id_" is the key.
     size_t position_; // read/write start position
-    void* buffer_;  // data content
-    long data_size_; // data size need to read/write
+    std::string buffer_;  // data content
     uint16_t storage_index_;
 
     /*Define the default, copy and move constructor*/
-    Data(): id_(), position_(0), buffer_(), data_size_(0), storage_index_(){}
+    Data(): id_(), position_(0), buffer_(), storage_index_(){}
     Data(const Data &other): id_(other.id_), position_(other.position_), buffer_(other.buffer_),
-                             data_size_(other.data_size_), storage_index_(other.storage_index_) {}
+                             storage_index_(other.storage_index_) {}
     Data(Data &other): id_(other.id_), position_(other.position_), buffer_(other.buffer_),
-                       data_size_(other.data_size_), storage_index_(other.storage_index_) {}
+                      storage_index_(other.storage_index_) {}
 
     /*Define Assignment Operator*/
     Data &operator=(const Data &other){
         id_ = other.id_;
         position_ = other.position_;
         buffer_ = other.buffer_;
-        data_size_ = other.data_size_;
         storage_index_ = other.storage_index_;
         return *this;
     }
@@ -184,9 +182,8 @@ namespace clmdep_msgpack {
                 mv1::object const &operator()(mv1::object const &o, Data &input) const {
                     input.id_ = o.via.array.ptr[0].as<CharStruct>();
                     input.position_ = o.via.array.ptr[1].as<size_t>();
-                    input.buffer_ = (void*)o.via.array.ptr[2].as<std::string>().c_str();
-                    input.data_size_ = o.via.array.ptr[3].as<size_t>();
-                    input.storage_index_ = o.via.array.ptr[4].as<uint16_t>();
+                    input.buffer_ = o.via.array.ptr[2].as<std::string>();
+                    input.storage_index_ = o.via.array.ptr[3].as<uint16_t>();
                     return o;
                 }
             };
@@ -195,11 +192,10 @@ namespace clmdep_msgpack {
             struct pack<Data> {
                 template<typename Stream>
                 packer <Stream> &operator()(mv1::packer <Stream> &o, Data const &input) const {
-                    o.pack_array(5);
+                    o.pack_array(4);
                     o.pack(input.id_);
                     o.pack(input.position_);
-                    o.pack(std::string((char*)input.buffer_));
-                    o.pack(input.data_size_);
+                    o.pack(input.buffer_);
                     o.pack(input.storage_index_);
                     return o;
                 }
@@ -209,14 +205,13 @@ namespace clmdep_msgpack {
             struct object_with_zone<Data> {
                 void operator()(mv1::object::with_zone &o, Data const &input) const {
                     o.type = type::ARRAY;
-                    o.via.array.size = 5;
+                    o.via.array.size = 4;
                     o.via.array.ptr = static_cast<clmdep_msgpack::object *>(o.zone.allocate_align(
                             sizeof(mv1::object) * o.via.array.size, MSGPACK_ZONE_ALIGNOF(mv1::object)));
                     o.via.array.ptr[0] = mv1::object(input.id_, o.zone);
                     o.via.array.ptr[1] = mv1::object(input.position_, o.zone);
-                    o.via.array.ptr[2] = mv1::object(std::string((char*)input.buffer_), o.zone);
-                    o.via.array.ptr[3] = mv1::object(input.data_size_, o.zone);
-                    o.via.array.ptr[4] = mv1::object(input.storage_index_, o.zone);
+                    o.via.array.ptr[2] = mv1::object(input.buffer_, o.zone);
+                    o.via.array.ptr[3] = mv1::object(input.storage_index_, o.zone);
                 }
             };
         }  // namespace adaptor
