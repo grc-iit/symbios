@@ -56,8 +56,6 @@ Data symbios::Server::LocateRequest(Data &request){
         memcpy(request.buffer_.data()+start,distribution.destination_data_.buffer_.data()+ distribution.destination_data_.position_, distribution.destination_data_.buffer_.size() - distribution.destination_data_.position_);
         start+=distribution.destination_data_.buffer_.size() - distribution.destination_data_.position_;
     }
-//    //printf("%s data sending\n",);
-//    std::string val(,request.data_size_);
     COMMON_DBGVAR(request.buffer_);
     return request;
 }
