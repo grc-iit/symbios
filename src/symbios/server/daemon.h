@@ -11,6 +11,7 @@
 #include <mpi.h>
 #include <thread>
 #include <basket/common/data_structures.h>
+#include <basket/common/macros.h>
 
 namespace symbios {
     template<class T>
@@ -33,11 +34,17 @@ namespace symbios {
             catchSignals();
             if(spawn_thread_) {
                 worker = std::thread(&T::Run, daemon_manager_.get(), std::move(futureObj));
-                printf("Running\n");
+                MPI_Barrier(MPI_COMM_WORLD);
+                if(BASKET_CONF->MPI_RANK == 0){
+                    printf("Running\n");
+                }
                 while(true) sleep(1);
             }
             else {
-                printf("Running\n");
+                MPI_Barrier(MPI_COMM_WORLD);
+                if(BASKET_CONF->MPI_RANK == 0){
+                    printf("Running\n");
+                }
                 daemon_manager_->Run(std::move(futureObj));
             }
         }
