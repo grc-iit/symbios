@@ -2,14 +2,17 @@
 // Created by Jie on 8/25/20.
 //
 
-#include <symbios/io_clients/redis_io.h>
-#include <cstring>
 #include <basket/common/singleton.h>
+#include <common/debug.h>
+#include <cstring>
+#include <string>
 #include <symbios/common/configuration_manager.h>
 #include <symbios/common/error_codes.h>
-
+#include <symbios/io_clients/redis_io.h>
 
 void RedisIOClient::Read(Data &source, Data &destination) {
+    auto tracer_source =
+            common::debug::AutoTrace(std::string("RedisIOClient::Read"), source, destination);
     try {
 
         auto resp = m_redisCluster->get(source.id_.c_str());
@@ -28,9 +31,12 @@ void RedisIOClient::Read(Data &source, Data &destination) {
     } catch (const Error &err) {
         throw ErrorException(REDIS_SERVER_SIDE_FAILED);
     }
+    COMMON_DBGVAR(destination);
 }
 
 void RedisIOClient::Write(Data &source, Data &destination) {
+    auto tracer_source =
+            common::debug::AutoTrace("RedisIOClient::Write", source, destination);
     try {
         auto resp = m_redisCluster->get(destination.id_.c_str());
         if (resp) {
@@ -78,5 +84,6 @@ void RedisIOClient::Write(Data &source, Data &destination) {
 }
 
 void RedisIOClient::Remove(Data &source) {
+    auto tracer_source = common::debug::AutoTrace("RedisIOClient::Read", source);
 
 }

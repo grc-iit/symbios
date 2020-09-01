@@ -2,19 +2,22 @@
 // Created by Jie on 8/25/20.
 //
 
-#include <symbios/io_clients/mongo_io.h>
+#include "common/debug.h"
 #include <basket/common/singleton.h>
+#include <bsoncxx/builder/stream/document.hpp>
+#include <bsoncxx/builder/stream/helpers.hpp>
+#include <common/debug.h>
+#include <cstring>
+#include <mongocxx/exception/bulk_write_exception.hpp>
+#include <mongocxx/exception/query_exception.hpp>
+#include <string>
 #include <symbios/common/configuration_manager.h>
 #include <symbios/common/error_codes.h>
-#include <cstring>
-#include <bsoncxx/builder/stream/helpers.hpp>
-#include <bsoncxx/builder/stream/document.hpp>
-#include <mongocxx/exception/query_exception.hpp>
-#include <mongocxx/exception/bulk_write_exception.hpp>
-
+#include <symbios/io_clients/mongo_io.h>
 
 void MongoIOClient::Read(Data &source, Data &destination) {
-    mongocxx::collection file = client[mongo_solution->database_.c_str()].collection(
+  auto tracer_source = common::debug::AutoTrace("MongoIOClient::Read", source, destination);
+mongocxx::collection file = client[mongo_solution->database_.c_str()].collection(
             mongo_solution->collection_.c_str());
     bsoncxx::stdx::optional<bsoncxx::document::value> maybe_result =
             file.find_one(bsoncxx::builder::stream::document{} << "key" << std::string(source.id_.c_str())
@@ -24,9 +27,12 @@ void MongoIOClient::Read(Data &source, Data &destination) {
     } else {
         throw ErrorException(READ_REDIS_DATA_FAILED);
     }
+    COMMON_DBGVAR(destination);
 }
 
 void MongoIOClient::Write(Data &source, Data &destination) {
+   auto tracer_source =
+      common::debug::AutoTrace("MongoIOClient::Write", source,destination);
     mongocxx::collection file = client[mongo_solution->database_.c_str()].collection(
             mongo_solution->collection_.c_str());
     bool exists = false;
@@ -77,10 +83,13 @@ void MongoIOClient::Write(Data &source, Data &destination) {
     }
     if (add->inserted_id().type() == bsoncxx::type::k_oid) {
         bsoncxx::oid id = add->inserted_id().get_oid().value;
+        COMMON_DBGVAR(id.to_string());
     } else std::cout << "Inserted id was not an OID type" << "\n";
 }
 
 void MongoIOClient::Remove(Data &source) {
+  auto tracer =
+      common::debug::AutoTrace("MongoIOClient::Remove", source);
     mongocxx::collection file = client[mongo_solution->database_.c_str()].collection(
             mongo_solution->collection_.c_str());
     file.delete_many(bsoncxx::builder::basic::make_document(

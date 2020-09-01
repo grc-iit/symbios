@@ -19,3 +19,6 @@ data
 /.idea/.name
 /build/
 /hcl/
+.*.un~
+*~
+.clangd/*
