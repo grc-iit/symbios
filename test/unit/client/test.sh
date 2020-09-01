@@ -34,7 +34,7 @@ do
 
             echo "Starting Server"
             echo "${SERVER_PATH} ${CONFIG_PATH}"
-            "${SERVER_PATH}" "${CONFIG_PATH}"
+            nohup "${SERVER_PATH}" "${CONFIG_PATH}" &
             SERVER_PID=$!
             echo $SERVER_PID > "${LOG_PATH}" #TODO: how to run this multi-threaded
             echo "sleeping for 5 seconds"
