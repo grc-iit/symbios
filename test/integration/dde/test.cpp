@@ -2,6 +2,9 @@
 // Created by mani on 8/30/2020.
 //
 
+//number of ops, mpi procs
+
+
 #include <common/arguments.h>
 #include <symbios/common/enumerations.h>
 #include <mpi.h>
@@ -124,11 +127,11 @@ int main(int argc, char* argv[]){
     //Get global statistics
     double avg_msec, std_msec, min_msec, max_msec;
     MPI_Allreduce(&local_end_time, &avg_msec, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+    avg_msec = avg_msec/nprocs;
     local_std_msec = pow(local_end_time - avg_msec, 2);
     MPI_Reduce(&local_std_msec, &std_msec, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
     MPI_Reduce(&local_end_time, &min_msec, 1, MPI_DOUBLE, MPI_MIN, 0, MPI_COMM_WORLD);
     MPI_Reduce(&local_end_time, &max_msec, 1, MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
-    avg_msec = avg_msec/nprocs;
     std_msec = std::sqrt(std_msec);
 
     //Get average bandwidth and throughput

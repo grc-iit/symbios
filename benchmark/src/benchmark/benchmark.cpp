@@ -51,7 +51,6 @@ void io_stats(
         std::string output_path = args.GetStringOpt("-out");
         bool exists = boost::filesystem::exists(output_path);
         std::ofstream out(output_path, std::ofstream::out | std::ofstream::app);
-
         if(!exists) {
             out << "avg_msec,std_msec,min_msec,max_msec,nprocs,block_size,ap,tot_read,tot_write,tot_bytes,bw_read,bw_write,bw_kbps,conf" << std::endl;
         }

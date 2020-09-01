@@ -73,7 +73,7 @@ function(io_test nprocs storage_type caddr cport block_size file_size total_io a
             mpirun -n ${nprocs} ${CMAKE_CURRENT_BINARY_DIR}/benchmark
             -s ${storage_type} -caddr ${caddr} -cport ${cport} -config ${config}_${storage_type} -path /test.bin
             -w io-only -ap ${access_pattern} -bs ${block_size} -fs ${file_size} -tot ${total_io} -wfrac ${wfrac} -rfrac ${rfrac} -seed 2542
-            -out /home/llogan/io_test_${config}.csv)
+            -out /home/llogan/io_test_${config}_${storage_type}.csv)
 endfunction()
 
 set(PROCS 1 2 4 8 16 32 40)
@@ -132,7 +132,7 @@ function(md_test nprocs storage_type caddr cport md_fcnt md_depth config)
             mpirun -n ${nprocs} ${CMAKE_CURRENT_BINARY_DIR}/benchmark
             -s ${storage_type} -caddr ${caddr} -cport ${cport} -config ${config}_${storage_type} -path /
             -w md-fs -md_fcnt ${md_fcnt} -md_depth ${md_depth}
-            -out /home/llogan/md_test_${config}.csv)
+            -out /home/llogan/md_test_${config}_${storage_type}.csv)
 endfunction()
 
 set(PROCS 1 2 4 8 16 32 40)

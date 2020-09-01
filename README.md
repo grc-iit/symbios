@@ -68,25 +68,6 @@ cd boost_1_74_0
 
 ### Hireds
 
-A C library for interacting with Redis. Redis-plus-plus depends on it.
-These instructions assume that you have set the environment variables
-listed at the beginning of this section. Note, this approach will ONLY
-work if you have your environment setup described as in the first
-section. You must have exactly one path in the INCLUDE_PATH 
-environment variable. Read the next approach if you don't like it.
-
-```bash
-wget https://github.com/redis/hiredis/archive/v1.0.0.tar.gz  
-tar -xzf v1.0.0.tar.gz  
-cd hiredis*  
-make  
-make PREFIX="" install   
-```
-
-Note, PREFIX="" is not a mistake.   
-
-A better way is as follows:
-
 ```bash
 wget https://github.com/redis/hiredis/archive/v1.0.0.tar.gz  
 tar -xzf v1.0.0.tar.gz  
@@ -135,7 +116,7 @@ cmake --build . --target install
 curl -OL https://github.com/mongodb/mongo-cxx-driver/archive/r3.5.1.tar.gz  
 tar -xzf r3.5.1.tar.gz    
 cd mongo-cxx-driver-r3.5.1/build  
-cmake .. -DCMAKE_PREFIX_PATH=$DEP_INSTALL -DBUILD_VERSION=3.5.1 -DCMAKE_INSTALL_PREFIX=$DEP_INSTALL -DCMAKE_CXX_STANDARD=17 -DBSONCXX_POLY_USE_BOOST=1 -DCMAKE_BUILD_TYPE=Release     
+cmake .. -DBOOST_ROOT=$DEP_INSTALL -DCMAKE_PREFIX_PATH=$DEP_INSTALL -DBUILD_VERSION=3.5.1 -DCMAKE_INSTALL_PREFIX=$DEP_INSTALL -DCMAKE_CXX_STANDARD=17 -DBSONCXX_POLY_USE_BOOST=1 -DCMAKE_BUILD_TYPE=Release     
 make -j8  
 cmake --build . --target install  
 ```
@@ -152,6 +133,32 @@ git checkout v1.1.0 -b v1.1.0
 mkdir build
 cd build
 cmake .. -DCMAKE_CXX_FLAGS:STRING="-Wno-error=class-memaccess -Wno-error=implicit-fallthrough="  -DCMAKE_INSTALL_PREFIX=$DEP_INSTALL -DINCLUDE_INSTALL_DIR=$DEP_INSTALL/include -DLIB_INSTALL_DIR=$DEP_INSTALL/lib -DCMAKE_INSTALL_DIR=$DEP_INSTALL/cmake -DDOC_INSTALL_DIR=$DEP_INSTALL/share/doc/RapidJSON
+make -j8
+make install
+```
+
+### OpenBLAS
+
+```bash
+wget https://github.com/xianyi/OpenBLAS/archive/v0.3.10.tar.gz
+tar -xzf v0.3.10.tar.gz
+cd OpenBLAS-0.3.10
+mkdir build
+cd build
+cmake -DCMAKE_INSTALL_PREFIX=$DEP_INSTALL ../
+make -j8
+make install
+```
+
+### DLIB
+
+```bash
+wget http://dlib.net/files/dlib-19.21.tar.bz2
+tar -xjf dlib-19.21.tar.bz2
+cd dlib-19.21
+mkdir build
+cd build
+cmake -DCMAKE_INSTALL_PREFIX=$DEP_INSTALL ../ -DBUILD_SHARED_LIBS=1 -DCMAKE_INSTALL_PREFIX=$DEP_INSTALL
 make -j8
 make install
 ```
