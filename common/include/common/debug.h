@@ -47,8 +47,20 @@
 #include <mpi.h>
 #include <string>
 #include <tuple>
-namespace common::debug{
 
+template <class Tup, class Func, std::size_t ...Is>
+constexpr void static_for_impl(Tup&& t, Func &&f, std::index_sequence<Is...> )
+{
+    ( f(std::integral_constant<std::size_t, Is>{}, std::get<Is>(t)),... );
+}
+
+template <class ... T, class Func >
+constexpr void static_for(std::tuple<T...>&t, Func &&f)
+{
+    static_for_impl(t, std::forward<Func>(f), std::make_index_sequence<sizeof...(T)>{});
+}
+
+namespace common::debug{
     /**
  * Handles signals and prints stack trace.
  *
@@ -144,6 +156,7 @@ std::cout << "DBG: " << __FILE__ << "(" << __LINE__ << ") "\
         template <typename... Args>
         AutoTrace(std::string string,Args... args):m_line(string)
         {
+
             char thread_name[256];
             pthread_getname_np(pthread_self(), thread_name,256);
             std::stringstream stream;
@@ -162,9 +175,9 @@ std::cout << "DBG: " << __FILE__ << "(" << __LINE__ << ") "\
         stream << "args(";
         if(args_size == 0) stream << "Void";
         else{
-            static_for<args_size>( [&](auto w){
-                                       stream << std::get<w.n>(args_obj) << ", ";
-                                   });
+            static_for(args_obj, [&] (auto i, auto w) {
+                stream << w << ", ";
+            });
         }
         stream << ");";
 #endif
