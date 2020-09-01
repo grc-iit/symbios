@@ -9,8 +9,25 @@ include_directories(${CMAKE_SOURCE_DIR})
 set(CTEST_ENVIRONMENT "LD_LIBRARY_PATH=${CMAKE_BINARY_DIR}/")
 set($ENV{LD_PRELOAD} "$ENV{LD_PRELOAD} ${CMAKE_BINARY_DIR}")
 
-set(test_files  client
-                data_placement
+set(test_files client)
+foreach (test_file ${test_files})
+    set(exec unit_${test_file})
+    add_executable(${exec} ${test_file}/test.cpp)
+    add_dependencies(${exec} symbios)
+    target_include_directories(${exec} PRIVATE "${CMAKE_BINARY_DIR}/")
+    target_link_libraries(${exec} ${LIBS})
+    target_link_libraries(${exec} symbios)
+    #set_target_properties(${exec} PROPERTIES FOLDER test/unit)
+    set(test_parameters )
+    set(test_name ${test_file}_tests)
+    add_test(NAME ${test_name} COMMAND ${CMAKE_SOURCE_DIR}/test/unit/${test_files}/test.sh ${test_parameters})
+    set_tests_properties(${test_name} PROPERTIES WILL_FAIL false)
+    set_property(TEST ${test_name} APPEND PROPERTY ENVIRONMENT "LD_PRELOAD=${CMAKE_BINARY_DIR}/ares/datasets/libdatasets.so")
+    set_property(TEST ${test_name} APPEND PROPERTY ENVIRONMENT "HDF5_PLUGIN_PATH=$ENV{HDF5_PLUGIN_PATH}")
+    set_property(TEST ${test_name} APPEND PROPERTY ENVIRONMENT "RUN_DIR=$ENV{RUN_DIR}")
+endforeach ()
+
+set(test_files  data_placement
                 dynamic_provisioner
                 io_clients
                 metadata_orchestrator
