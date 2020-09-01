@@ -2,7 +2,7 @@
 // Created by mani on 8/24/2020.
 //
 
-#include <symbios/client/client.h>
+#include <symbios/client/test.h>
 
 int main(int argc, char * argv[]){
     MPI_Init(&argc,&argv);

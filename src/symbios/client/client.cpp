@@ -1,4 +1,4 @@
-#include <symbios/client/client.h>
+#include <symbios/client/test.h>
 #include <rpc/client.h>
 //: fileDescriptorMap("FileDescriptors", BASKET_CONF->RPC_PORT)
 symbios::Client::Client(){
