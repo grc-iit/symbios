@@ -60,16 +60,16 @@ namespace symbios {
             for (rapidjson::SizeType i = 0; i < results.Size(); i++) {
                 std::shared_ptr<StorageSolution> ss;
 
-                if(results[i].GetString() == "POSIX"){
+                if(results[i].GetString() == "FILE_IO"){
                     auto mount = replaceEnvVariable(results[i]["MOUNT"].GetString());
                     ss = static_cast<const shared_ptr<StorageSolution>>(new FileStorageSolution(mount));
                 }
-                else if(results[i].GetString() == "REDIS"){
+                else if(results[i].GetString() == "REDIS_IO"){
                     ss = static_cast<const shared_ptr<StorageSolution>>(new RedisSS (
                             results[i]["IP"].GetString(),
                             results[i]["PORT"].GetInt()));
                 }
-                else if(results[i].GetString() == "MONGO"){
+                else if(results[i].GetString() == "MONGO_IO"){
                     ss = static_cast<const shared_ptr<StorageSolution>>(new MongoSS(
                             results[i]["IP"].GetString(),
                              results[i]["DATABASE"].GetString(),

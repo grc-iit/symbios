@@ -29,9 +29,7 @@ void symbios::Client::LocateRequest(Data &request) {
   auto ret =
       rpc->call<RPCLIB_MSGPACK::object_handle>(server, "LocateRequest", request)
           .as<Data>();
-  request.buffer_ = malloc(ret.data_size_);
-  memcpy(request.buffer_, ret.buffer_, ret.data_size_);
-  request.data_size_ = ret.data_size_;
+  request.buffer_ = ret.buffer_;
   COMMON_DBGVAR((char *)request.buffer_);
 
 }
