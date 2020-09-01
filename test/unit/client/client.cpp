@@ -7,7 +7,14 @@
 int main(int argc, char * argv[]){
     MPI_Init(&argc,&argv);
     MPI_Barrier(MPI_COMM_WORLD);
-    if(argc > 1) SYMBIOS_CONF->CONFIGURATION_FILE=argv[1];
+
+//    int ioMode, distributionMode, requestSize, requestNumber;
+
+    if(argc > 1){
+        SYMBIOS_CONF->CONFIGURATION_FILE=argv[1];
+//        IOMode = std::stoi(argv[2]);
+//        DistributionMode
+    }
     BASKET_CONF->BACKED_FILE_DIR=SYMBIOS_CONF->SERVER_DIR;
     auto client = symbios::Client();
     auto data = Data();
