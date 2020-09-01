@@ -1,5 +1,5 @@
-#ifndef SYMBIOS_TEST_H
-#define SYMBIOS_TEST_H
+#ifndef SYMBIOS_CLIENT_H
+#define SYMBIOS_CLIENT_H
 
 #include <basket.h>
 #include <iostream>
@@ -26,4 +26,4 @@ namespace symbios{
     }
 
 
-#endif //SYMBIOS_TEST_H
+#endif //SYMBIOS_CLIENT_H
