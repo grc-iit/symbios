@@ -65,112 +65,6 @@ cd boost_1_74_0
 ./bootstrap.sh --prefix=$DEP_INSTALL
 ./b2 install
 ```
-### Redis
-To install the actual redis:
-```bash
-wget http://download.redis.io/releases/redis-6.0.6.tar.gz
-tar xvzf redis-stable.tar.gz
-cd redis-stable
-make PREFIX=$DEP_INSTALL install
-```
-Manage local redis using the scripts in scripts/deploymnet. 
-redis_r.sh and redis_s.sh will run and stop redis respectively.
-
-### Hireds
-
-A C library for interacting with Redis. Redis-plus-plus depends on it.
-```bash
-wget https://github.com/redis/hiredis/archive/v1.0.0.tar.gz  
-tar -xzf v1.0.0.tar.gz  
-cd hiredis*  
-make  
-sed -i 's&INSTALL_INCLUDE_PATH= $(DESTDIR)$(PREFIX)/$(INCLUDE_PATH)&INSTALL_INCLUDE_PATH=$(PREFIX)/include/hiredis&g' ./Makefile
-sed -i 's&INSTALL_LIBRARY_PATH= $(DESTDIR)$(PREFIX)/$(LIBRARY_PATH)&INSTALL_LIBRARY_PATH=$(PREFIX)/lib&g' ./Makefile
-sed -i 's&INSTALL_PKGCONF_PATH= $(INSTALL_LIBRARY_PATH)/$(PKGCONF_PATH)&INSTALL_PKGCONF_PATH=$(INSTALL_LIBRARY_PATH)/pkgconfig&g' ./Makefile
-make PREFIX=$DEP_INSTALL install   
-```
-
-### Redis-Plus-Plus
-
-A library for interacting with a Redis database in C++, located [here](https://github.com/sewenew/redis-plus-plus)
-
-```bash
-wget https://github.com/sewenew/redis-plus-plus/archive/1.1.2.tar.gz      
-tar -xzf 1.1.2.tar.gz      
-cd redis-plus-plus*    
-mkdir build  
-cd build  
-cmake -DREDIS_PLUS_PLUS_CXX_STANDARD=17 -DCMAKE_PREFIX_PATH=$DEP_INSTALL -DCMAKE_INSTALL_PREFIX=$DEP_INSTALL -DCMAKE_BUILD_TYPE=Release ../  
-make
-make install  
-```
-
-If the hiredis and redis-plus-plus are not colocated, then set 
-DCMAKE_PREFIX_PATH to be the path to where hiredis is installed.
-
-### Python
-Python 3 is a prerequirement of Mongodb, to install from source:
-```bash
-wget --no-check-certificate https://www.python.org/ftp/python/3.7.9/Python-3.7.9.tgz
-xz -d Python-3.7.9.tgz
-tar -xzvf Python-3.7.9.tgz
-cd Python-3.7.9/
-./configure --prefix=$DEP_INSTALL --enable-optimizations
-make && make install
-
-curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-python get-pip.py
-```
-
-### MongoDB
-MongoDB installation is based on SCons a python module and therefore python3 must be installed.
-To install the actual MongoDB:
-```bash
-wget https://github.com/mongodb/mongo/archive/r4.4.0.tar.gz
-tar -xzf r4.4.0.tar.gz
-cd mongo-r4.4.0/
-python3 -m pip install -r etc/pip/compile-requirements.txt
-python3 buildscripts/scons.py DESTDIR=$DEP_INSTALL install-mongod
-```
-
-According to the documentation, there might be a need to use:
-```bash
-python3 buildscripts/scons.py install-mongod --disable-warnings-as-errors
-```
-Manage local mongodb using the scripts in scripts/deploymnet. 
-mongodb_r.sh and mongodb_s.sh will run and stop redis respectively.
-
-### Mongodb C Driver
-
-```bash
-wget https://github.com/mongodb/mongo-c-driver/releases/download/1.17.0/mongo-c-driver-1.17.0.tar.gz  
-tar -xzf mongo-c-driver-1.17.0.tar.gz    
-cd mongo-c-driver-1.17.0/build 
-cmake -DCMAKE_INSTALL_PREFIX=$DEP_INSTALL -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF ../  
-make -j8  
-cmake --build . --target install  
-```
-
-### Mongodb C++ Driver
-
-```bash
-sudo apt-get install libssl-dev
-curl -OL https://github.com/mongodb/mongo-cxx-driver/archive/r3.5.1.tar.gz  
-tar -xzf r3.5.1.tar.gz    
-cd mongo-cxx-driver-r3.5.1/build  
-cmake .. -DCMAKE_PREFIX_PATH=$DEP_INSTALL -DBUILD_VERSION=3.5.1 -DCMAKE_INSTALL_PREFIX=$DEP_INSTALL -DCMAKE_CXX_STANDARD=17 -DBSONCXX_POLY_USE_BOOST=1 -DCMAKE_BUILD_TYPE=Release     
-make -j8  
-cmake --build . --target install  
-```
-
-If the C and C++ driver aren't being installed to the same place, then
-change -DCMAKE_PREFIX_PATH to whatever directory the mongo C driver is....
-
-For reasons unbeknownst to me (Jaime) you need to add the following:
-```bash
-export CFLAGS="-I${INSTALL_DIR}/include/mongocxx/v_noabi -I${INSTALL_DIR}/include/bsoncxx/v_noabi $CFLAGS"
-export CXXFLAGS="-I/${INSTALL_DIR}/include/mongocxx/v_noabi -I${INSTALL_DIR}/include/bsoncxx/v_noabi $CXXFLAGS"
-```
 
 ### RapidJson
 ```bash
@@ -197,6 +91,7 @@ HCL was tested with mpich 3.3.1, boost 1.69.0, rpclib 2.2.1, mercury 1.0.1, and 
 
 All information can be seen on https://bitbucket.org/scs-io/hcl/src/master/
 
+
 ### Redis Server
 ```bash
 wget https://github.com/redis/redis/archive/6.0.6.tar.gz
@@ -205,32 +100,108 @@ cd redis-6.0.6
 make PREFIX=$DEP_INSTALL install
 ```
 
-#### Compile and Install
-Basic Method:
+#### Hireds
+
+A C library for interacting with Redis. Redis-plus-plus depends on it.
 ```bash
-git clone https://bitbucket.org/scs-io/hcl
-cd hcl
-git checkout -b release/0.0.4
-mkdir build
-cmake -DCMAKE_INSTALL_PREFIX:PATH=/install_dir -DBASKET_ENABLE_RPCLIB=true ..
+wget https://github.com/redis/hiredis/archive/v1.0.0.tar.gz  
+tar -xzf v1.0.0.tar.gz  
+cd hiredis*  
+make  
+sed -i 's&INSTALL_INCLUDE_PATH= $(DESTDIR)$(PREFIX)/$(INCLUDE_PATH)&INSTALL_INCLUDE_PATH=$(PREFIX)/include/hiredis&g' ./Makefile
+sed -i 's&INSTALL_LIBRARY_PATH= $(DESTDIR)$(PREFIX)/$(LIBRARY_PATH)&INSTALL_LIBRARY_PATH=$(PREFIX)/lib&g' ./Makefile
+sed -i 's&INSTALL_PKGCONF_PATH= $(INSTALL_LIBRARY_PATH)/$(PKGCONF_PATH)&INSTALL_PKGCONF_PATH=$(INSTALL_LIBRARY_PATH)/pkgconfig&g' ./Makefile
+make PREFIX=$DEP_INSTALL install   
+```
+
+#### Redis-Plus-Plus
+
+A library for interacting with a Redis database in C++, located [here](https://github.com/sewenew/redis-plus-plus)
+
+```bash
+wget https://github.com/sewenew/redis-plus-plus/archive/1.1.2.tar.gz      
+tar -xzf 1.1.2.tar.gz      
+cd redis-plus-plus*    
+mkdir build  
+cd build  
+cmake -DREDIS_PLUS_PLUS_CXX_STANDARD=17 -DCMAKE_PREFIX_PATH=$DEP_INSTALL -DCMAKE_INSTALL_PREFIX=$DEP_INSTALL -DCMAKE_BUILD_TYPE=Release ../  
 make
-make install
+make install  
+```
+If the hiredis and redis-plus-plus are not colocated, then set 
+DCMAKE_PREFIX_PATH to be the path to where hiredis is installed.
+
+#### Redis Cluster Local Script Usage
+```bash
+cd scripts/local
+./run_redis_cluster.sh redis_cluster_config_path redis_server_numbers redis_cluster_install_path
+```
+Manage local redis using the scripts in scripts/deploymnet. 
+redis_r.sh and redis_s.sh will run and stop redis respectively.
+
+
+### MongoDB
+MongoDB installation is based on SCons a python module and therefore python3 must be installed.
+#### Python
+Python 3 is a prerequirement of Mongodb, to install from source:
+```bash
+wget --no-check-certificate https://www.python.org/ftp/python/3.7.9/Python-3.7.9.tgz
+xz -d Python-3.7.9.tgz
+tar -xzvf Python-3.7.9.tgz
+cd Python-3.7.9/
+./configure --prefix=$DEP_INSTALL --enable-optimizations
+make && make install
+
+curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+python get-pip.py
 ```
 
-With git submodules:
+To install the actual MongoDB:
+```bash
+wget https://github.com/mongodb/mongo/archive/r4.4.0.tar.gz
+tar -xzf r4.4.0.tar.gz
+cd mongo-r4.4.0/
+python3 -m pip install -r etc/pip/compile-requirements.txt
+python3 buildscripts/scons.py DESTDIR=$DEP_INSTALL install-mongod
+```
 
-Once the repo is cloned, you have to run two commands:
+According to the documentation, there might be a need to use:
 ```bash
-git submodule init
-git submodule update
+python3 buildscripts/scons.py install-mongod --disable-warnings-as-errors
 ```
-or while clonning the main repo:
+Manage local mongodb using the scripts in scripts/deploymnet. 
+mongodb_r.sh and mongodb_s.sh will run and stop redis respectively.
+
+#### Mongodb C Driver
+
 ```bash
-git clone --recurse-submodules repo_url
+wget https://github.com/mongodb/mongo-c-driver/releases/download/1.17.0/mongo-c-driver-1.17.0.tar.gz  
+tar -xzf mongo-c-driver-1.17.0.tar.gz    
+cd mongo-c-driver-1.17.0/build 
+cmake -DCMAKE_INSTALL_PREFIX=$DEP_INSTALL -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF ../  
+make -j8  
+cmake --build . --target install  
 ```
-Them, use
+
+#### Mongodb C++ Driver
+
 ```bash
-git clone --recurse-submodules repo_url
+sudo apt-get install libssl-dev
+curl -OL https://github.com/mongodb/mongo-cxx-driver/archive/r3.5.1.tar.gz  
+tar -xzf r3.5.1.tar.gz    
+cd mongo-cxx-driver-r3.5.1/build  
+cmake .. -DCMAKE_PREFIX_PATH=$DEP_INSTALL -DBUILD_VERSION=3.5.1 -DCMAKE_INSTALL_PREFIX=$DEP_INSTALL -DCMAKE_CXX_STANDARD=17 -DBSONCXX_POLY_USE_BOOST=1 -DCMAKE_BUILD_TYPE=Release     
+make -j8  
+cmake --build . --target install  
+```
+
+If the C and C++ driver aren't being installed to the same place, then
+change -DCMAKE_PREFIX_PATH to whatever directory the mongo C driver is....
+
+For reasons unbeknownst to me (Jaime) you need to add the following:
+```bash
+export CFLAGS="-I${INSTALL_DIR}/include/mongocxx/v_noabi -I${INSTALL_DIR}/include/bsoncxx/v_noabi $CFLAGS"
+export CXXFLAGS="-I/${INSTALL_DIR}/include/mongocxx/v_noabi -I${INSTALL_DIR}/include/bsoncxx/v_noabi $CXXFLAGS"
 ```
 
 ## Compile Symbios
@@ -272,11 +243,6 @@ io_client.Write(source_data, destination_data);
 Data source_data_;
 Data destination_data_;
 io_client.Read(source_data_, destination_data_);
-```
-## Redis Cluster Local Script Usage
-```bash
-cd scripts/local
-./run_redis_cluster.sh redis_cluster_config_path redis_server_numbers redis_cluster_install_path
 ```
 
 ## Local testing of Symbios
