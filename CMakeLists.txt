@@ -48,7 +48,7 @@ set(SYMBIOS_SERVER_SRC ${SYMBIOS_COMMON_SRC}
         ${CMAKE_SOURCE_DIR}/src/symbios/data_distribution/random_dde.h ${CMAKE_SOURCE_DIR}/src/symbios/data_distribution/random_dde.cpp
         ${CMAKE_SOURCE_DIR}/src/symbios/data_distribution/round_robin_dde.h ${CMAKE_SOURCE_DIR}/src/symbios/data_distribution/round_robin_dde.cpp
         ${CMAKE_SOURCE_DIR}/src/symbios/metadata_orchestrator/metadata_orchestrator.h ${CMAKE_SOURCE_DIR}/src/symbios/metadata_orchestrator/metadata_orchestrator.cpp
-        ${CMAKE_SOURCE_DIR}/src/symbios/server/daemon.cpp ${CMAKE_SOURCE_DIR}/src/symbios/server/daemon.h)
+        ${CMAKE_SOURCE_DIR}/src/symbios/server/daemon.h)
 
 add_executable(symbios_server ${SYMBIOS_SERVER_SRC} ${CMAKE_SOURCE_DIR}/src/symbios/server/main.cpp)
 add_dependencies(symbios_server symbios)
