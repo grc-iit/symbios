@@ -12,12 +12,14 @@
 #include <symbios/io_clients/file_io.h>
 #include <symbios/io_clients/mongo_io.h>
 #include <symbios/io_clients/redis_io.h>
+#include <common/debug.h>
 
 class IOFactory {
 public:
     IOFactory(){}
 
     std::shared_ptr<IOClient> GetIOClient(uint16_t storage_index){
+        auto tracer_source = common::debug::AutoTrace("IOFactory::GetIOClient", storage_index);
         auto solution = SYMBIOS_CONF->STORAGE_SOLUTIONS[storage_index];
         switch (solution->io_client_type_){
             case IOClientType::FILE_IO:
