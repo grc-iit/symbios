@@ -2,18 +2,27 @@
 // Created by mani on 8/24/2020.
 //
 
-#include <symbios/io_clients/file_io.h>
-#include <sys/types.h>
-#include <sys/stat.h>
+#include <common/debug.h>
 #include <fcntl.h>
-#include <unistd.h>
+#include <string>
 #include <symbios/common/error_codes.h>
+#include <symbios/io_clients/file_io.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 void FileIOClient::Read(Data &source, Data &destination) {
-    const char* file_name = source.id_.c_str();
-    int fileFd = open(file_name, O_RDONLY);
-    if(fileFd == -1){
-        throw ErrorException(OPEN_FILE_FAILED);
+  auto tracer_source =
+      common::debug::AutoTrace(std::string("FileIOClient::Read"), source, destination);
+  const char *file_name = source.id_.c_str();
+  int fileFd = open(file_name, O_RDONLY);
+  if (fileFd == -1) {
+    throw ErrorException(OPEN_FILE_FAILED);
+  } else {
+    auto file_size = lseek(fileFd, 0L, SEEK_END);
+    if (lseek(fileFd, source.position_, SEEK_SET) == -1) {
+      close(fileFd);
+      throw ErrorException(SEEK_FILE_FAILED);
     } else {
         auto file_size = lseek(fileFd, 0L, SEEK_END);
         if(lseek(fileFd, source.position_, SEEK_SET) == -1){
@@ -36,9 +45,13 @@ void FileIOClient::Read(Data &source, Data &destination) {
             }
         }
     }
+  }
+  COMMON_DBGVAR((char *)source.buffer_);
+  COMMON_DBGVAR((char *)destination.buffer_);
 }
 
 void FileIOClient::Write(Data &source, Data &destination) {
+    auto tracer_source = common::debug::AutoTrace(std::string("FileIOClient::Read"), source, destination);
     const char* dest_file_name = destination.id_.c_str();
     int fileFd = open (dest_file_name, O_RDWR | O_CREAT, 0644);
     if(fileFd == -1){
@@ -57,8 +70,8 @@ void FileIOClient::Write(Data &source, Data &destination) {
             close(fileFd);
         }
     }
+  COMMON_DBGVAR((char *)source.buffer_);
+  COMMON_DBGVAR((char *)destination.buffer_);
 }
 
-void FileIOClient::Remove(Data &source) {
-
-}
+void FileIOClient::Remove(Data &source) {}

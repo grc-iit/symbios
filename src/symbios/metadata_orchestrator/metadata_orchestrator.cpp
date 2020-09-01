@@ -2,48 +2,46 @@
 // Created by mani on 8/24/2020.
 //
 
-#include <symbios/metadata_orchestrator/metadata_orchestrator.h>
-#include <symbios/common/configuration_manager.h>
-#include <symbios/io_clients/io_factory.h>
-#include <rpc/msgpack.hpp>
-#include <symbios/common/error_definition.h>
 #include <common/debug.h>
+#include <rpc/msgpack.hpp>
+#include <symbios/common/configuration_manager.h>
+#include <symbios/common/error_definition.h>
+#include <symbios/io_clients/io_factory.h>
+#include <symbios/metadata_orchestrator/metadata_orchestrator.h>
 
-void MetadataOrchestrator::Store(Data &original_request, std::vector<DataDistribution> &distributions) {
-    auto original_metadata = original_request;
-    /**
-     * Update primary index
-     */
-    original_metadata.position_ = 0;
-    auto primary_metadata = Metadata();
-    bool exists;
-    auto existing_distributions = std::vector<DataDistribution>();
-    try {
-        existing_distributions = Locate(original_request,primary_metadata);
-        exists=true;
-    } catch (ErrorException e) {
-        exists=false;
-    }
-    bool is_metadata_updated = false;
-    if(exists){
-        for (auto distribution:distributions) {
-            auto iter = primary_metadata.links_.find(distribution.destination_data_.position_);
-            if(iter == primary_metadata.links_.end()){
-                distribution.destination_data_.buffer_ = std::string().data();
-                primary_metadata.links_.insert({distribution.destination_data_.position_, distribution.destination_data_});
-                is_metadata_updated=true;
-            }else{
-                distribution.destination_data_.storage_index_ = iter->second.storage_index_;
-            }
-        }
-    }else{
-        is_metadata_updated=true;
-        primary_metadata.is_link_=false;
-        primary_metadata.storage_index_=original_request.storage_index_;
-        for (auto distribution:distributions) {
-            distribution.destination_data_.buffer_ = std::string().data();
-            primary_metadata.links_.insert({distribution.destination_data_.position_, distribution.destination_data_});
-        }
+void MetadataOrchestrator::Store(Data &original_request,
+                                 std::vector<DataDistribution> &distributions) {
+  auto original_metadata = original_request;
+  auto tracer = common::debug::AutoTrace(
+      std::string("MetadataOrchestrator::Store"), original_request);
+  /**
+   * Update primary index
+   */
+  original_metadata.position_ = 0;
+  auto primary_metadata = Metadata();
+  bool exists;
+  auto existing_distributions = std::vector<DataDistribution>();
+  try {
+    existing_distributions = Locate(original_request, primary_metadata);
+    exists = true;
+  } catch (ErrorException e) {
+    exists = false;
+  }
+  bool is_metadata_updated = false;
+  if (exists) {
+    for (auto distribution : distributions) {
+      auto iter = primary_metadata.links_.find(
+          distribution.destination_data_.position_);
+      if (iter == primary_metadata.links_.end()) {
+        distribution.destination_data_.buffer_ = std::string().data();
+        primary_metadata.links_.insert(
+            {distribution.destination_data_.position_,
+             distribution.destination_data_});
+        is_metadata_updated = true;
+      } else {
+        distribution.destination_data_.storage_index_ =
+            iter->second.storage_index_;
+      }
     }
     if(is_metadata_updated){
         std::stringstream buffer;
@@ -71,10 +69,14 @@ void MetadataOrchestrator::Store(Data &original_request, std::vector<DataDistrib
             }
         }
     }
+  }
+  COMMON_DBGVAR((char *)original_request.buffer_);
 }
 
-std::vector<DataDistribution> MetadataOrchestrator::Locate(Data &request, Metadata &primary_metadata) {
-
+std::vector<DataDistribution>
+MetadataOrchestrator::Locate(Data &request, Metadata &primary_metadata) {
+auto tracer = common::debug::AutoTrace(
+      std::string("MetadataOrchestrator::Locate"), request,primary_metadata);
     Data original_metadata;
     original_metadata.id_ = request.id_ + "_meta";
     original_metadata.storage_index_=request.storage_index_;
@@ -110,9 +112,8 @@ std::vector<DataDistribution> MetadataOrchestrator::Locate(Data &request, Metada
             distributions.push_back(distribution);
         }
     }
+  COMMON_DBGVAR((char *)request.buffer_);
     return distributions;
 }
 
-MetadataOrchestrator::MetadataOrchestrator() {
-
-}
+MetadataOrchestrator::MetadataOrchestrator() {}
