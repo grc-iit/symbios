@@ -6,6 +6,7 @@ set(INSTALL_DIR $ENV{INSTALL_DIR})
 #message(install_dir: ${INSTALL_DIR})
 #message(module_lsit ${MODULE_LIST})
 #message(module_lib_list ${MODULE_LIB_LIST})
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DH5_HAVE_DIRECT -w -DBASKET_ENABLE_RPCLIB")
 set(INCLUDE_DIRS "-I${INSTALL_DIR}/include/ -L${INSTALL_DIR}/lib/") #-L${PROJECT_SOURCE_DIR}/build/hcl/ -I${PROJECT_SOURCE_DIR}/hcl/include/") # -I${MODULE_LIST} -L${MODULE_LIB_LIST}")# -DRPCLIB_ENABLE_LOGGING -DRPCLIB_ASIO=clmdep_asio -DRPCLIB_FMT=clmdep_fmt")
@@ -19,10 +20,9 @@ include_directories(src)
 set(CMAKE_CXX_STANDARD 17)
 
 # Debug flags
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DDEBUG_MSG")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DHERMES_DEBUG")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DHERMES_TIMER")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DHERMES_TRACE")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DCOMMON_DEBUG_MSG")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DCOMMON_DEBUG_TIMER")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DCOMMON_DEBUG_TRACE")
 
 # Source files
 set(SYMBIOS_COMMON_SRC ${CMAKE_SOURCE_DIR}/include/symbios/common/data_structure.h ${CMAKE_SOURCE_DIR}/include/symbios/common/configuration_manager.h ${CMAKE_SOURCE_DIR}/src/symbios/common/data_structure.cpp ${CMAKE_SOURCE_DIR}/common/src/common/debug.cpp
@@ -48,7 +48,7 @@ set(SYMBIOS_SERVER_SRC ${SYMBIOS_COMMON_SRC}
         ${CMAKE_SOURCE_DIR}/src/symbios/data_distribution/random_dde.h ${CMAKE_SOURCE_DIR}/src/symbios/data_distribution/random_dde.cpp
         ${CMAKE_SOURCE_DIR}/src/symbios/data_distribution/round_robin_dde.h ${CMAKE_SOURCE_DIR}/src/symbios/data_distribution/round_robin_dde.cpp
         ${CMAKE_SOURCE_DIR}/src/symbios/metadata_orchestrator/metadata_orchestrator.h ${CMAKE_SOURCE_DIR}/src/symbios/metadata_orchestrator/metadata_orchestrator.cpp
-        ${CMAKE_SOURCE_DIR}/src/symbios/server/daemon.cpp ${CMAKE_SOURCE_DIR}/src/symbios/server/daemon.h)
+        ${CMAKE_SOURCE_DIR}/src/symbios/server/daemon.h)
 
 add_executable(symbios_server ${SYMBIOS_SERVER_SRC} ${CMAKE_SOURCE_DIR}/src/symbios/server/main.cpp)
 add_dependencies(symbios_server symbios)

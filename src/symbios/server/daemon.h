@@ -11,6 +11,7 @@
 #include <mpi.h>
 #include <thread>
 #include <basket/common/data_structures.h>
+#include <basket/common/macros.h>
 
 namespace symbios {
     template<class T>
@@ -22,7 +23,7 @@ namespace symbios {
         std::shared_ptr<T> daemon_manager_;
         bool spawn_thread_;
 
-        Daemon(CharStruct main_log_file = "/tmp/tmp.BUKlhPiLxF/build/symbios_server.log",bool spawn_thread=false): daemon_manager_(),spawn_thread_(spawn_thread) {
+        Daemon(CharStruct main_log_file = "/tomp/tmp.BUKlhPiLxF/build/symbios_server.lg",bool spawn_thread=false): daemon_manager_(),spawn_thread_(spawn_thread) {
 
         }
 
@@ -33,11 +34,17 @@ namespace symbios {
             catchSignals();
             if(spawn_thread_) {
                 worker = std::thread(&T::Run, daemon_manager_.get(), std::move(futureObj));
-                printf("Running\n");
+                MPI_Barrier(MPI_COMM_WORLD);
+                if(BASKET_CONF->MPI_RANK == 0){
+                    printf("Running\n");
+                }
                 while(true) sleep(1);
             }
             else {
-                printf("Running\n");
+                MPI_Barrier(MPI_COMM_WORLD);
+                if(BASKET_CONF->MPI_RANK == 0){
+                    printf("Running\n");
+                }
                 daemon_manager_->Run(std::move(futureObj));
             }
         }

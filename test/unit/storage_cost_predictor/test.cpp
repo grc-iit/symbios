@@ -38,10 +38,11 @@ int main(int argc, char * argv[]) {
     StorageCostPredictor a;
     std::string config = "asdf";
     a.Init();
-    a.LoadMetrics(rank, nprocs, args.GetStringOpt("metrics"), args.GetStringOpt("model"));
-    a.Feedback(1, .25, .25, config);
-    a.Feedback(2, .5, .5, config);
-    a.Feedback(4, 1, 1, config);
+    a.LoadMetrics(rank, nprocs, args.GetStringOpt("-metrics"), args.GetStringOpt("-model"));
+    a.Feedback(10, 25, 25, config);
+    a.Feedback(20, 50, 50, config);
+    a.Feedback(30, 75, 75, config);
     a.Fit();
+    std::cout << a.Predict(100.0, 100.0, config) << std::endl;
     return 0;
 }

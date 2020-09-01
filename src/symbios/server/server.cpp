@@ -36,6 +36,7 @@ int symbios::Server::StoreRequest(Data &request){
         basket::Singleton<IOFactory>::GetInstance()->GetIOClient(distribution.destination_data_.storage_index_)->Write(distribution.source_data_, distribution.destination_data_);
         COMMON_DBGMSG("Storing data in "<<distribution.destination_data_.storage_index_);
     }
+
     return SYMBIOS_CONF->SERVER_COUNT;
 }
 
@@ -46,14 +47,16 @@ Data symbios::Server::LocateRequest(Data &request){
     int total_size= 0;
     for(auto &distribution:distributions){
         basket::Singleton<IOFactory>::GetInstance()->GetIOClient(distribution.destination_data_.storage_index_)->Read(distribution.source_data_,distribution.destination_data_);
-        total_size+=distribution.destination_data_.data_size_;
+        total_size+=distribution.destination_data_.buffer_.size();
     }
-    request.buffer_=malloc(total_size);
+    request.buffer_.resize(total_size);
+
     long start=0;
     for(auto &distribution:distributions){
-        memcpy(request.buffer_+start,distribution.destination_data_.buffer_+ distribution.destination_data_.position_, distribution.destination_data_.data_size_);
-        start+=distribution.destination_data_.data_size_;
+        memcpy(request.buffer_.data()+start,distribution.destination_data_.buffer_.data()+ distribution.destination_data_.position_, distribution.destination_data_.buffer_.size() - distribution.destination_data_.position_);
+        start+=distribution.destination_data_.buffer_.size() - distribution.destination_data_.position_;
     }
+    COMMON_DBGVAR(request.buffer_);
     return request;
 }
 

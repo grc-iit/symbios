@@ -1,8 +1,8 @@
 #!/bin/bash
-if [ $# -lt 2 ]
+if [ $# -lt 3 ]
 then
-  echo "Usage: ./run_redis_cluster.sh redis_cluster_config_path redis_server_numbers redis_install_path"
-  echo "e.g ./run_redis_cluster.sh ~/redis_config 3 ~/redis_install"
+  echo "Usage: ./run_redis_cluster.sh redis_cluster_config_path redis_server_numbers redis_install_path clean_flag"
+  echo "e.g ./run_redis_cluster.sh ~/redis_config 3 ~/redis_install [true/false]"
   exit
 fi
 
@@ -11,6 +11,7 @@ fi
 REDIS_CLUSTER_DIR=${1}
 REDIS_SERVER_NUMS=${2}
 REDIS_INSTALL_DIR=${3}
+CLEAN_FLAG=${4:-true}
 
 CWD=$(pwd)
 
@@ -51,8 +52,11 @@ then
   exit
 fi
 
-# clean redis cluster directory
-rm -rf  ${REDIS_CLUSTER_DIR}/*
+if [ ${CLEAN_FLAG} = "true" ]
+then
+  # clean redis cluster directory
+  rm -rf  ${REDIS_CLUSTER_DIR}/*
+fi
 
 # create Redis server list
 for seq in `seq 1 ${REDIS_SERVER_NUMS}`
@@ -69,7 +73,7 @@ do
   cp $REDIS_SERVER_BIN  ${redis_server_dir}
   cp $REDIS_CLIENT_BIN  ${redis_server_dir}
   # create the conf file
-  echo "port $redis_port" >> ${redis_server_dir}/$CONFIG_FILE
+  echo "port $redis_port" > ${redis_server_dir}/$CONFIG_FILE
   echo "protected-mode no" >> ${redis_server_dir}/$CONFIG_FILE
   echo "daemonize yes" >> ${redis_server_dir}/$CONFIG_FILE
   echo "pidfile ${redis_server_dir}/redis.pid" >> ${redis_server_dir}/$CONFIG_FILE
@@ -111,7 +115,6 @@ do
 done
 
 cmd="${cmd}--cluster-replicas 0"
-cmd
 echo yes | $cmd
 
 sleep 2

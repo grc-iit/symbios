@@ -80,8 +80,7 @@ int main(int argc, char* argv[]){
     auto request = Data();
     request.position_ = 0;
     request.storage_index_ = 0;
-    //request.buffer_ = distribution.get();
-    request.data_size_ = request_size;
+    request.buffer_.resize(request_size);
     ops_per_proc = number_request;
     bytes_per_proc = ops_per_proc * request_size;
     auto distributions = engine->Distribute(request);

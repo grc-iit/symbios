@@ -183,6 +183,14 @@ cd redis-6.0.6
 make PREFIX=$DEP_INSTALL install
 ```
 
+### Mongo Server
+```bash
+wget https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu1804-4.4.0.tgz
+tar -xzf mongodb-linux-x86_64-ubuntu1804-4.4.0.tgz
+mv mongodb-linux-x86_64-ubuntu1804-4.4.0 mongo-4.4.0
+cp -rf mongo-4.4.0 $DEP_INSTALL
+```
+
 #### Compile and Install
 Basic Method:
 ```bash
@@ -254,7 +262,13 @@ io_client.Read(source_data_, destination_data_);
 ## Redis Cluster Local Script Usage
 ```bash
 cd scripts/local
-./run_redis_cluster.sh redis_cluster_config_path redis_server_numbers redis_cluster_install_path
+./run_redis_cluster.sh redis_cluster_config_path redis_server_numbers redis_cluster_install_path [clean_flag]
+```
+
+## Mongo Local Script Usage
+```bash
+cd scripts/local
+./run_mongo.sh mongo_config_path mongo_install_path [clean_flag]
 ```
 
 ## Local testing of Symbios

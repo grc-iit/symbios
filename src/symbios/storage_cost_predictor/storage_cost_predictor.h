@@ -82,7 +82,7 @@ public:
     void Fit(void) {
         common::debug::AutoTrace trace = common::debug::AutoTrace("LinRegModel::FitData");
         if (dataset_.size() > 0) {
-            parameter_vector params(2);
+            parameter_vector params = dlib::randm(2,1);
             dlib::solve_least_squares_lm(
                     dlib::objective_delta_stop_strategy(1e-7),
                     Residual,
@@ -90,14 +90,17 @@ public:
                     dataset_,
                     params);
             for (int i = 0; i < 2; ++i) {
-                coeffs_[i] = params(0);
+                coeffs_[i] = params(i);
             }
         }
     }
 
     void Feedback(double bw, double read_bytes, double write_bytes) {
         common::debug::AutoTrace trace = common::debug::AutoTrace("LinRegModel::Feedback");
-        dataset_.emplace_back(input_vector(read_bytes, write_bytes), bw);
+        input_vector iv;
+        iv(0) = read_bytes;
+        iv(1) = write_bytes;
+        dataset_.emplace_back(iv, bw);
     }
 
     double Predict(double read_bytes, double write_bytes) {
@@ -111,11 +114,12 @@ private:
     MPI_File metrics_file_ = nullptr, model_file_ = nullptr;
     int rank_ = 0, nprocs_ = 1;
     bool commit_metrics_ = true, csv_header_ = true;
-    std::vector<IOMetric> metrics_;
     size_t window_size_ = 256;
     size_t window_off_ = 0;
     std::unordered_map<std::string, LinRegModel> storage_models_;
+    std::list<std::string> storage_configs_;
     std::list<ModelMetric> model_metrics_;
+    std::vector<IOMetric> metrics_;
 
     int ParseInt(std::string &input, size_t &pos_in_file, size_t filesz) {
         std::string substr(input.data() + pos_in_file, filesz - pos_in_file);
@@ -206,7 +210,8 @@ private:
         for(int i = 0; i < rank_; ++i) {
             off += offsets[i];
         }
-        MPI_File_write_at_all(file, off, serial.data(), serial.size(), MPI_CHAR, &status);
+        MPI_File_seek(file, off, MPI_SEEK_END);
+        MPI_File_write_all(file, serial.data(), serial.size(), MPI_CHAR, &status);
     }
 
     void CloseCSV(MPI_File &file) {
@@ -230,6 +235,9 @@ private:
         double bw_write = ParseDouble(input, pos_in_file, filesz); NextToken(input, pos_in_file, filesz);
         double bw_kbps = ParseDouble(input, pos_in_file, filesz); NextToken(input, pos_in_file, filesz);
         std::string conf = ParseString(input, pos_in_file, filesz); NextToken(input, pos_in_file, filesz);
+        if(storage_models_.find(conf) == storage_models_.end()) {
+            storage_configs_.emplace_back(conf);
+        }
         storage_models_[conf].Feedback(bw_kbps, tot_read, tot_write);
         metrics_.emplace_back(
                 avg_msec, std_msec, min_msec, max_msec, nprocs, block_size, ap,
@@ -245,7 +253,6 @@ private:
         }
         for (; pos_in_file < filesz;) {
             ParseMetricsRow(buf, pos_in_file, filesz);
-            ++window_off_;
         }
     }
 
@@ -267,7 +274,7 @@ private:
             io_metric.bw_read_ << "," <<
             io_metric.bw_write_ << "," <<
             io_metric.bw_kbps_ << "," <<
-            io_metric.conf_ << "," <<
+            io_metric.conf_ <<
             std::endl;
         }
         std::string serial = ss.str();
@@ -292,7 +299,7 @@ private:
                io_metric.bw_read_ << "," <<
                io_metric.bw_write_ << "," <<
                io_metric.bw_kbps_ << "," <<
-               io_metric.conf_ << "," <<
+               io_metric.conf_ <<
                std::endl;
         }
         std::string serial = ss.str();
@@ -307,8 +314,10 @@ public:
         CloseCSV(model_file_);
     }
 
-    void Init(bool commit_metrics=true, bool csv_header_=true) {
+    void Init(bool commit_metrics=true, bool csv_header=true, size_t window_size=256) {
         commit_metrics_ = commit_metrics;
+        csv_header_ = csv_header_;
+        window_size_ = window_size;
     }
 
     void LoadMetrics(int rank, int nprocs, std::string metrics_file_path, std::string model_file_path) {
@@ -318,23 +327,29 @@ public:
         model_file_path_ = model_file_path;
         LoadMetricsCSV();
         Fit();
+        window_off_ = metrics_.size();
     }
 
     void CommitMetrics() {
         if(!commit_metrics_) { return; }
         SaveMetricsCSV();
         SaveModelCSV();
+        window_off_ = metrics_.size();
     }
 
     void Fit() {
-        for(std::pair<std::string, LinRegModel> sm : storage_models_) {
-            sm.second.Fit();
+        for(std::string &storage_config : storage_configs_) {
+            LinRegModel &model = storage_models_[storage_config];
+            model.Fit();
         }
     }
 
     void Feedback(double bw_measured, double read_bytes, double write_bytes, std::string &config) {
+        metrics_.emplace_back(
+                0, 0, 0, 0, nprocs_, 0, 0,
+                read_bytes, write_bytes, read_bytes+write_bytes, 0, 0, bw_measured, config);
         storage_models_[config].Feedback(bw_measured, write_bytes, read_bytes);
-        if(window_off_ % window_size_ == 0) {
+        if(window_off_ % window_size_ == 0 && window_off_ > 0) {
             Fit();
             CommitMetrics();
         }
@@ -345,14 +360,16 @@ public:
         model_metrics_.emplace_back(bw_measured, bw_pred, read_bytes, write_bytes);
     }
 
-    void Predict(double write_bytes, double read_bytes, std::string &config) {
+    double Predict(double read_bytes, double write_bytes, std::string &config) {
         double bw_max_pred = 0;
-        for(std::pair<std::string, LinRegModel> sm : storage_models_) {
-            double bw_pred = sm.second.Predict(write_bytes, read_bytes);
+        for(std::string &storage_config : storage_configs_) {
+            LinRegModel &model = storage_models_[storage_config];
+            double bw_pred = model.Predict(read_bytes, write_bytes);
             if(bw_pred > bw_max_pred) {
                 bw_max_pred = bw_pred;
-                config = sm.first;
+                config = storage_config;
             }
+            return bw_pred;
         }
     }
 };
