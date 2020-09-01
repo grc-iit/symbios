@@ -22,6 +22,7 @@ void symbios::Client::StoreRequest(Data &request) {
 }
 
 void symbios::Client::LocateRequest(Data &request) {
+
   auto tracer = common::debug::AutoTrace(
       std::string("symbios::Client::LocateRequest"), request);
   int server = rand() % BASKET_CONF->NUM_SERVERS;
@@ -32,4 +33,5 @@ void symbios::Client::LocateRequest(Data &request) {
   memcpy(request.buffer_, ret.buffer_, ret.data_size_);
   request.data_size_ = ret.data_size_;
   COMMON_DBGVAR((char *)request.buffer_);
+
 }

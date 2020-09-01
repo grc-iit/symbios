@@ -11,15 +11,15 @@ int main(int argc, char * argv[]){
     BASKET_CONF->BACKED_FILE_DIR=SYMBIOS_CONF->SERVER_DIR;
     auto client = symbios::Client();
     auto data = Data();
-    data.id_="filename";
+    data.id_="filename2";
     data.position_=0;
-    data.buffer_= (void *) "Hello";
-    data.data_size_=strlen("Hello")+1;
+    data.buffer_= "Hello";
     data.storage_index_=0;
     client.StoreRequest(data);
     data.buffer_= std::string().data();
+    data.storage_index_=2;
     client.LocateRequest(data);
-    printf("Data recieved %s\n",(char*)data.buffer_);
+    printf("Data recieved %s\n",data.buffer_.data());
     MPI_Finalize();
     return 0;
 }
