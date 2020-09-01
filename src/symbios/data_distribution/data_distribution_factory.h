@@ -12,13 +12,15 @@
 #include <symbios/data_distribution/heuristics_dde.h>
 #include <symbios/data_distribution/dp_dde.h>
 #include <basket/common/singleton.h>
+#include <common/debug.h>
 
 class DataDistributionEngineFactory {
 public:
-    DataDistributionEngineFactory(){}
+    DataDistributionEngineFactory() {}
 
-    std::shared_ptr<DataDistributionEngine> GetDataDistributionEngine(DataDistributionPolicy &policy){
-        switch (policy){
+    std::shared_ptr<DataDistributionEngine> GetDataDistributionEngine(DataDistributionPolicy &policy) {
+        auto tracer = common::debug::AutoTrace("DataDistributionEngineFactory::GetDataDistributionEngine", policy);
+        switch (policy) {
             case DataDistributionPolicy::RANDOM_POLICY:
                 return basket::Singleton<RandomDDE>::GetInstance();
             case DataDistributionPolicy::ROUND_ROBIN_POLICY:

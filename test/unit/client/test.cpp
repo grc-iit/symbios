@@ -3,6 +3,7 @@
 //
 
 #include <symbios/client/client.h>
+#include <common/debug.h>
 
 int main(int argc, char * argv[]){
     MPI_Init(&argc,&argv);
@@ -19,7 +20,8 @@ int main(int argc, char * argv[]){
     data.buffer_= std::string().data();
     data.storage_index_=2;
     client.LocateRequest(data);
-    printf("Data recieved %s\n",data.buffer_.data());
+
+    COMMON_DBGVAR(data.buffer_.data());
     MPI_Finalize();
     return 0;
 }
