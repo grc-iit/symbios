@@ -1,14 +1,15 @@
 #!/bin/bash
 if [ $# -lt 2 ]
 then
-  echo "Usage: ./run_mongo.sh mongo_config_path mongo_server_install_path"
-  echo "e.g ./run_mongo.sh ~/mongo_config ~/mongo_server_install_path"
+  echo "Usage: ./run_mongo.sh mongo_config_path mongo_server_install_path clean_flag"
+  echo "e.g ./run_mongo.sh ~/mongo_config_path ~/mongo_server_install_path [true/false]"
   exit
 fi
 
 #Input Variables
 MONGO_CLUSTER_DIR=${1}
 MONGO_INSTALL_DIR=${2}
+CLEAN_FLAG=${3:-true}
 
 CWD=$(pwd)
 
@@ -32,7 +33,10 @@ fi
 
 
 # clean mongo cluster directory
-rm -rf  ${MONGO_CLUSTER_DIR}/*
+if [ ${CLEAN_FLAG} = "true" ]
+then
+  rm -rf  ${MONGO_CLUSTER_DIR}/*
+fi
 
 #create db and logs directory for mongodb
 mkdir -p ${MONGO_CLUSTER_DIR}/db
@@ -40,7 +44,7 @@ mkdir -p ${MONGO_CLUSTER_DIR}/logs
 mkdir -p ${MONGO_CLUSTER_DIR}/conf
 
 #create mongodb configuration file
-echo "dbpath=${MONGO_CLUSTER_DIR}/db" >> ${MONGO_CLUSTER_DIR}/conf/${CONFIG_FILE}
+echo "dbpath=${MONGO_CLUSTER_DIR}/db" > ${MONGO_CLUSTER_DIR}/conf/${CONFIG_FILE}
 echo "logpath=${MONGO_CLUSTER_DIR}/logs/mongodb.log" >> ${MONGO_CLUSTER_DIR}/conf/${CONFIG_FILE}
 echo "port=$PORT_BASE" >> ${MONGO_CLUSTER_DIR}/conf/${CONFIG_FILE}
 echo "fork=true" >> ${MONGO_CLUSTER_DIR}/conf/${CONFIG_FILE}
