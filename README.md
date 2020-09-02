@@ -265,6 +265,12 @@ cd scripts/local
 ./run_mongo.sh mongo_config_path mongo_install_path [clean_flag]
 ```
 
+## Mongo sharding cluster Local Script Usage
+```bash
+cd scripts/local
+./run_mongo_cluster.sh mongo_cluster_install_path shard_server_nums mongo_server_install_path database_name collection_name [clean_flag]
+```
+
 ## Local testing of Symbios
 
 - update conf/symbios.conf to correct the path of SERVER_LISTS, CLIENT_LISTS, and SERVER_DIR
