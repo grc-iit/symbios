@@ -70,6 +70,8 @@ public:
 
     void Remove(Data &source) override;
 
+    size_t Size(Data &source) override;
+
 private:
     mongocxx::client client;
     std::shared_ptr<MongoSS> mongo_solution;

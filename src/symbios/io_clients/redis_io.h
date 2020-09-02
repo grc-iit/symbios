@@ -41,6 +41,8 @@ public:
      */
     void Write(Data &source, Data &destination) override;
 
+    size_t Size(Data &source) override;
+
 private:
     std::shared_ptr<RedisCluster>   m_redisCluster;
 };

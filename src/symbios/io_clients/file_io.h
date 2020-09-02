@@ -32,6 +32,8 @@ public:
 
     void Remove(Data &source) override;
 
+    size_t Size(Data &source) override;
+
 };
 
 

@@ -12,6 +12,7 @@ class MetadataOrchestrator {
 public:
     void Store(Data &original_request, std::vector<DataDistribution> &distributions);
     std::vector<DataDistribution> Locate(Data &request, Metadata &primary_metadata);
+    bool Delete(Data &request);
     MetadataOrchestrator();
 };
 

@@ -21,18 +21,18 @@ set(CMAKE_CXX_STANDARD 17)
 
 # Debug flags
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DCOMMON_DEBUG_MSG")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DCOMMON_DEBUG_TIMER")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DCOMMON_DEBUG_TIMER")
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DCOMMON_DEBUG_TRACE")
 
 # Source files
 set(SYMBIOS_COMMON_SRC ${CMAKE_SOURCE_DIR}/include/symbios/common/data_structure.h ${CMAKE_SOURCE_DIR}/include/symbios/common/configuration_manager.h ${CMAKE_SOURCE_DIR}/src/symbios/common/data_structure.cpp ${CMAKE_SOURCE_DIR}/common/src/common/debug.cpp
         ${CMAKE_SOURCE_DIR}/common/include/common/debug.h ${CMAKE_SOURCE_DIR}/common/include/common/arguments.h)
 set(SYMBIOS_LIB_SRC ${SYMBIOS_COMMON_SRC} include/symbios/client/client.h src/symbios/client/client.cpp
-        src/symbios/client/posix.cpp )
+        src/symbios/client/posix.cpp include/symbios/client/posix.h)
 
 # add symbios lib
 add_library(symbios SHARED ${SYMBIOS_LIB_SRC})
-target_link_libraries(symbios -lbasket -lrpc)
+target_link_libraries(symbios -lbasket -lrpc  -lboost_system -lboost_filesystem )
 # TODO: add any required libraries
 
 # add symbios server

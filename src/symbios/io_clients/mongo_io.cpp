@@ -23,7 +23,7 @@ mongocxx::collection file = client[mongo_solution->database_.c_str()].collection
             file.find_one(bsoncxx::builder::stream::document{} << "key" << std::string(source.id_.c_str())
                                                                << bsoncxx::builder::stream::finalize);
     if (maybe_result) {
-        destination.buffer_= maybe_result->view()["value"].get_utf8().value.to_string();
+        destination.buffer_= maybe_result->view()["value"].get_utf8().value.to_string().substr(source.position_,source.buffer_.size());
     } else {
         throw ErrorException(READ_REDIS_DATA_FAILED);
     }
@@ -94,4 +94,16 @@ void MongoIOClient::Remove(Data &source) {
             mongo_solution->collection_.c_str());
     file.delete_many(bsoncxx::builder::basic::make_document(
             bsoncxx::builder::basic::kvp("key", std::string(source.id_.c_str()))));
+}
+
+size_t MongoIOClient::Size(Data &source) {
+    bool exists = false;
+    Data read_source;
+    try {
+        read_source.id_ = source.id_;
+        Read(read_source, read_source);
+        return read_source.buffer_.size();
+    } catch (const std::exception &e) {
+       return 0;
+    }
 }
