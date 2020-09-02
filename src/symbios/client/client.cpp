@@ -3,10 +3,11 @@
 #include <symbios/client/client.h>
 #include <unistd.h>
 
-symbios::Client::Client() {
-    auto tracer = common::debug::AutoTrace("symbios::Client::Client");
+//: fileDescriptorMap("FileDescriptors", BASKET_CONF->RPC_PORT)
+symbios::Client::Client(){
     SYMBIOS_CONF->ConfigureSymbiosClient();
-    rpc = basket::Singleton<RPCFactory>::GetInstance()->GetRPC(BASKET_CONF->RPC_PORT);
+    auto basket=BASKET_CONF;
+    rpc=basket::Singleton<RPCFactory>::GetInstance()->GetRPC(BASKET_CONF->RPC_PORT); //TODO: use another port?
     COMMON_DBGVAR(BASKET_CONF->RPC_PORT);
 }
 
@@ -26,3 +27,17 @@ void symbios::Client::LocateRequest(Data &request) {
     COMMON_DBGVAR(request.buffer_);
 
 }
+
+bool symbios::Client::Delete(Data &request) {
+    auto tracer = common::debug::AutoTrace("symbios::Client::LocateRequest", request);
+    int server = rand() % BASKET_CONF->NUM_SERVERS;
+    return rpc->call<RPCLIB_MSGPACK::object_handle>(server, "DeleteRequest", request).as<bool>();
+}
+
+size_t symbios::Client::Size(Data &request) {
+    auto tracer = common::debug::AutoTrace("symbios::Client::LocateRequest", request);
+    int server = rand() % BASKET_CONF->NUM_SERVERS;
+    return rpc->call<RPCLIB_MSGPACK::object_handle>(server, "SizeRequest", request).as<size_t>();
+}
+
+

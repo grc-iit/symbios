@@ -38,6 +38,11 @@ public:
      *
      */
     virtual void Remove(Data &source) = 0;
+    /**
+     * Size
+     *
+     */
+    virtual size_t Size(Data &source) = 0;
 };
 
 

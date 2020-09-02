@@ -23,7 +23,7 @@ void RedisIOClient::Read(Data &source, Data &destination) {
                 throw ErrorException(READ_REDIS_POSITION_OR_SIZE_FAILED);
             } else {
                 // read data from Redis successful
-                destination.buffer_ = std::string(value.c_str() + source.position_, value_size - source.position_);
+                destination.buffer_ = std::string(value.c_str() + source.position_, source.buffer_.size());
             }
         } else {
             throw ErrorException(READ_REDIS_DATA_FAILED);
@@ -84,6 +84,14 @@ void RedisIOClient::Write(Data &source, Data &destination) {
 }
 
 void RedisIOClient::Remove(Data &source) {
-    auto tracer_source = common::debug::AutoTrace("RedisIOClient::Read", source);
+    auto tracer_source = common::debug::AutoTrace("RedisIOClient::Remove", source);
+    auto resp = m_redisCluster->del(source.id_.c_str());
 
+}
+
+size_t RedisIOClient::Size(Data &source) {
+    auto resp = m_redisCluster->get(source.id_.c_str());
+    if(resp){
+        return resp->size();
+    }else return 0;
 }

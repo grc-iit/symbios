@@ -99,13 +99,16 @@ MetadataOrchestrator::Locate(Data &request, Metadata &primary_metadata) {
     }
     auto distributions = std::vector<DataDistribution>();
     auto start_position = 0;
+    bool get_all = request.buffer_.size() == 0;
     for (auto link:primary_metadata.links_) {
-        if (link.first >= request.position_ && link.first <= request.buffer_.size()) {
+        if (get_all || link.first >= request.position_ && link.first <= request.buffer_.size()) {
             auto dest_data = link.second;
-            if (request.position_ > link.first)
-                dest_data.position_ = request.position_;
-            if (request.buffer_.size() < link.first + link.second.buffer_.size() - link.second.position_)
-                link.second.buffer_ = request.buffer_;
+            if(!get_all){
+                if (request.position_ > link.first)
+                    dest_data.position_ = request.position_;
+                if (request.buffer_.size() < link.first + link.second.buffer_.size() - link.second.position_)
+                    link.second.buffer_ = request.buffer_;
+            }
             auto distribution = DataDistribution();
             distribution.source_data_ = dest_data;
             distribution.destination_data_ = dest_data;
@@ -120,3 +123,13 @@ MetadataOrchestrator::Locate(Data &request, Metadata &primary_metadata) {
 }
 
 MetadataOrchestrator::MetadataOrchestrator() {}
+
+bool MetadataOrchestrator::Delete(Data &request) {
+    for(auto solution:SYMBIOS_CONF->STORAGE_SOLUTIONS){
+        Data original_metadata;
+        original_metadata.id_ = request.id_ + "_meta";
+        original_metadata.storage_index_ = solution.first;
+        basket::Singleton<IOFactory>::GetInstance()->GetIOClient(original_metadata.storage_index_)->Remove(original_metadata);
+    }
+    return true;
+}
