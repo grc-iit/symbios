@@ -87,13 +87,14 @@ void MongoIOClient::Write(Data &source, Data &destination) {
     } else std::cout << "Inserted id was not an OID type" << "\n";
 }
 
-void MongoIOClient::Remove(Data &source) {
+bool MongoIOClient::Remove(Data &source) {
   auto tracer =
       common::debug::AutoTrace("MongoIOClient::Remove", source);
     mongocxx::collection file = client[mongo_solution->database_.c_str()].collection(
             mongo_solution->collection_.c_str());
     file.delete_many(bsoncxx::builder::basic::make_document(
             bsoncxx::builder::basic::kvp("key", std::string(source.id_.c_str()))));
+    return true;
 }
 
 size_t MongoIOClient::Size(Data &source) {

@@ -12,7 +12,7 @@
 void MetadataOrchestrator::Store(Data &original_request,
                                  std::vector<DataDistribution> &distributions) {
 
-    auto tracer = common::debug::AutoTrace("MetadataOrchestrator::Store", original_request,distributions);
+    auto tracer = common::debug::AutoTrace("MetadataOrchestrator::Store", original_request, distributions);
     auto original_metadata = original_request;
     /**
      * Update primary index
@@ -33,20 +33,21 @@ void MetadataOrchestrator::Store(Data &original_request,
             auto iter = primary_metadata.links_.find(distribution.destination_data_.position_);
             if (iter == primary_metadata.links_.end()) {
                 distribution.destination_data_.buffer_ = std::string().data();
-                primary_metadata.links_.insert({distribution.destination_data_.position_, distribution.destination_data_});
+                primary_metadata.links_.insert(
+                        {distribution.destination_data_.position_, distribution.destination_data_});
                 is_metadata_updated = true;
             } else {
                 distribution.destination_data_.storage_index_ = iter->second.storage_index_;
             }
         }
-    }else{
-        is_metadata_updated=true;
-        primary_metadata.is_link_=false;
-        primary_metadata.storage_index_=original_request.storage_index_;
+    } else {
+        is_metadata_updated = true;
+        primary_metadata.is_link_ = false;
+        primary_metadata.storage_index_ = original_request.storage_index_;
         for (auto distribution:distributions) {
             distribution.destination_data_.buffer_ = std::string().data();
             primary_metadata.links_.insert({distribution.destination_data_.position_, distribution.destination_data_});
-            }
+        }
     }
     if (is_metadata_updated) {
         std::stringstream buffer;
@@ -55,7 +56,8 @@ void MetadataOrchestrator::Store(Data &original_request,
         original_metadata.id_ = original_request.id_ + "_meta";
         original_metadata.buffer_ = buffer.str();
         original_metadata.storage_index_ = primary_metadata.storage_index_;
-        basket::Singleton<IOFactory>::GetInstance()->GetIOClient(original_metadata.storage_index_)->Write(original_metadata,original_metadata);
+        basket::Singleton<IOFactory>::GetInstance()->GetIOClient(original_metadata.storage_index_)->Write(
+                original_metadata, original_metadata);
     }
     if (!exists) {
         auto link_metadata = Metadata();
@@ -70,7 +72,8 @@ void MetadataOrchestrator::Store(Data &original_request,
             bool is_primary = solution.first == original_request.storage_index_;
             if (!is_primary) {
                 link_meta.storage_index_ = solution.first;
-            basket::Singleton<IOFactory>::GetInstance()->GetIOClient(link_meta.storage_index_)->Write(link_meta,link_meta);
+                basket::Singleton<IOFactory>::GetInstance()->GetIOClient(link_meta.storage_index_)->Write(link_meta,
+                                                                                                          link_meta);
             }
         }
     }
@@ -83,8 +86,12 @@ MetadataOrchestrator::Locate(Data &request, Metadata &primary_metadata) {
     Data original_metadata;
     original_metadata.id_ = request.id_ + "_meta";
     original_metadata.storage_index_ = request.storage_index_;
-    basket::Singleton<IOFactory>::GetInstance()->GetIOClient(original_metadata.storage_index_)->Read(original_metadata,original_metadata);
-    clmdep_msgpack::object_handle oh = clmdep_msgpack::unpack( original_metadata.buffer_.data(),  original_metadata.buffer_.size());
+    basket::Singleton<IOFactory>::GetInstance()->GetIOClient(original_metadata.storage_index_)->Read(original_metadata,
+                                                                                                     original_metadata);
+    if(original_metadata.buffer_.size() == 0)
+        throw ErrorException(OPEN_FILE_FAILED);
+    clmdep_msgpack::object_handle oh = clmdep_msgpack::unpack(original_metadata.buffer_.data(),
+                                                              original_metadata.buffer_.size());
     clmdep_msgpack::object deserialized = oh.get();
     Metadata metadata = deserialized.as<Metadata>();
     COMMON_DBGMSG("Deserialized");
@@ -92,8 +99,10 @@ MetadataOrchestrator::Locate(Data &request, Metadata &primary_metadata) {
         primary_metadata = metadata;
     } else {
         original_metadata = metadata.links_[-1];
-        basket::Singleton<IOFactory>::GetInstance()->GetIOClient(original_metadata.storage_index_)->Read(original_metadata,original_metadata);
-        clmdep_msgpack::object_handle oh = clmdep_msgpack::unpack( original_metadata.buffer_.data(),  original_metadata.buffer_.size());
+        basket::Singleton<IOFactory>::GetInstance()->GetIOClient(original_metadata.storage_index_)->Read(
+                original_metadata, original_metadata);
+        clmdep_msgpack::object_handle oh = clmdep_msgpack::unpack(original_metadata.buffer_.data(),
+                                                                  original_metadata.buffer_.size());
         oh.get().convert(primary_metadata);
         COMMON_DBGMSG("Getting Primary metadata using hop");
     }
@@ -103,7 +112,7 @@ MetadataOrchestrator::Locate(Data &request, Metadata &primary_metadata) {
     for (auto link:primary_metadata.links_) {
         if (get_all || link.first >= request.position_ && link.first <= request.buffer_.size()) {
             auto dest_data = link.second;
-            if(!get_all){
+            if (!get_all) {
                 if (request.position_ > link.first)
                     dest_data.position_ = request.position_;
                 if (request.buffer_.size() < link.first + link.second.buffer_.size() - link.second.position_)
@@ -125,7 +134,7 @@ MetadataOrchestrator::Locate(Data &request, Metadata &primary_metadata) {
 MetadataOrchestrator::MetadataOrchestrator() {}
 
 bool MetadataOrchestrator::Delete(Data &request) {
-    for(auto solution:SYMBIOS_CONF->STORAGE_SOLUTIONS){
+    for (auto solution:SYMBIOS_CONF->STORAGE_SOLUTIONS) {
         Data original_metadata;
         original_metadata.id_ = request.id_ + "_meta";
         original_metadata.storage_index_ = solution.first;
