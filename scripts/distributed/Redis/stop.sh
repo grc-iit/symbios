@@ -7,7 +7,7 @@ NC='\033[0m' # No Color
 
 CWD="$(pwd)"
 HOSTFILE=@1
-REDIS_DIR=@2
+LOG_DIR=@2
 
 SERVERS="($(cat "${HOSTFILE}"))"
 
@@ -16,7 +16,7 @@ for server in "${SERVERS[@]}"
 do
 ssh "${server}" /bin/bash << EOF
   killall redis-server > /dev/null
-  rm -rf "${REDIS_DIR}"/*
+  rm -rf "${LOG_DIR}"/*
 EOF
 done
 echo -e "${GREEN}Redis is stopped${NC}"

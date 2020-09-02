@@ -16,9 +16,10 @@ conf_file=${1}
 server_dir=${2} 
 client_dir=${3} 
 server_hostfile=${4}
+client_hostfile=${4}
 
 #General Variables
-client_list=($(cat ${CWD}/hostfiles/hostfile_clients))
+client_list=($(cat ${client_hostfile}))
 server_list=($(cat ${server_hostfile}))
 
 #Config PFS
@@ -32,7 +33,7 @@ sed -i "s/USER/${USER}/g" ${conf_file}
 echo "tcp://${server_list[0]}:${comm_port}/${name} ${client_dir} pvfs2 defaults,noauto 0 0" > $PVFS2TAB_FILE
 
 #Server Setup
-for node in ${server_list[@]}
+for node in "${server_list[@]}"
 do
 ssh ${node} /bin/bash << EOF
 echo "${GREEN}Setting up server at ${node} ${NC}"
@@ -44,12 +45,12 @@ EOF
 done
 
 #Client Setup
-for node in ${client_list[@]}
+for node in "${client_list[@]}"
 do
 ssh ${node} /bin/bash << EOF
 echo "${GREEN}Starting client on ${node}${NC}"
 sudo kill-pvfs2-client
-mkdir -p ${client_dir} 
+mkdir -p ${client_dir}
 sudo insmod ${ORANGEFS_KO}/pvfs2.ko
 sudo ${ORANGEFS_PATH}/sbin/pvfs2-client -p ${ORANGEFS_PATH}/sbin/pvfs2-client-core
 sudo mount -t pvfs2 tcp://${server_list[0]}:${comm_port}/${name} ${client_dir}
