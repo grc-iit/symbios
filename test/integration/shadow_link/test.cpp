@@ -103,11 +103,12 @@ int main(int argc, char* argv[]){
         update_t.pauseTime();
     }
 
+    Metadata primary_metadata;
     common::debug::Timer locate_t;
     for(int i=0;i<number_request;++i){
         request.id_ = path + "temp_" + std::to_string(i);
         locate_t.resumeTime();
-        mo->Store(request,distributions);
+        mo->Locate(request,primary_metadata);
         locate_t.pauseTime();
     }
 
