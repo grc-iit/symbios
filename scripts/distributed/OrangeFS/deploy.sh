@@ -4,6 +4,10 @@
 # ORANGEFS_KO
 # ORANGEFS_PATH
 # PVFS2TAB_FILE
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+CYAN='\033[0;36m'
+NC='\033[0m' # No Color
 
 CWD=$(pwd)
 
@@ -31,7 +35,7 @@ echo "tcp://${server_list[0]}:${comm_port}/${name} ${client_dir} pvfs2 defaults,
 for node in ${server_list[@]}
 do
 ssh ${node} /bin/bash << EOF
-echo "Setting up server at ${node} "
+echo "${GREEN}Setting up server at ${node} ${NC}"
 rm -rf ${server_dir}*
 mkdir -p ${server_dir}
 pvfs2-server -f -a ${node} ${conf_file}
@@ -43,7 +47,7 @@ done
 for node in ${client_list[@]}
 do
 ssh ${node} /bin/bash << EOF
-echo "Starting client on ${node}"
+echo "${GREEN}Starting client on ${node}${NC}"
 sudo kill-pvfs2-client
 mkdir -p ${client_dir} 
 sudo insmod ${ORANGEFS_KO}/pvfs2.ko
