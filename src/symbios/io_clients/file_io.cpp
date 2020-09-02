@@ -66,9 +66,10 @@ void FileIOClient::Write(Data &source, Data &destination) {
     }
 }
 
-void FileIOClient::Remove(Data &source) {
+bool FileIOClient::Remove(Data &source) {
     auto tracer_source = common::debug::AutoTrace("FileIOClient::Remove", source);
     remove(source.id_.c_str());
+    return true;
 }
 
 size_t FileIOClient::Size(Data &source) {
