@@ -34,7 +34,7 @@ public:
      */
     void Read(Data &source, Data &destination) override;
 
-    void Remove(Data &source) override;
+    bool Remove(Data &source) override;
 
     /*
      * Write data from source into destination buffer while respecting the position_

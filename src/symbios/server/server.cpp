@@ -71,7 +71,12 @@ Data symbios::Server::Locate(Data &request){
 size_t symbios::Server::Size(Data &request) {
     auto tracer=common::debug::AutoTrace(std::string("symbios::Server::Size"), request);
     Metadata primary_metadata;
-    auto distributions = basket::Singleton<MetadataOrchestrator>::GetInstance()->Locate(request, primary_metadata);
+    std::vector<DataDistribution> distributions;
+    try {
+        distributions = basket::Singleton<MetadataOrchestrator>::GetInstance()->Locate(request, primary_metadata);
+    } catch (ErrorException e) {
+        return 0;
+    }
     int total_size= 0;
     for(auto &distribution:distributions){
         total_size+=basket::Singleton<IOFactory>::GetInstance()->GetIOClient(distribution.destination_data_.storage_index_)->Size(distribution.destination_data_);
@@ -82,11 +87,17 @@ size_t symbios::Server::Size(Data &request) {
 bool symbios::Server::Delete(Data &request) {
     auto tracer=common::debug::AutoTrace(std::string("symbios::Server::Size"), request);
     Metadata primary_metadata;
-    auto distributions = basket::Singleton<MetadataOrchestrator>::GetInstance()->Locate(request, primary_metadata);
-    for(auto &distribution:distributions){
-        basket::Singleton<IOFactory>::GetInstance()->GetIOClient(distribution.destination_data_.storage_index_)->Remove(distribution.source_data_);
+    std::vector<DataDistribution> distributions;
+    try {
+        distributions = basket::Singleton<MetadataOrchestrator>::GetInstance()->Locate(request, primary_metadata);
+    } catch (ErrorException e) {
+        return false;
     }
-    return basket::Singleton<MetadataOrchestrator>::GetInstance()->Delete(request);;
+    bool status = true;
+    for(auto &distribution:distributions){
+        status = status && basket::Singleton<IOFactory>::GetInstance()->GetIOClient(distribution.destination_data_.storage_index_)->Remove(distribution.source_data_);
+    }
+    return status && basket::Singleton<MetadataOrchestrator>::GetInstance()->Delete(request);
 }
 
 
