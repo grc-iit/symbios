@@ -6,9 +6,9 @@ CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
 CWD="$( pwd )"
-CONFIG_SERVER_HOSTFILE=@1
-SHARD_SERVER_HOSTFILE=@2
-ROUTER_SERVER_HOSTFILE=@3
+SERVER_HOSTFILE=@1
+ROUTER_SERVER_HOSTFILE=@2
+CONFIG_SERVER_COUNT=@3
 MONGO_PATH=@4
 DATABASE_NAME=@5
 COLLECTION_NAME=@6
@@ -17,8 +17,8 @@ mongod_config_path=${MONGO_PATH}/mongod_config
 mongod_shard_path=${MONGO_PATH}/mongod_shard
 mongos_local_path=${MONGO_PATH}/mongos
 
-CONFIG_SERVERS="($(cat "${CONFIG_SERVER_HOSTFILE}"))"
-SHARD_SERVERS="($(cat "${SHARD_SERVER_HOSTFILE}"))"
+CONFIG_SERVERS=`head -${CONFIG_SERVER_COUNT} ${CWD}/servers | awk '{print $1}'`
+SHARD_SERVERS=`cat ${CWD}/servers | awk '{print $1}'`
 ROUTER_SERVERS="($(cat "${ROUTER_SERVER_HOSTFILE}"))"
 SHARD_SERVER_COUNT=${#SHARD_SERVERS[@]}
 
@@ -164,7 +164,7 @@ EOF
 cat ${MONGO_PATH}/enableSharding.log | grep -i ok
 
 echo -e "${GREEN}Checking Config Servers${NC}"
-for config_server in "${CONFIG_SERVER_HOSTFILE[@]}"
+for config_server in "${SERVER_HOSTFILE[@]}"
 do
 ssh "${config_server}" /bin/bash << EOF
   pgrep -la mongod
