@@ -23,7 +23,7 @@ void FileIOClient::Read(Data &source, Data &destination) {
             close(fileFd);
             throw ErrorException(SEEK_FILE_FAILED);
         } else {
-            auto source_data_size = 0;
+            auto source_data_size = source.buffer_.size();
             if (source.buffer_.size() == 0) {
                 source_data_size = file_size - source.position_;
             }

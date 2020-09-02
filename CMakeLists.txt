@@ -32,7 +32,7 @@ set(SYMBIOS_LIB_SRC ${SYMBIOS_COMMON_SRC} include/symbios/client/client.h src/sy
 
 # add symbios lib
 add_library(symbios SHARED ${SYMBIOS_LIB_SRC})
-target_link_libraries(symbios -lbasket -lrpc)
+target_link_libraries(symbios -lbasket -lrpc  -lboost_system -lboost_filesystem )
 # TODO: add any required libraries
 
 # add symbios server

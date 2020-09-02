@@ -54,7 +54,7 @@ int main(int argc, char * argv[]){
             printf("Reading Data\n");
             data.id_="filename2";
             data.position_=0;
-            data.buffer_ = std::string(requestSize, '*');
+            data.buffer_ = std::string(requestSize, '#');
             data.storage_index_=0;
             client.LocateRequest(data);
             printf("Data recieved %s\n",data.buffer_.data());

@@ -32,10 +32,11 @@ set(test_files  data_placement
                 io_clients
                 metadata_orchestrator
                 server
-                storage_cost_predictor)
+                storage_cost_predictor
+                config_manager)
 foreach (test_file ${test_files})
     set(exec unit_${test_file})
-    add_executable(${exec} ${test_file}/test.cpp)
+    add_executable(${exec} ${test_file}/test.cpp ${SYMBIOS_SERVER_SRC})
     add_dependencies(${exec} symbios)
     target_include_directories(${exec} PRIVATE "${CMAKE_BINARY_DIR}/")
     target_link_libraries(${exec} ${LIBS})
