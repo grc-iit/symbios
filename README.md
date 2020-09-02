@@ -256,13 +256,13 @@ io_client.Read(source_data_, destination_data_);
 ## Redis Cluster Local Script Usage
 ```bash
 cd scripts/local
-./run_redis_cluster.sh redis_cluster_config_path redis_server_numbers redis_cluster_install_path
+./run_redis_cluster.sh redis_cluster_config_path redis_server_numbers redis_cluster_install_path [clean_flag]
 ```
 
 ## Mongo Local Script Usage
 ```bash
 cd scripts/local
-./run_mongo.sh mongo_config_path mongo_install_path
+./run_mongo.sh mongo_config_path mongo_install_path [clean_flag]
 ```
 
 ## Local testing of Symbios
