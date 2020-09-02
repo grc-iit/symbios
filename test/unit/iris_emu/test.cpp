@@ -20,15 +20,26 @@ int main(int argc, char * argv[]){
     auto tracer=common::debug::AutoTrace(std::string("iris_emu::main"));
     MPI_Init(&argc,&argv);
     MPI_Barrier(MPI_COMM_WORLD);
+
+    if (argc == 1) {
+        std::cout<<"cmd: ./unit_iris_emu <conf> <raw_data> <file/mongo/redis> <file_name> <chunk_size>\n";
+        exit(0);
+    }
+
     if(argc > 1) SYMBIOS_CONF->CONFIGURATION_FILE=argv[1];
     BASKET_CONF->BACKED_FILE_DIR=SYMBIOS_CONF->SERVER_DIR;
 
-    std::string data = "Hello Symbios";  // argv[2]
-    auto type_ = IOClientType ::FILE_IO; //argv[3]
-    auto file_ = "iris_emu_file3"; //argv[4]
-    auto max_obj_size = MAX_OBJ_SIZE; //argv[5]
-    DataMapper mapper_(type_, max_obj_size);
+    std::string data = argc > 2 ? argv[2] : "Hello Symbios";  // argv[2]
 
+    auto type_ = argc > 3 ?
+            ( strcmp("file", argv[3]) == 0  ? IOClientType::FILE_IO :
+            strcmp("mongo", argv[3]) == 0 ? IOClientType::MONGO_IO :
+            strcmp("redis", argv[3]) == 0? IOClientType::REDIS_IO : IOClientType::FILE_IO ): IOClientType ::FILE_IO;
+
+    auto file_ = argc > 4 ? argv[4] : "iris_emu_4";  // argv[4]
+    auto max_obj_size = argc > 5 ? std::atoi(argv[5]) : MAX_OBJ_SIZE;  // argv[5]
+
+    DataMapper mapper_(type_, max_obj_size);
     DataDescriptor src = {file_,0,  data.size(), 0 };
     auto objs = mapper_.generateDataObjects(src);
 //    COMMON_DBGVAR(objs);
@@ -48,7 +59,7 @@ int main(int argc, char * argv[]){
 //        .buffer_=std::string().data();
     }
 
-    DataDescriptor read_src = {file_, 0,  5, 0 };
+    DataDescriptor read_src = {file_, 0,  data.size(), 0 };
     objs = mapper_.generateDataObjects(read_src);
 
 //    std::cout<<"Reading Data"<<std::endl;
