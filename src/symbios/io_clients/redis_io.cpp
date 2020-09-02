@@ -19,11 +19,15 @@ void RedisIOClient::Read(Data &source, Data &destination) {
         if (resp) {
             std::string value = *resp;
             std::string::size_type value_size = value.length();
-            if (source.buffer_.size() > value_size) {
+            size_t source_size = source.buffer_.size();
+            if(source_size == 0){
+                source_size = value_size;
+            }
+            if (source_size > value_size) {
                 throw ErrorException(READ_REDIS_POSITION_OR_SIZE_FAILED);
             } else {
                 // read data from Redis successful
-                destination.buffer_ = std::string(value.c_str() + source.position_, source.buffer_.size());
+                destination.buffer_ = std::string(value.c_str() + source.position_, source_size - source.position_);
             }
         } else {
             throw ErrorException(READ_REDIS_DATA_FAILED);

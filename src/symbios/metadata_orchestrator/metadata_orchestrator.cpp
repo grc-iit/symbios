@@ -45,8 +45,11 @@ void MetadataOrchestrator::Store(Data &original_request,
         primary_metadata.is_link_ = false;
         primary_metadata.storage_index_ = original_request.storage_index_;
         for (auto distribution:distributions) {
-            distribution.destination_data_.buffer_ = std::string().data();
-            primary_metadata.links_.insert({distribution.destination_data_.position_, distribution.destination_data_});
+            auto link_data =  distribution.destination_data_;
+            link_data.buffer_ = std::string().data();
+            link_data.id_ = original_request.id_ + "_meta";
+            link_data.position_=0;
+            primary_metadata.links_.insert({distribution.destination_data_.position_, link_data});
         }
     }
     if (is_metadata_updated) {
@@ -67,6 +70,7 @@ void MetadataOrchestrator::Store(Data &original_request,
         auto link_meta = original_metadata;
         std::stringstream link_metadata_buf;
         clmdep_msgpack::pack(link_metadata_buf, link_metadata);
+        link_metadata_buf.seekg(0);
         link_meta.buffer_ = link_metadata_buf.str();
         for (auto solution:SYMBIOS_CONF->STORAGE_SOLUTIONS) {
             bool is_primary = solution.first == original_request.storage_index_;
@@ -88,8 +92,6 @@ MetadataOrchestrator::Locate(Data &request, Metadata &primary_metadata) {
     original_metadata.storage_index_ = request.storage_index_;
     basket::Singleton<IOFactory>::GetInstance()->GetIOClient(original_metadata.storage_index_)->Read(original_metadata,
                                                                                                      original_metadata);
-    if(original_metadata.buffer_.size() == 0)
-        throw ErrorException(OPEN_FILE_FAILED);
     clmdep_msgpack::object_handle oh = clmdep_msgpack::unpack(original_metadata.buffer_.data(),
                                                               original_metadata.buffer_.size());
     clmdep_msgpack::object deserialized = oh.get();
