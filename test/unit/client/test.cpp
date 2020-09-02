@@ -58,6 +58,7 @@ int main(int argc, char * argv[]){
             data.storage_index_=0;
             client.LocateRequest(data);
             printf("Data recieved %s\n",data.buffer_.data());
+            client.Delete(data);
         }
         COMMON_DBGVAR(data.buffer_.data());
     }

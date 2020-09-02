@@ -23,7 +23,12 @@ mongocxx::collection file = client[mongo_solution->database_.c_str()].collection
             file.find_one(bsoncxx::builder::stream::document{} << "key" << std::string(source.id_.c_str())
                                                                << bsoncxx::builder::stream::finalize);
     if (maybe_result) {
-        destination.buffer_= maybe_result->view()["value"].get_utf8().value.to_string().substr(source.position_,source.buffer_.size());
+        auto data = maybe_result->view()["value"].get_utf8().value.to_string();
+        size_t source_size = source.buffer_.size();
+        if(source_size == 0){
+            source_size = data.size();
+        }
+        destination.buffer_= data.substr(source.position_,source_size - source.position_);
     } else {
         throw ErrorException(READ_REDIS_DATA_FAILED);
     }
