@@ -314,17 +314,15 @@ public:
         CloseCSV(model_file_);
     }
 
-    void Init(bool commit_metrics=true, bool csv_header=true, size_t window_size=256) {
-        commit_metrics_ = commit_metrics;
-        csv_header_ = csv_header_;
-        window_size_ = window_size;
-    }
+    void SetWindowSize(size_t window_size) { window_size_ = window_size; }
+    void EnableMetricStorage(bool commit_metrics) { commit_metrics_ = commit_metrics; }
 
-    void LoadMetrics(int rank, int nprocs, std::string metrics_file_path, std::string model_file_path) {
+    void LoadMetrics(int rank, int nprocs, std::string metrics_file_path, std::string model_file_path, bool csv_header = true) {
         rank_ = rank;
         nprocs_ = nprocs;
         metrics_file_path_ = metrics_file_path;
         model_file_path_ = model_file_path;
+        csv_header_ = csv_header_;
         LoadMetricsCSV();
         Fit();
         window_off_ = metrics_.size();
@@ -369,7 +367,7 @@ public:
                 bw_max_pred = bw_pred;
                 config = storage_config;
             }
-            return bw_pred;
+            return bw_max_pred;
         }
     }
 };

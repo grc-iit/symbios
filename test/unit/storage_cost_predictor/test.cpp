@@ -4,10 +4,13 @@
 
 #include <common/arguments.h>
 #include <src/symbios/storage_cost_predictor/storage_cost_predictor.h>
+#include <basket/common/singleton.h>
 
 class SCCArgs : public common::args::ArgMap {
 private:
     void VerifyArgs(void) {
+        AssertOptIsSet("-metrics");
+        AssertOptIsSet("-model");
     }
 
 public:
@@ -20,8 +23,8 @@ public:
     }
 
     SCCArgs(int argc, char **argv) {
-        AddOpt("-metrics", common::args::ArgType::kString, "~/metrics.csv");
-        AddOpt("-model", common::args::ArgType::kString, "~/model.csv");
+        AddOpt("-metrics", common::args::ArgType::kString);
+        AddOpt("-model", common::args::ArgType::kString);
         ArgIter(argc, argv);
         VerifyArgs();
     }
@@ -29,20 +32,19 @@ public:
 
 int main(int argc, char * argv[]) {
     MPI_Init(&argc,&argv);
-    int rank, nprocs = 1;
+    int rank=0, nprocs = 1;
 
     SCCArgs args(argc, argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &nprocs);
 
-    StorageCostPredictor a;
+    std::shared_ptr<StorageCostPredictor> a = basket::Singleton<StorageCostPredictor>::GetInstance();
     std::string config = "asdf";
-    a.Init();
-    a.LoadMetrics(rank, nprocs, args.GetStringOpt("-metrics"), args.GetStringOpt("-model"));
-    a.Feedback(10, 25, 25, config);
-    a.Feedback(20, 50, 50, config);
-    a.Feedback(30, 75, 75, config);
-    a.Fit();
-    std::cout << a.Predict(100.0, 100.0, config) << std::endl;
+    a->LoadMetrics(rank, nprocs, args.GetStringOpt("-metrics"), args.GetStringOpt("-model"));
+    a->Feedback(10*(rank+1), 25*(rank+1), 25*(rank+1), config);
+    a->Feedback(20*(rank+1), 50*(rank+1), 50*(rank+1), config);
+    a->Feedback(30*(rank+1), 75*(rank+1), 75*(rank+1), config);
+    a->Fit();
+    std::cout << a->Predict(100.0, 100.0, config) << std::endl;
     return 0;
 }
