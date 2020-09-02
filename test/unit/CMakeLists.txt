@@ -13,8 +13,7 @@ set(test_files  client
                 dynamic_provisioner
                 io_clients
                 metadata_orchestrator
-                server
-                storage_cost_predictor)
+                server)
 foreach (test_file ${test_files})
     set(exec unit_${test_file})
     add_executable(${exec} ${test_file}/test.cpp)
@@ -51,3 +50,16 @@ foreach (test_file ${test_files})
     set_property(TEST ${test_name} APPEND PROPERTY ENVIRONMENT "HDF5_PLUGIN_PATH=$ENV{HDF5_PLUGIN_PATH}")
     set_property(TEST ${test_name} APPEND PROPERTY ENVIRONMENT "RUN_DIR=$ENV{RUN_DIR}")
 endforeach ()
+
+
+set(NREQS_LIST 100 1000 10000 100000 1000000)
+set(NPROCS_LIST 1 2 4 8 16 32)
+set(MODEL_FILE ${CMAKE_BINARY_DIR}/test_data.csv)
+add_executable(unit_storage_cost_predictor storage_cost_predictor/test.cpp ${SYMBIOS_SERVER_SRC})
+target_link_libraries(unit_storage_cost_predictor ${LIBS})
+foreach(NREQS ${NREQS_LIST})
+    foreach(NPROCS ${NPROCS_LIST})
+        add_test(NAME scc_predictor_${NREQS}_${NPROCS} COMMAND
+                mpirun -n ${NPROCS} ${CMAKE_BINARY_DIR}/test/unit/unit_storage_cost_predictor -model ${MODEL_FILE} -nreqs ${NREQS_LIST})
+    endforeach()
+endforeach()
