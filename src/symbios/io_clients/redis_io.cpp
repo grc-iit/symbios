@@ -83,10 +83,10 @@ void RedisIOClient::Write(Data &source, Data &destination) {
     }
 }
 
-void RedisIOClient::Remove(Data &source) {
+bool RedisIOClient::Remove(Data &source) {
     auto tracer_source = common::debug::AutoTrace("RedisIOClient::Remove", source);
     auto resp = m_redisCluster->del(source.id_.c_str());
-
+    return true;
 }
 
 size_t RedisIOClient::Size(Data &source) {
