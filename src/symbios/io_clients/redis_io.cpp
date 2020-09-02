@@ -19,7 +19,7 @@ void RedisIOClient::Read(Data &source, Data &destination) {
         if (resp) {
             std::string value = *resp;
             std::string::size_type value_size = value.length();
-            size_t source_size = source.buffer_.size();
+            size_t source_size = source.data_size_;
             if(source_size == 0){
                 source_size = value_size;
             }
@@ -27,7 +27,9 @@ void RedisIOClient::Read(Data &source, Data &destination) {
                 throw ErrorException(READ_REDIS_POSITION_OR_SIZE_FAILED);
             } else {
                 // read data from Redis successful
-                destination.buffer_ = std::string(value.c_str() + source.position_, source_size - source.position_);
+                destination.buffer_= static_cast<char *>(malloc(source_size - source.position_ +1));
+                memcpy(destination.buffer_, value.c_str()+ source.position_,source_size - source.position_ +1);
+                destination.data_size_=source_size - source.position_;
             }
         } else {
             throw ErrorException(READ_REDIS_DATA_FAILED);
@@ -47,39 +49,36 @@ void RedisIOClient::Write(Data &source, Data &destination) {
             // The key has been existed in redis cluster.
             std::string old_value = *resp;
             std::string::size_type old_value_size = old_value.length();
-            if (source.buffer_.size() - source.position_ >= old_value_size ||
-                source.buffer_.size() - source.position_ + destination.position_ >= old_value_size) {
+            if (source.data_size_ - source.position_ >= old_value_size ||
+                source.data_size_ - source.position_ + destination.position_ >= old_value_size) {
                 auto new_val = std::string();
-                new_val.resize(destination.position_ + source.buffer_.size() - source.position_);
+                new_val.resize(destination.position_ + source.data_size_ - source.position_);
                 if (destination.position_ > 0) {
                     memcpy(new_val.data(), old_value.c_str(), destination.position_ - 1);
                 }
-                memcpy(new_val.data() + destination.position_, source.buffer_.data() + source.position_, source.buffer_.size() -  source.position_);
+                memcpy(new_val.data() + destination.position_, source.buffer_ + source.position_, source.data_size_ -  source.position_);
                 bool result = m_redisCluster->set(destination.id_.c_str(), new_val);
                 if (!result) {
                     throw ErrorException(WRITE_REDIS_DATA_FAILED);
                 }
-                destination.buffer_ = new_val;
             } else {
                 // update the old_value
                 memcpy(old_value.data() + destination.position_,
-                       source.buffer_.c_str() + source.position_,
-                       source.buffer_.size() - source.position_);
+                       source.buffer_ + source.position_,
+                       source.data_size_ - source.position_);
                 // put the updated data back
                 bool result = m_redisCluster->set(destination.id_.c_str(), old_value);
                 if (!result) {
                     throw ErrorException(WRITE_REDIS_DATA_FAILED);
                 }
-                destination.buffer_ = old_value;
             }
         } else {
             // The key isn't exist in redis cluster
-            std::string value = std::string(source.buffer_.c_str() + source.position_, source.buffer_.size() - source.position_);
+            std::string value = std::string(source.buffer_ + source.position_, source.data_size_ - source.position_);
             bool result = m_redisCluster->set(destination.id_.c_str(), value);
             if (!result) {
                 throw ErrorException(WRITE_REDIS_DATA_FAILED);
             }
-            destination.buffer_ = value;
         }
 
     } catch (const Error &err) {

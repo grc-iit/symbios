@@ -39,25 +39,28 @@ int main(int argc, char * argv[]){
 
     MPI_Barrier(MPI_COMM_WORLD);
     printf("Done Conf\n");
+    auto val = std::string(requestSize, '*');
+    auto data = Data();
+    data.id_="filename2";
+    data.position_=0;
+    data.buffer_ = val.data();
+    data.buffer_[ val.size()]='\0';
+    data.data_size_= val.size()+1;
+    data.storage_index_=0;
+    client.Delete(data);
     for(int i=0; i < requestNumber; i++){
-        auto data = Data();
+
         if(ioOperation == 0 || ioOperation == 2){
             printf("Sending Data\n");
-            data.id_="filename2";
-            data.position_=0;
-            data.buffer_ = std::string(requestSize, '*');
-            data.storage_index_=0;
             client.StoreRequest(data);
-            printf("Data Sent %s\n",data.buffer_.data());
+            printf("Data Sent %s\n",data.buffer_);
         }
+        data.buffer_ = static_cast<char *>(malloc(data.data_size_));;
+        data.storage_index_=1;
         if(ioOperation == 0 || ioOperation == 2){
             printf("Reading Data\n");
-            data.id_="filename2";
-            data.position_=0;
-            data.buffer_ = std::string(requestSize, '#');
-            data.storage_index_=0;
             client.LocateRequest(data);
-            printf("Data recieved %s\n",data.buffer_.data());
+            printf("Data recieved %s\n",data.buffer_);
             client.Delete(data);
         }
         COMMON_DBGVAR(data.buffer_.data());
