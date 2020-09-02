@@ -70,6 +70,7 @@ namespace symbios {
 
         void config(rapidjson::Document &doc, const char *member,
                     std::unordered_map<uint16_t, std::shared_ptr<StorageSolution>>&variable) {
+            variable = std::unordered_map<uint16_t, std::shared_ptr<StorageSolution>>();
             if(!doc.HasMember(member)) return;
             rapidjson::Value& results = doc[member];
             assert(results.IsArray());
@@ -200,6 +201,7 @@ namespace symbios {
             config(doc, "STORAGE_SOLUTIONS", STORAGE_SOLUTIONS);
             config(doc, "DATA_DISTRIBUTION_POLICY", DATA_DISTRIBUTION_POLICY);
             boost::filesystem::create_directories(SERVER_DIR.c_str());
+
             fclose(outfile);
         }
 
