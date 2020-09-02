@@ -90,13 +90,17 @@ int main(int argc, char* argv[]){
 
     auto mo = basket::Singleton<MetadataOrchestrator>::GetInstance();
     auto path = SYMBIOS_CONF->STORAGE_SOLUTIONS[0]->end_point_;
+    for(int i=0;i<number_request;++i){
+        request.id_ = path + "/temp_" + std::to_string(i);
+        mo->Delete(request);
+    }
+
     common::debug::Timer store_t;
     for(int i=0;i<number_request;++i){
         request.id_ = path + "/temp_" + std::to_string(i);
         store_t.resumeTime();
         mo->Store(request,distributions);
         store_t.pauseTime();
-        sleep(1);
     }
     common::debug::Timer update_t;
     for(int i=0;i<number_request;++i){
@@ -104,7 +108,6 @@ int main(int argc, char* argv[]){
         update_t.resumeTime();
         mo->Store(request,distributions);
         update_t.pauseTime();
-        sleep(2);
     }
     Metadata primary_metadata;
     common::debug::Timer locate_t;
