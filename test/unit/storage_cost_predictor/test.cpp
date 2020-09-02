@@ -11,7 +11,8 @@ class SCPArgs : public common::args::ArgMap {
 private:
     void VerifyArgs(void) {
         AssertOptIsSet("-model");
-        AssertOptIsSet("-num_reqs");
+        AssertOptIsSet("-nreqs");
+        AssertOptIsSet("-out");
     }
 
 public:
@@ -19,13 +20,15 @@ public:
         std::cout << "Usage: ./test -[param-id] [value] ... " << std::endl;
         std::cout << std::endl;
         std::cout << "-model [string]: path to model file" << std::endl;
-        std::cout << "-num_req [size]: The number of requests to run" << std::endl;
+        std::cout << "-nreqs [size]: The number of requests to run" << std::endl;
+        std::cout << "-out [string]: The request output file" << std::endl;
         std::cout << "" << std::endl;
     }
 
     SCPArgs(int argc, char **argv) {
         AddOpt("-model", common::args::ArgType::kString);
-        AddOpt("-num_reqs", common::args::ArgType::kSize);
+        AddOpt("-nreqs", common::args::ArgType::kSize);
+        AddOpt("-out", common::args::ArgType::kString);
         ArgIter(argc, argv);
         VerifyArgs();
     }
@@ -48,7 +51,6 @@ void out_csv(SCPArgs &args, int rank, double local_time_spent, int nprocs, size_
     if(!args.OptIsSet("-out")) {
         return;
     }
-
     //Get average time spent in application
     double avg_msec, std_msec, min_msec, max_msec;
     time_stats(local_time_spent, nprocs, avg_msec, std_msec, min_msec, max_msec);
@@ -59,12 +61,11 @@ void out_csv(SCPArgs &args, int rank, double local_time_spent, int nprocs, size_
 
     //Write to output CSV in root process
     if(rank == 0) {
-        std::string conf = args.GetStringOpt("-config");
         std::string output_path = args.GetStringOpt("-out");
         bool exists = boost::filesystem::exists(output_path);
         std::ofstream out(output_path, std::ofstream::out | std::ofstream::app);
         if(!exists) {
-            out << "avg_msec,std_msec,min_msec,max_msec,nprocs,md_fcnt,md_dir,tot_ops,thrpt_kiops,conf" << std::endl;
+            out << "avg_msec,std_msec,min_msec,max_msec,nprocs,nreqs,thrpt_kiops" << std::endl;
         }
         out <<
             avg_msec << "," <<
@@ -74,7 +75,7 @@ void out_csv(SCPArgs &args, int rank, double local_time_spent, int nprocs, size_
             nprocs << "," <<
             tot_ops << "," <<
             thrpt_kiops << "," <<
-            conf << std::endl;
+            std::endl;
     }
 }
 
@@ -87,7 +88,7 @@ int main(int argc, char * argv[]) {
     MPI_Comm_size(MPI_COMM_WORLD, &nprocs);
     auto scp = basket::Singleton<StorageCostPredictor>::GetInstance();
     std::string config = "rank" + std::to_string(rank);
-    size_t num_reqs = args.GetSizeOpt("-num_reqs");
+    size_t num_reqs = args.GetSizeOpt("-nreqs");
     size_t nreqs_per_proc = num_reqs / nprocs;
     std::string model_path = args.GetStringOpt("-model");
 
@@ -118,6 +119,6 @@ int main(int argc, char * argv[]) {
 
     //Get stats
     out_csv(args, rank, local_time_spent, nprocs, nreqs_per_proc);
-
     MPI_Finalize();
+    return 0;
 }
