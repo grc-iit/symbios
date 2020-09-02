@@ -97,7 +97,7 @@ int main(int argc, char* argv[]){
 
     common::debug::Timer update_t;
     for(int i=0;i<number_request;++i){
-        request.id_ = path + "temp_" + std::to_string(i);
+        request.id_ = path + "/temp_" + std::to_string(i);
         update_t.resumeTime();
         mo->Store(request,distributions);
         update_t.pauseTime();
@@ -106,12 +106,12 @@ int main(int argc, char* argv[]){
     Metadata primary_metadata;
     common::debug::Timer locate_t;
     for(int i=0;i<number_request;++i){
-        request.id_ = path + "temp_" + std::to_string(i);
+        request.id_ = path + "/temp_" + std::to_string(i);
         locate_t.resumeTime();
         mo->Locate(request,primary_metadata);
         locate_t.pauseTime();
+        mo->Delete(request);
     }
-
 
     MPI_Barrier(MPI_COMM_WORLD);
     double store_local_end_time = store_t.endTime();
@@ -196,6 +196,19 @@ int main(int argc, char* argv[]){
             update_thrpt_kiops << "," << update_bw_kbps << "," <<
             locate_thrpt_kiops << "," << locate_bw_kbps << "," <<
             std::endl;
+        std::cout << store_avg_msec << "," << store_std_msec << "," << store_min_msec << "," << store_max_msec << "," <<
+                  update_avg_msec << "," << update_std_msec << "," << update_min_msec << "," << update_max_msec << "," <<
+                  locate_avg_msec << "," << locate_std_msec << "," << locate_min_msec << "," << locate_max_msec << "," <<
+                  nprocs << "," <<
+                  number_request << "," <<
+                  request_size << "," <<
+                  SYMBIOS_CONF->RANDOM_SEED << "," <<
+                  tot_ops << "," <<
+                  tot_bytes << "," <<
+                  store_thrpt_kiops << "," << store_bw_kbps << "," <<
+                  update_thrpt_kiops << "," << update_bw_kbps << "," <<
+                  locate_thrpt_kiops << "," << locate_bw_kbps << "," <<
+                  std::endl;
     }
 
     MPI_Finalize();
