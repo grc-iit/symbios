@@ -88,6 +88,8 @@ MetadataOrchestrator::Locate(Data &request, Metadata &primary_metadata) {
     original_metadata.storage_index_ = request.storage_index_;
     basket::Singleton<IOFactory>::GetInstance()->GetIOClient(original_metadata.storage_index_)->Read(original_metadata,
                                                                                                      original_metadata);
+    if(original_metadata.buffer_.size() == 0)
+        throw ErrorException(OPEN_FILE_FAILED);
     clmdep_msgpack::object_handle oh = clmdep_msgpack::unpack(original_metadata.buffer_.data(),
                                                               original_metadata.buffer_.size());
     clmdep_msgpack::object deserialized = oh.get();
@@ -136,8 +138,7 @@ bool MetadataOrchestrator::Delete(Data &request) {
         Data original_metadata;
         original_metadata.id_ = request.id_ + "_meta";
         original_metadata.storage_index_ = solution.first;
-        basket::Singleton<IOFactory>::GetInstance()->GetIOClient(original_metadata.storage_index_)->Remove(
-                original_metadata);
+        basket::Singleton<IOFactory>::GetInstance()->GetIOClient(original_metadata.storage_index_)->Remove(original_metadata);
     }
     return true;
 }

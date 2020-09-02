@@ -21,6 +21,7 @@ private:
         AssertOptIsSet("-n");
         AssertOptIsSet("-c");
         AssertOptIsSet("-out");
+        AssertOptIsSet("-i");
 
 
     }
@@ -32,6 +33,7 @@ public:
         std::cout << "-c [string]: path to configuration file" << std::endl;
         std::cout << "-s [int]: size of request" << std::endl;
         std::cout << "-n [int]: number of requests" << std::endl;
+        std::cout << "-i [int]: storage index" << std::endl;
         std::cout << "Additional Parameters" << std::endl;
         std::cout << "-out [string]: path to csv file" << std::endl;
         std::cout << "" << std::endl;
@@ -42,6 +44,7 @@ public:
         AddOpt("-out", ArgType::kString);
         AddOpt("-s", ArgType::kInt);
         AddOpt("-n", ArgType::kInt);
+        AddOpt("-i", ArgType::kInt);
         ArgIter(argc, argv);
         VerifyArgs();
     }
@@ -79,7 +82,7 @@ int main(int argc, char* argv[]){
     MPI_Barrier(MPI_COMM_WORLD);
     auto request = Data();
     request.position_ = 0;
-    request.storage_index_ = 0;
+    request.storage_index_ = args.GetIntOpt("-i");;
     request.buffer_.resize(request_size);
     ops_per_proc = number_request;
     bytes_per_proc = ops_per_proc * request_size;
@@ -93,16 +96,16 @@ int main(int argc, char* argv[]){
         store_t.resumeTime();
         mo->Store(request,distributions);
         store_t.pauseTime();
+        sleep(1);
     }
-
     common::debug::Timer update_t;
     for(int i=0;i<number_request;++i){
         request.id_ = path + "/temp_" + std::to_string(i);
         update_t.resumeTime();
         mo->Store(request,distributions);
         update_t.pauseTime();
+        sleep(2);
     }
-
     Metadata primary_metadata;
     common::debug::Timer locate_t;
     for(int i=0;i<number_request;++i){
