@@ -6,20 +6,22 @@
 #include <mpi.h>
 #include <symbios/common/configuration_manager.h>
 #include <symbios/common/data_structure.h>
-
-//#define SYMBIOS_FORWARD_DECL(name, ret, args) typedef ret(*__real_t_##name)args;
-//#define MAP_OR_FAIL(func)                                                      \
-//    __real_t_##func __real_##func;                                         \
-//    __real_##func = (__real_t_##func)dlsym(RTLD_NEXT,#func);
+#include "dlfcn.h"
 
 namespace symbios{
         class Client {
             private:
                 std::shared_ptr<RPC> rpc;
+//                basket::unordered_map<FILE*,CharStruct> fileDescriptorMap;
             public:
                 Client();
                 void StoreRequest(Data &request);
                 void LocateRequest(Data &request);
+
+                bool addOrUpdateFileDescriptorPool(FILE* fh, CharStruct filename);
+                bool isFileDescriptorTracked(FILE* fh);
+                bool deleteFileDescriptorFromPool(FILE* fh);
+                std::pair<bool, CharStruct> getFileNameFromMap(FILE* fh);
             };
     }
 

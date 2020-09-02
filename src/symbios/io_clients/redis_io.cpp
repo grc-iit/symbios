@@ -23,7 +23,7 @@ void RedisIOClient::Read(Data &source, Data &destination) {
                 throw ErrorException(READ_REDIS_POSITION_OR_SIZE_FAILED);
             } else {
                 // read data from Redis successful
-                destination.buffer_ = std::string(value.c_str() + source.position_, value_size - source.position_);
+                destination.buffer_ = std::string(value.c_str() + source.position_, source.buffer_.size());
             }
         } else {
             throw ErrorException(READ_REDIS_DATA_FAILED);

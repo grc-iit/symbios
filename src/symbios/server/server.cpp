@@ -63,3 +63,4 @@ Data symbios::Server::LocateRequest(Data &request){
 void symbios::Server::Run(std::future<void> futureObj) {
     RunInternal(std::move(futureObj));
 }
+
