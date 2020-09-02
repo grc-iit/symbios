@@ -28,26 +28,12 @@ void symbios::Client::LocateRequest(Data &request) {
 
 }
 
-//bool symbios::Client::addOrUpdateFileDescriptorPool(FILE* fh, CharStruct filename) {
-//    auto map_locator = fileDescriptorMap.Get(fh);
-//    if (map_locator.first)
-//        fileDescriptorMap.Erase(fh);
-//    return fileDescriptorMap.Put(fh, filename);
-//}
-//
-//bool symbios::Client::isFileDescriptorTracked(FILE* fh) {
-//    auto map_locator=fileDescriptorMap.Get(fh);
-//    return map_locator.first;
-//}
-//
-//bool symbios::Client::deleteFileDescriptorFromPool(FILE* fh) {
-//    auto map_locator = fileDescriptorMap.Get(fh);
-//    if (map_locator.first)
-//        return fileDescriptorMap.Erase(fh).first;
-//    else
-//        return map_locator.first;
-//}
-//
-//std::pair<bool, CharStruct> symbios::Client::getFileNameFromMap(FILE* fh) {
-//    return fileDescriptorMap.Get(fh);
-//}
+bool symbios::Client::Delete(Data &request) {
+    return true;
+}
+
+size_t symbios::Client::Size(Data &request) {
+    return 0;
+}
+
+
