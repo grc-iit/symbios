@@ -2,6 +2,8 @@
 // Created by mani on 8/24/2020.
 //
 
+//TODO: Note, if exception happense between locks, it will never get unlocked!
+
 #ifndef SYMBIOS_STORAGE_COST_PREDICTOR_H
 #define SYMBIOS_STORAGE_COST_PREDICTOR_H
 
@@ -15,6 +17,8 @@
 #include <unordered_map>
 #include <math.h>
 #include <common/debug.h>
+#include <mutex>
+#include <future>
 
 struct IOMetric {
     double avg_msec_;
@@ -114,12 +118,13 @@ private:
     MPI_File metrics_file_ = nullptr, model_file_ = nullptr;
     int rank_ = 0, nprocs_ = 1;
     bool commit_metrics_ = true, csv_header_ = true;
-    size_t window_size_ = 256;
-    size_t window_off_ = 0;
+    size_t window_size_ = 256, window_tick_ = 0, window_off_ = 0;
     std::unordered_map<std::string, LinRegModel> storage_models_;
     std::list<std::string> storage_configs_;
     std::list<ModelMetric> model_metrics_;
     std::vector<IOMetric> metrics_;
+    std::future<void> fit_future_;
+    std::mutex lock;
 
     int ParseInt(std::string &input, size_t &pos_in_file, size_t filesz) {
         std::string substr(input.data() + pos_in_file, filesz - pos_in_file);
@@ -181,15 +186,21 @@ private:
         }
     }
 
-    size_t LoadCSV(std::string &path, MPI_File &file, size_t &nrows, std::string &buf) {
+    size_t LoadCSV(std::string &path, MPI_File &file, std::string &buf) {
         common::debug::AutoTrace trace = common::debug::AutoTrace("StorageCostPredictor::LoadCSV");
+        int ec;
         MPI_Status status;
-        size_t filesz = 0;
-        bool exists = boost::filesystem::exists(path);
-        if (exists) { filesz = boost::filesystem::file_size(path); }
-        MPI_File_open(MPI_COMM_WORLD, path.data(), MPI_MODE_RDWR | MPI_MODE_CREATE, MPI_INFO_NULL, &file); //TODO: Error handling?
-        if (!exists && csv_header_ && rank_ == 0) {
+        MPI_Offset filesz;
+        ec = MPI_File_open(MPI_COMM_WORLD, path.data(), MPI_MODE_RDWR | MPI_MODE_CREATE, MPI_INFO_NULL, &file);
+        if(ec != MPI_SUCCESS || file == nullptr) {
+            std::cout << "Could not open CSV" << std::endl;
+            throw 1;
+        }
+        MPI_File_get_size(file, &filesz);
+        if (filesz==0 && csv_header_ && rank_ == 0) {
             csv_header_ = false; //TODO: write schema to file instead;
+        }
+        if(filesz == 0) {
             return 0;
         }
         buf.reserve(filesz);
@@ -203,15 +214,17 @@ private:
             std::cout << "Saving to an invalid CSV" << std::endl;
             throw 1;
         }
+        std::cout << "RANK: " << rank_ << " Serial: " << serial.size() << std::endl;
         MPI_Barrier(MPI_COMM_WORLD);
         MPI_Status status;
         size_t off = 0;
         std::vector<size_t> offsets(nprocs_);
         size_t serial_size = serial.size();
-        MPI_Alltoall(&serial_size, 1, MPI_UNSIGNED_LONG, &offsets[0], 1, MPI_UNSIGNED_LONG, MPI_COMM_WORLD);
+        MPI_Allgather(&serial_size, 1, MPI_UNSIGNED_LONG, &offsets[0], 1, MPI_UNSIGNED_LONG, MPI_COMM_WORLD);
         for(int i = 0; i < rank_; ++i) {
             off += offsets[i];
         }
+        std::cout << "RANK: " << rank_ << " OFFSET: " << off << " SIZE: " << serial.size() << std::endl;
         MPI_File_seek(file, off, MPI_SEEK_END);
         MPI_File_write_all(file, &serial[0], serial.size(), MPI_CHAR, &status);
     }
@@ -249,9 +262,9 @@ private:
 
     void LoadMetricsCSV() {
         common::debug::AutoTrace trace = common::debug::AutoTrace("StorageCostPredictor::LoadMetricsCSV");
-        size_t nrows = 0, pos_in_file = 0;
+        size_t pos_in_file = 0;
         std::string buf;
-        size_t filesz = LoadCSV(metrics_file_path_, metrics_file_, nrows, buf);
+        size_t filesz = LoadCSV(metrics_file_path_, metrics_file_, buf);
         if(csv_header_) {
             NextLine(buf, pos_in_file, filesz);
         }
@@ -263,6 +276,7 @@ private:
     void SaveMetricsCSV() {
         common::debug::AutoTrace trace = common::debug::AutoTrace("StorageCostPredictor::SaveMetricsCSV");
         std::stringstream ss;
+        lock.lock();
         for(int row_id = window_off_; row_id < metrics_.size(); ++row_id) {
             IOMetric &io_metric = metrics_[row_id];
             ss <<
@@ -282,6 +296,7 @@ private:
             io_metric.conf_ <<
             std::endl;
         }
+        lock.unlock();
         std::string serial = ss.str();
         SaveCSV(serial, metrics_file_);
     }
@@ -289,6 +304,7 @@ private:
     void SaveModelCSV() {
         common::debug::AutoTrace trace = common::debug::AutoTrace("StorageCostPredictor::SaveModelCSV");
         std::stringstream ss;
+        lock.lock();
         for(int row_id = window_off_; row_id < metrics_.size(); ++row_id) {
             IOMetric &io_metric = metrics_[row_id];
             ss <<
@@ -308,13 +324,43 @@ private:
                io_metric.conf_ <<
                std::endl;
         }
+        lock.unlock();
         std::string serial = ss.str();
         SaveCSV(serial, metrics_file_);
+    }
+
+    void CommitMetrics() {
+        common::debug::AutoTrace trace = common::debug::AutoTrace("StorageCostPredictor::CommitMetrics");
+        if(!commit_metrics_) { return; }
+        SaveMetricsCSV();
+        SaveModelCSV();
+        window_off_ = metrics_.size();
+    }
+
+    void AsyncFitCommit() {
+        common::debug::AutoTrace trace = common::debug::AutoTrace("StorageCostPredictor::AsyncFitCommit");
+        for(std::string &storage_config : storage_configs_) {
+            LinRegModel &model = storage_models_[storage_config];
+            model.Fit();
+        }
+        CommitMetrics();
+    }
+
+    void Fit() {
+        common::debug::AutoTrace trace = common::debug::AutoTrace("StorageCostPredictor::Fit");
+        for(std::string &storage_config : storage_configs_) {
+            LinRegModel &model = storage_models_[storage_config];
+            model.Fit();
+        }
     }
 
 public:
     StorageCostPredictor() { common::debug::AutoTrace trace = common::debug::AutoTrace("StorageCostPredictor::StorageCostPredictor"); }
     ~StorageCostPredictor() {
+        if(fit_future_.valid()) {
+            fit_future_.wait();
+            fit_future_.get();
+        }
         common::debug::AutoTrace trace = common::debug::AutoTrace("StorageCostPredictor::~StorageCostPredictor");
         CommitMetrics();
         CloseCSV(metrics_file_);
@@ -336,38 +382,35 @@ public:
         window_off_ = metrics_.size();
     }
 
-    void CommitMetrics() {
-        common::debug::AutoTrace trace = common::debug::AutoTrace("StorageCostPredictor::CommitMetrics");
-        if(!commit_metrics_) { return; }
-        SaveMetricsCSV();
-        SaveModelCSV();
-        window_off_ = metrics_.size();
-    }
-
-    void Fit() {
-        common::debug::AutoTrace trace = common::debug::AutoTrace("StorageCostPredictor::Fit");
-        for(std::string &storage_config : storage_configs_) {
-            LinRegModel &model = storage_models_[storage_config];
-            model.Fit();
+    void FitCommit() {
+        if(fit_future_.valid()) {
+            fit_future_.wait();
+            fit_future_.get();
         }
+        fit_future_ = std::async(std::launch::async, &StorageCostPredictor::AsyncFitCommit, this);
     }
 
     void Feedback(double bw_measured, double read_bytes, double write_bytes, std::string &config) {
         common::debug::AutoTrace trace = common::debug::AutoTrace("StorageCostPredictor::Feedback");
+        lock.lock();
         metrics_.emplace_back(
                 0, 0, 0, 0, nprocs_, 0, 0,
                 read_bytes, write_bytes, read_bytes+write_bytes, 0, 0, bw_measured, config);
+        lock.unlock();
         storage_models_[config].Feedback(bw_measured, write_bytes, read_bytes);
-        if(window_off_ % window_size_ == 0 && window_off_ > 0) {
+        ++window_tick_;
+        if(window_tick_ >= window_size_) {
             Fit();
-            CommitMetrics();
+            window_tick_ = 0;
         }
     }
 
     void Feedback(double bw_measured, double bw_pred, double read_bytes, double write_bytes, std::string &config) {
         common::debug::AutoTrace trace = common::debug::AutoTrace("StorageCostPredictor::Feedback");
         Feedback(bw_measured, read_bytes, write_bytes, config);
+        lock.lock();
         model_metrics_.emplace_back(bw_measured, bw_pred, read_bytes, write_bytes);
+        lock.unlock();
     }
 
     double Predict(double read_bytes, double write_bytes, std::string &config) {

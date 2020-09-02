@@ -37,14 +37,13 @@ int main(int argc, char * argv[]) {
     SCCArgs args(argc, argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &nprocs);
-
     std::shared_ptr<StorageCostPredictor> a = basket::Singleton<StorageCostPredictor>::GetInstance();
     std::string config = "asdf";
     a->LoadMetrics(rank, nprocs, args.GetStringOpt("-metrics"), args.GetStringOpt("-model"));
     a->Feedback(10*(rank+1), 25*(rank+1), 25*(rank+1), config);
     a->Feedback(20*(rank+1), 50*(rank+1), 50*(rank+1), config);
     a->Feedback(30*(rank+1), 75*(rank+1), 75*(rank+1), config);
-    a->Fit();
+    a->FitCommit();
     std::cout << a->Predict(100.0, 100.0, config) << std::endl;
-    return 0;
+    //MPI_Finalize();
 }
