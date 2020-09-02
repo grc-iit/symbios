@@ -68,4 +68,12 @@ void FileIOClient::Write(Data &source, Data &destination) {
 
 void FileIOClient::Remove(Data &source) {
     auto tracer_source = common::debug::AutoTrace("FileIOClient::Remove", source);
+    remove(source.id_.c_str());
+}
+
+size_t FileIOClient::Size(Data &source) {
+    if(boost::filesystem::exists(source.id_.c_str())){
+        return boost::filesystem::file_size(source.id_.c_str());
+    }
+    return 0;
 }

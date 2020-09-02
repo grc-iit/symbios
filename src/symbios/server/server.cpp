@@ -8,10 +8,14 @@ symbios::Server::Server(){
     SYMBIOS_CONF->ConfigureSymbiosServer();
     auto basket=BASKET_CONF;
     rpc=basket::Singleton<RPCFactory>::GetInstance()->GetRPC(BASKET_CONF->RPC_PORT);
-    std::function<int(Data&)> functionStoreRequest(std::bind(&Server::StoreRequest, this, std::placeholders::_1));
-    std::function<Data(Data&)> functionLocateRequest(std::bind(&Server::LocateRequest, this, std::placeholders::_1));
+    std::function<int(Data&)> functionStoreRequest(std::bind(&Server::Store, this, std::placeholders::_1));
+    std::function<Data(Data&)> functionLocateRequest(std::bind(&Server::Locate, this, std::placeholders::_1));
+    std::function<size_t(Data&)> functionSizeRequest(std::bind(&Server::Size, this, std::placeholders::_1));
+    std::function<bool(Data&)> functionDeleteRequest(std::bind(&Server::Delete, this, std::placeholders::_1));
     rpc->bind("StoreRequest", functionStoreRequest);
     rpc->bind("LocateRequest", functionLocateRequest);
+    rpc->bind("DeleteRequest", functionDeleteRequest);
+    rpc->bind("SizeRequest", functionSizeRequest);
     /**
      * Preload classes.
      */
@@ -21,13 +25,17 @@ symbios::Server::Server(){
 
 }
 
+void symbios::Server::Run(std::future<void> futureObj) {
+    RunInternal(std::move(futureObj));
+}
+
 void symbios::Server::RunInternal(std::future<void> futureObj) {
     while(futureObj.wait_for(std::chrono::milliseconds(1)) == std::future_status::timeout){
         usleep(10000);
     }
 }
 
-int symbios::Server::StoreRequest(Data &request){
+int symbios::Server::Store(Data &request){
     auto tracer=common::debug::AutoTrace(std::string("symbios::Server::StoreRequest"), request);
     auto dde = basket::Singleton<DataDistributionEngineFactory>::GetInstance()->GetDataDistributionEngine(SYMBIOS_CONF->DATA_DISTRIBUTION_POLICY);
     auto distributions = dde->Distribute(request);
@@ -40,7 +48,7 @@ int symbios::Server::StoreRequest(Data &request){
     return SYMBIOS_CONF->SERVER_COUNT;
 }
 
-Data symbios::Server::LocateRequest(Data &request){
+Data symbios::Server::Locate(Data &request){
     auto tracer=common::debug::AutoTrace(std::string("symbios::Server::LocateRequest"), request);
     Metadata primary_metadata;
     auto distributions = basket::Singleton<MetadataOrchestrator>::GetInstance()->Locate(request, primary_metadata);
@@ -60,7 +68,27 @@ Data symbios::Server::LocateRequest(Data &request){
     return request;
 }
 
-void symbios::Server::Run(std::future<void> futureObj) {
-    RunInternal(std::move(futureObj));
+size_t symbios::Server::Size(Data &request) {
+    auto tracer=common::debug::AutoTrace(std::string("symbios::Server::Size"), request);
+    Metadata primary_metadata;
+    auto distributions = basket::Singleton<MetadataOrchestrator>::GetInstance()->Locate(request, primary_metadata);
+    int total_size= 0;
+    for(auto &distribution:distributions){
+        total_size+=basket::Singleton<IOFactory>::GetInstance()->GetIOClient(distribution.destination_data_.storage_index_)->Size(distribution.destination_data_);
+    }
+    return total_size;
 }
+
+bool symbios::Server::Delete(Data &request) {
+    auto tracer=common::debug::AutoTrace(std::string("symbios::Server::Size"), request);
+    Metadata primary_metadata;
+    auto distributions = basket::Singleton<MetadataOrchestrator>::GetInstance()->Locate(request, primary_metadata);
+    for(auto &distribution:distributions){
+        basket::Singleton<IOFactory>::GetInstance()->GetIOClient(distribution.destination_data_.storage_index_)->Remove(distribution.source_data_);
+    }
+    return basket::Singleton<MetadataOrchestrator>::GetInstance()->Delete(request);;
+}
+
+
+
 

@@ -18,8 +18,10 @@ namespace symbios {
     public:
         void Run(std::future<void> futureObj);
         explicit Server();
-        int StoreRequest(Data &request);
-        Data LocateRequest(Data &request);
+        int Store(Data &request);
+        Data Locate(Data &request);
+        size_t Size(Data &request);
+        bool Delete(Data &request);
     };
 }
 

@@ -29,11 +29,15 @@ void symbios::Client::LocateRequest(Data &request) {
 }
 
 bool symbios::Client::Delete(Data &request) {
-    return true;
+    auto tracer = common::debug::AutoTrace("symbios::Client::LocateRequest", request);
+    int server = rand() % BASKET_CONF->NUM_SERVERS;
+    return rpc->call<RPCLIB_MSGPACK::object_handle>(server, "DeleteRequest", request).as<bool>();
 }
 
 size_t symbios::Client::Size(Data &request) {
-    return 0;
+    auto tracer = common::debug::AutoTrace("symbios::Client::LocateRequest", request);
+    int server = rand() % BASKET_CONF->NUM_SERVERS;
+    return rpc->call<RPCLIB_MSGPACK::object_handle>(server, "SizeRequest", request).as<size_t>();
 }
 
 

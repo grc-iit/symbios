@@ -95,3 +95,15 @@ void MongoIOClient::Remove(Data &source) {
     file.delete_many(bsoncxx::builder::basic::make_document(
             bsoncxx::builder::basic::kvp("key", std::string(source.id_.c_str()))));
 }
+
+size_t MongoIOClient::Size(Data &source) {
+    bool exists = false;
+    Data read_source;
+    try {
+        read_source.id_ = source.id_;
+        Read(read_source, read_source);
+        return read_source.buffer_.size();
+    } catch (const std::exception &e) {
+       return 0;
+    }
+}
