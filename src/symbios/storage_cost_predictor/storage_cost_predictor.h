@@ -226,7 +226,11 @@ private:
             off += offsets[i];
         }
         MPI_File_seek(file, off, MPI_SEEK_END);
-        MPI_File_write_all(file, &serial[0], serial.size(), MPI_CHAR, &status);
+        int ec = MPI_File_write_all(file, &serial[0], serial.size(), MPI_CHAR, &status);
+        if(ec != MPI_SUCCESS) {
+            std::cout << "Could not write to MPI file" << std::endl;
+            return;
+        }
     }
 
     void CloseCSV(MPI_File &file) {
