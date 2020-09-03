@@ -60,9 +60,7 @@ void MetadataOrchestrator::Store(Data &original_request,
         clmdep_msgpack::pack(buffer, primary_metadata);
         buffer.seekg(0);
         std::string s = buffer.str();
-        //std::replace( s.begin(), s.end(), '\0','$');
         original_metadata.data_size_ = s.size();
-        //char t[s.size()];
         original_metadata.buffer_ = static_cast<char *>(malloc(original_metadata.data_size_));
         memcpy(original_metadata.buffer_,s.c_str(),s.size());
         //original_metadata.buffer_=t;
@@ -81,7 +79,6 @@ void MetadataOrchestrator::Store(Data &original_request,
         clmdep_msgpack::pack(buffer, link_metadata);
         buffer.seekg(0);
         std::string s = buffer.str();
-        std::replace( s.begin(), s.end(), '\0','$');
         link_meta.data_size_ = s.size();
         link_meta.buffer_ = static_cast<char *>(malloc(link_meta.data_size_));
         memcpy(link_meta.buffer_,s.data(),link_meta.data_size_);

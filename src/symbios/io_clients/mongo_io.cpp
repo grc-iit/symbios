@@ -62,7 +62,7 @@ void MongoIOClient::Write(Data &source, Data &destination) {
             memcpy(new_val.data() + destination.position_, source.buffer_ + source.position_, source.data_size_ - source.position_);
             source.position_ = 0;
         } else {
-            new_val=std::string(read_source.buffer_);
+            new_val=std::string(read_source.buffer_,read_source.data_size_);
             // update the old_value
             memcpy(new_val.data() + destination.position_,
                    source.buffer_ + source.position_,
@@ -73,7 +73,7 @@ void MongoIOClient::Write(Data &source, Data &destination) {
                 bsoncxx::builder::basic::kvp("key", std::string(destination.id_.c_str()))));
         free(read_source.buffer_);
     }else{
-        new_val=std::string(source.buffer_);
+        new_val=std::string(source.buffer_,source.data_size_);
     }
     auto document = bsoncxx::builder::basic::document{};
     using bsoncxx::builder::basic::kvp;
