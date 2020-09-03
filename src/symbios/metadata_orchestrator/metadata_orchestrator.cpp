@@ -60,10 +60,12 @@ void MetadataOrchestrator::Store(Data &original_request,
         clmdep_msgpack::pack(buffer, primary_metadata);
         buffer.seekg(0);
         std::string s = buffer.str();
-        std::replace( s.begin(), s.end(), '\0','$');
+        //std::replace( s.begin(), s.end(), '\0','$');
         original_metadata.data_size_ = s.size();
+        //char t[s.size()];
         original_metadata.buffer_ = static_cast<char *>(malloc(original_metadata.data_size_));
         memcpy(original_metadata.buffer_,s.c_str(),s.size());
+        //original_metadata.buffer_=t;
         basket::Singleton<IOFactory>::GetInstance()->GetIOClient(original_metadata.storage_index_)->Write(
                 original_metadata, original_metadata);
         free(original_metadata.buffer_);
@@ -74,7 +76,7 @@ void MetadataOrchestrator::Store(Data &original_request,
         link_metadata.is_link_ = true;
         link_metadata.links_.insert({-1, original_metadata});
         auto link_meta = Data();
-        link_meta.id_=original_request.id_ + "_meta";
+        //link_meta.id_=original_request.id_ + "_meta";
         std::stringstream buffer;
         clmdep_msgpack::pack(buffer, link_metadata);
         buffer.seekg(0);
@@ -105,8 +107,8 @@ MetadataOrchestrator::Locate(Data &request, Metadata &primary_metadata) {
     original_metadata.storage_index_ = request.storage_index_;
     basket::Singleton<IOFactory>::GetInstance()->GetIOClient(original_metadata.storage_index_)->Read(original_metadata,
                                                                                                      original_metadata);
-    std::string s = std::string(original_metadata.buffer_);
-    std::replace( s.begin(), s.end(), '$','\0');
+    std::string s = std::string(original_metadata.buffer_,original_metadata.data_size_);
+    //std::replace( s.begin(), s.end(), '$','\0');
     clmdep_msgpack::object_handle oh = clmdep_msgpack::unpack(s.c_str(),
                                                               original_metadata.data_size_);
     clmdep_msgpack::object deserialized = oh.get();
@@ -120,8 +122,8 @@ MetadataOrchestrator::Locate(Data &request, Metadata &primary_metadata) {
         original_metadata = metadata.links_[-1];
         basket::Singleton<IOFactory>::GetInstance()->GetIOClient(original_metadata.storage_index_)->Read(
                 original_metadata, original_metadata);
-        std::string s = std::string(original_metadata.buffer_);
-        std::replace( s.begin(), s.end(), '$','\0');
+        std::string s = std::string(original_metadata.buffer_,original_metadata.data_size_);
+        //std::replace( s.begin(), s.end(), '$','\0');
         clmdep_msgpack::object_handle oh = clmdep_msgpack::unpack(s.c_str(),
                                                                   original_metadata.data_size_);
         oh.get().convert(primary_metadata);
