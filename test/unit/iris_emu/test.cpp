@@ -29,7 +29,7 @@ int main(int argc, char * argv[]){
     if(argc > 1) SYMBIOS_CONF->CONFIGURATION_FILE=argv[1];
     BASKET_CONF->BACKED_FILE_DIR=SYMBIOS_CONF->SERVER_DIR;
 
-    const char *data = argc > 2 ? argv[2] : "Hello Symbios";  // argv[2]
+    std::string data = argc > 2 ? argv[2] : "Hello Symbios";  // argv[2]
 
     auto type_ = argc > 3 ?
             ( strcmp("file", argv[3]) == 0  ? IOClientType::FILE_IO :
@@ -40,18 +40,21 @@ int main(int argc, char * argv[]){
     auto max_obj_size = argc > 5 ? std::atoi(argv[5]) : MAX_OBJ_SIZE;  // argv[5]
 
     DataMapper mapper_(type_, max_obj_size);
-    DataDescriptor src = {file_,0,  strlen(data), 0 };
+    DataDescriptor src = {file_,0,  data.size(), 0 };
     auto objs = mapper_.map(src);
 //    COMMON_DBGVAR(objs);
 
     doOp operation(type_);
 //    std::cout<<"Writing Data"<<std::endl;
+//    char * buff = (char *) malloc(max_obj_size);
     for (auto &i : objs){
         auto data_obj = Data();
         data_obj.id_= i.id_;
 
         data_obj.position_=i.position_;
-        slice_str(data, data_obj.buffer_, i.position_ + i.chunk_index * max_obj_size, i.size);
+        data_obj.buffer_ = data.data();
+        data_obj.buffer_[ data.size()]='\0';
+        data_obj.data_size_= data.size()+1;
         data_obj.storage_index_ = type_;
 
         COMMON_DBGVAR(data_obj);
@@ -59,21 +62,22 @@ int main(int argc, char * argv[]){
 //        .buffer_=std::string().data();
     }
 
-    DataDescriptor read_src = {file_, 0,  strlen(data), 0 };
+    DataDescriptor read_src = {file_, 0,  data.size(), 0 };
     objs = mapper_.map(read_src);
 
-//    std::cout<<"Reading Data"<<std::endl;
+    std::cout<<"Reading Data"<<std::endl;
     for (auto &i : objs){
         auto data_obj = Data();
         data_obj.id_= i.id_;
 
         data_obj.position_=i.position_;
-//        data_obj.buffer_.resize(i.size);
+        data_obj.buffer_ = static_cast<char *>(malloc(data_obj.data_size_));;
         data_obj.storage_index_ = type_;
 
-        COMMON_DBGVAR2(data_obj, i);
+        COMMON_DBGVAR2(da ta_obj, i);
         operation.Read(data_obj, data_obj);
         COMMON_DBGVAR2(data_obj, i);
+
         std::cout<<data_obj.buffer_<<std::endl;
     }
 

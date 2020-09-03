@@ -43,8 +43,8 @@ void LibHandler::run(uint16_t op_type) {
 }
 
 void LibHandler::do_mapped_write() {
-    DataDescriptor src = {file_,0,  strlen(data), 0 };
-    DataDescriptor read_src = {file_, 0,  strlen(data), 0 };
+    DataDescriptor src = {file_,0,  data.size(), 0 };
+    DataDescriptor read_src = {file_, 0,  data.size(), 0 };
     DataMapper mapper_(db_type, max_obj_size);
     auto objs = mapper_.map(src);
     auto read_objs = mapper_.map(read_src);
@@ -55,10 +55,15 @@ void LibHandler::do_mapped_write() {
             auto data_obj = Data();
             data_obj.id_= i.id_;
             data_obj.position_=i.position_;
-            slice_str(data, data_obj.buffer_, i.position_ + i.chunk_index * max_obj_size, i.size);
+
+            data_obj.position_=i.position_;
+            data_obj.buffer_ = data.data();
+            data_obj.buffer_[ data.size()]='\0';
+            data_obj.data_size_= data.size()+1;
             data_obj.storage_index_ = db_type;
             COMMON_DBGVAR(data_obj);
             operation.Write(data_obj, data_obj);
+
         }
     }
 
@@ -68,9 +73,13 @@ void LibHandler::do_mapped_write() {
             auto data_obj = Data();
             data_obj.id_= i.id_;
             data_obj.position_=i.position_;
-//            data_obj.buffer_= data.substr(i.position_+i.chunk_index*max_obj_size, i.size);
-            slice_str(data, data_obj.buffer_, i.position_ + i.chunk_index * max_obj_size, i.size);
+
+            data_obj.position_=i.position_;
+            data_obj.buffer_ = data.data();
+            data_obj.buffer_[ data.size()]='\0';
+            data_obj.data_size_= data.size()+1;
             data_obj.storage_index_ = db_type;
+
             client.StoreRequest(data_obj);
         }
     }
@@ -82,8 +91,13 @@ void LibHandler::do_mapped_write() {
             auto data_obj = Data();
             data_obj.id_= i.id_;
             data_obj.position_=i.position_;
-//            data_obj.buffer_= data.substr(i.position_+i.chunk_index*max_obj_size, i.size);
-            slice_str(data, data_obj.buffer_, i.position_ + i.chunk_index * max_obj_size, i.size);
+
+            data_obj.position_=i.position_;
+            data_obj.buffer_ = data.data();
+            data_obj.buffer_[ data.size()]='\0';
+            data_obj.data_size_= data.size()+1;
+            data_obj.storage_index_ = db_type;
+
             data_obj.storage_index_ = db_type;
             client.StoreRequest(data_obj);
         }
@@ -94,8 +108,8 @@ void LibHandler::do_mapped_write() {
 }
 
 void LibHandler::do_mapped_read() {
-    DataDescriptor src = {file_,0,  strlen(data), 0 };
-    DataDescriptor read_src = {file_, 0,  strlen(data), 0 };
+    DataDescriptor src = {file_,0,  data.size(), 0 };
+    DataDescriptor read_src = {file_, 0,  data.size(), 0 };
     DataMapper mapper_(db_type, max_obj_size);
     auto objs = mapper_.map(src);
     auto read_objs = mapper_.map(read_src);
@@ -106,8 +120,9 @@ void LibHandler::do_mapped_read() {
             auto data_obj = Data();
             data_obj.id_= i.id_;
             data_obj.position_=i.position_;
-//            data_obj.buffer_.resize(i.size);
+            data_obj.buffer_ = static_cast<char *>(malloc(data_obj.data_size_));;
             data_obj.storage_index_ = db_type;
+
             operation.Read(data_obj, data_obj);
             COMMON_DBGVAR2(data_obj, i);
             std::cout<<i.position_<<':'<<data_obj.buffer_<<std::endl;
@@ -120,8 +135,9 @@ void LibHandler::do_mapped_read() {
             auto data_obj = Data();
             data_obj.id_= i.id_;
             data_obj.position_=i.position_;
-//            data_obj.buffer_.resize(i.size);
+            data_obj.buffer_ = static_cast<char *>(malloc(data_obj.data_size_));;
             data_obj.storage_index_ = db_type;
+
             client.LocateRequest(data_obj);
             COMMON_DBGVAR2(data_obj, i);
             std::cout<<data_obj.buffer_<<std::endl;
@@ -135,8 +151,9 @@ void LibHandler::do_mapped_read() {
             auto data_obj = Data();
             data_obj.id_= i.id_;
             data_obj.position_=i.position_;
-//            data_obj.buffer_.resize(i.size);
+            data_obj.buffer_ = static_cast<char *>(malloc(data_obj.data_size_));;
             data_obj.storage_index_ = db_type;
+
             client.LocateRequest(data_obj);
             COMMON_DBGVAR2(data_obj, i);
             std::cout<<data_obj.buffer_<<std::endl;

@@ -51,7 +51,7 @@ private:
     uint16_t lib_type;
     uint16_t db_type;
     uint16_t max_obj_size;
-    char* data;
+    std::string data;
     std::string file_;
     std::vector<DataDescriptor> map_data();
     void do_mapped_read();
