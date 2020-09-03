@@ -3,7 +3,7 @@ set(INSTALL_DIR $ENV{INSTALL_DIR})
 include_directories(${INSTALL_DIR}/include/)
 set(CMAKE_CXX_STANDARD 17)
 
-set(LIBS -L${INSTALL_DIR}/lib64 -L${INSTALL_DIR}/lib -L${INSTALL_DIR}/lib -lmpi -lhiredis -lbasket -lrpc -lredis++ -lmongoc-1.0 -lbson-1.0 -lbsoncxx -lboost_system -lboost_filesystem  -lmongocxx -lpthread -ldlib -ldl)
+set(LIBS -L${INSTALL_DIR}/lib64 -L${INSTALL_DIR}/lib -L${INSTALL_DIR}/lib -lopenblas  -ldlib -lgfortran -lm -lquadmath -lpthread -lm -lmpi -lhiredis -lbasket -lrpc -lredis++ -lmongoc-1.0 -lbson-1.0 -lbsoncxx -lboost_system -lboost_filesystem  -lmongocxx -lpthread -ldl)
 include_directories(${CMAKE_SOURCE_DIR})
 set(CTEST_ENVIRONMENT "LD_LIBRARY_PATH=${CMAKE_BINARY_DIR}/")
 set($ENV{LD_PRELOAD} "$ENV{LD_PRELOAD} ${CMAKE_BINARY_DIR}")

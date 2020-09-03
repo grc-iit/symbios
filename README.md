@@ -81,6 +81,11 @@ make install
 
 ### OpenBLAS
 
+install gfortran 
+```bash
+sudo apt install gfortran
+```
+
 ```bash
 wget https://github.com/xianyi/OpenBLAS/archive/v0.3.10.tar.gz
 tar -xzf v0.3.10.tar.gz
