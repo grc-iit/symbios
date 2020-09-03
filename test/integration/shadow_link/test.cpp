@@ -119,6 +119,7 @@ int main(int argc, char* argv[]){
         locate_t.pauseTime();
         mo->Delete(request);
     }
+    free(request.buffer_);
     MPI_Barrier(MPI_COMM_WORLD);
     double store_local_end_time = store_t.getTimeElapsed();
     double update_local_end_time = update_t.getTimeElapsed();
