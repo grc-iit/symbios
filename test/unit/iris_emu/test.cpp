@@ -6,7 +6,6 @@
 #include <common/debug.h>
 #include <symbios/common/enumerations.h>
 #include <symbios/client/client.h>
-#include <common/debug.h>
 
 #define  MAX_OBJ_SIZE 4
 
@@ -42,11 +41,9 @@ int main(int argc, char * argv[]){
     DataMapper mapper_(type_, max_obj_size);
     DataDescriptor src = {file_,0,  data.size(), 0 };
     auto objs = mapper_.map(src);
-//    COMMON_DBGVAR(objs);
+    COMMON_DBGVAR(objs);
 
     doOp operation(type_);
-//    std::cout<<"Writing Data"<<std::endl;
-//    char * buff = (char *) malloc(max_obj_size);
     for (auto &i : objs){
         auto data_obj = Data();
         data_obj.id_= i.id_;
@@ -57,9 +54,8 @@ int main(int argc, char * argv[]){
         data_obj.data_size_= data.size()+1;
         data_obj.storage_index_ = type_;
 
-        COMMON_DBGVAR(data_obj);
+        COMMON_DBGVAR2(data_obj, i);
         operation.Write(data_obj, data_obj);
-//        .buffer_=std::string().data();
     }
 
     DataDescriptor read_src = {file_, 0,  data.size(), 0 };
@@ -74,7 +70,7 @@ int main(int argc, char * argv[]){
         data_obj.buffer_ = static_cast<char *>(malloc(data_obj.data_size_));;
         data_obj.storage_index_ = type_;
 
-        COMMON_DBGVAR2(da ta_obj, i);
+        COMMON_DBGVAR2(data_obj, i);
         operation.Read(data_obj, data_obj);
         COMMON_DBGVAR2(data_obj, i);
 
