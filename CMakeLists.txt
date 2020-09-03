@@ -37,7 +37,7 @@ target_link_libraries(symbios -lbasket -lrpc  -lboost_system -lboost_filesystem 
 
 # add symbios server
 set(SYMBIOS_SERVER_SRC ${SYMBIOS_COMMON_SRC}
-        ${CMAKE_SOURCE_DIR}/src/symbios/storage_cost_predictor/storage_cost_predictor.cpp ${CMAKE_SOURCE_DIR}/src/symbios/storage_cost_predictor/storage_cost_predictor.h
+        #${CMAKE_SOURCE_DIR}/src/symbios/storage_cost_predictor/storage_cost_predictor.cpp ${CMAKE_SOURCE_DIR}/src/symbios/storage_cost_predictor/storage_cost_predictor.h
         ${CMAKE_SOURCE_DIR}/src/symbios/server/server.h ${CMAKE_SOURCE_DIR}/src/symbios/server/server.cpp
         ${CMAKE_SOURCE_DIR}/src/symbios/io_clients/io.h ${CMAKE_SOURCE_DIR}/src/symbios/io_clients/io_factory.h
         ${CMAKE_SOURCE_DIR}/src/symbios/io_clients/file_io.h ${CMAKE_SOURCE_DIR}/src/symbios/io_clients/file_io.cpp
