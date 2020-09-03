@@ -18,7 +18,7 @@ typedef struct Data{
     uint16_t storage_index_;
 
     /*Define the default, copy and move constructor*/
-    Data(): id_(), position_(0), buffer_(), storage_index_(),data_size_(){}
+    Data(): id_(), position_(0), buffer_(NULL), storage_index_(),data_size_(){}
     Data(const Data &other): id_(other.id_), position_(other.position_), buffer_(other.buffer_),
                              storage_index_(other.storage_index_),data_size_(other.data_size_) {}
     Data(Data &other): id_(other.id_), position_(other.position_), buffer_(other.buffer_),
