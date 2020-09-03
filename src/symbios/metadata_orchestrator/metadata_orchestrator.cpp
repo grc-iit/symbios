@@ -74,7 +74,7 @@ void MetadataOrchestrator::Store(Data &original_request,
         link_metadata.is_link_ = true;
         link_metadata.links_.insert({-1, original_metadata});
         auto link_meta = Data();
-        //link_meta.id_=original_request.id_ + "_meta";
+        link_meta.id_=original_request.id_ + "_meta";
         std::stringstream buffer;
         clmdep_msgpack::pack(buffer, link_metadata);
         buffer.seekg(0);
