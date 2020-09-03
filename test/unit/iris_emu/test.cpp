@@ -41,7 +41,7 @@ int main(int argc, char * argv[]){
 
     DataMapper mapper_(type_, max_obj_size);
     DataDescriptor src = {file_,0,  data.size(), 0 };
-    auto objs = mapper_.generateDataObjects(src);
+    auto objs = mapper_.map(src);
 //    COMMON_DBGVAR(objs);
 
     doOp operation(type_);
@@ -60,7 +60,7 @@ int main(int argc, char * argv[]){
     }
 
     DataDescriptor read_src = {file_, 0,  data.size(), 0 };
-    objs = mapper_.generateDataObjects(read_src);
+    objs = mapper_.map(read_src);
 
 //    std::cout<<"Reading Data"<<std::endl;
     for (auto &i : objs){

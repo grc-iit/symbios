@@ -8,8 +8,16 @@
 #include <symbios/io_clients/io_factory.h>
 #include <symbios/common/enumerations.h>
 #include <symbios/common/error_codes.h>
+#include <symbios/client/client.h>
 #include <common/debug.h>
 #include <vector>
+
+
+typedef enum IOLib {
+    IRIS,
+    NIOBE,
+    SYMBIOS
+};
 
 typedef struct DataDescriptor {
     CharStruct id_;
@@ -18,6 +26,29 @@ typedef struct DataDescriptor {
     uint chunk_index;
 };
 
+
+/*
+ * Libhandler is to handle the different libraries mentioned in enum IOLib.
+ *
+ */
+
+class LibHandler{
+private:
+    DataDescriptor src;
+    std::vector<DataDescriptor> objs;
+    uint16_t lib_type;
+    uint16_t io_type;
+    uint16_t max_obj_size;
+    std::string data;
+    std::string file_;
+    std::vector<DataDescriptor> map_data();
+    void do_mapped_op();
+public:
+    LibHandler(std::string file_, std::string data, uint16_t lib_type_, uint16_t io_type_, uint16_t max_obj_size_);
+    void run();
+};
+
+
 class DataMapper {
 
 public:
@@ -25,7 +56,7 @@ public:
     uint maxObjSize;
 
     DataMapper(uint16_t type_, uint maxObjSize_);
-    std::vector<DataDescriptor> generateDataObjects(DataDescriptor &src);
+    std::vector<DataDescriptor> map(DataDescriptor &src);
 
 };
 

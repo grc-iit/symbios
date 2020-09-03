@@ -5,6 +5,8 @@
 #include "iris.h"
 
 
+//// doOp which does operations emulating iris ////
+
 doOp::doOp(int16_t type_) {
     factory = IOFactory();
     client = factory.GetIOClient(type_);
@@ -20,12 +22,121 @@ void doOp::Read(Data &source, Data &destination) {
 
 doOp::~doOp() {}
 
+
+//// LibHandler
+
+void LibHandler::run() {
+    map_data();
+    do_mapped_op();
+}
+
+void LibHandler::do_mapped_op() {
+    DataDescriptor src = {file_,0,  data.size(), 0 };
+    DataDescriptor read_src = {file_, 0,  data.size(), 0 };
+    DataMapper mapper_(io_type, max_obj_size);
+    auto objs = mapper_.map(src);
+    auto read_objs = mapper_.map(read_src);
+
+    if (lib_type == IOLib::IRIS){
+        doOp operation(io_type);
+        for (auto &i : objs){
+            auto data_obj = Data();
+            data_obj.id_= i.id_;
+            data_obj.position_=i.position_;
+            data_obj.buffer_= data.substr(i.position_+i.chunk_index*max_obj_size, i.size);
+            data_obj.storage_index_ = io_type;
+            COMMON_DBGVAR(data_obj);
+            operation.Write(data_obj, data_obj);
+        }
+
+        for (auto &i : read_objs){
+            auto data_obj = Data();
+            data_obj.id_= i.id_;
+            data_obj.position_=i.position_;
+            data_obj.buffer_.resize(i.size);
+            data_obj.storage_index_ = io_type;
+            operation.Read(data_obj, data_obj);
+            COMMON_DBGVAR2(data_obj, i);
+            std::cout<<i.position_<<':'<<data_obj.buffer_<<std::endl;
+        }
+    }
+
+    else if (lib_type == IOLib::NIOBE){
+        auto client = symbios::Client();
+        for (auto &i : objs) {
+            auto data_obj = Data();
+            data_obj.id_= i.id_;
+            data_obj.position_=i.position_;
+            data_obj.buffer_= data.substr(i.position_+i.chunk_index*max_obj_size, i.size);
+            data_obj.storage_index_ = io_type;
+            client.StoreRequest(data_obj);
+        }
+
+        for (auto &i : read_objs){
+            auto data_obj = Data();
+            data_obj.id_= i.id_;
+            data_obj.position_=i.position_;
+            data_obj.buffer_.resize(i.size);
+            data_obj.storage_index_ = io_type;
+            client.LocateRequest(data_obj);
+            COMMON_DBGVAR2(data_obj, i);
+            std::cout<<data_obj.buffer_<<std::endl;
+        }
+
+    }
+
+    else if (lib_type == IOLib::SYMBIOS){
+        auto client = symbios::Client();
+
+        for (auto &i : objs) {
+            auto data_obj = Data();
+            data_obj.id_= i.id_;
+            data_obj.position_=i.position_;
+            data_obj.buffer_= data.substr(i.position_+i.chunk_index*max_obj_size, i.size);
+            data_obj.storage_index_ = io_type;
+            client.StoreRequest(data_obj);
+        }
+
+        for (auto &i : read_objs){
+            auto data_obj = Data();
+            data_obj.id_= i.id_;
+            data_obj.position_=i.position_;
+            data_obj.buffer_.resize(i.size);
+            data_obj.storage_index_ = io_type;
+            client.LocateRequest(data_obj);
+            COMMON_DBGVAR2(data_obj, i);
+            std::cout<<data_obj.buffer_<<std::endl;
+        }
+    }
+    else{
+        exit(3); // throw("INVALID LIB");
+    }
+}
+
+LibHandler::LibHandler(std::string file__, std::string data_, uint16_t lib_type_, uint16_t io_type_, uint16_t max_obj_size_) {
+    lib_type = lib_type_;
+    io_type = io_type_;
+    max_obj_size = max_obj_size_;
+    file_ = file__;
+    data = data_;
+}
+
+
+//// DATA MAPPER
+
 DataMapper::DataMapper(uint16_t type_, uint maxObjSize_) {
     storage_type_ = type_;
     maxObjSize = maxObjSize_;
 }
 
-std::vector<DataDescriptor> DataMapper::generateDataObjects(DataDescriptor &src){
+std::vector<DataDescriptor> LibHandler::map_data() {
+    DataMapper mapper_(io_type, max_obj_size);
+    objs = mapper_.map(src);
+    return objs;
+}
+
+
+std::vector<DataDescriptor> DataMapper::map(DataDescriptor &src){
     std::vector<DataDescriptor> objects;
 
     std::size_t remainingOperationSize = src.size;
@@ -44,3 +155,5 @@ std::vector<DataDescriptor> DataMapper::generateDataObjects(DataDescriptor &src)
 
     return objects;
 }
+
+///// END //////////
