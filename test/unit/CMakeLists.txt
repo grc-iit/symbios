@@ -75,9 +75,10 @@ set(NPROCS_LIST 1 2 4 8 16 32)
 set(MODEL_FILE ${CMAKE_BINARY_DIR}/test_data.csv)
 add_executable(unit_storage_cost_predictor storage_cost_predictor/test.cpp ${SYMBIOS_SERVER_SRC})
 target_link_libraries(unit_storage_cost_predictor ${LIBS})
+#set_target_properties(unit_storage_cost_predictor PROPERTIES COMPILE_FLAGS -O3)
 foreach(NREQS ${NREQS_LIST})
     foreach(NPROCS ${NPROCS_LIST})
-        add_test(NAME scc_predictor_${NREQS}_${NPROCS} COMMAND
+        add_test(NAME sc_predictor_${NREQS}_${NPROCS} COMMAND
                 mpirun -n ${NPROCS} ${CMAKE_BINARY_DIR}/test/unit/unit_storage_cost_predictor -model ${MODEL_FILE} -nreqs ${NREQS} -out ${CMAKE_BINARY_DIR}/scc_thrpt.csv)
     endforeach()
 endforeach()
