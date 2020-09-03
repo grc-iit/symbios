@@ -2,20 +2,118 @@
 /*
  * An application to generate different workloads to test a distributed storage system
  *
- * TODO: Add timers. Add CSV.
  * */
 
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <mpi.h>
-#include <benchmark/benchmark.h>
-#include "common/rng.h"
+#include <common/rng.h>
 #include <common/debug.h>
+#include "benchmark.h"
 
-DistributionPtr create_dist(BenchmarkArgs &args, size_t file_size, size_t block_size)
+void time_stats(double local_time_spent, int nprocs, double &avg_msec, double &std_msec, double &min_msec, double &max_msec)
 {
-    DistributionType access_pattern = DistributionType::kNone;
+    double local_std_msec;
+    MPI_Allreduce(&local_time_spent, &avg_msec, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+    avg_msec = avg_msec/nprocs;
+    local_std_msec = pow(local_time_spent - avg_msec, 2);
+    MPI_Reduce(&local_std_msec, &std_msec, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+    MPI_Reduce(&local_time_spent, &min_msec, 1, MPI_DOUBLE, MPI_MIN, 0, MPI_COMM_WORLD);
+    MPI_Reduce(&local_time_spent, &max_msec, 1, MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
+    std_msec = std::sqrt(std_msec);
+}
+
+void io_stats(
+        BenchmarkArgs &args, int rank, double local_time_spent,
+        int nprocs, size_t read_per_proc, size_t write_per_proc,
+        size_t block_size, DistributionType ap)
+{
+    if(!args.OptIsSet("-out")) {
+        return;
+    }
+
+    //Get average time spent in application
+    double avg_msec, std_msec, min_msec, max_msec;
+    time_stats(local_time_spent, nprocs, avg_msec, std_msec, min_msec, max_msec);
+
+    //Get average bandwidth and throughput
+    size_t tot_read = read_per_proc * nprocs;
+    size_t tot_write = write_per_proc * nprocs;
+    size_t tot_bytes = tot_read + tot_write;
+    double bw_read = ((double)tot_read)/avg_msec;
+    double bw_write = ((double)tot_write)/avg_msec;
+    double bw_kbps = ((double)tot_bytes)/avg_msec;
+
+    //Write to output CSV in root process
+    if(rank == 0) {
+        std::string conf = args.GetStringOpt("-config");
+        std::string output_path = args.GetStringOpt("-out");
+        bool exists = boost::filesystem::exists(output_path);
+        std::ofstream out(output_path, std::ofstream::out | std::ofstream::app);
+        if(!exists) {
+            out << "avg_msec,std_msec,min_msec,max_msec,nprocs,block_size,ap,tot_read,tot_write,tot_bytes,bw_read,bw_write,bw_kbps,conf" << std::endl;
+        }
+        out <<
+            avg_msec << "," <<
+            std_msec << "," <<
+            min_msec << "," <<
+            max_msec << "," <<
+            nprocs << "," <<
+            block_size << "," <<
+            static_cast<int>(ap) << "," <<
+            tot_read << "," <<
+            tot_write << "," <<
+            tot_bytes << "," <<
+            bw_read << "," <<
+            bw_write << "," <<
+            bw_kbps << "," <<
+            conf << std::endl;
+    }
+}
+
+void md_stats(BenchmarkArgs &args, int rank, double local_time_spent, int nprocs, size_t md_fcnt_per_proc, size_t md_dir_per_proc)
+{
+    if(!args.OptIsSet("-out")) {
+        return;
+    }
+
+    //Get average time spent in application
+    double avg_msec, std_msec, min_msec, max_msec;
+    time_stats(local_time_spent, nprocs, avg_msec, std_msec, min_msec, max_msec);
+
+    //Get average bandwidth and throughput
+    size_t md_fcnt = md_fcnt_per_proc * nprocs;
+    size_t md_dir = md_dir_per_proc * nprocs;
+    size_t tot_ops = md_fcnt + md_dir;
+    double thrpt_kiops = ((double)tot_ops)/avg_msec;
+
+    //Write to output CSV in root process
+    if(rank == 0) {
+        std::string conf = args.GetStringOpt("-config");
+        std::string output_path = args.GetStringOpt("-out");
+        bool exists = boost::filesystem::exists(output_path);
+        std::ofstream out(output_path, std::ofstream::out | std::ofstream::app);
+        if(!exists) {
+            out << "avg_msec,std_msec,min_msec,max_msec,nprocs,md_fcnt,md_dir,tot_ops,thrpt_kiops,conf" << std::endl;
+        }
+        out <<
+            avg_msec << "," <<
+            std_msec << "," <<
+            min_msec << "," <<
+            max_msec << "," <<
+            nprocs << "," <<
+            md_fcnt << "," <<
+            md_dir << "," <<
+            tot_ops << "," <<
+            thrpt_kiops << "," <<
+            conf << std::endl;
+    }
+}
+
+DistributionPtr create_dist(BenchmarkArgs &args, size_t file_size, size_t block_size, DistributionType &access_pattern)
+{
+    access_pattern = DistributionType::kNone;
     if(args.OptIsSet("-ap")) {
         access_pattern = static_cast<DistributionType>(args.GetIntOpt("-ap"));
     }
@@ -38,56 +136,96 @@ DistributionPtr create_dist(BenchmarkArgs &args, size_t file_size, size_t block_
     return std::move(dist);
 }
 
-size_t io_file_workload(IOClientPtr &fs, BenchmarkArgs &args)
+void prealloc(IOClientPtr &fs, int rank, int nprocs, BenchmarkArgs &args)
 {
-    std::string path = args.GetStringOpt("-path");
+    std::string path = args.GetStringOpt("-path") + std::to_string(rank);
+    size_t file_size = args.GetSizeOpt("-fs");
+    size_t block_size = (1<<24);
+
+    FilePtr fp = fs->Open(path, FileMode::kWrite | FileMode::kCreate);
+    void *buffer = std::calloc(block_size, 1);
+    size_t file_size_per_proc = file_size / nprocs;
+
+    for(size_t i = 0; i < file_size_per_proc; i += block_size) {
+        size_t write_size = (i+block_size)<=file_size_per_proc ? block_size : file_size_per_proc - i;
+        fp->Write(buffer, write_size);
+    }
+}
+
+void io_file_workload(IOClientPtr &fs, int rank, int nprocs, BenchmarkArgs &args)
+{
+    common::debug::Timer t;
+    std::string path = args.GetStringOpt("-path") + std::to_string(rank);
     float rfrac = args.GetFloatOpt("-rfrac");
     float wfrac = args.GetFloatOpt("-wfrac");
     size_t block_size = args.GetSizeOpt("-bs");
-    size_t file_size = args.GetSizeOpt("-fs");
-    size_t total_io = args.GetSizeOpt("-tot");
+    size_t file_size_per_proc = args.GetSizeOpt("-fs")/nprocs;
+    size_t tot_bytes = args.GetSizeOpt("-tot");
+    DistributionType access_pattern;
     DistributionPtr dist;
 
     int direct = args.OptIsSet("-direct") ? FileMode::kDirect : 0;
-    FilePtr fp = fs->Open(path, FileMode::kRead | FileMode::kWrite | FileMode::kCreate | direct);
+    FilePtr fp = fs->Open(path, FileMode::kRead | FileMode::kWrite | direct);
     void *buffer = std::calloc(block_size, 1);
 
-    dist = create_dist(args, file_size, block_size);
-    double write_io = wfrac*total_io;
-    for(size_t i = 0; i < write_io; i += block_size) {
+    //Start Time
+    t.startTime();
+
+    //Write to file
+    MPI_Barrier(MPI_COMM_WORLD);
+    dist = create_dist(args, file_size_per_proc, block_size, access_pattern);
+    size_t write_per_proc = wfrac*tot_bytes/nprocs;
+    for(size_t i = 0; i < write_per_proc; i += block_size) {
         fp->Seek(dist->GetSize());
         fp->Write(buffer, block_size);
     }
 
-    dist = create_dist(args, file_size, block_size);
-    double read_io = rfrac*total_io;
-    for(size_t i = 0; i < read_io; i += block_size) {
-        fp->Read(buffer, block_size);
+    //Read from file
+    MPI_Barrier(MPI_COMM_WORLD);
+    dist = create_dist(args, file_size_per_proc, block_size, access_pattern);
+    size_t read_per_proc = rfrac*tot_bytes/nprocs;
+    for(size_t i = 0; i < read_per_proc; i += block_size) {
         fp->Seek(dist->GetSize());
+        fp->Read(buffer, block_size);
     }
 
+    //End Time
+    double local_time_spent = t.endTime();
     free(buffer);
 
-    return total_io;
+    //Get stats
+    io_stats(args, rank, local_time_spent, nprocs, read_per_proc, write_per_proc, block_size, access_pattern);
 }
 
-int md_fs_workload(IOClientPtr &fs, BenchmarkArgs &args)
+void md_fs_workload(IOClientPtr &fs, int rank, int nprocs, BenchmarkArgs &args)
 {
+    size_t fcnt = args.GetSizeOpt("-md_fcnt")/nprocs;
     int depth = args.GetIntOpt("-md_depth");
-    int fcnt = args.GetIntOpt("-md_fcnt");
+    std::string path = args.GetStringOpt("-path");
 
-    std::string newdir;
+    //Start Time
+    common::debug::Timer t;
+    t.startTime();
+
+    std::string dirstr = "/md-ex" + std::to_string(rank);
+    std::string newdir = path;
     for(int i = 0; i < depth; ++i) {
-        newdir += "/md-ex";
+        newdir += dirstr;
         fs->Mkdir(newdir);
     }
+    std::string newfile = newdir + "/file" + std::to_string(rank);
     for(int i = 0; i < fcnt; ++i) {
-        std::string newfile = newdir + "/file" + std::to_string(i);
         FilePtr fp = fs->Open(newfile, FileMode::kWrite | FileMode::kCreate);
     }
-    fs->Rmdir("/md-ex");
+    if(depth > 0) {
+        fs->Rmdir(path + dirstr);
+    }
 
-    return depth + fcnt;
+    //End Time
+    double local_time_spent = t.endTime();
+
+    //Get stats
+    md_stats(args, rank, local_time_spent, nprocs, fcnt, depth);
 }
 
 int main(int argc, char **argv)
@@ -95,8 +233,6 @@ int main(int argc, char **argv)
     MPI_Init(&argc,&argv);
     BenchmarkArgs args(argc, argv);
     int rank, nprocs = 1;
-    int ops_per_proc = 0;
-    size_t bytes_per_proc = 0;
 
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &nprocs);
@@ -109,56 +245,20 @@ int main(int argc, char **argv)
     io->Connect(addr, port);
 
     //Run workloads
-    common::debug::Timer t;
-    t.startTime();
     int workload = args.GetIntOpt("-w");
     switch(static_cast<WorkloadType>(workload)) {
+        case WorkloadType::kPrealloc: {
+            prealloc(io, rank, nprocs, args);
+            break;
+        }
         case WorkloadType::kIoOnlyFs: {
-            bytes_per_proc = io_file_workload(io, args);
+            io_file_workload(io, rank, nprocs, args);
             break;
         }
         case WorkloadType::kMdFs: {
-            ops_per_proc = md_fs_workload(io, args);
+            md_fs_workload(io, rank, nprocs, args);
             break;
         }
-    }
-    double local_end_time = t.endTime();
-    double local_std_msec;
-
-    //Get global statistics
-    double avg_msec, std_msec, min_msec, max_msec;
-    MPI_Allreduce(&local_end_time, &avg_msec, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
-    local_std_msec = pow(local_end_time - avg_msec, 2);
-    MPI_Reduce(&local_std_msec, &std_msec, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
-    MPI_Reduce(&local_end_time, &min_msec, 1, MPI_DOUBLE, MPI_MIN, 0, MPI_COMM_WORLD);
-    MPI_Reduce(&local_end_time, &max_msec, 1, MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
-    avg_msec = avg_msec/nprocs;
-    std_msec = std::sqrt(std_msec);
-
-    //Get average bandwidth and throughput
-    size_t tot_ops = ((size_t)ops_per_proc) * nprocs;
-    size_t tot_bytes = bytes_per_proc * nprocs;
-    double thrpt_kiops = ((double)tot_ops)/avg_msec;
-    double bw_kbps = ((double)tot_bytes)/avg_msec;
-
-    //Write to output CSV in root process
-    if(rank == 0 && args.OptIsSet("-out")) {
-        std::string output_path = args.GetStringOpt("-out");
-        bool exists = boost::filesystem::exists(output_path);
-        std::ofstream out(output_path, std::ofstream::out | std::ofstream::app);
-        if(!exists) {
-            out << "avg_msec,std_msec,min_msec,max_msec,nprocs,tot_ops,tot_bytes,thrpt_kiops,bw_kbps" << std::endl;
-        }
-        out <<
-            avg_msec << "," <<
-            std_msec << "," <<
-            min_msec << "," <<
-            max_msec << "," <<
-            nprocs << "," <<
-            tot_ops << "," <<
-            tot_bytes << "," <<
-            thrpt_kiops << "," <<
-            bw_kbps << std::endl;
     }
 
     MPI_Finalize();

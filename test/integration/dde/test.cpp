@@ -2,6 +2,9 @@
 // Created by mani on 8/30/2020.
 //
 
+//number of ops, mpi procs
+
+
 #include <common/arguments.h>
 #include <symbios/common/enumerations.h>
 #include <mpi.h>
@@ -13,7 +16,7 @@
 #include <boost/filesystem.hpp>
 
 
-class BenchmarkArgs : public ArgMap {
+class BenchmarkArgs : public common::args::ArgMap {
 private:
     void VerifyArgs(void) {
         AssertOptIsSet("-p");
@@ -56,16 +59,16 @@ public:
     }
 
     BenchmarkArgs(int argc, char **argv) {
-        AddOpt("-p", ArgType::kStringMap);
+        AddOpt("-p", common::args::ArgType::kStringMap);
         AddStringMapVal("-p", "RANDOM_POLICY", static_cast<int>(DataDistributionPolicy::RANDOM_POLICY));
         AddStringMapVal("-p", "ROUND_ROBIN_POLICY", static_cast<int>(DataDistributionPolicy::ROUND_ROBIN_POLICY));
         AddStringMapVal("-p", "HEURISTICS_POLICY", static_cast<int>(DataDistributionPolicy::HEURISTICS_POLICY));
         AddStringMapVal("-p", "DYNAMIC_PROGRAMMING_POLICY", static_cast<int>(DataDistributionPolicy::DYNAMIC_PROGRAMMING_POLICY));
-        AddOpt("-c", ArgType::kString);
-        AddOpt("-out", ArgType::kString);
-        AddOpt("-s", ArgType::kInt);
-        AddOpt("-n", ArgType::kInt);
-        AddOpt("-seed", ArgType::kInt);
+        AddOpt("-c", common::args::ArgType::kString);
+        AddOpt("-out", common::args::ArgType::kString);
+        AddOpt("-s", common::args::ArgType::kInt);
+        AddOpt("-n", common::args::ArgType::kInt);
+        AddOpt("-seed", common::args::ArgType::kInt);
         ArgIter(argc, argv);
         VerifyArgs();
     }
@@ -106,7 +109,8 @@ int main(int argc, char* argv[]){
     auto request = Data();
     request.position_ = 0;
     request.storage_index_ = 0;
-    request.buffer_.resize(request_size);
+    request.buffer_= static_cast<char *>(malloc(request_size));
+    request.data_size_=request_size;
     common::debug::Timer t;
     ops_per_proc = number_request;
     bytes_per_proc = ops_per_proc * request_size;
@@ -117,17 +121,17 @@ int main(int argc, char* argv[]){
         t.pauseTime();
     }
     MPI_Barrier(MPI_COMM_WORLD);
-    double local_end_time = t.endTime();
+    double local_end_time = t.getTimeElapsed();
     double local_std_msec;
 
     //Get global statistics
     double avg_msec, std_msec, min_msec, max_msec;
     MPI_Allreduce(&local_end_time, &avg_msec, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+    avg_msec = avg_msec/nprocs;
     local_std_msec = pow(local_end_time - avg_msec, 2);
     MPI_Reduce(&local_std_msec, &std_msec, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
     MPI_Reduce(&local_end_time, &min_msec, 1, MPI_DOUBLE, MPI_MIN, 0, MPI_COMM_WORLD);
     MPI_Reduce(&local_end_time, &max_msec, 1, MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
-    avg_msec = avg_msec/nprocs;
     std_msec = std::sqrt(std_msec);
 
     //Get average bandwidth and throughput

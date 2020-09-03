@@ -6,7 +6,7 @@
 
 std::ostream &operator<<(std::ostream &os, Data &m) {
     return os << "{id_:" << m.id_ << ","
-              << "data_size_:" << m.buffer_.size() << ","
+              << "data_size_:" << m.data_size_ << ","
               << "position_:" << m.position_ << ","
               << "storage_index_:" << m.storage_index_ << "}";
 }
