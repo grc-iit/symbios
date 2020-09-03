@@ -31,7 +31,8 @@ set(test_files  data_placement
                 io_clients
                 metadata_orchestrator
                 server
-                config_manager)
+                config_manager
+                posix)
 foreach (test_file ${test_files})
     set(exec unit_${test_file})
     add_executable(${exec} ${test_file}/test.cpp ${SYMBIOS_SERVER_SRC})
