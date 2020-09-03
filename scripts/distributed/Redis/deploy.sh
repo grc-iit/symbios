@@ -11,9 +11,10 @@ LOG_DIR=${2}
 
 PORT_BASE=7000
 SERVERS=($(cat ${HOSTFILE}))
+echo "${CYAN}${SERVERS[*]}${NC}"
 
 # Prepare configuration for each server
-echo -e "${GREEN}Preparing Redis cluster configuration files ...${NC}"
+echo -e "${GREEN}Preparing Redis cluster configuration files${NC}"
 i=0
 for server in "${SERVERS[@]}"; do
   server_ip=$(getent ahosts "${server}" | grep STREAM | awk '{print $1}')

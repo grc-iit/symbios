@@ -10,13 +10,15 @@ HOSTFILE=@1
 LOG_DIR=@2
 
 SERVERS=($(cat ${HOSTFILE}))
+echo "${CYAN}${SERVERS[*]}${NC}"
 
-echo -e "${GREEN}Stopping Redis ...${NC}"
+echo -e "${GREEN}Stopping Redis${NC}"
 for server in "${SERVERS[@]}"
 do
 ssh "${server}" /bin/bash << EOF
   killall redis-server > /dev/null
-  rm -rf "${LOG_DIR}"/*
 EOF
 done
 echo -e "${GREEN}Redis is stopped${NC}"
+
+rm -rf "${LOG_DIR}"/*
