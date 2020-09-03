@@ -79,6 +79,37 @@ make -j8
 make install
 ```
 
+### OpenBLAS
+
+install gfortran 
+```bash
+sudo apt install gfortran
+```
+
+```bash
+wget https://github.com/xianyi/OpenBLAS/archive/v0.3.10.tar.gz
+tar -xzf v0.3.10.tar.gz
+cd OpenBLAS-0.3.10
+mkdir build
+cd build
+cmake -DCMAKE_INSTALL_PREFIX=$DEP_INSTALL ../
+make -j8
+make install
+```
+
+### DLIB
+
+```bash
+wget http://dlib.net/files/dlib-19.21.tar.bz2
+tar -xjf dlib-19.21.tar.bz2
+cd dlib-19.21
+mkdir build
+cd build
+cmake -DCMAKE_INSTALL_PREFIX=$DEP_INSTALL ../ -DBUILD_SHARED_LIBS=1 -DCMAKE_INSTALL_PREFIX=$DEP_INSTALL
+make -j8
+make install
+```
+
 ### HCL
 HCL is dependendat upon:
 * glibc

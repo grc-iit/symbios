@@ -132,11 +132,12 @@ size_t fread(void *ptr, std::size_t size, std::size_t count, FILE *stream) {
             data.position_ = stat.second.file_pointer_;
         }
         else return stat.first;
-        data.buffer_.reserve(data_size);
+        data.data_size_=data_size;
+        data.buffer_= static_cast<char *>(malloc(data_size));
         client->LocateRequest(data);
-        if (data.buffer_.size() != data_size) return data.buffer_.size();
-        memcpy(ptr, data.buffer_.data(), data.buffer_.size());
-        return data.buffer_.size();
+        if (data.data_size_ != data_size) return data.data_size_;
+        memcpy(ptr, data.buffer_, data.data_size_);
+        return data.data_size_;
     }
     MAP_OR_FAIL(fread);
     return __real_fread(ptr, size, count, stream);
@@ -157,8 +158,9 @@ size_t fwrite(const void *ptr, size_t size, size_t count, FILE *stream) {
         }
         else return stat.first;
         //set the other variables
-        data.buffer_.reserve(data_size);
-        memcpy(data.buffer_.data(), ptr, data_size);
+        data.data_size_=data_size;
+        data.buffer_= static_cast<char *>(malloc(data_size));
+        memcpy(data.buffer_, ptr, data_size);
         client->StoreRequest(data);
         if(data_size + stat.second.file_pointer_ > stat.second.file_size_){
             stat.second.file_size_ = data_size + stat.second.file_pointer_;

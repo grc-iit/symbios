@@ -21,6 +21,7 @@ typedef std::unique_ptr<std::list<std::string>> DirectoryListPtr;
 class IOClient {
 public:
     IOClient() = default;
+    virtual ~IOClient() = default;
     virtual void Connect(std::string addr, int port) = 0;
     virtual FilePtr Open(std::string path, int mode) = 0;
     virtual void Mkdir(std::string path) = 0;

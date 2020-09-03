@@ -34,10 +34,10 @@ public:
         if(mode & FileMode::kDirect) { flags |= O_DIRECT; }
         if(mode & FileMode::kSync) { flags |= O_SYNC; }
 
-        fp_ = open(path_.c_str(), flags);
+        fp_ = open(path_.c_str(), flags, 0666);
         if(fp_ < 0) {
-            std::cout << "Could not open file: " << path_ << std::endl;
-            perror("open orangefs");
+            std::cout << "Could not open file (OrangefsIO): " << path_ << std::endl;
+            perror("Open() (OrangefsIO)");
             throw 1;
         }
     }
@@ -80,19 +80,19 @@ public:
     }
 
     FilePtr Open(std::string path, int mode) {
-        return std::make_unique<OrangefsFile>(addr_ + path, mode);
+        return std::unique_ptr<OrangefsFile>(new OrangefsFile(addr_ + path, mode));
     }
 
     void Mkdir(std::string path) {
-        boost::filesystem::create_directory(path);
+        boost::filesystem::create_directory(addr_ + path);
     }
 
     void Rmdir(std::string path) {
-        boost::filesystem::remove_all(path);
+        boost::filesystem::remove_all(addr_ + path);
     }
 
     void Remove(std::string path) {
-        boost::filesystem::remove_all(path);
+        boost::filesystem::remove_all(addr_ + path);
     }
 
     DirectoryListPtr Ls(std::string path) {
