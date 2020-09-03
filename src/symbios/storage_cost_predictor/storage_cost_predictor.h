@@ -291,7 +291,7 @@ private:
     void CommitMetrics() {
         common::debug::AutoTrace trace = common::debug::AutoTrace("StorageCostPredictor::CommitMetrics");
         if(!commit_metrics_) { return; }
-        //SaveModelCSV();
+        SaveModelCSV();
     }
 
     void Fit() {
