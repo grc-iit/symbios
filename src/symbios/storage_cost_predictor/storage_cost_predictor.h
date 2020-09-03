@@ -307,7 +307,8 @@ private:
         do {
             if(window_tick_ >= window_size_) {
                 Fit();
-                //Metrics();
+                MPI_Barrier(MPI_COMM_WORLD);
+                CommitMetrics();
                 window_tick_ = 0;
             }
         }
