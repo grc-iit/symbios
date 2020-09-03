@@ -22,17 +22,14 @@ void basic_tests(){
     assert(result == 4);
     assert(strncmp(buffer, "loca", 4));
 
-    ////Standard Write
-    result = fwrite(buffer, 1,4, server_dir);
-    assert(result == 4);
-
     ////Standard fseek
     result = fseek(server_dir, 0, SEEK_SET);
     assert(result==0);
     assert(ftell(server_dir)==0);
-    result = fread (buffer,1,4,server_dir);
+
+    ////Standard Write
+    result = fwrite(buffer, 1,4, server_dir);
     assert(result == 4);
-    assert(strncmp(buffer, "loca", 4));
 
     ////Middle fseek
     result = fseek(server_dir, 2, SEEK_SET);
@@ -50,18 +47,19 @@ void basic_tests(){
     auto new_server_dir = fopen((SYMBIOS_CONF->SERVER_DIR + "/test").c_str(), "a+");
     result = fwrite(buffer, 1,2, new_server_dir);
     assert(result == 2);
-    result = fseek(server_dir, 0, SEEK_SET);
+    result = fseek(new_server_dir, 0, SEEK_SET);
     assert(result==0);
-    assert(ftell(server_dir)==0);
-    result = fread (buffer,1,6,server_dir);
+    assert(ftell(new_server_dir)==0);
+    result = fread (buffer,1,6,new_server_dir);
     assert(result == 4);
     assert(strncmp(buffer, "locaca", 4));
+    fclose(new_server_dir);
 }
 
 void intercept_test(char* mount_point){
     auto posix = basket::Singleton<symbios::Posix>::GetInstance();
     size_t result;
-    char * buffer = (char*) malloc (sizeof(char)*100);
+    char* buffer = (char*) std::string("testingInterception").c_str();
 
     ////Intercept Open
     auto test_file = fopen(mount_point, "w+");
@@ -72,45 +70,81 @@ void intercept_test(char* mount_point){
     assert(stat.second.file_size_ == 0);
     assert(stat.second.file_pointer_ == 0);
 
-    ////Standard Read
-    result = fread (buffer,1,4,client_file);
-    assert(result == 4);
-    assert(strncmp(buffer, "loca", 4));
-
     ////Standard Write
-    result = fwrite(buffer, 1,4, server_dir);
-    assert(result == 4);
+    result = fwrite(buffer, 1,19, test_file);
+    assert(result == 19);
+    stat = posix->GetStat(test_file);
+    assert(stat.first);
+    assert(stat.second.file_size_ == 19);
+    assert(stat.second.file_pointer_ == 19);
 
     ////Standard fseek
-    result = fseek(server_dir, 0, SEEK_SET);
-    assert(result==0);
-    assert(ftell(server_dir)==0);
-    result = fread (buffer,1,4,server_dir);
-    assert(result == 4);
-    assert(strncmp(buffer, "loca", 4));
+    result = fseek(test_file, 0, SEEK_SET);
+    assert(result == 0);
+    stat = posix->GetStat(test_file);
+    assert(stat.first);
+    assert(stat.second.file_size_ == 19);
+    assert(stat.second.file_pointer_ == 0);
+
+    ////Standard Read
+    result = fread (buffer,1,19,test_file);
+    assert(result == 19);
+    assert(strncmp(buffer, "testingInterception", 19));
+    stat = posix->GetStat(test_file);
+    assert(stat.first);
+    assert(stat.second.file_size_ == 19);
+    assert(stat.second.file_pointer_ == 19);
 
     ////Middle fseek
-    result = fseek(server_dir, 2, SEEK_SET);
-    assert(result==0);
-    assert(ftell(server_dir)==2);
-    result = fread (buffer,1,2,server_dir);
-    assert(result == 2);
-    assert(strncmp(buffer, "ca", 2));
+    result = fseek(test_file, 5, SEEK_SET);
+    assert(result == 0);
+    stat = posix->GetStat(test_file);
+    assert(stat.first);
+    assert(stat.second.file_size_ == 19);
+    assert(stat.second.file_pointer_ == 5);
+
+    result = fread (buffer,1,5,test_file);
+    assert(result == 0);
+    assert(strncmp(buffer, "ngInt", 2));
+    stat = posix->GetStat(test_file);
+    assert(stat.first);
+    assert(stat.second.file_size_ == 19);
+    assert(stat.second.file_pointer_ == 10);
 
     ////Standard close
-    fclose(client_file);
-    fclose(server_dir);
+    fclose(test_file);
 
     ////Open Append
+    buffer = (char*) std::string("testingInterception").c_str();
     auto new_server_dir = fopen((SYMBIOS_CONF->SERVER_DIR + "/test").c_str(), "a+");
-    result = fwrite(buffer, 1,2, new_server_dir);
-    assert(result == 2);
-    result = fseek(server_dir, 0, SEEK_SET);
+    stat = posix->GetStat(new_server_dir);
+    assert(stat.first);
+    assert(stat.second.file_size_ == 19);
+    assert(stat.second.file_pointer_ == 19);
+
+    result = fwrite(buffer, 1,7, new_server_dir);
+    assert(result == 7);
+    stat = posix->GetStat(new_server_dir);
+    assert(stat.first);
+    assert(stat.second.file_size_ == 26);
+    assert(stat.second.file_pointer_ == 26);
+
+    result = fseek(new_server_dir, 19, SEEK_SET);
     assert(result==0);
-    assert(ftell(server_dir)==0);
-    result = fread (buffer,1,6,server_dir);
-    assert(result == 4);
-    assert(strncmp(buffer, "locaca", 4));
+    stat = posix->GetStat(new_server_dir);
+    assert(stat.first);
+    assert(stat.second.file_size_ == 26);
+    assert(stat.second.file_pointer_ == 19);
+
+    result = fread (buffer,1,7,new_server_dir);
+    assert(result == 7);
+    assert(strncmp(buffer, "testing", 7));
+    stat = posix->GetStat(new_server_dir);
+    assert(stat.first);
+    assert(stat.second.file_size_ == 26);
+    assert(stat.second.file_pointer_ == 26);
+
+    fclose(new_server_dir);
 }
 
 int main(int argc, char * argv[]){
