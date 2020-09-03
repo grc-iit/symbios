@@ -3,14 +3,14 @@
 //
 
 #include <common/arguments.h>
-#include <symbios/common/enumerations.h>
 #include <mpi.h>
 #include <symbios/common/configuration_manager.h>
+#include <symbios/data_distribution/data_distribution_factory.h>
+#include <boost/filesystem.hpp>
+#include <symbios/common/enumerations.h>
 #include <basket/common/macros.h>
 #include <common/rng.h>
-#include <symbios/data_distribution/data_distribution_factory.h>
 #include <common/debug.h>
-#include <boost/filesystem.hpp>
 #include <symbios/metadata_orchestrator/metadata_orchestrator.h>
 
 
