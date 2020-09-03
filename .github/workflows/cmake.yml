@@ -41,6 +41,17 @@ jobs:
      
     steps:
     - uses: actions/checkout@v2
+    - name: Cache
+      uses: actions/cache@v2.1.1
+      with:
+        # A list of files, directories, and wildcard patterns to cache and restore
+        path: ${GITHUB_WORKSPACE}
+        # An explicit key for restoring and saving the cache
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/symbios/*') }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-name }}-
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
     - name: Create Build Environment
       env:
         GITHUB_WORKSPACE: ${{runner.workspace}}
@@ -59,17 +70,6 @@ jobs:
         cd ${GITHUB_WORKSPACE}/build
         cmake ${GITHUB_WORKSPACE} -DCMAKE_BUILD_TYPE=$BUILD_TYPE
         cmake --build . --config $
-    - name: Cache
-      uses: actions/cache@v2.1.1
-      with:
-        # A list of files, directories, and wildcard patterns to cache and restore
-        path: ${GITHUB_WORKSPACE}
-        # An explicit key for restoring and saving the cache
-        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/symbios/*') }}
-        restore-keys: |
-          ${{ runner.os }}-build-${{ env.cache-name }}-
-          ${{ runner.os }}-build-
-          ${{ runner.os }}-
     
     - name: Test
       shell: bash
