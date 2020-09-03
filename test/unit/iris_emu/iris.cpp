@@ -57,7 +57,7 @@ void LibHandler::do_mapped_write() {
             data_obj.position_=i.position_;
 
             data_obj.position_=i.position_;
-            data_obj.buffer_ = data.data();
+            data_obj.buffer_ = data.substr(i.position_+i.chunk_index*max_obj_size, i.size).data();
             data_obj.buffer_[ data.size()]='\0';
             data_obj.data_size_= data.size()+1;
             data_obj.storage_index_ = db_type;
@@ -75,7 +75,7 @@ void LibHandler::do_mapped_write() {
             data_obj.position_=i.position_;
 
             data_obj.position_=i.position_;
-            data_obj.buffer_ = data.data();
+            data_obj.buffer_ = data.substr(i.position_+i.chunk_index*max_obj_size, i.size).data();
             data_obj.buffer_[ data.size()]='\0';
             data_obj.data_size_= data.size()+1;
             data_obj.storage_index_ = db_type;
@@ -93,7 +93,7 @@ void LibHandler::do_mapped_write() {
             data_obj.position_=i.position_;
 
             data_obj.position_=i.position_;
-            data_obj.buffer_ = data.data();
+            data_obj.buffer_ = data.substr(i.position_+i.chunk_index*max_obj_size, i.size).data();
             data_obj.buffer_[ data.size()]='\0';
             data_obj.data_size_= data.size()+1;
             data_obj.storage_index_ = db_type;
