@@ -9,7 +9,7 @@ CWD="$(pwd)"
 HOSTFILE=@1
 LOG_DIR=@2
 
-SERVERS="($(cat "${HOSTFILE}"))"
+SERVERS=($(cat ${HOSTFILE}))
 
 echo -e "${GREEN}Stopping Redis ...${NC}"
 for server in "${SERVERS[@]}"
