@@ -67,7 +67,7 @@ void MetadataOrchestrator::Store(Data &original_request,
         basket::Singleton<IOFactory>::GetInstance()->GetIOClient(original_metadata.storage_index_)->Write(
                 original_metadata, original_metadata);
         free(original_metadata.buffer_);
-        original_metadata.buffer_="";
+        original_metadata.buffer_=NULL;
     }
     if (!exists) {
         auto link_metadata = Metadata();

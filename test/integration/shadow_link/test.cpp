@@ -90,22 +90,22 @@ int main(int argc, char* argv[]){
     auto distributions = engine->Distribute(request);
 
     auto mo = basket::Singleton<MetadataOrchestrator>::GetInstance();
-    auto path = SYMBIOS_CONF->STORAGE_SOLUTIONS[0]->end_point_;
+    auto path = SYMBIOS_CONF->STORAGE_SOLUTIONS[0]->end_point_ +"/"+std::to_string(rank)+"_";
     for(int i=0;i<number_request;++i){
-        request.id_ = path + "/temp_" + std::to_string(i);
+        request.id_ = path + "temp_" + std::to_string(i);
         mo->Delete(request);
     }
 
     common::debug::Timer store_t;
     for(int i=0;i<number_request;++i){
-        request.id_ = path + "/temp_" + std::to_string(i);
+        request.id_ = path + "temp_" + std::to_string(i);
         store_t.resumeTime();
         mo->Store(request,distributions);
         store_t.pauseTime();
     }
     common::debug::Timer update_t;
     for(int i=0;i<number_request;++i){
-        request.id_ = path + "/temp_" + std::to_string(i);
+        request.id_ = path + "temp_" + std::to_string(i);
         update_t.resumeTime();
         mo->Store(request,distributions);
         update_t.pauseTime();
@@ -113,7 +113,7 @@ int main(int argc, char* argv[]){
     Metadata primary_metadata;
     common::debug::Timer locate_t;
     for(int i=0;i<number_request;++i){
-        request.id_ = path + "/temp_" + std::to_string(i);
+        request.id_ = path + "temp_" + std::to_string(i);
         locate_t.resumeTime();
         mo->Locate(request,primary_metadata);
         locate_t.pauseTime();
