@@ -51,7 +51,7 @@ public:
 };
 
 int main(int argc, char* argv[]){
-    MPI_Init(&argc,&argv);
+    MPI_Init_thread(&argc,&argv,1,NULL);
     BenchmarkArgs args(argc, argv);
     int rank, nprocs = 1;
     int ops_per_proc = 0;
