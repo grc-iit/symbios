@@ -69,7 +69,7 @@ jobs:
         mkdir -p ${GITHUB_WORKSPACE}/build
         cd ${GITHUB_WORKSPACE}/build
         cmake ${GITHUB_WORKSPACE} -DCMAKE_BUILD_TYPE=$BUILD_TYPE
-        cmake --build . --config $
+        cmake --build . --config $ -- -j 3
     
     - name: Test
       shell: bash
