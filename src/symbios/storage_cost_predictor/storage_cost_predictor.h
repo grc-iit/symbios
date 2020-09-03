@@ -2,7 +2,7 @@
 // Created by mani on 8/24/2020.
 //
 
-//TODO: Synchronize predict
+//TODO: use configuration manager to get storage index
 
 #ifndef SYMBIOS_STORAGE_COST_PREDICTOR_H
 #define SYMBIOS_STORAGE_COST_PREDICTOR_H
@@ -27,32 +27,6 @@
 #define LINREG_NPARAMS 3
 #define MAX_METRIC_QUEUE 1024
 
-struct IOMetric {
-    double avg_msec_;
-    double std_msec_;
-    double min_msec_;
-    double max_msec_;
-    int nprocs_;
-    size_t block_size_;
-    int ap_;
-    size_t tot_read_;
-    size_t tot_write_;
-    size_t tot_bytes_;
-    double bw_read_;
-    double bw_write_;
-    double bw_kbps_;
-    std::string conf_;
-
-    IOMetric(double avg_msec,  double std_msec, double min_msec, double max_msec,
-             int nprocs, size_t block_size, int ap, size_t tot_read, size_t tot_write, size_t tot_bytes,
-             double bw_read, double bw_write, double bw_kbps, std::string conf) :
-
-            avg_msec_(avg_msec), std_msec_(std_msec), min_msec_(min_msec), max_msec_(max_msec),
-            nprocs_(nprocs), block_size_(block_size), ap_(ap),
-            tot_read_(tot_read), tot_write_(tot_write), tot_bytes_(tot_bytes),
-            bw_read_(bw_read), bw_write_(bw_write), bw_kbps_(bw_kbps), conf_(conf) {}
-};
-
 class LinRegModel {
 public:
     typedef std::array<double, LINREG_NPARAMS> CoeffArray;
@@ -63,11 +37,12 @@ private:
     typedef std::pair<input_vector, double> Observation;
     typedef boost::lockfree::spsc_queue<Observation, boost::lockfree::capacity<MAX_METRIC_QUEUE>> ObservationQueue;
     typedef std::vector<Observation> ObservationVec;
+    size_t window_off_ = 0;
 
     ObservationQueue dataset_;
     CoeffQueue coeffs_q_;
-    CoeffArray coeffs_[2] = {0, .5, .5};
-    std::atomic_bool updated_ = false;
+    CoeffArray coeffs_[2];
+    std::atomic_bool buffer_ = false;
 
     static double Residual(const Observation &data, const parameter_vector &params) {
         const input_vector &x = data.first;
@@ -86,16 +61,10 @@ private:
     }
 
     void UpdateCoeffs(const CoeffArray &coeffs) {
-        for(int i = 0; i < LINREG_NPARAMS; ++i) { coeffs_[1][i] = (coeffs_[1][i] + coeffs[i])/2; }
+        bool buffer = !buffer_;
+        for(int i = 0; i < LINREG_NPARAMS; ++i) { coeffs_[buffer][i] = (coeffs_[buffer][i] + coeffs[i])/2; }
         coeffs_q_.push(coeffs);
-        updated_ = true;
-    }
-
-    void RefreshCoeffs() {
-        if(updated_) {
-            coeffs_[0] = coeffs_[1];
-            updated_ = false;
-        }
+        buffer_ = buffer;
     }
 
 public:
@@ -128,17 +97,22 @@ public:
     }
 
     double Predict(double nprocs, double read_bytes, double write_bytes) {
-        RefreshCoeffs();
-        return coeffs_[0][0]*nprocs + coeffs_[0][1]*read_bytes + coeffs_[0][2]*write_bytes;
+        bool buffer = buffer_;
+        return coeffs_[buffer][0]*nprocs + coeffs_[buffer][1]*read_bytes + coeffs_[buffer][2]*write_bytes;
     }
 
     void UpdateCoeffs(double nprocs_coeff, double tot_read_coeff, double tot_write_coeff) {
         CoeffArray coeffs = {nprocs_coeff, tot_read_coeff, tot_write_coeff};
         UpdateCoeffs(coeffs);
+        window_off_++;
     }
 
     CoeffQueue &GetCoeffQueue() {
         return coeffs_q_;
+    }
+
+    size_t &GetWindowOff() {
+        return window_off_;
     }
 };
 
@@ -293,11 +267,13 @@ private:
             LinRegModel &model = storage_models_[storage_config];
             LinRegModel::CoeffQueue &q = model.GetCoeffQueue();
             LinRegModel::CoeffArray coeffs;
+            size_t window_off = model.GetWindowOff();
             while(q.pop(coeffs)) {
+                if(window_off > 0) { --window_off; continue; }
                 ss <<
                    coeffs[0] << "," <<
-                   coeffs[0] << "," <<
                    coeffs[1] << "," <<
+                   coeffs[2] << "," <<
                    storage_config <<
                    std::endl;
             }
@@ -321,14 +297,14 @@ private:
     }
 
     void Run(std::future<void> loop_cond) {
-        while(!loop_cond.valid()) {
+        do {
             if(window_tick_ >= window_size_) {
                 common::debug::AutoTrace trace = common::debug::AutoTrace("StorageCostPredictor::AsyncFitCommit");
                 Fit();
                 CommitMetrics();
             }
-            std::this_thread::sleep_for(std::chrono::milliseconds(500));
         }
+        while(loop_cond.wait_for(std::chrono::milliseconds(500))==std::future_status::timeout);
         CommitMetrics();
     }
 
@@ -366,18 +342,9 @@ public:
         ++window_tick_;
     }
 
-    double Predict(double read_bytes, double write_bytes, std::string &config) {
+    double Predict(double read_bytes, double write_bytes, std::string config) {
         common::debug::AutoTrace trace = common::debug::AutoTrace("StorageCostPredictor::Predict");
-        double bw_max_pred = 0;
-        for(std::string &storage_config : storage_configs_) {
-            LinRegModel &model = storage_models_[storage_config];
-            double bw_pred = model.Predict(nprocs_, read_bytes, write_bytes);
-            if(bw_pred > bw_max_pred) {
-                bw_max_pred = bw_pred;
-                config = storage_config;
-            }
-            return bw_max_pred;
-        }
+        return storage_models_[config].Predict(nprocs_, read_bytes, write_bytes);
     }
 };
 

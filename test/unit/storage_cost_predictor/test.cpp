@@ -46,37 +46,58 @@ void time_stats(double local_time_spent, int nprocs, double &avg_msec, double &s
     std_msec = std::sqrt(std_msec);
 }
 
-void out_csv(SCPArgs &args, int rank, double local_time_spent, int nprocs, size_t nreqs_per_proc)
+void out_csv(SCPArgs &args, int rank, common::debug::Timer t[4], int nprocs, size_t nreqs_per_proc)
 {
     if(!args.OptIsSet("-out")) {
         return;
     }
+
+    //Get time spent in application process
+    double net_time[4];
+    for(int i = 0; i < 4; ++i) {
+        net_time[i] = t->getTimeElapsed();
+    }
+
     //Get average time spent in application
-    double avg_msec, std_msec, min_msec, max_msec;
-    time_stats(local_time_spent, nprocs, avg_msec, std_msec, min_msec, max_msec);
+    double avg_msec[4], std_msec[4], min_msec[4], max_msec[4];
+    for(int i = 0; i < 4; ++i) {
+        time_stats(net_time[i], nprocs, avg_msec[i], std_msec[i], min_msec[i], max_msec[i]);
+    }
+    std::string prefix[] = {"init_", "feed_", "pred_", "fin_"};
 
     //Get average bandwidth and throughput
     size_t tot_ops = nreqs_per_proc * nprocs;
-    double thrpt_kiops = ((double)tot_ops)/avg_msec;
+    double thrpt_kiops[4] = {0}, sum = 0;
+    for(int i = 0; i < 4; ++i) {
+        thrpt_kiops[i] = ((double)tot_ops)/avg_msec[i];
+        sum += avg_msec[i];
+    }
+    double net_kiops = ((double)tot_ops)/sum;
 
     //Write to output CSV in root process
     if(rank == 0) {
         std::string output_path = args.GetStringOpt("-out");
-        bool exists = boost::filesystem::exists(output_path);
         std::ofstream out(output_path, std::ofstream::out | std::ofstream::app);
-        if(!exists) {
-            out << "avg_msec,std_msec,min_msec,max_msec,nprocs,nreqs_per_proc,nreqs,thrpt_kiops" << std::endl;
+        std::string header;
+        header = "nprocs,nreqs_per_proc,nreqs,";
+        for (int i = 0; i < 4; ++i) {
+            header += prefix[i] + "msec_avg" + "," +
+                      prefix[i] + "msec_std" + "," +
+                      prefix[i] + "min_std" + "," +
+                      prefix[i] + "max_std" + "," +
+                      prefix[i] + "thrpt_kiops";
         }
-        out <<
-            avg_msec << "," <<
-            std_msec << "," <<
-            min_msec << "," <<
-            max_msec << "," <<
-            nprocs << "," <<
-            nreqs_per_proc << "," <<
-            tot_ops << "," <<
-            thrpt_kiops << "," <<
-            std::endl;
+        out << header << std::endl;
+        out << nprocs << "," << nreqs_per_proc << "," << tot_ops << ",";
+        for (int i = 0; i < 4; ++i) {
+            out <<
+                avg_msec[i] << "," <<
+                std_msec[i] << "," <<
+                min_msec[i] << "," <<
+                max_msec[i] << "," <<
+                thrpt_kiops[i] << ",";
+        }
+        out << net_kiops << std::endl;
     }
 }
 
@@ -108,18 +129,28 @@ int main(int argc, char * argv[]) {
     }
 
     //Run tests
-    common::debug::Timer t;
-    t.startTime();
-    scp->Init(rank, nprocs, model_path);
+    common::debug::Timer t[4];
+
+    t[0].resumeTime();
+    scp->Init(rank, nprocs, model_path, true);
+    t[0].pauseTime();
+
     for(size_t i =0; i < nreqs_per_proc; ++i) {
-        scp->Feedback(10*(rank+1)*(i+1), 25*(rank+1)*(i+1), 25*(rank+1)*(i+1), config);
-        scp->Predict(25*(rank+1)*(i+1), 25*(rank+1)*(i+1), config);
+        t[1].resumeTime();
+        scp->Feedback(10*(rank+1)*(i+1), 25*(rank+1)*(i+1), -25*(rank+1)*(i+1), config);
+        t[1].pauseTime();
+
+        t[2].startTime();
+        scp->Predict(25*(rank+1)*(i+1), -25*(rank+1)*(i+1), config);
+        t[2].startTime();
     }
+
+    t[3].resumeTime();
     scp->Finalize();
-    double local_time_spent = t.endTime();
+    t[3].pauseTime();
 
     //Get stats
-    out_csv(args, rank, local_time_spent, nprocs, nreqs_per_proc);
+    out_csv(args, rank, t, nprocs, nreqs_per_proc);
     MPI_Finalize();
     return 0;
 }
