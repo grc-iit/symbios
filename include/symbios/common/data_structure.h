@@ -67,7 +67,7 @@ typedef struct FileSS: public StorageSolution{
 }FileStorageSolution;
 
 typedef struct RedisSS: public StorageSolution{
-    uint16_t port_;
+    std::string port_;
     /*Define the default, copy and move constructor*/
     RedisSS(CharStruct end_point,  uint16_t port):StorageSolution(end_point,IOClientType::REDIS_IO),port_(port){}
     RedisSS(const RedisSS &other):StorageSolution(other),port_(other.port_){}

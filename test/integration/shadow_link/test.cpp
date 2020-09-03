@@ -200,7 +200,7 @@ int main(int argc, char* argv[]){
             tot_bytes << "," <<
             store_thrpt_kiops << "," << store_bw_kbps << "," <<
             update_thrpt_kiops << "," << update_bw_kbps << "," <<
-            locate_thrpt_kiops << "," << locate_bw_kbps << "," <<
+            locate_thrpt_kiops << "," << locate_bw_kbps << "," << request.storage_index_ <<
             std::endl;
         std::cout << store_avg_msec << "," << store_std_msec << "," << store_min_msec << "," << store_max_msec << "," <<
                   update_avg_msec << "," << update_std_msec << "," << update_min_msec << "," << update_max_msec << "," <<
@@ -213,7 +213,7 @@ int main(int argc, char* argv[]){
                   tot_bytes << "," <<
                   store_thrpt_kiops << "," << store_bw_kbps << "," <<
                   update_thrpt_kiops << "," << update_bw_kbps << "," <<
-                  locate_thrpt_kiops << "," << locate_bw_kbps << "," <<
+                  locate_thrpt_kiops << "," << locate_bw_kbps << "," << request.storage_index_ <<
                   std::endl;
     }
 
