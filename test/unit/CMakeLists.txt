@@ -33,7 +33,8 @@ set(test_files  data_placement
                 metadata_orchestrator
                 server
                 storage_cost_predictor
-                config_manager)
+                config_manager
+                posix)
 foreach (test_file ${test_files})
     set(exec unit_${test_file})
     add_executable(${exec} ${test_file}/test.cpp ${SYMBIOS_SERVER_SRC})
@@ -57,7 +58,7 @@ set(test_files  file_io
                 mongo_io)
 foreach (test_file ${test_files})
     set(exec unit_${test_file})
-    add_executable(${exec} io_clients/${test_file}/test.cpp ${SYMBIOS_SERVER_SRC})
+    add_executable(${exec} io_clients/${test_file}/test.cpp ${SYMBIOS_SERVER_SRC} posix/test.cpp)
     add_dependencies(${exec} symbios)
     target_include_directories(${exec} PRIVATE "${CMAKE_BINARY_DIR}/")
     target_link_libraries(${exec} ${LIBS})
