@@ -4,7 +4,6 @@
 
 #include "iris.h"
 #include <common/debug.h>
-#include <symbios/common/enumerations.h>
 #include <symbios/client/client.h>
 
 #define  MAX_OBJ_SIZE 4
@@ -25,7 +24,13 @@ int main(int argc, char * argv[]){
         exit(0);
     }
 
-    if(argc > 1) SYMBIOS_CONF->CONFIGURATION_FILE=argv[1];
+    int ioMode, ioOperation, requestSize, requestNumber;
+    std::string distributionMode;
+
+    if(argc > 1){
+        SYMBIOS_CONF->CONFIGURATION_FILE=argv[1];
+    }
+
     BASKET_CONF->BACKED_FILE_DIR=SYMBIOS_CONF->SERVER_DIR;
 
     std::string data = argc > 2 ? argv[2] : "Hello Symbios";  // argv[2]
