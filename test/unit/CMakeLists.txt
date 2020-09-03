@@ -31,8 +31,8 @@ set(test_files  data_placement
                 io_clients
                 metadata_orchestrator
                 server
-                config_manager)
-
+                config_manager
+                posix)
 foreach (test_file ${test_files})
     set(exec unit_${test_file})
     add_executable(${exec} ${test_file}/test.cpp ${SYMBIOS_SERVER_SRC})
@@ -70,35 +70,16 @@ foreach (test_file ${test_files})
     set_property(TEST ${test_name} APPEND PROPERTY ENVIRONMENT "RUN_DIR=$ENV{RUN_DIR}")
 endforeach ()
 
-set(test_files iris_emu)
-foreach (test_file ${test_files})
-set(exec unit_${test_file})
-add_executable(${exec}  ${test_file}/test.cpp ${test_file}/iris.cpp ${SYMBIOS_SERVER_SRC})
-add_dependencies(${exec} symbios)
-target_include_directories(${exec} PRIVATE "${CMAKE_BINARY_DIR}/")
-target_link_libraries(${exec} ${LIBS})
-target_link_libraries(${exec} symbios)
-#set_target_properties(${exec} PROPERTIES FOLDER test/unit)
-set(test_parameters )
-set(test_name ${test_file}_test)
-add_test(NAME ${test_name} COMMAND ${CMAKE_BINARY_DIR}/test/unit/${exec} ${test_parameters})
-set_tests_properties(${test_name} PROPERTIES WILL_FAIL false)
-set_property(TEST ${test_name} APPEND PROPERTY ENVIRONMENT "LD_PRELOAD=${CMAKE_BINARY_DIR}/ares/datasets/libdatasets.so")
-set_property(TEST ${test_name} APPEND PROPERTY ENVIRONMENT "HDF5_PLUGIN_PATH=$ENV{HDF5_PLUGIN_PATH}")
-set_property(TEST ${test_name} APPEND PROPERTY ENVIRONMENT "RUN_DIR=$ENV{RUN_DIR}")
-endforeach ()
-
-
 
 set(NREQS_LIST 100 1000 10000 100000 1000000)
 set(NPROCS_LIST 1 2 4 8 16 32)
 set(MODEL_FILE ${CMAKE_BINARY_DIR}/test_data.csv)
 add_executable(unit_storage_cost_predictor storage_cost_predictor/test.cpp ${SYMBIOS_SERVER_SRC})
 target_link_libraries(unit_storage_cost_predictor ${LIBS})
+#set_target_properties(unit_storage_cost_predictor PROPERTIES COMPILE_FLAGS -O3)
 foreach(NREQS ${NREQS_LIST})
     foreach(NPROCS ${NPROCS_LIST})
-        add_test(NAME scc_predictor_${NREQS}_${NPROCS} COMMAND
+        add_test(NAME sc_predictor_${NREQS}_${NPROCS} COMMAND
                 mpirun -n ${NPROCS} ${CMAKE_BINARY_DIR}/test/unit/unit_storage_cost_predictor -model ${MODEL_FILE} -nreqs ${NREQS} -out ${CMAKE_BINARY_DIR}/scc_thrpt.csv)
     endforeach()
 endforeach()
-
