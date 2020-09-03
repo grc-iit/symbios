@@ -246,8 +246,7 @@ private:
         double tot_read_coeff = ParseDouble(input, pos_in_file, filesz); NextToken(input, pos_in_file, filesz);
         double tot_write_coeff = ParseDouble(input, pos_in_file, filesz); NextToken(input, pos_in_file, filesz);
         std::string conf = ParseString(input, pos_in_file, filesz); NextToken(input, pos_in_file, filesz);
-        std::string my_conf="rank"+std::to_string(BASKET_CONF->MPI_RANK);
-        if(my_conf == conf && storage_models_.find(conf) == storage_models_.end()) {
+        if(storage_models_.find(conf) == storage_models_.end()) {
             storage_configs_.emplace_back(conf);
             //printf("%s\n",conf.data());
         }
@@ -338,10 +337,12 @@ public:
         csv_header_ = csv_header_;
         LoadModelCSV();
         worker_thread_ = std::thread(&StorageCostPredictor::Run, this, std::move(terminate_worker_.get_future()));
+        MPI_Barrier(MPI_COMM_WORLD);
     }
 
     void Finalize() {
         common::debug::AutoTrace trace = common::debug::AutoTrace("StorageCostPredictor::~StorageCostPredictor");
+        MPI_Barrier(MPI_COMM_WORLD);
         terminate_worker_.set_value();
         worker_thread_.join();
         CloseCSV(model_file_);
