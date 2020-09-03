@@ -23,7 +23,7 @@ for server in "${SERVERS[@]}"; do
   (
     echo "port $port"
     echo "cluster-enabled yes"
-    echo "cluster-config-file nodes.conf"
+    echo "cluster-config-file ${LOG_DIR}/${port}/nodes.conf"
     echo "cluster-node-timeout 5000"
     echo "appendonly yes"
     echo "protected-mode no"
