@@ -76,6 +76,7 @@ bool symbios::Posix::UpdateStat(FILE *fh, PosixStat &stat) {
 
 
 FILE *fopen(const char *filename, const char *mode) {
+    printf(filename);
     MAP_OR_FAIL(fopen);
     FILE *fh;
     if(strncmp(filename, SYMBIOS_CONF->CONFIGURATION_FILE.c_str(), SYMBIOS_CONF->CONFIGURATION_FILE.size()) == 0)
