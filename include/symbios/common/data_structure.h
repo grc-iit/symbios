@@ -69,7 +69,7 @@ typedef struct FileSS: public StorageSolution{
 typedef struct RedisSS: public StorageSolution{
     std::string port_;
     /*Define the default, copy and move constructor*/
-    RedisSS(CharStruct end_point,  uint16_t port):StorageSolution(end_point,IOClientType::REDIS_IO),port_(port){}
+    RedisSS(CharStruct end_point,  std::string port):StorageSolution(end_point,IOClientType::REDIS_IO),port_(port){}
     RedisSS(const RedisSS &other):StorageSolution(other),port_(other.port_){}
     RedisSS(RedisSS &other):StorageSolution(other),port_(other.port_){}
     /*Define Assignment Operator*/
