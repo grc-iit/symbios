@@ -58,6 +58,7 @@ for server in "${SERVERS[@]}"; do
   ((i = i + 1))
 done
 cmd="${cmd}--cluster-replicas 1"
+echo "Cluster command: ${cmd}"
 echo yes | $cmd
 
 # Check cluster nodes
