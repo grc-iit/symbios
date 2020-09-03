@@ -10,7 +10,7 @@ HOSTFILE=@1
 LOG_DIR=@2
 
 SERVERS=($(cat ${HOSTFILE}))
-echo "${CYAN}${SERVERS[*]}${NC}"
+echo -e "${CYAN}${SERVERS[*]}${NC}"
 
 echo -e "${GREEN}Stopping Redis${NC}"
 for server in "${SERVERS[@]}"

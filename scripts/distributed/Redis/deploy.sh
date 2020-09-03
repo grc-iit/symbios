@@ -11,7 +11,7 @@ LOG_DIR=${2}
 
 PORT_BASE=7000
 SERVERS=($(cat ${HOSTFILE}))
-echo "${CYAN}${SERVERS[*]}${NC}"
+echo -e "${CYAN}${SERVERS[*]}${NC}"
 
 # Prepare configuration for each server
 echo -e "${GREEN}Preparing Redis cluster configuration files${NC}"
