@@ -28,9 +28,8 @@ mongocxx::collection file = client[mongo_solution->database_.c_str()].collection
         if(source_size == 0){
             source_size = data.size();
         }
-        destination.buffer_= static_cast<char *>(malloc(source_size - source.position_+ 1) );
+        destination.buffer_= static_cast<char *>(malloc(source_size - source.position_) );
         memcpy(destination.buffer_,data.data()+source.position_,source_size - source.position_);
-        destination.buffer_[source_size - source.position_]='\0';
         destination.data_size_ = source_size - source.position_;
     } else {
         throw ErrorException(READ_REDIS_DATA_FAILED);

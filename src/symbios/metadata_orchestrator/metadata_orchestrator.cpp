@@ -33,7 +33,7 @@ void MetadataOrchestrator::Store(Data &original_request,
         for (auto &distribution : distributions) {
             auto iter = primary_metadata.links_.find(distribution.destination_data_.position_);
             if (iter == primary_metadata.links_.end()) {
-                distribution.destination_data_.buffer_= NULL;
+                distribution.destination_data_.buffer_= "";
                 primary_metadata.links_.insert(
                         {distribution.destination_data_.position_, distribution.destination_data_});
                 is_metadata_updated = true;
@@ -59,13 +59,15 @@ void MetadataOrchestrator::Store(Data &original_request,
         std::stringstream buffer;
         clmdep_msgpack::pack(buffer, primary_metadata);
         buffer.seekg(0);
-        original_metadata.data_size_ = buffer.str().size();
+        std::string s = buffer.str();
+        std::replace( s.begin(), s.end(), '\0','#');
+        original_metadata.data_size_ = s.size();
         original_metadata.buffer_ = static_cast<char *>(malloc(original_metadata.data_size_));
-        memcpy(original_metadata.buffer_,buffer.str().data(),original_metadata.data_size_);
+        memcpy(original_metadata.buffer_,s.c_str(),s.size());
         basket::Singleton<IOFactory>::GetInstance()->GetIOClient(original_metadata.storage_index_)->Write(
                 original_metadata, original_metadata);
         free(original_metadata.buffer_);
-        original_metadata.buffer_=NULL;
+        original_metadata.buffer_="";
     }
     if (!exists) {
         auto link_metadata = Metadata();
@@ -73,12 +75,14 @@ void MetadataOrchestrator::Store(Data &original_request,
         link_metadata.links_.insert({-1, original_metadata});
         auto link_meta = Data();
         link_meta.id_=original_request.id_ + "_meta";
-        std::stringstream link_metadata_buf;
-        clmdep_msgpack::pack(link_metadata_buf, link_metadata);
-        link_metadata_buf.seekg(0);
-        link_meta.data_size_ = link_metadata_buf.str().size();
+        std::stringstream buffer;
+        clmdep_msgpack::pack(buffer, link_metadata);
+        buffer.seekg(0);
+        std::string s = buffer.str();
+        std::replace( s.begin(), s.end(), '\0','#');
+        link_meta.data_size_ = s.size();
         link_meta.buffer_ = static_cast<char *>(malloc(link_meta.data_size_));
-        memcpy(link_meta.buffer_,link_metadata_buf.str().data(),link_meta.data_size_);
+        memcpy(link_meta.buffer_,s.data(),link_meta.data_size_);
         for (auto &solution:SYMBIOS_CONF->STORAGE_SOLUTIONS) {
             bool is_primary = solution.first == original_request.storage_index_;
             if (!is_primary) {
@@ -101,7 +105,9 @@ MetadataOrchestrator::Locate(Data &request, Metadata &primary_metadata) {
     original_metadata.storage_index_ = request.storage_index_;
     basket::Singleton<IOFactory>::GetInstance()->GetIOClient(original_metadata.storage_index_)->Read(original_metadata,
                                                                                                      original_metadata);
-    clmdep_msgpack::object_handle oh = clmdep_msgpack::unpack(original_metadata.buffer_,
+    std::string s = std::string(original_metadata.buffer_);
+    std::replace( s.begin(), s.end(), '#','\0');
+    clmdep_msgpack::object_handle oh = clmdep_msgpack::unpack(s.c_str(),
                                                               original_metadata.data_size_);
     clmdep_msgpack::object deserialized = oh.get();
     Metadata metadata = deserialized.as<Metadata>();
@@ -114,7 +120,9 @@ MetadataOrchestrator::Locate(Data &request, Metadata &primary_metadata) {
         original_metadata = metadata.links_[-1];
         basket::Singleton<IOFactory>::GetInstance()->GetIOClient(original_metadata.storage_index_)->Read(
                 original_metadata, original_metadata);
-        clmdep_msgpack::object_handle oh = clmdep_msgpack::unpack(original_metadata.buffer_,
+        std::string s = std::string(original_metadata.buffer_);
+        std::replace( s.begin(), s.end(), '#','\0');
+        clmdep_msgpack::object_handle oh = clmdep_msgpack::unpack(s.c_str(),
                                                                   original_metadata.data_size_);
         oh.get().convert(primary_metadata);
         free(original_metadata.buffer_);
