@@ -44,7 +44,7 @@ private:
     CoeffArray coeffs_[2];
     std::atomic_bool buffer_ = false;
 
-    static double Residual(const Observation &data, const parameter_vector &params) {
+    double Residual(const Observation &data, const parameter_vector &params) {
         const input_vector &x = data.first;
         double y = data.second;
         double sum = 0;
@@ -75,10 +75,11 @@ public:
         ObservationVec datavec = GetWindow();
         if (datavec.size() > 0) {
             parameter_vector params(LINREG_NPARAMS);
+            std::function<double(const Observation &, const parameter_vector &)> residual(std::bind(&LinRegModel::Residual, this, std::placeholders::_1, std::placeholders::_2));
             dlib::solve_least_squares_lm(
                     dlib::objective_delta_stop_strategy(1e-7),
-                    Residual,
-                    dlib::derivative(Residual),
+                    residual,
+                    dlib::derivative(residual),
                     datavec,
                     params);
             CoeffArray coeffs;
@@ -122,7 +123,7 @@ private:
     MPI_File model_file_ = nullptr;
     int rank_ = 0, nprocs_ = 1;
     bool commit_metrics_ = true, csv_header_ = false;
-    size_t window_size_ = 256, window_tick_ = 0;
+    size_t window_size_ = 1024, window_tick_ = 0;
     std::unordered_map<std::string, LinRegModel> storage_models_;
     std::list<std::string> storage_configs_;
     std::thread worker_thread_;
@@ -247,6 +248,7 @@ private:
         std::string conf = ParseString(input, pos_in_file, filesz); NextToken(input, pos_in_file, filesz);
         if(storage_models_.find(conf) == storage_models_.end()) {
             storage_configs_.emplace_back(conf);
+            //printf("%s\n",conf.data());
         }
         storage_models_[conf].UpdateCoeffs(nprocs_coeff, tot_read_coeff, tot_write_coeff);
     }
@@ -289,7 +291,7 @@ private:
     void CommitMetrics() {
         common::debug::AutoTrace trace = common::debug::AutoTrace("StorageCostPredictor::CommitMetrics");
         if(!commit_metrics_) { return; }
-        SaveModelCSV();
+        //SaveModelCSV();
     }
 
     void Fit() {
@@ -305,15 +307,17 @@ private:
         do {
             if(window_tick_ >= window_size_) {
                 Fit();
-                CommitMetrics();
+                MPI_Barrier(MPI_COMM_WORLD);
+                //CommitMetrics();
                 window_tick_ = 0;
             }
         }
         while(loop_cond.wait_for(std::chrono::milliseconds(500))==std::future_status::timeout);
-        if(window_tick_ >= window_size_) {
-            Fit();
-        }
-        CommitMetrics();
+        MPI_Barrier(MPI_COMM_WORLD);
+//        if(window_tick_ >= window_size_) {
+//            Fit();
+//        }
+//        CommitMetrics();
     }
 
 public:
@@ -334,11 +338,13 @@ public:
         model_file_path_ = model_file_path;
         csv_header_ = csv_header_;
         LoadModelCSV();
-        worker_thread_ = std::thread(&StorageCostPredictor::Run, this, terminate_worker_.get_future());
+        worker_thread_ = std::thread(&StorageCostPredictor::Run, this, std::move(terminate_worker_.get_future()));
+        MPI_Barrier(MPI_COMM_WORLD);
     }
 
     void Finalize() {
         common::debug::AutoTrace trace = common::debug::AutoTrace("StorageCostPredictor::~StorageCostPredictor");
+        MPI_Barrier(MPI_COMM_WORLD);
         terminate_worker_.set_value();
         worker_thread_.join();
         CloseCSV(model_file_);
