@@ -13,6 +13,9 @@
 #include <vector>
 
 
+void slice_str(const char * str, char * buffer, size_t start, size_t end);
+
+
 typedef enum IOLib {
     IRIS,
     NIOBE,
@@ -48,13 +51,13 @@ private:
     uint16_t lib_type;
     uint16_t db_type;
     uint16_t max_obj_size;
-    std::string data;
+    char* data;
     std::string file_;
     std::vector<DataDescriptor> map_data();
     void do_mapped_read();
     void do_mapped_write();
 public:
-    LibHandler(std::string file_, std::string data, uint16_t lib_type_, uint16_t io_type_, uint16_t max_obj_size_);
+    LibHandler(std::string file_, char* data, uint16_t lib_type_, uint16_t io_type_, uint16_t max_obj_size_);
     void run(uint16_t op_type);
 };
 
