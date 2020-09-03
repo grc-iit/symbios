@@ -26,6 +26,8 @@ RUN echo "Downloading Modules" \
 && wget https://github.com/sewenew/redis-plus-plus/archive/1.1.2.tar.gz \
 && wget https://github.com/mongodb/mongo-c-driver/releases/download/1.17.0/mongo-c-driver-1.17.0.tar.gz \
 && wget https://github.com/mongodb/mongo-cxx-driver/archive/r3.5.1.tar.gz \
+&& wget https://github.com/xianyi/OpenBLAS/archive/v0.3.10.tar.gz \
+&& wget http://dlib.net/files/dlib-19.21.tar.bz2 \
 && tar zxf mpich-3.3.2.tar.gz \
 && tar zxf boost_1_74_0.tar.gz \
 && tar xvf v2.2.1.tar.gz \
@@ -33,7 +35,10 @@ RUN echo "Downloading Modules" \
 && tar -xzf 1.1.2.tar.gz \
 && tar -xzf mongo-c-driver-1.17.0.tar.gz \
 && tar -xzf r3.5.1.tar.gz \
+&& tar -xzf v0.3.10.tar.gz \
+&& tar -xjf dlib-19.21.tar.bz2 \
 && rm *.tar.gz
+
 
 ##################### MPI ######################
 WORKDIR  ${SOURCE_DIR}/mpich-3.3.2/
@@ -102,3 +107,20 @@ RUN echo "Installing Mongodb C++ Driver" \
 && cmake .. -DCMAKE_PREFIX_PATH=${INSTALL_DIR} -DBUILD_VERSION=3.5.1 -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} -DCMAKE_CXX_STANDARD=17 -DBSONCXX_POLY_USE_BOOST=1 -DCMAKE_BUILD_TYPE=Release \
 && make -j 4 \
 && cmake --build . --target install
+
+##################### OPENBLAS ######################
+RUN apt-get install -y gfortran
+
+WORKDIR  ${SOURCE_DIR}/OpenBLAS-0.3.10/build
+RUN echo "Installing OPENBLAS" \
+&& cmake -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} ../ \
+&& make -j \
+&& make install
+
+##################### DLIB ######################
+
+WORKDIR  ${SOURCE_DIR}/dlib-19.21/build
+RUN echo "Installing DLIB" \
+&& cmake -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} ../ -DBUILD_SHARED_LIBS=1 -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} \
+&& make -j \
+&& make install

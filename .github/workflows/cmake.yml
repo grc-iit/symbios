@@ -14,7 +14,7 @@ jobs:
     # See: https://docs.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow#configuring-a-build-matrix
     runs-on: ubuntu-latest
     container:
-      image: jcernuda/symbios:1.0.0
+      image: jcernuda/symbios:1.0.3
       ports: 
         - 9000:9000
     strategy:
@@ -38,9 +38,20 @@ jobs:
       #uses: supercharge/mongodb-github-action@1.3.0
       #with:
         #mongodb-version: ${{ matrix.mongodb-version }}
-
+     
     steps:
     - uses: actions/checkout@v2
+    - name: Cache
+      uses: actions/cache@v2.1.1
+      with:
+        # A list of files, directories, and wildcard patterns to cache and restore
+        path: ${GITHUB_WORKSPACE}
+        # An explicit key for restoring and saving the cache
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/symbios/*') }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-name }}-
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
     - name: Create Build Environment
       env:
         GITHUB_WORKSPACE: ${{runner.workspace}}
@@ -58,7 +69,7 @@ jobs:
         mkdir -p ${GITHUB_WORKSPACE}/build
         cd ${GITHUB_WORKSPACE}/build
         cmake ${GITHUB_WORKSPACE} -DCMAKE_BUILD_TYPE=$BUILD_TYPE
-        cmake --build . --config $
+        cmake --build . --config $ -- -j 3
     
     - name: Test
       shell: bash

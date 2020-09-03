@@ -4,8 +4,6 @@
 #include <symbios/client/posix.h>
 #include <basket/common/macros.h>
 #include <symbios/client/client.h>
-#include <symbios/common/configuration_manager.h>
-#include <symbios/common/enumerations.h>
 
 
 bool symbios::Posix::UpdateOnOpen(FILE *fh, PosixStat &stat) {
@@ -74,11 +72,12 @@ bool symbios::Posix::UpdateStat(FILE *fh, PosixStat &stat) {
     return fileDescriptorMap_.insert_or_assign(fh,stat).second;
 }
 
-
 FILE *fopen(const char *filename, const char *mode) {
+    COMMON_DBGVAR(filename);
     MAP_OR_FAIL(fopen);
     FILE *fh;
     if(strncmp(filename, SYMBIOS_CONF->CONFIGURATION_FILE.c_str(), SYMBIOS_CONF->CONFIGURATION_FILE.size()) == 0)
+        //TODO: SERVER_DIR, CLIENT_LIST, SERVER_LIST, LOGGING_FOLDER (main/damenon + other?)
         return __real_fopen(filename, mode);
     auto posix = basket::Singleton<symbios::Posix>::GetInstance();
     for (auto solutions:SYMBIOS_CONF->STORAGE_SOLUTIONS) {
