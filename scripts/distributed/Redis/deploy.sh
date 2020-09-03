@@ -39,8 +39,7 @@ for server in "${SERVERS[@]}"; do
   ((port = $PORT_BASE + $i))
   echo "Starting redis on ${server}:${port}"
   ssh "${server}" /bin/bash <<EOF
-  cd ${LOG_DIR}/$port
-  redis-server ./redis.conf > /dev/null 2>&1 &
+  redis-server ${LOG_DIR}/$port/redis.conf > /dev/null 2>&1 &
   echo -e "${GREEN}Verifying Redis cluster${NC}"
   pgrep -l redis-server
 EOF
@@ -53,7 +52,7 @@ echo -e "${GREEN}Connecting Redis cluster servers${NC}"
 cmd="redis-cli --cluster create "
 i=0
 for server in "${SERVERS[@]}"; do
-  server_ip=$(getent ahosts "${server}${HOSTNAME_POSTFIX}" | grep STREAM | awk '{print $1}')
+  server_ip=$(getent ahosts "${server}" | grep STREAM | awk '{print $1}')
   ((port = $PORT_BASE + $i))
   cmd="${cmd}${server_ip}:${port} "
   ((i = i + 1))
@@ -64,6 +63,6 @@ echo yes | $cmd
 # Check cluster nodes
 echo -e "${GREEN}Checking Redis cluster nodes${NC}"
 first_server="${SERVERS[0]}"
-cmd="redis-cli -c -h ${first_server}${HOSTNAME_POSTFIX} -p ${PORT_BASE} cluster nodes"
+cmd="redis-cli -c -h ${first_server} -p ${PORT_BASE} cluster nodes"
 $cmd | sort -k9 -n
 echo -e "${GREEN}Redis is started${NC}"
