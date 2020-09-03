@@ -37,7 +37,12 @@ public:
      * Remove
      *
      */
-    virtual void Remove(Data &source) = 0;
+    virtual bool Remove(Data &source) = 0;
+    /**
+     * Size
+     *
+     */
+    virtual size_t Size(Data &source) = 0;
 };
 
 

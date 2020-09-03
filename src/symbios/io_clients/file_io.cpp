@@ -23,13 +23,14 @@ void FileIOClient::Read(Data &source, Data &destination) {
             close(fileFd);
             throw ErrorException(SEEK_FILE_FAILED);
         } else {
-            auto source_data_size = 0;
-            if (source.buffer_.size() == 0) {
+            auto source_data_size = source.data_size_;
+            if (source.data_size_ == 0) {
                 source_data_size = file_size - source.position_;
             }
-            destination.buffer_.resize(source_data_size);
-            size_t data_size = read(fileFd, destination.buffer_.data() + destination.position_, source_data_size);
+            destination.buffer_= static_cast<char *>(malloc(source_data_size));
+            size_t data_size = read(fileFd, destination.buffer_ + destination.position_, source_data_size);
             if (data_size == source_data_size) {
+                destination.data_size_=data_size;
                 // read data from file successful
                 close(fileFd);
             } else {
@@ -53,10 +54,10 @@ void FileIOClient::Write(Data &source, Data &destination) {
             close(fileFd);
             throw ErrorException(SEEK_FILE_FAILED);
         } else {
-            ssize_t size = write(fileFd, source.buffer_.c_str() + source.position_,
-                                 source.buffer_.size() - source.position_);
+            ssize_t size = write(fileFd, source.buffer_ + source.position_,
+                                 source.data_size_ - source.position_);
             COMMON_DBGVAR(size);
-            if (size < source.buffer_.size() - source.position_) {
+            if (size < source.data_size_ - source.position_) {
                 // write data to file failed
                 close(fileFd);
                 throw ErrorException(WRITE_DATA_TO_FILE_FAILED);
@@ -66,6 +67,15 @@ void FileIOClient::Write(Data &source, Data &destination) {
     }
 }
 
-void FileIOClient::Remove(Data &source) {
+bool FileIOClient::Remove(Data &source) {
     auto tracer_source = common::debug::AutoTrace("FileIOClient::Remove", source);
+    remove(source.id_.c_str());
+    return true;
+}
+
+size_t FileIOClient::Size(Data &source) {
+    if(boost::filesystem::exists(source.id_.c_str())){
+        return boost::filesystem::file_size(source.id_.c_str());
+    }
+    return 0;
 }

@@ -22,23 +22,26 @@ namespace symbios {
         std::thread worker;
         std::shared_ptr<T> daemon_manager_;
         bool spawn_thread_;
+        bool wait_;
+        bool is_running_;
 
-        Daemon(CharStruct main_log_file = "/tomp/tmp.BUKlhPiLxF/build/symbios_server.lg",bool spawn_thread=false): daemon_manager_(),spawn_thread_(spawn_thread) {
+        Daemon(CharStruct main_log_file = "/tomp/tmp.BUKlhPiLxF/build/single_node_symbios_server.lg", bool spawn_thread=false, bool wait=true): wait_(wait),daemon_manager_(),spawn_thread_(spawn_thread) {
 
         }
 
         void Run(){
             main_log_file = Daemon<T>::main_log_file;
             std::future<void> futureObj = exitSignal.get_future();
-            daemon_manager_=std::make_shared<T>();
+            daemon_manager_ = basket::Singleton<T>::GetInstance();
             catchSignals();
+            is_running_=true;
             if(spawn_thread_) {
                 worker = std::thread(&T::Run, daemon_manager_.get(), std::move(futureObj));
                 MPI_Barrier(MPI_COMM_WORLD);
                 if(BASKET_CONF->MPI_RANK == 0){
                     printf("Running\n");
                 }
-                while(true) sleep(1);
+                if(wait_) while(true) sleep(1);
             }
             else {
                 MPI_Barrier(MPI_COMM_WORLD);
@@ -49,13 +52,18 @@ namespace symbios {
             }
         }
 
-        ~Daemon(){
-            if(spawn_thread_){
-                exitSignal.set_value();
-                worker.join();
+        void Stop(){
+            if(is_running_){
+                if(spawn_thread_){
+                    exitSignal.set_value();
+                    worker.join();
+                }
+                is_running_=false;
             }
         }
-
+        ~Daemon(){
+            Stop();
+        }
 
     private:
         static void signalHandler(int sig){

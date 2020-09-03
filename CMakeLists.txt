@@ -21,22 +21,23 @@ set(CMAKE_CXX_STANDARD 17)
 
 # Debug flags
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DCOMMON_DEBUG_MSG")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DCOMMON_DEBUG_TIMER")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DCOMMON_DEBUG_TIMER")
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DCOMMON_DEBUG_TRACE")
 
 # Source files
 set(SYMBIOS_COMMON_SRC ${CMAKE_SOURCE_DIR}/include/symbios/common/data_structure.h ${CMAKE_SOURCE_DIR}/include/symbios/common/configuration_manager.h ${CMAKE_SOURCE_DIR}/src/symbios/common/data_structure.cpp ${CMAKE_SOURCE_DIR}/common/src/common/debug.cpp
         ${CMAKE_SOURCE_DIR}/common/include/common/debug.h ${CMAKE_SOURCE_DIR}/common/include/common/replayer.h ${CMAKE_SOURCE_DIR}/common/include/common/arguments.h)
 set(SYMBIOS_LIB_SRC ${SYMBIOS_COMMON_SRC} include/symbios/client/client.h src/symbios/client/client.cpp
-        src/symbios/client/posix.cpp )
+        src/symbios/client/posix.cpp include/symbios/client/posix.h)
 
 # add symbios lib
 add_library(symbios SHARED ${SYMBIOS_LIB_SRC})
-target_link_libraries(symbios -lbasket -lrpc)
+target_link_libraries(symbios -lbasket -lrpc  -lboost_system -lboost_filesystem -ldl)
 # TODO: add any required libraries
 
 # add symbios server
 set(SYMBIOS_SERVER_SRC ${SYMBIOS_COMMON_SRC}
+        ${CMAKE_SOURCE_DIR}/src/symbios/storage_cost_predictor/storage_cost_predictor.cpp ${CMAKE_SOURCE_DIR}/src/symbios/storage_cost_predictor/storage_cost_predictor.h
         ${CMAKE_SOURCE_DIR}/src/symbios/server/server.h ${CMAKE_SOURCE_DIR}/src/symbios/server/server.cpp
         ${CMAKE_SOURCE_DIR}/src/symbios/io_clients/io.h ${CMAKE_SOURCE_DIR}/src/symbios/io_clients/io_factory.h
         ${CMAKE_SOURCE_DIR}/src/symbios/io_clients/file_io.h ${CMAKE_SOURCE_DIR}/src/symbios/io_clients/file_io.cpp
@@ -50,13 +51,14 @@ set(SYMBIOS_SERVER_SRC ${SYMBIOS_COMMON_SRC}
         ${CMAKE_SOURCE_DIR}/src/symbios/metadata_orchestrator/metadata_orchestrator.h ${CMAKE_SOURCE_DIR}/src/symbios/metadata_orchestrator/metadata_orchestrator.cpp
         ${CMAKE_SOURCE_DIR}/src/symbios/server/daemon.h)
 
-add_executable(symbios_server ${SYMBIOS_SERVER_SRC} ${CMAKE_SOURCE_DIR}/src/symbios/server/main.cpp)
+add_executable(symbios_server ${SYMBIOS_SERVER_SRC} ${CMAKE_SOURCE_DIR}/src/symbios/server/main.cpp )
 add_dependencies(symbios_server symbios)
-target_link_libraries(symbios_server -lmpi -lhiredis -lbasket -lrpc -lredis++ -lmongoc-1.0 -lbson-1.0 -lbsoncxx -lboost_system -lboost_filesystem  -lmongocxx -lpthread)
+target_link_libraries(symbios_server -lmpi -lhiredis -lbasket -lrpc -lredis++ -lmongoc-1.0 -lbson-1.0 -ldlib -lopenblas -lgfortran -lm -lquadmath  -lbsoncxx -lboost_system -lboost_filesystem  -lmongocxx -lpthread -ldl)
 # TODO: add any required libraries
 
 # add benchmark tool
 add_subdirectory(benchmark)
+add_subdirectory(common/test)
 
 option(BUILD_TEST "Build the unit tests" ON)
 if(BUILD_TEST)

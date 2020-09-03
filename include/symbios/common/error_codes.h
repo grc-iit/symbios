@@ -25,5 +25,6 @@ const ErrorCode READ_MONGODB_DATA_FAILED = {1008, "Read data from Mongodb failed
 const ErrorCode WRITE_MONGODB_DATA_FAILED = {1009, "Write data to Mongodb failed"};
 const ErrorCode READ_MONGO_POSITION_OR_SIZE_FAILED = {1010, "Error read position or data size when reading data from Mongodb"};
 const ErrorCode MONGODB_SERVER_SIDE_FAILED = {1011, "Mongodb server maybe failed"};
+const ErrorCode UNDEFINED_ENV_VARIABLE = {2011, "The environment variable is not defined %s"};
 
 #endif //SYMBIOS_ERROR_CODES_H

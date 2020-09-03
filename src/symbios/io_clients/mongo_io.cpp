@@ -23,7 +23,14 @@ mongocxx::collection file = client[mongo_solution->database_.c_str()].collection
             file.find_one(bsoncxx::builder::stream::document{} << "key" << std::string(source.id_.c_str())
                                                                << bsoncxx::builder::stream::finalize);
     if (maybe_result) {
-        destination.buffer_= maybe_result->view()["value"].get_utf8().value.to_string();
+        auto data = maybe_result->view()["value"].get_utf8().value.to_string();
+        size_t source_size = source.data_size_;
+        if(source_size == 0){
+            source_size = data.size();
+        }
+        destination.buffer_= static_cast<char *>(malloc(source_size - source.position_) );
+        memcpy(destination.buffer_,data.data()+source.position_,source_size - source.position_);
+        destination.data_size_ = source_size - source.position_;
     } else {
         throw ErrorException(READ_REDIS_DATA_FAILED);
     }
@@ -37,6 +44,7 @@ void MongoIOClient::Write(Data &source, Data &destination) {
             mongo_solution->collection_.c_str());
     bool exists = false;
     Data read_source;
+    std::string new_val;
     try {
         read_source.id_ = destination.id_;
         Read(read_source, read_source);
@@ -44,32 +52,32 @@ void MongoIOClient::Write(Data &source, Data &destination) {
     } catch (const std::exception &e) {
         exists = false;
     }
-    bool delete_source_buffer = false;
     if (exists) {
-        if (source.buffer_.size() - source.position_ >= read_source.buffer_.size() || source.buffer_.size() - source.position_ + destination.position_ >= read_source.buffer_.size()) {
-            auto new_val=std::string();
-            new_val.resize(destination.position_ + source.buffer_.size() - source.position_);
+        if (source.data_size_ - source.position_ >= read_source.data_size_ || source.data_size_ - source.position_ + destination.position_ >= read_source.data_size_) {
+            new_val=std::string();
+            new_val.resize(destination.position_ + source.data_size_ - source.position_);
             if (destination.position_ > 0) {
-                memcpy(new_val.data(), read_source.buffer_.c_str(), destination.position_ - 1);
+                memcpy(new_val.data(), read_source.buffer_, destination.position_ - 1);
             }
-            memcpy(new_val.data() + destination.position_, source.buffer_.c_str() + source.position_, source.buffer_.size() - source.position_);
-            source.buffer_ = new_val;
+            memcpy(new_val.data() + destination.position_, source.buffer_ + source.position_, source.data_size_ - source.position_);
             source.position_ = 0;
-            delete_source_buffer = true;
         } else {
+            new_val=std::string(read_source.buffer_);
             // update the old_value
-            memcpy(read_source.buffer_.data() + destination.position_,
-                   source.buffer_.c_str() + source.position_,
-                   source.buffer_.size() - source.position_);
+            memcpy(new_val.data() + destination.position_,
+                   source.buffer_ + source.position_,
+                   source.data_size_ - source.position_);
             source.position_ = 0;
-            source.buffer_ = read_source.buffer_;
         }
         file.delete_many(bsoncxx::builder::basic::make_document(
                 bsoncxx::builder::basic::kvp("key", std::string(destination.id_.c_str()))));
+        free(read_source.buffer_);
+    }else{
+        new_val=std::string(source.buffer_);
     }
     auto document = bsoncxx::builder::basic::document{};
     using bsoncxx::builder::basic::kvp;
-    std::string data(source.buffer_.c_str() + source.position_, source.buffer_.size() - source.position_);
+    std::string data(new_val.data() + source.position_, source.data_size_ - source.position_);
     std::string keyName(destination.id_.c_str());
     //std::cout<<"KeyName :"<<keyName<<"\n";
     document.append(kvp("key", keyName), kvp("value", data));
@@ -87,11 +95,24 @@ void MongoIOClient::Write(Data &source, Data &destination) {
     } else std::cout << "Inserted id was not an OID type" << "\n";
 }
 
-void MongoIOClient::Remove(Data &source) {
+bool MongoIOClient::Remove(Data &source) {
   auto tracer =
       common::debug::AutoTrace("MongoIOClient::Remove", source);
     mongocxx::collection file = client[mongo_solution->database_.c_str()].collection(
             mongo_solution->collection_.c_str());
     file.delete_many(bsoncxx::builder::basic::make_document(
             bsoncxx::builder::basic::kvp("key", std::string(source.id_.c_str()))));
+    return true;
+}
+
+size_t MongoIOClient::Size(Data &source) {
+    bool exists = false;
+    Data read_source;
+    try {
+        read_source.id_ = source.id_;
+        Read(read_source, read_source);
+        return read_source.data_size_;
+    } catch (const std::exception &e) {
+       return 0;
+    }
 }
