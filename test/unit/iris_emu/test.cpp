@@ -24,7 +24,6 @@ int main(int argc, char * argv[]){
         exit(0);
     }
 
-    int ioMode, ioOperation, requestSize, requestNumber;
     std::string distributionMode;
 
     if(argc > 1){
