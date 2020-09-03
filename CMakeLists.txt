@@ -32,7 +32,7 @@ set(SYMBIOS_LIB_SRC ${SYMBIOS_COMMON_SRC} include/symbios/client/client.h src/sy
 
 # add symbios lib
 add_library(symbios SHARED ${SYMBIOS_LIB_SRC})
-target_link_libraries(symbios -lbasket -lrpc  -lboost_system -lboost_filesystem )
+target_link_libraries(symbios -lbasket -lrpc  -lboost_system -lboost_filesystem -ldl)
 # TODO: add any required libraries
 
 # add symbios server
@@ -52,11 +52,12 @@ set(SYMBIOS_SERVER_SRC ${SYMBIOS_COMMON_SRC}
 
 add_executable(symbios_server ${SYMBIOS_SERVER_SRC} ${CMAKE_SOURCE_DIR}/src/symbios/server/main.cpp)
 add_dependencies(symbios_server symbios)
-target_link_libraries(symbios_server -lmpi -lhiredis -lbasket -lrpc -lredis++ -lmongoc-1.0 -lbson-1.0 -lbsoncxx -lboost_system -lboost_filesystem  -lmongocxx -lpthread)
+target_link_libraries(symbios_server -lmpi -lhiredis -lbasket -lrpc -lredis++ -lmongoc-1.0 -lbson-1.0 -lbsoncxx -lboost_system -lboost_filesystem  -lmongocxx -lpthread -ldl)
 # TODO: add any required libraries
 
 # add benchmark tool
 add_subdirectory(benchmark)
+add_subdirectory(common/test)
 
 option(BUILD_TEST "Build the unit tests" ON)
 if(BUILD_TEST)
