@@ -6,8 +6,8 @@ CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
 CWD="$(pwd)"
-HOSTFILE=@1
-LOG_DIR=@2
+HOSTFILE=${1}
+LOG_DIR=${1}
 
 SERVERS=($(cat ${HOSTFILE}))
 echo -e "${CYAN}${SERVERS[*]}${NC}"
