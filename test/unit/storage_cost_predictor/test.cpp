@@ -65,7 +65,7 @@ void out_csv(SCPArgs &args, int rank, double local_time_spent, int nprocs, size_
         bool exists = boost::filesystem::exists(output_path);
         std::ofstream out(output_path, std::ofstream::out | std::ofstream::app);
         if(!exists) {
-            out << "avg_msec,std_msec,min_msec,max_msec,nprocs,nreqs,thrpt_kiops" << std::endl;
+            out << "avg_msec,std_msec,min_msec,max_msec,nprocs,nreqs_per_proc,nreqs,thrpt_kiops" << std::endl;
         }
         out <<
             avg_msec << "," <<
@@ -73,6 +73,7 @@ void out_csv(SCPArgs &args, int rank, double local_time_spent, int nprocs, size_
             min_msec << "," <<
             max_msec << "," <<
             nprocs << "," <<
+            nreqs_per_proc << "," <<
             tot_ops << "," <<
             thrpt_kiops << "," <<
             std::endl;
@@ -89,7 +90,7 @@ int main(int argc, char * argv[]) {
     auto scp = basket::Singleton<StorageCostPredictor>::GetInstance();
     std::string config = "rank" + std::to_string(rank);
     size_t num_reqs = args.GetSizeOpt("-nreqs");
-    size_t nreqs_per_proc = num_reqs / nprocs;
+    size_t nreqs_per_proc = num_reqs;
     std::string model_path = args.GetStringOpt("-model");
 
     //Generate test data
