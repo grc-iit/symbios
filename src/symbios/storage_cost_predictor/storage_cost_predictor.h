@@ -297,14 +297,18 @@ private:
     }
 
     void Run(std::future<void> loop_cond) {
+        common::debug::AutoTrace trace = common::debug::AutoTrace("StorageCostPredictor::AsyncFitCommit");
         do {
             if(window_tick_ >= window_size_) {
-                common::debug::AutoTrace trace = common::debug::AutoTrace("StorageCostPredictor::AsyncFitCommit");
                 Fit();
                 CommitMetrics();
+                window_tick_ = 0;
             }
         }
         while(loop_cond.wait_for(std::chrono::milliseconds(500))==std::future_status::timeout);
+        if(window_tick_ >= window_size_) {
+            Fit();
+        }
         CommitMetrics();
     }
 
