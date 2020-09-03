@@ -49,7 +49,7 @@ int main(int argc, char * argv[]){
         data_obj.id_= i.id_;
 
         data_obj.position_=i.position_;
-        data_obj.buffer_ = data.data();
+        data_obj.buffer_ = data.substr(i.position_+i.chunk_index*max_obj_size, i.size).data();
         data_obj.buffer_[ data.size()]='\0';
         data_obj.data_size_= data.size()+1;
         data_obj.storage_index_ = type_;
@@ -67,7 +67,7 @@ int main(int argc, char * argv[]){
         data_obj.id_= i.id_;
 
         data_obj.position_=i.position_;
-        data_obj.buffer_ = static_cast<char *>(malloc(data_obj.data_size_));;
+        data_obj.buffer_ = static_cast<char *>(malloc(i.size));;
         data_obj.storage_index_ = type_;
 
         COMMON_DBGVAR2(data_obj, i);
