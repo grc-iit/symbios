@@ -310,7 +310,6 @@ private:
                 CommitMetrics();
                 window_tick_ = 0;
             }
-            MPI_Barrier(MPI_COMM_WORLD);
         }
         while(loop_cond.wait_for(std::chrono::milliseconds(500))==std::future_status::timeout);
         MPI_Barrier(MPI_COMM_WORLD);
@@ -318,7 +317,6 @@ private:
             Fit();
         }
         CommitMetrics();
-        MPI_Barrier(MPI_COMM_WORLD);
     }
 
 public:
