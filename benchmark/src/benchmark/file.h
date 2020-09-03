@@ -15,6 +15,7 @@ typedef std::unique_ptr<File> FilePtr;
 class File {
 public:
     File() = default;
+    virtual ~File() = default;
     virtual void Read(void *buffer, size_t size) = 0;
     virtual void Write(void *buffer, size_t size) = 0;
     virtual void Seek(size_t off) = 0;

@@ -7,16 +7,16 @@
 
 #include <iostream>
 #include <common/arguments.h>
-#include "../../src/benchmark/file.h"
-#include "common/rng.h"
-#include "../../src/benchmark/io_client.h"
-#include "../../src/benchmark/io_client_factory.h"
+#include <common/rng.h>
+#include "io_client.h"
+#include "io_client_factory.h"
+#include "file.h"
 
 enum class WorkloadType {
-    kIoOnlyFs, kMdFs
+    kPrealloc, kIoOnlyFs, kMdFs
 };
 
-class BenchmarkArgs : public ArgMap {
+class BenchmarkArgs : public common::args::ArgMap {
 private:
     void VerifyArgs(void) {
         AssertOptIsSet("-s");
@@ -35,7 +35,13 @@ private:
 
         AssertOptIsSet("-w");
         int workload = GetIntOpt("-w");
+        std::cout << "-w " << workload <<  std::endl;
         switch(static_cast<WorkloadType>(workload)) {
+            case WorkloadType::kPrealloc: {
+                AssertOptIsSet("-path");
+                AssertOptIsSet("-fs");
+                break;
+            }
             case WorkloadType::kIoOnlyFs: {
                 AssertOptIsSet("-path");
                 AssertOptIsSet("-rfrac");
@@ -43,11 +49,18 @@ private:
                 AssertOptIsSet("-bs");
                 AssertOptIsSet("-fs");
                 AssertOptIsSet("-tot");
+                if(OptIsSet("-out")) {
+                    AssertOptIsSet("-config");
+                }
                 break;
             }
             case WorkloadType::kMdFs: {
                 AssertOptIsSet("-md_depth");
                 AssertOptIsSet("-md_fcnt");
+                AssertOptIsSet("-path");
+                if(OptIsSet("-out")) {
+                    AssertOptIsSet("-config");
+                }
                 break;
             }
         }
@@ -59,6 +72,7 @@ public:
         std::cout << "" << std::endl;
 
         std::cout << "-w [string]: Which workload to run" << std::endl;
+        std::cout << "   prealloc" << std::endl;
         std::cout << "   io-only" << std::endl;
         std::cout << "   md-fs" << std::endl;
 
@@ -78,7 +92,7 @@ public:
         std::cout << "" << std::endl;
 
         std::cout << "io-only workload parameters" << std::endl;
-        std::cout << "-path [string]: The path to the file. Default: /symbios-test-file.bin." << std::endl;
+        std::cout << "-path [string]: The path to the file." << std::endl;
         std::cout << "-rfrac [float]: The percent of I/O to dedicate to reads" << std::endl;
         std::cout << "-wfrac [float]: The percent of I/O to dedicate to writes" << std::endl;
         std::cout << "-bs [size]: The unit of I/O ops" << std::endl;
@@ -91,7 +105,8 @@ public:
 
         std::cout << "md-fs workload parameters" << std::endl;
         std::cout << "-md_depth [int]: The number of directories to nest" << std::endl;
-        std::cout << "-md_fcnt [int]: The number of files to open/close in the deepest directory" << std::endl;
+        std::cout << "-md_fcnt [size]: The number of files to open/close in the deepest directory" << std::endl;
+        std::cout << "-path [string]: The directory to begin creating files/directories" << std::endl;
         std::cout << "" << std::endl;
 
         std::cout << "Uniform Distribution Parameters" << std::endl;
@@ -101,32 +116,36 @@ public:
         std::cout << "Additional Params" << std::endl;
         std::cout << "-direct: A flag that indicates whether or not to use direct I/O" << std::endl;
         std::cout << "-out: The file to output statistics from tests to" << std::endl;
+        std::cout << "-config [string]: The configuration used for this test." << std::endl;
     }
 
     BenchmarkArgs(int argc, char **argv) {
-        AddOpt("-w", ArgType::kStringMap);
+        AddOpt("-w", common::args::ArgType::kStringMap);
+        AddStringMapVal("-w", "prealloc", static_cast<int>(WorkloadType::kPrealloc));
         AddStringMapVal("-w", "io-only", static_cast<int>(WorkloadType::kIoOnlyFs));
         AddStringMapVal("-w", "md-fs", static_cast<int>(WorkloadType::kMdFs));
-        AddOpt("-s", ArgType::kStringMap);
+        AddOpt("-s", common::args::ArgType::kStringMap);
         AddStringMapVal("-s", "orangefs", static_cast<int>(IOClientType::kOrangefs));
         AddStringMapVal("-s", "mongodb", static_cast<int>(IOClientType::kMongo));
         AddStringMapVal("-s", "redis", static_cast<int>(IOClientType::kRedis));
-        AddOpt("-caddr", ArgType::kString);
-        AddOpt("-cport", ArgType::kInt);
-        AddOpt("-p", ArgType::kSize);
-        AddOpt("-path", ArgType::kString);
-        AddOpt("-rfrac", ArgType::kFloat);
-        AddOpt("-wfrac", ArgType::kFloat);
-        AddOpt("-bs", ArgType::kSize);
-        AddOpt("-fs", ArgType::kSize);
-        AddOpt("-tot", ArgType::kSize);
-        AddOpt("-ap", ArgType::kStringMap);
+        AddOpt("-caddr", common::args::ArgType::kString);
+        AddOpt("-cport", common::args::ArgType::kInt, 0);
+        AddOpt("-p", common::args::ArgType::kSize);
+        AddOpt("-path", common::args::ArgType::kString);
+        AddOpt("-config", common::args::ArgType::kString);
+        AddOpt("-rfrac", common::args::ArgType::kFloat);
+        AddOpt("-wfrac", common::args::ArgType::kFloat);
+        AddOpt("-bs", common::args::ArgType::kSize);
+        AddOpt("-fs", common::args::ArgType::kSize);
+        AddOpt("-tot", common::args::ArgType::kSize);
+        AddOpt("-ap", common::args::ArgType::kStringMap);
         AddStringMapVal("-ap", "seq", static_cast<int>(DistributionType::kNone));
         AddStringMapVal("-ap", "uniform", static_cast<int>(DistributionType::kUniform));
-        AddOpt("-md_depth", ArgType::kInt);
-        AddOpt("-md_fcnt", ArgType::kInt);
-        AddOpt("-direct", ArgType::kNone);
-        AddOpt("-out", ArgType::kString);
+        AddOpt("-md_depth", common::args::ArgType::kInt);
+        AddOpt("-md_fcnt", common::args::ArgType::kSize);
+        AddOpt("-direct", common::args::ArgType::kNone);
+        AddOpt("-out", common::args::ArgType::kString);
+        AddOpt("-seed", common::args::ArgType::kInt);
         ArgIter(argc, argv);
         VerifyArgs();
     }

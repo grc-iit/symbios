@@ -4,6 +4,10 @@
 # ORANGEFS_KO
 # ORANGEFS_PATH
 # PVFS2TAB_FILE
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+CYAN='\033[0;36m'
+NC='\033[0m' # No Color
 
 CWD=$(pwd)
 
@@ -17,24 +21,20 @@ server_hostfile=${4}
 client_list=($(cat ${CWD}/hostfiles/hostfile_clients))
 server_list=($(cat ${server_hostfile}))
 
-#Config PFS
-name="orangefs" #TODO: Allow renaming
-comm_port=3334  #TODO: Allow changing
-
 #Stop clients
-for node in ${client_list[@]}
+for node in "${client_list[@]}"
 do
 ssh ${node} /bin/bash << EOF
-echo "Stopping client on $node"
+echo "${GREEN}Stopping client on ${node}${NC}"
 sudo /usr/sbin/kill-pvfs2-client
 EOF
 done
 
 #Stop servers
-for node in ${server_list[@]}
+for node in "${server_list[@]}"
 do
 ssh ${node} /bin/bash << EOF
-echo "Killing server at ${node} "
+echo "${GREEN}Killing server at ${node} ${NC}"
 sudo /usr/sbin/kill-pvfs2-client
 rm -rf ${server_dir}/*
 killall -s SIGKILL pvfs2-server
