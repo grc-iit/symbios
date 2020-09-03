@@ -84,7 +84,7 @@ namespace symbios {
                 }
                 else if(results[i]["TYPE"] == "REDIS_IO"){
                     std::string ip;
-                    uint16_t port;
+                    std::string port;
                     config(results[i],"IP",ip);
                     config(results[i],"PORT",port);
                     ss = static_cast<const shared_ptr<StorageSolution>>(new RedisSS (ip,port));
@@ -170,7 +170,7 @@ namespace symbios {
                                  STORAGE_SOLUTIONS(),
                                  DATA_DISTRIBUTION_POLICY(DataDistributionPolicy::RANDOM_POLICY){
             STORAGE_SOLUTIONS.insert({0, std::make_shared<FileStorageSolution>("./") });
-            STORAGE_SOLUTIONS.insert({1, std::make_shared<RedisSS>("127.0.0.1", 6379) });
+            STORAGE_SOLUTIONS.insert({1, std::make_shared<RedisSS>("127.0.0.1", "6379") });
             STORAGE_SOLUTIONS.insert({2, std::make_shared<MongoSS>("mongodb://localhost:27017", "mydb", "test") });
 
         }
@@ -215,6 +215,7 @@ namespace symbios {
             LoadConfiguration();
             BASKET_CONF->RPC_THREADS = SERVER_RPC_THREADS;
             BASKET_CONF->MEMORY_ALLOCATED = 1024ULL * 1024ULL * 1ULL;
+            BASKET_CONF->BACKED_FILE_DIR=SERVER_DIR;
             BASKET_CONF->ConfigureDefaultServer(SERVER_LISTS.c_str());
             SERVER_COUNT = BASKET_CONF->NUM_SERVERS;
             BASKET_CONF->RPC_PORT = SYMBIOS_PORT;
