@@ -290,8 +290,8 @@ private:
 
     void CommitMetrics() {
         common::debug::AutoTrace trace = common::debug::AutoTrace("StorageCostPredictor::CommitMetrics");
-        if(!commit_metrics_) { return; }
-        //SaveModelCSV();
+        //if(!commit_metrics_) { return; }
+        SaveModelCSV();
     }
 
     void Fit() {
@@ -307,17 +307,18 @@ private:
         do {
             if(window_tick_ >= window_size_) {
                 Fit();
-                MPI_Barrier(MPI_COMM_WORLD);
-                //CommitMetrics();
+                CommitMetrics();
                 window_tick_ = 0;
             }
+            MPI_Barrier(MPI_COMM_WORLD);
         }
         while(loop_cond.wait_for(std::chrono::milliseconds(500))==std::future_status::timeout);
         MPI_Barrier(MPI_COMM_WORLD);
-//        if(window_tick_ >= window_size_) {
-//            Fit();
-//        }
-//        CommitMetrics();
+        if(window_tick_ >= window_size_) {
+            Fit();
+        }
+        CommitMetrics();
+        MPI_Barrier(MPI_COMM_WORLD);
     }
 
 public:
