@@ -307,16 +307,16 @@ private:
         do {
             if(window_tick_ >= window_size_) {
                 Fit();
-                CommitMetrics();
+                //Metrics();
                 window_tick_ = 0;
             }
         }
         while(loop_cond.wait_for(std::chrono::milliseconds(500))==std::future_status::timeout);
         MPI_Barrier(MPI_COMM_WORLD);
-       /* if(window_tick_ >= window_size_) {
+        if(window_tick_ >= window_size_) {
             Fit();
         }
-        //CommitMetrics();*/
+        CommitMetrics();
     }
 
 public:
