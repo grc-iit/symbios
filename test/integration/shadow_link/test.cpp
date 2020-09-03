@@ -103,7 +103,6 @@ int main(int argc, char* argv[]){
         mo->Store(request,distributions);
         store_t.pauseTime();
     }
-    printf("%f\n",store_t.getTimeElapsed());
     common::debug::Timer update_t;
     for(int i=0;i<number_request;++i){
         request.id_ = path + "/temp_" + std::to_string(i);
@@ -111,7 +110,6 @@ int main(int argc, char* argv[]){
         mo->Store(request,distributions);
         update_t.pauseTime();
     }
-    printf("%f\n",store_t.getTimeElapsed());
     Metadata primary_metadata;
     common::debug::Timer locate_t;
     for(int i=0;i<number_request;++i){
@@ -121,8 +119,6 @@ int main(int argc, char* argv[]){
         locate_t.pauseTime();
         mo->Delete(request);
     }
-    printf("%f\n",store_t.getTimeElapsed());
-
     MPI_Barrier(MPI_COMM_WORLD);
     double store_local_end_time = store_t.getTimeElapsed();
     double update_local_end_time = update_t.getTimeElapsed();
