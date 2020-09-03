@@ -34,12 +34,14 @@ public:
      */
     void Read(Data &source, Data &destination) override;
 
-    void Remove(Data &source) override;
+    bool Remove(Data &source) override;
 
     /*
      * Write data from source into destination buffer while respecting the position_
      */
     void Write(Data &source, Data &destination) override;
+
+    size_t Size(Data &source) override;
 
 private:
     std::shared_ptr<RedisCluster>   m_redisCluster;

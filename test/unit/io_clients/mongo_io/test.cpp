@@ -19,7 +19,8 @@ int main(int argc, char*argv[]){
         Data destination;
         Data source;
         destination.id_=key;
-        source.buffer_=value;
+        source.buffer_=value.data();
+        source.data_size_=value.size();
         basket::Singleton<IOFactory>::GetInstance()->GetIOClient(2)->Write(source,destination);
     } catch (mongocxx::bulk_write_exception ex){
         //throw ErrorException(MONGODB_SERVER_SIDE_FAILED);

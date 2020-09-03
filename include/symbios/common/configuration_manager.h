@@ -11,28 +11,108 @@
 #include <rapidjson/filereadstream.h>
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/reader.h>
+#include <regex>
+#include <boost/filesystem/operations.hpp>
+#include <symbios/common/error_codes.h>
 
 #define SYMBIOS_CONF basket::Singleton<symbios::ConfigurationManager>::GetInstance()
 namespace symbios {
     class ConfigurationManager {
 
     private:
-        void config(rapidjson::Document &doc, const char *member, uint16_t &variable) {
-            assert(doc.HasMember(member));
+        static std::string replaceEnvVariable(std::string temp_variable){
+
+            std::string pattern("(\\$\\{.*?\\})");
+            auto regexp = regex(pattern);
+            smatch m;
+            regex_search(temp_variable, m, regexp);
+            auto variables=std::set<std::string>();
+            for(unsigned i=0; i<m.size(); ++i) {
+                auto extracted_val = m[i].str();
+                //if(extracted_val.find("{") == std::string::npos) continue;
+                auto val = m[i].str().substr(2, m[i].str().size() - 3);
+                variables.insert(val);
+            }
+            for(auto variable:variables){
+                auto unrolled = std::getenv(variable.c_str());
+                if(unrolled==NULL) throw ErrorException(UNDEFINED_ENV_VARIABLE,variable.c_str());
+                temp_variable = regex_replace(temp_variable, regexp, unrolled);
+            }
+            return temp_variable;
+        }
+        template <typename T>
+        void config(T &doc, const char *member, uint16_t &variable) {
+            if(!doc.HasMember(member)) return;
             assert(doc[member].IsInt());
-            variable = doc[member].GetInt();
+            variable = atoi(replaceEnvVariable(std::to_string(doc[member].GetInt())).c_str());
         }
-
-        void config(rapidjson::Document &doc, const char *member, really_long &variable) {
-            assert(doc.HasMember(member));
+        template <typename T>
+        void config(T &doc, const char *member, really_long &variable) {
+            if(!doc.HasMember(member)) return;
             assert(doc[member].IsUint64());
-            variable = doc[member].GetUint64();
+            variable = atoll(replaceEnvVariable(std::to_string(doc[member].GetUint64())).c_str());
         }
 
-        void config(rapidjson::Document &doc, const char *member, CharStruct &variable) {
-            assert(doc.HasMember(member));
+        template <typename T>
+        void config(T &doc, const char *member, std::string &variable) {
+            if(!doc.HasMember(member)) return;
             assert(doc[member].IsString());
-            variable = doc[member].GetString();
+            std::string temp_variable = doc[member].GetString();
+            variable = replaceEnvVariable(temp_variable);
+        }
+        template <typename T>
+        void config(T &doc, const char *member, CharStruct &variable) {
+            if(!doc.HasMember(member)) return;
+            assert(doc[member].IsString());
+            std::string temp_variable = doc[member].GetString();
+            variable = CharStruct(replaceEnvVariable(temp_variable));
+        }
+
+        void config(rapidjson::Document &doc, const char *member,
+                    std::unordered_map<uint16_t, std::shared_ptr<StorageSolution>>&variable) {
+            variable = std::unordered_map<uint16_t, std::shared_ptr<StorageSolution>>();
+            if(!doc.HasMember(member)) return;
+            rapidjson::Value& results = doc[member];
+            assert(results.IsArray());
+            for (rapidjson::SizeType i = 0; i < results.Size(); i++) {
+                std::shared_ptr<StorageSolution> ss;
+
+                if(results[i]["TYPE"] == "FILE_IO"){
+                    std::string mount;
+                    config(results[i],"MOUNT",mount);
+                    ss = static_cast<const shared_ptr<StorageSolution>>(new FileStorageSolution(mount));
+                }
+                else if(results[i]["TYPE"] == "REDIS_IO"){
+                    std::string ip;
+                    uint16_t port;
+                    config(results[i],"IP",ip);
+                    config(results[i],"PORT",port);
+                    ss = static_cast<const shared_ptr<StorageSolution>>(new RedisSS (ip,port));
+                }
+                else if(results[i]["TYPE"] == "MONGO_IO"){
+                    std::string ip,database,collection;
+                    config(results[i],"IP",ip);
+                    config(results[i],"DATABASE",database);
+                    config(results[i],"COLLECTION",collection);
+                    ss = static_cast<const shared_ptr<StorageSolution>>(new MongoSS(ip,database,collection));
+                }
+                else{
+                    std::cerr << "Incorrect configuration on Storage Solutions" << std::endl;
+                }
+
+                variable.insert(std::pair<uint16_t, std::shared_ptr<StorageSolution>>(i, ss));
+            }
+        }
+
+        void config(rapidjson::Document &doc, const char *member, DataDistributionPolicy &variable) {
+            if(!doc.HasMember(member)) return;
+            assert(doc[member].IsString());
+            std::string distr_string = doc[member].GetString();
+            if(distr_string == "RANDOM_POLICY") variable=RANDOM_POLICY;
+            else if(distr_string == "ROUND_ROBIN_POLICY") variable=ROUND_ROBIN_POLICY;
+            else if(distr_string == "HEURISTICS_POLICY") variable=HEURISTICS_POLICY;
+            else if(distr_string == "DYNAMIC_PROGRAMMING_POLICY") variable=DYNAMIC_PROGRAMMING_POLICY;
+            else std::cerr << "Incorrect configuration on Data Distribution Policy" << std::endl;
         }
 
         int CountServers(CharStruct server_list_path) {
@@ -75,16 +155,16 @@ namespace symbios {
         CharStruct SERVER_DIR;
         CharStruct CONFIGURATION_FILE;
         uint16_t SERVER_COUNT;
-        int RANDOM_SEED;
+        uint16_t RANDOM_SEED;
         std::unordered_map<uint16_t, std::shared_ptr<StorageSolution>> STORAGE_SOLUTIONS;
         DataDistributionPolicy DATA_DISTRIBUTION_POLICY;
 
-        ConfigurationManager() : SERVER_LISTS("/tmp/tmp.BUKlhPiLxF/conf/server_lists/symbios_server"),
-                                 CLIENT_LISTS("/tmp/tmp.BUKlhPiLxF/conf/server_lists/symbios_client"),
+        ConfigurationManager() : SERVER_LISTS("/home/user/symbios/conf/server_lists/single_node_symbios_server"),
+                                 CLIENT_LISTS("/home/user/symbios/conf/server_lists/single_node_symbios_client"),
                                  SYMBIOS_PORT(8000),
                                  SERVER_RPC_THREADS(4),
-                                 SERVER_DIR("/dev/shm/hari/symbios_server"),
-                                 CONFIGURATION_FILE("/tmp/tmp.BUKlhPiLxF/conf/symbios.conf"),
+                                 SERVER_DIR("/dev/shm/hari/single_node_symbios_server"),
+                                 CONFIGURATION_FILE("/home/user/symbios/conf/base_symbios.conf"),
                                  SERVER_COUNT(1),
                                  RANDOM_SEED(100),
                                  STORAGE_SOLUTIONS(),
@@ -108,7 +188,7 @@ namespace symbios {
             Document doc;
             doc.ParseStream<kParseStopWhenDoneFlag>(instream);
             if (!doc.IsObject()) {
-                std::cout << "Symbios - Canfiguration JSON is invalid" << std::endl;
+                std::cout << "Symbios - Configuration JSON is invalid" << std::endl;
                 fclose(outfile);
                 exit(EXIT_FAILURE);
             }
@@ -117,9 +197,11 @@ namespace symbios {
             config(doc, "SYMBIOS_PORT", SYMBIOS_PORT);
             config(doc, "SERVER_RPC_THREADS", SERVER_RPC_THREADS);
             config(doc, "SERVER_DIR", SERVER_DIR);
-            /**
-             * TODO: add DATA_DISTRIBUTION_POLICY, solutions, RANDOM_SEED
-             */
+            config(doc, "RANDOM_SEED", RANDOM_SEED);
+            config(doc, "STORAGE_SOLUTIONS", STORAGE_SOLUTIONS);
+            config(doc, "DATA_DISTRIBUTION_POLICY", DATA_DISTRIBUTION_POLICY);
+            boost::filesystem::create_directories(SERVER_DIR.c_str());
+
             fclose(outfile);
         }
 

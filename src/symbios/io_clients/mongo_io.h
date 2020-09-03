@@ -68,7 +68,9 @@ public:
      */
     void Write(Data &source, Data &destination) override;
 
-    void Remove(Data &source) override;
+    bool Remove(Data &source) override;
+
+    size_t Size(Data &source) override;
 
 private:
     mongocxx::client client;

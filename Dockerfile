@@ -9,10 +9,10 @@ RUN mkdir -p ${INSTALL_DIR}
 RUN useradd -m user && yes password | passwd user
 
 ENV PATH=${INSTALL_DIR}/bin:${INSTALL_DIR}/sbin:$PATH
-ENV LD_LIBRARY_PATH=${INSTALL_DIR}/lib;${INSTALL_DIR}/lib64
+ENV LD_LIBRARY_PATH=${INSTALL_DIR}/lib:${INSTALL_DIR}/lib64
 ENV LDFLAGS="$LDFLAGS -L${INSTALL_DIR}/lib -L${INSTALL_DIR}/lib64"
 ENV CFLAGS="-I${INSTALL_DIR}/include -I${INSTALL_DIR}/include/mongocxx/v_noabi -I${INSTALL_DIR}/include/bsoncxx/v_noabi $CFLAGS"
-ENV CXXFLAGS="-I${INSTALL_DIR}/include -I/${INSTALL_DIR}/include/mongocxx/v_noabi -I${INSTALL_DIR}/include/bsoncxx/v_noabi $CXXFLAGS"
+ENV CXXFLAGS="-I${INSTALL_DIR}/include -I${INSTALL_DIR}/include/mongocxx/v_noabi -I${INSTALL_DIR}/include/bsoncxx/v_noabi $CXXFLAGS"
 ENV GITHUB_WORKSPACE=$HOME/work/
 
 WORKDIR ${SOURCE_DIR}
