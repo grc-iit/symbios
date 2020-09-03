@@ -33,7 +33,7 @@ void MetadataOrchestrator::Store(Data &original_request,
         for (auto &distribution : distributions) {
             auto iter = primary_metadata.links_.find(distribution.destination_data_.position_);
             if (iter == primary_metadata.links_.end()) {
-                distribution.destination_data_.buffer_= "";
+                distribution.destination_data_.buffer_= NULL;
                 primary_metadata.links_.insert(
                         {distribution.destination_data_.position_, distribution.destination_data_});
                 is_metadata_updated = true;
@@ -47,7 +47,7 @@ void MetadataOrchestrator::Store(Data &original_request,
         primary_metadata.storage_index_ = original_request.storage_index_;
         for (auto &distribution:distributions) {
             auto link_data =  distribution.destination_data_;
-            link_data.buffer_= "";
+            link_data.buffer_= NULL;
             link_data.id_ = original_request.id_;
             link_data.position_=0;
             primary_metadata.links_.insert({distribution.destination_data_.position_, link_data});
@@ -60,7 +60,7 @@ void MetadataOrchestrator::Store(Data &original_request,
         clmdep_msgpack::pack(buffer, primary_metadata);
         buffer.seekg(0);
         std::string s = buffer.str();
-        std::replace( s.begin(), s.end(), '\0','#');
+        std::replace( s.begin(), s.end(), '\0','$');
         original_metadata.data_size_ = s.size();
         original_metadata.buffer_ = static_cast<char *>(malloc(original_metadata.data_size_));
         memcpy(original_metadata.buffer_,s.c_str(),s.size());
@@ -79,7 +79,7 @@ void MetadataOrchestrator::Store(Data &original_request,
         clmdep_msgpack::pack(buffer, link_metadata);
         buffer.seekg(0);
         std::string s = buffer.str();
-        std::replace( s.begin(), s.end(), '\0','#');
+        std::replace( s.begin(), s.end(), '\0','$');
         link_meta.data_size_ = s.size();
         link_meta.buffer_ = static_cast<char *>(malloc(link_meta.data_size_));
         memcpy(link_meta.buffer_,s.data(),link_meta.data_size_);
@@ -106,7 +106,7 @@ MetadataOrchestrator::Locate(Data &request, Metadata &primary_metadata) {
     basket::Singleton<IOFactory>::GetInstance()->GetIOClient(original_metadata.storage_index_)->Read(original_metadata,
                                                                                                      original_metadata);
     std::string s = std::string(original_metadata.buffer_);
-    std::replace( s.begin(), s.end(), '#','\0');
+    std::replace( s.begin(), s.end(), '$','\0');
     clmdep_msgpack::object_handle oh = clmdep_msgpack::unpack(s.c_str(),
                                                               original_metadata.data_size_);
     clmdep_msgpack::object deserialized = oh.get();
@@ -121,7 +121,7 @@ MetadataOrchestrator::Locate(Data &request, Metadata &primary_metadata) {
         basket::Singleton<IOFactory>::GetInstance()->GetIOClient(original_metadata.storage_index_)->Read(
                 original_metadata, original_metadata);
         std::string s = std::string(original_metadata.buffer_);
-        std::replace( s.begin(), s.end(), '#','\0');
+        std::replace( s.begin(), s.end(), '$','\0');
         clmdep_msgpack::object_handle oh = clmdep_msgpack::unpack(s.c_str(),
                                                                   original_metadata.data_size_);
         oh.get().convert(primary_metadata);
