@@ -4,8 +4,6 @@
 #include <symbios/client/posix.h>
 #include <basket/common/macros.h>
 #include <symbios/client/client.h>
-#include <symbios/common/configuration_manager.h>
-#include <symbios/common/enumerations.h>
 
 
 bool symbios::Posix::UpdateOnOpen(FILE *fh, PosixStat &stat) {

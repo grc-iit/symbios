@@ -31,7 +31,6 @@ set(test_files  data_placement
                 io_clients
                 metadata_orchestrator
                 server
-                storage_cost_predictor
                 config_manager
                 posix)
 foreach (test_file ${test_files})
