@@ -18,10 +18,10 @@ std::vector<DataDistribution> HeuristicsDDE::Distribute(Data &request) {
     auto tracer = common::debug::AutoTrace("HeuristicsDDE::Distribute", request);
     auto distributions = std::vector<DataDistribution>();
     int16_t selected_solution_index = 0;
-    COMMON_DBGVAR(request.buffer_.size());
-    if (request.buffer_.size() < 16 * 1024) {
+    COMMON_DBGVAR(request.data_size_);
+    if (request.data_size_ < 16 * 1024) {
         selected_solution_index = maps[IOClientType::MONGO_IO].first;
-    } else if (request.buffer_.size() >= 16 * 1024 and request.buffer_.size() < 128 * 1024) {
+    } else if (request.data_size_ >= 16 * 1024 and request.data_size_ < 128 * 1024) {
         selected_solution_index = maps[IOClientType::REDIS_IO].first;
     } else {
         selected_solution_index = maps[IOClientType::FILE_IO].first;
