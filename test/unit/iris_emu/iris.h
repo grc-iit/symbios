@@ -19,6 +19,15 @@ typedef enum IOLib {
     SYMBIOS
 };
 
+typedef enum OPType {
+    READ,
+    WRITE,
+    FOPEN,
+    LSEEK,
+    FCLOSE
+};
+
+
 typedef struct DataDescriptor {
     CharStruct id_;
     size_t position_; // read/write start position
@@ -37,15 +46,16 @@ private:
     DataDescriptor src;
     std::vector<DataDescriptor> objs;
     uint16_t lib_type;
-    uint16_t io_type;
+    uint16_t db_type;
     uint16_t max_obj_size;
     std::string data;
     std::string file_;
     std::vector<DataDescriptor> map_data();
-    void do_mapped_op();
+    void do_mapped_read();
+    void do_mapped_write();
 public:
     LibHandler(std::string file_, std::string data, uint16_t lib_type_, uint16_t io_type_, uint16_t max_obj_size_);
-    void run();
+    void run(uint16_t op_type);
 };
 
 
