@@ -36,8 +36,9 @@ target_link_libraries(symbios -lbasket -lrpc  -lboost_system -lboost_filesystem 
 # TODO: add any required libraries
 
 # add symbios server
+
 set(SYMBIOS_SERVER_SRC ${SYMBIOS_COMMON_SRC}
-        #${CMAKE_SOURCE_DIR}/src/symbios/storage_cost_predictor/storage_cost_predictor.cpp ${CMAKE_SOURCE_DIR}/src/symbios/storage_cost_predictor/storage_cost_predictor.h
+        ${CMAKE_SOURCE_DIR}/src/symbios/storage_cost_predictor/storage_cost_predictor.cpp ${CMAKE_SOURCE_DIR}/src/symbios/storage_cost_predictor/storage_cost_predictor.h
         ${CMAKE_SOURCE_DIR}/src/symbios/server/server.h ${CMAKE_SOURCE_DIR}/src/symbios/server/server.cpp
         ${CMAKE_SOURCE_DIR}/src/symbios/io_clients/io.h ${CMAKE_SOURCE_DIR}/src/symbios/io_clients/io_factory.h
         ${CMAKE_SOURCE_DIR}/src/symbios/io_clients/file_io.h ${CMAKE_SOURCE_DIR}/src/symbios/io_clients/file_io.cpp
@@ -51,10 +52,15 @@ set(SYMBIOS_SERVER_SRC ${SYMBIOS_COMMON_SRC}
         ${CMAKE_SOURCE_DIR}/src/symbios/metadata_orchestrator/metadata_orchestrator.h ${CMAKE_SOURCE_DIR}/src/symbios/metadata_orchestrator/metadata_orchestrator.cpp
         ${CMAKE_SOURCE_DIR}/src/symbios/server/daemon.h)
 
-add_executable(symbios_server ${SYMBIOS_SERVER_SRC} ${CMAKE_SOURCE_DIR}/src/symbios/server/main.cpp )
+add_library(symbios_server_lib SHARED ${SYMBIOS_SERVER_SRC})
+add_dependencies(symbios_server_lib symbios)
+target_link_libraries(symbios_server_lib -lmpi -lhiredis -lbasket -lrpc -lredis++ -lmongoc-1.0 -lbson-1.0 -ldlib -lopenblas -lgfortran -lm -lquadmath  -lbsoncxx -lboost_system -lboost_filesystem  -lmongocxx -lpthread -ldl)
+
+add_executable(symbios_server ${CMAKE_SOURCE_DIR}/src/symbios/server/main.cpp)
 add_dependencies(symbios_server symbios)
-target_link_libraries(symbios_server -lmpi -lhiredis -lbasket -lrpc -lredis++ -lmongoc-1.0 -lbson-1.0 -ldlib -lopenblas -lgfortran -lm -lquadmath  -lbsoncxx -lboost_system -lboost_filesystem  -lmongocxx -lpthread -ldl)
-# TODO: add any required libraries
+add_dependencies(symbios_server symbios_server_lib)
+target_link_libraries(symbios_server symbios_server_lib)
+target_link_libraries(symbios_server  -lmpi)
 
 # add benchmark tool
 add_subdirectory(benchmark)
