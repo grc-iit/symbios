@@ -10,7 +10,7 @@ std::vector<DataDistribution> RoundRobinDDE::Distribute(Data &request) {
     AUTO_TRACER("RoundRobinDDE::Distribute", request);
     auto distributions = std::vector<DataDistribution>();
     uint16_t index = 0;
-    auto next_value = sequence.GetNextSequenceServer(index);
+    auto next_value = sequence.LocalGetNextSequence();
     int16_t selected_solution_index = next_value % SYMBIOS_CONF->STORAGE_SOLUTIONS.size();
     COMMON_DBGVAR(next_value);
     auto selected_solution = SYMBIOS_CONF->STORAGE_SOLUTIONS[selected_solution_index];

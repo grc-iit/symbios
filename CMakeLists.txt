@@ -72,14 +72,14 @@ add_custom_command(
         TARGET copy_conf
         COMMAND ${CMAKE_COMMAND} -E copy
         ${CMAKE_CURRENT_SOURCE_DIR}/conf
-        ${CMAKE_INSTALL_PREFIX})
+        ${CMAKE_BINARY_DIR})
 
 add_custom_target(copy_scripts)
 add_custom_command(
         TARGET copy_scripts
         COMMAND ${CMAKE_COMMAND} -E copy
         ${CMAKE_CURRENT_SOURCE_DIR}/scripts
-        ${CMAKE_INSTALL_PREFIX})
+        ${CMAKE_BINARY_DIR})
 
 add_dependencies(symbios copy_conf)
 add_dependencies(symbios copy_scripts)
