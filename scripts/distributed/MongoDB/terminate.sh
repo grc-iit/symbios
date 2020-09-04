@@ -9,7 +9,9 @@ CWD="$( pwd )"
 
 SERVER_HOSTFILE=${1}
 CLIENT_HOSTFILE=${2}
-MONGO_PATH=${3}
+SERVER_LOCAL_PATH="/mnt/hdd/${user}/MongoDB"
+CLIENT_LOCAL_PATH="/mnt/nvme/${user}/MongoDB"
+TMPFS_PATH="/dev/shm/${user}/MongoDB"
 
 SERVERS=($(cat ${SERVER_HOSTFILE}))
 CLIENTS=($(cat ${CLIENT_HOSTFILE}))
@@ -23,6 +25,8 @@ for server in "${SERVERS[@]}"
 do
 ssh "${server}" /bin/bash << EOF
   pkill mongod
+  rm -rf ${SERVER_LOCAL_PATH}/*
+  rm -rf ${TMPFS_PATH}/*
 EOF
 done
 
@@ -32,10 +36,8 @@ for client in "${CLIENTS[@]}"
 do
 ssh "${client}" /bin/bash << EOF
   pkill mongos
+  rm -rf ${CLIENT_LOCAL_PATH}/*
+  rm -rf ${TMPFS_PATH}/*
 EOF
 done
 echo -e "${GREEN}Done stopping MongoDB${NC}"
-
-echo -e "${GREEN}Cleaning MongoDB${NC}"
-rm -rf ${MONGO_PATH}
-echo -e "${GREEN}Done${NC}"

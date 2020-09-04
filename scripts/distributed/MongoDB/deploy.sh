@@ -11,13 +11,13 @@ CWD="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 SERVER_HOSTFILE=${1}
 ROUTER_SERVER_HOSTFILE=${2}
 CONFIG_SERVER_COUNT=${3}
-SERVER_LOCAL_PATH=${4}
-CONF_PATH=${5}
+CONF_PATH=${4}
 DATABASE_NAME="integration"
 COLLECTION_NAME="symbios"
 
-CLIENT_LOCAL_PATH=${SERVER_LOCAL_PATH}
-TMPFS_PATH=${SERVER_LOCAL_PATH}
+SERVER_LOCAL_PATH="/mnt/hdd/${user}/MongoDB"
+CLIENT_LOCAL_PATH="/mnt/nvme/${user}/MongoDB"
+TMPFS_PATH="/dev/shm/${user}/MongoDB"
 mongod_config_path=${SERVER_LOCAL_PATH}/mongod_config
 mongos_local_path=${CLIENT_LOCAL_PATH}/mongos
 mongod_shard_path=${SERVER_LOCAL_PATH}/mongod_shard
