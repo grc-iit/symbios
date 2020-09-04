@@ -5,7 +5,11 @@
 #include <mpi.h>
 #include <common/arguments.h>
 #include <symbios/storage_cost_predictor/storage_cost_predictor.h>
+#include <symbios/storage_cost_predictor/serializers.h>
 #include <basket/common/singleton.h>
+#include <cstdio>
+
+#define RECORD_SIZE (3*sizeof(float) + sizeof(int))
 
 class SCPArgs : public common::args::ArgMap {
 private:
@@ -116,38 +120,38 @@ int main(int argc, char * argv[]) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &nprocs);
     auto scp = basket::Singleton<StorageCostPredictor>::GetInstance();
-    std::string config = "rank" + std::to_string(rank);
+    int storage_index = rank;
     size_t nreqs_per_proc = args.GetSizeOpt("-nreqs");
     std::string model_path = args.GetStringOpt("-model");
 
     //Generate test data
     if(rank == 0) {
-        std::ofstream of(model_path, std::ofstream::out | std::ofstream::trunc);
+        FILE *fp = std::fopen(model_path.c_str(), "w");
+        BinarySerializer serializer(nprocs * RECORD_SIZE);
         for(size_t i = 0; i < nprocs; ++i) {
-            std::string config = "rank" + std::to_string(i);
-            of <<
-               0 << "," <<
-               .5 << "," <<
-               .5 << "," <<
-               config <<
-               std::endl;
+            serializer.WriteFloat(0);
+            serializer.WriteFloat(.5);
+            serializer.WriteFloat(.5);
+            serializer.WriteInt(rank);
         }
+        fwrite(serializer.GetBuf(), 1, serializer.GetSize(), fp);
+        fclose(fp);
     }
 
     //Run tests
     common::debug::Timer t[4];
 
     t[0].resumeTime();
-    scp->Init(rank, nprocs, model_path, true);
+    scp->Init(rank, nprocs, model_path);
     t[0].pauseTime();
 
     for(size_t i =0; i < nreqs_per_proc; ++i) {
         t[1].resumeTime();
-        scp->Feedback(10*(rank+1)*(i+1), 25*(rank+1)*(i+1), -25*(rank+1)*(i+1), config);
+        scp->Feedback(10*(rank+1)*(i+1), 25*(rank+1)*(i+1), -25*(rank+1)*(i+1), storage_index);
         t[1].pauseTime();
 
         t[2].resumeTime();
-        scp->Predict(25*(rank+1)*(i+1), -25*(rank+1)*(i+1), config);
+        scp->Predict(25*(rank+1)*(i+1), -25*(rank+1)*(i+1), storage_index);
         t[2].pauseTime();
     }
 
