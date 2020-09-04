@@ -67,11 +67,11 @@ first_config_server="${CONFIG_SERVERS[0]}"
 second_config_server="${CONFIG_SERVERS[1]}"
 sed -i "s|_id : 0, host : \".*|_id : 0, host : \"${first_config_server}:${MONGO_PORT}\" },|" ${CONF_PATH}/conf_replica_init.js
 sed -i "s|_id : 1, host : \".*|_id : 1, host : \"${second_config_server}:${MONGO_PORT}\" }|" ${CONF_PATH}/conf_replica_init.js
-mongo --host "${first_config_server}" --port ${MONGO_PORT} < ${CONF_PATH}/conf_replica_init.js > ${CONF_PATH}/conf_replica_init.log
+mongo --host ${first_config_server} --port ${MONGO_PORT} < ${CONF_PATH}/conf_replica_init.js > ${CONF_PATH}/conf_replica_init.log
 cat ${CONF_PATH}/conf_replica_init.log | grep -i ok
-mongo --host "${first_config_server}" --port ${MONGO_PORT} --eval "rs.isMaster()" > ${CONF_PATH}/conf_replica_init.log
+mongo --host ${first_config_server} --port ${MONGO_PORT} --eval "rs.isMaster()" > ${CONF_PATH}/conf_replica_init.log
 cat conf_replica_init.log | grep -i "ismaster\|configsvr"
-mongo --host "${first_config_server}" --port ${MONGO_PORT} --eval "rs.status()" > ${CONF_PATH}/conf_replica_init.log
+mongo --host ${first_config_server} --port ${MONGO_PORT} --eval "rs.status()" > ${CONF_PATH}/conf_replica_init.log
 cat ${CONF_PATH}/conf_replica_init.log | grep -i "ok\|\"name\"\|stateStr"
 
 SHARD_BASE_PORT_BAKE=${SHARD_BASE_PORT}
