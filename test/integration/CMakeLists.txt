@@ -10,7 +10,7 @@ include_directories(${CMAKE_SOURCE_DIR})
 set(CTEST_ENVIRONMENT "LD_LIBRARY_PATH=${CMAKE_BINARY_DIR}/")
 set($ENV{LD_PRELOAD} "$ENV{LD_PRELOAD} ${CMAKE_BINARY_DIR}")
 
-set(test_files shadow_link)
+set(test_files shadow_link dde)
 foreach (test_file ${test_files})
     set(exec ${test_file})
     add_executable(${exec} ${test_file}/test.cpp)

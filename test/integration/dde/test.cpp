@@ -85,10 +85,10 @@ int main(int argc, char* argv[]){
     MPI_Comm_size(MPI_COMM_WORLD, &nprocs);
     std::string config = args.GetStringOpt("-c");
     SYMBIOS_CONF->CONFIGURATION_FILE=config.data();
-    if(rank == 0) SYMBIOS_CONF->ConfigureSymbiosServer();
-    MPI_Barrier(MPI_COMM_WORLD);
-    if(rank != 0) SYMBIOS_CONF->ConfigureSymbiosClient();
     BASKET_CONF->BACKED_FILE_DIR=SYMBIOS_CONF->SERVER_DIR;
+    /*if(rank == 0)*/ SYMBIOS_CONF->ConfigureSymbiosServer();
+    /*MPI_Barrier(MPI_COMM_WORLD);
+    if(rank != 0) SYMBIOS_CONF->ConfigureSymbiosClient();*/
     int dde_i = args.GetIntOpt("-p");
     SYMBIOS_CONF->DATA_DISTRIBUTION_POLICY = static_cast<DataDistributionPolicy>(dde_i);
     SYMBIOS_CONF->RANDOM_SEED = args.GetIntOpt("-seed");
@@ -100,26 +100,25 @@ int main(int argc, char* argv[]){
     //distribution->Shape((double)request_size/sizeof(double));
 
     std::shared_ptr<DataDistributionEngine> engine;
-    if(rank == 0)
+   /* if(rank == 0)*/
         engine = basket::Singleton<DataDistributionEngineFactory>::GetInstance()->GetDataDistributionEngine(SYMBIOS_CONF->DATA_DISTRIBUTION_POLICY);
-    MPI_Barrier(MPI_COMM_WORLD);
+    /*MPI_Barrier(MPI_COMM_WORLD);
     if(rank != 0)
         engine = basket::Singleton<DataDistributionEngineFactory>::GetInstance()->GetDataDistributionEngine(SYMBIOS_CONF->DATA_DISTRIBUTION_POLICY);
-    MPI_Barrier(MPI_COMM_WORLD);
+    MPI_Barrier(MPI_COMM_WORLD);*/
     auto request = Data();
     request.position_ = 0;
     request.storage_index_ = 0;
-    request.buffer_= static_cast<char *>(malloc(request_size));
     request.data_size_=request_size;
     common::debug::Timer t;
     ops_per_proc = number_request;
     bytes_per_proc = ops_per_proc * request_size;
+    request.id_ = "temp_";
+    t.resumeTime();
     for(int i=0;i<number_request;++i){
-        request.id_ = "temp_" + std::to_string(i);
-        t.resumeTime();
         engine->Distribute(request);
-        t.pauseTime();
     }
+    t.pauseTime();
     MPI_Barrier(MPI_COMM_WORLD);
     double local_end_time = t.getTimeElapsed();
     double local_std_msec;

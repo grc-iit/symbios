@@ -19,7 +19,7 @@ public:
     DataDistributionEngineFactory() {}
 
     std::shared_ptr<DataDistributionEngine> GetDataDistributionEngine(DataDistributionPolicy &policy) {
-        auto tracer = common::debug::AutoTrace("DataDistributionEngineFactory::GetDataDistributionEngine", policy);
+        AUTO_TRACER("DataDistributionEngineFactory::GetDataDistributionEngine", policy);
         switch (policy) {
             case DataDistributionPolicy::RANDOM_POLICY:
                 return basket::Singleton<RandomDDE>::GetInstance();

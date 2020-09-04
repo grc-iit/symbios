@@ -36,7 +36,7 @@ void symbios::Server::RunInternal(std::future<void> futureObj) {
 }
 
 int symbios::Server::Store(Data &request){
-    auto tracer=common::debug::AutoTrace(std::string("symbios::Server::StoreRequest"), request);
+    AUTO_TRACER(std::string("symbios::Server::StoreRequest"), request);
     auto dde = basket::Singleton<DataDistributionEngineFactory>::GetInstance()->GetDataDistributionEngine(SYMBIOS_CONF->DATA_DISTRIBUTION_POLICY);
     auto distributions = dde->Distribute(request);
     basket::Singleton<MetadataOrchestrator>::GetInstance()->Store(request,distributions);
@@ -49,7 +49,7 @@ int symbios::Server::Store(Data &request){
 }
 
 Data symbios::Server::Locate(Data &request){
-    auto tracer=common::debug::AutoTrace(std::string("symbios::Server::LocateRequest"), request);
+    AUTO_TRACER(std::string("symbios::Server::LocateRequest"), request);
     Metadata primary_metadata;
     auto distributions = basket::Singleton<MetadataOrchestrator>::GetInstance()->Locate(request, primary_metadata);
     int total_size= 0;
@@ -69,7 +69,7 @@ Data symbios::Server::Locate(Data &request){
 }
 
 size_t symbios::Server::Size(Data &request) {
-    auto tracer=common::debug::AutoTrace(std::string("symbios::Server::Size"), request);
+    AUTO_TRACER(std::string("symbios::Server::Size"), request);
     Metadata primary_metadata;
     std::vector<DataDistribution> distributions;
     try {
@@ -85,7 +85,7 @@ size_t symbios::Server::Size(Data &request) {
 }
 
 bool symbios::Server::Delete(Data &request) {
-    auto tracer=common::debug::AutoTrace(std::string("symbios::Server::Size"), request);
+    AUTO_TRACER(std::string("symbios::Server::Size"), request);
     Metadata primary_metadata;
     std::vector<DataDistribution> distributions;
     try {
