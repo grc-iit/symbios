@@ -12,7 +12,7 @@
 void MetadataOrchestrator::Store(Data &original_request,
                                  std::vector<DataDistribution> &distributions) {
 
-    auto tracer = common::debug::AutoTrace("MetadataOrchestrator::Store", original_request, distributions);
+    AUTO_TRACER("MetadataOrchestrator::Store", original_request, distributions);
     auto original_metadata = Data();
     /**
      * Update primary index
@@ -98,7 +98,7 @@ void MetadataOrchestrator::Store(Data &original_request,
 
 std::vector<DataDistribution>
 MetadataOrchestrator::Locate(Data &request, Metadata &primary_metadata) {
-    auto tracer = common::debug::AutoTrace("MetadataOrchestrator::Locate", request, primary_metadata);
+    AUTO_TRACER("MetadataOrchestrator::Locate", request, primary_metadata);
     Data original_metadata;
     original_metadata.id_ = request.id_ + "_meta";
     original_metadata.storage_index_ = request.storage_index_;

@@ -11,8 +11,7 @@
 #include <symbios/io_clients/redis_io.h>
 
 void RedisIOClient::Read(Data &source, Data &destination) {
-    auto tracer_source =
-            common::debug::AutoTrace(std::string("RedisIOClient::Read"), source, destination);
+    AUTO_TRACER(std::string("RedisIOClient::Read"), source, destination);
     try {
 
         auto resp = m_redisCluster->get(source.id_.c_str());
@@ -41,8 +40,7 @@ void RedisIOClient::Read(Data &source, Data &destination) {
 }
 
 void RedisIOClient::Write(Data &source, Data &destination) {
-    auto tracer_source =
-            common::debug::AutoTrace("RedisIOClient::Write", source, destination);
+    AUTO_TRACER("RedisIOClient::Write", source, destination);
     try {
         auto resp = m_redisCluster->get(destination.id_.c_str());
         if (resp) {
@@ -87,7 +85,7 @@ void RedisIOClient::Write(Data &source, Data &destination) {
 }
 
 bool RedisIOClient::Remove(Data &source) {
-    auto tracer_source = common::debug::AutoTrace("RedisIOClient::Remove", source);
+    AUTO_TRACER("RedisIOClient::Remove", source);
     auto resp = m_redisCluster->del(source.id_.c_str());
     return true;
 }
