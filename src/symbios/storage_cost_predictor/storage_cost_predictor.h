@@ -15,7 +15,7 @@
 #include <mpi.h>
 #include <dlib/optimization.h>
 #include <boost/filesystem/operations.hpp>
-#include <boost/lockfree/spsc_queue.hpp>
+//#include <boost/lockfree/spsc_queue.hpp>
 #include <symbios/server/daemon.h>
 #include <array>
 #include <vector>
@@ -30,7 +30,7 @@
 #include "double_buffer.h"
 
 #define LINREG_NPARAMS 3
-#define MAX_METRIC_QUEUE 1024
+//#define MAX_METRIC_QUEUE 1024
 #define RECORD_SIZE (3*sizeof(float) + sizeof(int))
 #define MB (1<<20)
 
@@ -176,7 +176,6 @@ private:
         deserializer.ParseInt(conf);
         if(storage_models_.find(conf) == storage_models_.end()) {
             storage_configs_.emplace_back(conf);
-            //printf("%s\n",conf.data());
         }
         storage_models_[conf].UpdateCoeffs(nprocs_coeff, tot_read_coeff, tot_write_coeff);
     }
@@ -258,15 +257,12 @@ private:
                 CommitMetrics();
                 window_tick_ = 0;
             }
-            MPI_Barrier(MPI_COMM_WORLD);
         }
         while(loop_cond.wait_for(std::chrono::milliseconds(500))==std::future_status::timeout);
-        MPI_Barrier(MPI_COMM_WORLD);
         if(window_tick_ >= window_size_) {
             Fit();
         }
         CommitMetrics();
-        MPI_Barrier(MPI_COMM_WORLD);
     }
 
 public:
@@ -283,11 +279,9 @@ public:
         model_file_path_ = model_file_path;
         LoadModelCSV();
         worker_thread_ = std::thread(&StorageCostPredictor::Run, this, std::move(terminate_worker_.get_future()));
-        MPI_Barrier(MPI_COMM_WORLD);
     }
 
     void Finalize() {
-        MPI_Barrier(MPI_COMM_WORLD);
         terminate_worker_.set_value();
         worker_thread_.join();
         CloseCSV(model_file_);
