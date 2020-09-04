@@ -48,7 +48,7 @@
 #include <string>
 #include <tuple>
 
-#if defined(COMMON_DEBUG_TRACE) || defined(COMMON_DEBUG_TIMER) || defined(ENABLE_AUTO_TRACER)
+#if (defined(COMMON_DEBUG_TRACE) || defined(COMMON_DEBUG_TIMER) || defined(ENABLE_AUTO_TRACER)) && !defined(DISABLE_AUTO_TRACER)
 #define AUTO_TRACER(...) common::debug::AutoTrace trace(__VA_ARGS__);
 #else
 #define AUTO_TRACER(...)
@@ -125,25 +125,25 @@ public:
         t1 = std::chrono::high_resolution_clock::now();
         time_elapsed=0;
     }
-    void pauseTime() {
+    __attribute__((always_inline)) void resumeTime() {
+        t1 = std::chrono::high_resolution_clock::now();
+    }
+    __attribute__((always_inline)) void pauseTime() {
         auto t2 = std::chrono::high_resolution_clock::now();
         time_elapsed +=  std::chrono::duration_cast<std::chrono::nanoseconds>(
-                t2 - t1).count()/1000000.0;
-    }
-    void resumeTime() {
-        t1 = std::chrono::high_resolution_clock::now();
+                t2 - t1).count();
     }
     double endTime(){
         auto t2 = std::chrono::high_resolution_clock::now();
         time_elapsed +=  std::chrono::duration_cast<std::chrono::nanoseconds>(
-                t2 - t1).count()/1000000.0;
-        return time_elapsed;
+                t2 - t1).count();
+        return time_elapsed/1000000.0;
     }
 
     double getTimeElapsed(){
-        return time_elapsed;
+        return time_elapsed/1000000.0;
     }
-private:
+public:
     std::chrono::high_resolution_clock::time_point t1;
     double time_elapsed;
 };

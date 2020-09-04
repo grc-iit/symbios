@@ -109,7 +109,6 @@ int main(int argc, char* argv[]){
     auto request = Data();
     request.position_ = 0;
     request.storage_index_ = 0;
-    request.buffer_= static_cast<char *>(malloc(request_size));
     request.data_size_=request_size;
     common::debug::Timer t;
     ops_per_proc = number_request;

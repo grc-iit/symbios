@@ -8,6 +8,7 @@
 #define SYMBIOS_STORAGE_COST_PREDICTOR_H
 
 //#define ENABLE_AUTO_TRACER
+//#define DISABLE_AUTO_TRACER
 
 #include <iostream>
 #include <fstream>
@@ -265,12 +266,8 @@ private:
     }
 
 public:
-    StorageCostPredictor() {
-        AUTO_TRACER("StorageCostPredictor::StorageCostPredictor");
-    }
-    ~StorageCostPredictor() {
-        AUTO_TRACER("StorageCostPredictor::~StorageCostPredictor");
-    }
+    StorageCostPredictor() { AUTO_TRACER("StorageCostPredictor::StorageCostPredictor"); }
+    ~StorageCostPredictor() { AUTO_TRACER("StorageCostPredictor::~StorageCostPredictor"); }
 
     void SetWindowSize(size_t window_size) { window_size_ = window_size; }
     void EnableMetricStorage(bool commit_metrics) { commit_metrics_ = commit_metrics; }

@@ -91,8 +91,8 @@ void out_csv(SCPArgs &args, int rank, common::debug::Timer t[4], int nprocs, siz
             for (int i = 0; i < 4; ++i) {
                 header += prefix[i] + "msec_avg" + "," +
                           prefix[i] + "msec_std" + "," +
-                          prefix[i] + "min_std" + "," +
-                          prefix[i] + "max_std" + "," +
+                          prefix[i] + "msec_min" + "," +
+                          prefix[i] + "msec_max" + "," +
                           prefix[i] + "thrpt_kiops" + ",";
             }
             header += "net_kiops,nprocs,nreqs_per_proc,nreqs";
@@ -147,15 +147,17 @@ int main(int argc, char * argv[]) {
     scp->Init(rank, nprocs, model_path);
     t[0].pauseTime();
 
+    t[1].resumeTime();
     for(size_t i =0; i < nreqs_per_proc; ++i) {
-        t[1].resumeTime();
-        scp->Feedback(10*(rank+1)*(i+1), 25*(rank+1)*(i+1), -25*(rank+1)*(i+1), storage_index);
-        t[1].pauseTime();
-
-        t[2].resumeTime();
-        scp->Predict(25*(rank+1)*(i+1), -25*(rank+1)*(i+1), storage_index);
-        t[2].pauseTime();
+        scp->Feedback(10 * (rank + 1) * (i + 1), 25 * (rank + 1) * (i + 1), -25 * (rank + 1) * (i + 1), storage_index);
     }
+    t[1].pauseTime();
+
+    t[2].resumeTime();
+    for(size_t i =0; i < nreqs_per_proc; ++i) {
+        scp->Predict(25*(rank+1)*(i+1), -25*(rank+1)*(i+1), storage_index);
+    }
+    t[2].pauseTime();
 
     t[3].resumeTime();
     scp->Finalize();
