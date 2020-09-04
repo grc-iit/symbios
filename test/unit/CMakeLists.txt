@@ -75,7 +75,6 @@ foreach (test_file ${test_files})
     set_property(TEST ${test_name} APPEND PROPERTY ENVIRONMENT "RUN_DIR=$ENV{RUN_DIR}")
 endforeach ()
 
-message(${CMAKE_CXX_FLAGS})
 set(NREQS_LIST 100 1000 10000 100000 1000000)
 set(NPROCS_LIST 1 2 4 8 16 32)
 set(MODEL_FILE ${CMAKE_BINARY_DIR}/test_data.csv)
