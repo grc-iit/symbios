@@ -100,11 +100,7 @@ int main(int argc, char* argv[]){
     //distribution->Shape((double)request_size/sizeof(double));
 
     std::shared_ptr<DataDistributionEngine> engine;
-    if(rank == 0)
-        engine = basket::Singleton<DataDistributionEngineFactory>::GetInstance()->GetDataDistributionEngine(SYMBIOS_CONF->DATA_DISTRIBUTION_POLICY);
-    MPI_Barrier(MPI_COMM_WORLD);
-    if(rank != 0)
-        engine = basket::Singleton<DataDistributionEngineFactory>::GetInstance()->GetDataDistributionEngine(SYMBIOS_CONF->DATA_DISTRIBUTION_POLICY);
+    engine = basket::Singleton<DataDistributionEngineFactory>::GetInstance()->GetDataDistributionEngine(SYMBIOS_CONF->DATA_DISTRIBUTION_POLICY);
     MPI_Barrier(MPI_COMM_WORLD);
     auto request = Data();
     request.position_ = 0;
