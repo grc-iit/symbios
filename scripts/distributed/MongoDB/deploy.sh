@@ -111,7 +111,7 @@ do
   for ((i=0;i<"SHARD_COPY_COUNT";i++))
   do
     nodeid=$(((SHARD_SERVER_COUNT+count-i)%SHARD_SERVER_COUNT))
-    current_server=`sed -n $((nodeid+1))p ${CWD}/servers | awk '{print $1}'`
+    current_server=${SHARD_SERVERS[$((nodeid+1))]}
     if [[ ${i} != $((SHARD_COPY_COUNT-1)) ]]
     then
       printf "\t\t{ _id :a %s, host : \"%s\" },\n" ${number} ${current_server}:$((SHARD_BASE_PORT_BAKE+count)) >> ${MONGO_PATH}/shard_replica_init.js
