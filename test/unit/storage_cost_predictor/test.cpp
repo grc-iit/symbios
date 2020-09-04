@@ -113,6 +113,7 @@ void out_csv(SCPArgs &args, int rank, common::debug::Timer t[4], int nprocs, siz
 }
 
 int main(int argc, char * argv[]) {
+
     MPI_Init(&argc,&argv);
     int rank=0, nprocs = 1;
 

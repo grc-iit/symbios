@@ -24,6 +24,7 @@
 #include <atomic>
 #include <chrono>
 #include "serializers.h"
+#include "double_buffer.h"
 
 #define LINREG_NPARAMS 3
 #define MAX_METRIC_QUEUE 1024
@@ -33,12 +34,13 @@
 class LinRegModel {
 public:
     typedef std::array<double, LINREG_NPARAMS> CoeffArray;
-    typedef boost::lockfree::spsc_queue<CoeffArray, boost::lockfree::capacity<1>> CoeffQueue;
+    //typedef boost::lockfree::spsc_queue<CoeffArray, boost::lockfree::capacity<1>> CoeffQueue;
+    typedef DoubleBuffer<CoeffArray> CoeffQueue;
 private:
     typedef dlib::matrix<double, LINREG_NPARAMS, 1> parameter_vector;
     typedef dlib::matrix<double, LINREG_NPARAMS, 1> input_vector;
     typedef std::pair<input_vector, double> Observation;
-    typedef boost::lockfree::spsc_queue<Observation, boost::lockfree::capacity<MAX_METRIC_QUEUE>> ObservationQueue;
+    typedef DoubleBuffer<Observation> ObservationQueue;
     typedef std::vector<Observation> ObservationVec;
     size_t window_off_ = 0;
 
@@ -56,28 +58,34 @@ private:
         return std::pow(y - sum, 2);
     }
 
+    //Dequeue a subset of the current metrics
+    //Called from either the worker thread
     ObservationVec GetWindow() {
         ObservationVec datavec;
         Observation obs;
-        while(dataset_.pop(obs)) { datavec.emplace_back(std::move(obs)); }
+        while(dataset_.pop(1, obs)) { datavec.emplace_back(std::move(obs)); }
         return std::move(datavec);
     }
 
-    void UpdateCoeffs(const CoeffArray &coeffs) {
+    //Add a record of the current coefficients
+    //Called from either the work thread or main thread, but not at the same time
+    void UpdateCoeffs(const CoeffArray &coeffs, bool required) {
         bool buffer = !buffer_;
         for(int i = 0; i < LINREG_NPARAMS; ++i) { coeffs_[buffer][i] = (coeffs_[buffer][i] + coeffs[i])/2; }
-        coeffs_q_.push(coeffs);
+        if(required) { coeffs_q_.push(1, coeffs); }
         buffer_ = buffer;
     }
 
 public:
     LinRegModel() = default;
 
+    //Tune the model based off of feedback
+    //Called from worker thread
     void Fit(void) {
         common::debug::AutoTrace trace = common::debug::AutoTrace("LinRegModel::FitData");
         ObservationVec datavec = GetWindow();
         if (datavec.size() > 0) {
-            parameter_vector params(LINREG_NPARAMS);
+            parameter_vector params = .5 * dlib::randm(3, 1);
             dlib::solve_least_squares_lm(
                     dlib::objective_delta_stop_strategy(1e-7),
                     Residual,
@@ -86,36 +94,38 @@ public:
                     params);
             CoeffArray coeffs;
             for(int i = 0; i < LINREG_NPARAMS; ++i) { coeffs[i] = params(i); }
-            UpdateCoeffs(coeffs);
+            UpdateCoeffs(coeffs, true);
         }
     }
 
+    //Add feedback on I/O performance
+    //Called from main thread
     void Feedback(double bw, double nprocs, double read_bytes, double write_bytes) {
         common::debug::AutoTrace trace = common::debug::AutoTrace("LinRegModel::Feedback");
         input_vector iv;
         iv(0) = nprocs;
         iv(1) = read_bytes;
         iv(2) = write_bytes;
-        dataset_.push(std::move(Observation(iv, bw)));
+        dataset_.push(0, std::move(Observation(iv, bw)));
     }
 
+    //Predict the bw for the storage config
+    //Called from main thread
     double Predict(double nprocs, double read_bytes, double write_bytes) {
         bool buffer = buffer_;
         return coeffs_[buffer][0]*nprocs + coeffs_[buffer][1]*read_bytes + coeffs_[buffer][2]*write_bytes;
     }
 
+    //Update coefficients
+    //Called from main thread
     void UpdateCoeffs(double nprocs_coeff, double tot_read_coeff, double tot_write_coeff) {
         CoeffArray coeffs = {nprocs_coeff, tot_read_coeff, tot_write_coeff};
-        UpdateCoeffs(coeffs);
+        UpdateCoeffs(coeffs, false);
         window_off_++;
     }
 
     CoeffQueue &GetCoeffQueue() {
         return coeffs_q_;
-    }
-
-    size_t &GetWindowOff() {
-        return window_off_;
     }
 };
 
@@ -201,7 +211,7 @@ private:
             LinRegModel &model = storage_models_[storage_config];
             LinRegModel::CoeffQueue &q = model.GetCoeffQueue();
             LinRegModel::CoeffArray coeffs;
-            while(q.pop(coeffs)) {
+            while(q.pop_sync(coeffs)) {
                 serializer.WriteFloat(coeffs[0]);
                 serializer.WriteFloat(coeffs[1]);
                 serializer.WriteFloat(coeffs[2]);
