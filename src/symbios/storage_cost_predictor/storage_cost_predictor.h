@@ -7,7 +7,7 @@
 #ifndef SYMBIOS_STORAGE_COST_PREDICTOR_H
 #define SYMBIOS_STORAGE_COST_PREDICTOR_H
 
-#define ENABLE_AUTO_TRACER
+//#define ENABLE_AUTO_TRACER
 
 #include <iostream>
 #include <fstream>
@@ -252,16 +252,16 @@ private:
         AUTO_TRACER("StorageCostPredictor::AsyncFitCommit");
         do {
             if(window_tick_ >= window_size_) {
-                //Fit();
-                //CommitMetrics();
+                Fit();
+                CommitMetrics();
                 window_tick_ = 0;
             }
         }
         while(loop_cond.wait_for(std::chrono::milliseconds(500))==std::future_status::timeout);
         if(window_tick_ >= window_size_) {
-            //Fit();
+            Fit();
         }
-        //CommitMetrics();
+        CommitMetrics();
     }
 
 public:

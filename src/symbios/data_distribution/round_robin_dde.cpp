@@ -7,7 +7,7 @@
 #include <symbios/data_distribution/round_robin_dde.h>
 
 std::vector<DataDistribution> RoundRobinDDE::Distribute(Data &request) {
-    auto tracer = common::debug::AutoTrace("RoundRobinDDE::Distribute", request);
+    AUTO_TRACER("RoundRobinDDE::Distribute", request);
     auto distributions = std::vector<DataDistribution>();
     uint16_t index = 0;
     auto next_value = sequence.GetNextSequenceServer(index);

@@ -12,7 +12,7 @@ symbios::Client::Client(){
 }
 
 void symbios::Client::StoreRequest(Data &request) {
-    auto tracer = common::debug::AutoTrace("symbios::Client::StoreRequest", request);
+    AUTO_TRACER("symbios::Client::StoreRequest", request);
     int server = rand() % BASKET_CONF->NUM_SERVERS;
     auto num_servers = rpc->call<RPCLIB_MSGPACK::object_handle>(server, "StoreRequest", request) .as<int>();
     COMMON_DBGVAR(num_servers);
@@ -20,7 +20,7 @@ void symbios::Client::StoreRequest(Data &request) {
 
 void symbios::Client::LocateRequest(Data &request) {
 
-    auto tracer = common::debug::AutoTrace("symbios::Client::LocateRequest", request);
+    AUTO_TRACER("symbios::Client::LocateRequest", request);
     int server = rand() % BASKET_CONF->NUM_SERVERS;
     auto ret = rpc->call<RPCLIB_MSGPACK::object_handle>(server, "LocateRequest", request).as<Data>();
     memcpy(request.buffer_,ret.buffer_,ret.data_size_);
@@ -29,13 +29,13 @@ void symbios::Client::LocateRequest(Data &request) {
 }
 
 bool symbios::Client::Delete(Data &request) {
-    auto tracer = common::debug::AutoTrace("symbios::Client::LocateRequest", request);
+    AUTO_TRACER("symbios::Client::LocateRequest", request);
     int server = rand() % BASKET_CONF->NUM_SERVERS;
     return rpc->call<RPCLIB_MSGPACK::object_handle>(server, "DeleteRequest", request).as<bool>();
 }
 
 size_t symbios::Client::Size(Data &request) {
-    auto tracer = common::debug::AutoTrace("symbios::Client::LocateRequest", request);
+    AUTO_TRACER("symbios::Client::LocateRequest", request);
     int server = rand() % BASKET_CONF->NUM_SERVERS;
     return rpc->call<RPCLIB_MSGPACK::object_handle>(server, "SizeRequest", request).as<size_t>();
 }
