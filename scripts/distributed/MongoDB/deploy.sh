@@ -18,9 +18,9 @@ mongod_config_path=${MONGO_PATH}/mongod_config
 mongod_shard_path=${MONGO_PATH}/mongod_shard
 mongos_local_path=${MONGO_PATH}/mongos
 
-CONFIG_SERVERS=$(head -${CONFIG_SERVER_COUNT} $SERVER_HOSTFILE | awk '{print $1}')
-SHARD_SERVERS=$(cat $SERVER_HOSTFILE | awk '{print $1}')
-ROUTER_SERVERS=$(cat $ROUTER_SERVER_HOSTFILE | awk '{print $1}')
+SHARD_SERVERS=($(cat ${SERVER_HOSTFILE}))
+CONFIG_SERVERS=("${SHARD_SERVERS[@]:0:${CONFIG_SERVER_COUNT}}")
+ROUTER_SERVERS=($(cat ${ROUTER_SERVER_HOSTFILE}))
 SHARD_SERVER_COUNT=${#SHARD_SERVERS[@]}
 
 CONFIG_REPL_NAME=replconfig01
