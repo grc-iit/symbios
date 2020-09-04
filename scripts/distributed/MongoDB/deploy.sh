@@ -38,6 +38,7 @@ SHARD_COPY_COUNT=1
 ROUTER_SERVER_COUNT=`cat ${ROUTER_SERVER_HOSTFILE} | wc -l`
 
 echo -e "${GREEN}============ Deploying MongoDB ... ============"
+echo -e "${GREEN}${CWD}"
 echo -e "${GREEN}======== Number of config server: ${CONFIG_SERVER_COUNT} ========"
 echo -e "${GREEN}======== Number of shard server:  ${SHARD_SERVER_COUNT} ========"
 echo -e "${GREEN}======== Number of router server: ${ROUTER_SERVER_COUNT} ========"
