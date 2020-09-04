@@ -23,6 +23,7 @@ void symbios::Client::LocateRequest(Data &request) {
     AUTO_TRACER("symbios::Client::LocateRequest", request);
     int server = rand() % BASKET_CONF->NUM_SERVERS;
     auto ret = rpc->call<RPCLIB_MSGPACK::object_handle>(server, "LocateRequest", request).as<Data>();
+    if(request.buffer_==NULL) request.buffer_ = static_cast<char *>(malloc(ret.data_size_));
     memcpy(request.buffer_,ret.buffer_,ret.data_size_);
     COMMON_DBGVAR(request.buffer_);
 

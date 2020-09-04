@@ -16,6 +16,7 @@ data
 /.idea/other.xml
 /cmake-build-debug-remote-host/
 /cmake-build-debug/
+/cmake-build-default/
 /.idea/.name
 /build/
 /hcl/

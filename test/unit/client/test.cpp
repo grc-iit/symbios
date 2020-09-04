@@ -63,7 +63,7 @@ int main(int argc, char * argv[]){
             printf("Data recieved %s\n",data.buffer_);
             client.Delete(data);
         }
-        COMMON_DBGVAR(data.buffer_.data());
+        COMMON_DBGVAR(data.buffer_);
     }
     MPI_Finalize();
     return 0;
