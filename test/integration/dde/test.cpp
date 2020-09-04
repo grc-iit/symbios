@@ -113,12 +113,12 @@ int main(int argc, char* argv[]){
     common::debug::Timer t;
     ops_per_proc = number_request;
     bytes_per_proc = ops_per_proc * request_size;
+    request.id_ = "temp_";
+    t.resumeTime();
     for(int i=0;i<number_request;++i){
-        request.id_ = "temp_" + std::to_string(i);
-        t.resumeTime();
         engine->Distribute(request);
-        t.pauseTime();
     }
+    t.pauseTime();
     MPI_Barrier(MPI_COMM_WORLD);
     double local_end_time = t.getTimeElapsed();
     double local_std_msec;
