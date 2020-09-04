@@ -97,12 +97,12 @@ sleep 5
 
 echo -e "${GREEN}Initializing shard replica set ...${NC}"
 echo -e "${GREEN}Preparing shards to mongos/query router ...${NC}"
-truncate -s 0 add_shard_to_mongos.js
+truncate -s 0  ${MONGO_PATH}/add_shard_to_mongos.js
 count=0
 for shard_server in ${SHARD_SERVERS}
 do
   truncate -s 0 ${MONGO_PATH}/shard_replica_init.js
-  printf "sh.addShard(\"${SHARD_REPL_NAME}$((count+1))/" >> add_shard_to_mongos.js
+  printf "sh.addShard(\"${SHARD_REPL_NAME}$((count+1))/" >> ${MONGO_PATH}/add_shard_to_mongos.js
   printf "rs.initiate(\n{\n" > ${MONGO_PATH}/shard_replica_init.js
   printf "\t_id : \"${SHARD_REPL_NAME}$((count+1))\",\n" >> ${MONGO_PATH}/shard_replica_init.js
   printf "\tmembers: [\n" >> ${MONGO_PATH}/shard_replica_init.js
@@ -115,10 +115,10 @@ do
     if [[ ${i} != $((SHARD_COPY_COUNT-1)) ]]
     then
       printf "\t\t{ _id :a %s, host : \"%s\" },\n" ${number} ${current_server}:$((SHARD_BASE_PORT_BAKE+count)) >> ${MONGO_PATH}/shard_replica_init.js
-      printf "${current_server}:$((SHARD_BASE_PORT_BAKE+count))," >> add_shard_to_mongos.js
+      printf "${current_server}:$((SHARD_BASE_PORT_BAKE+count))," >> ${MONGO_PATH}/add_shard_to_mongos.js
     else
       printf "\t\t{ _id : %s, host : \"%s\" }\n" ${number} ${current_server}:$((SHARD_BASE_PORT_BAKE+count)) >> ${MONGO_PATH}/shard_replica_init.js
-      printf "${current_server}:$((SHARD_BASE_PORT_BAKE+count))\")\n" >> add_shard_to_mongos.js
+      printf "${current_server}:$((SHARD_BASE_PORT_BAKE+count))\")\n" >> ${MONGO_PATH}/add_shard_to_mongos.js
     fi
       number=$((number+1))
   done
@@ -152,9 +152,9 @@ wait
 sleep 5
 
 echo -e "${GREEN}Adding shards to mongos/query router ...${NC}"
-truncate -s 0 add_shard_to_mongos.log
-mongo --host ${router_server} --port ${MONGO_PORT} < add_shard_to_mongos.js >> add_shard_to_mongos.log
-cat add_shard_to_mongos.log | grep -i ok
+truncate -s 0 ${MONGO_PATH}/add_shard_to_mongos.log
+mongo --host ${router_server} --port ${MONGO_PORT} < ${MONGO_PATH}/.js >> ${MONGO_PATH}/add_shard_to_mongos.log
+cat ${MONGO_PATH}/add_shard_to_mongos.log | grep -i ok
 
 echo -e "${GREEN}Enabling sharding${NC}"
 mongo --host ${router_server} --port ${MONGO_PORT} > ${MONGO_PATH}/enableSharding.log << EOF
