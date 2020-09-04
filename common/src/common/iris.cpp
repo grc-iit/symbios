@@ -32,22 +32,20 @@ doOp::~doOp() {}
 
 //// LibHandler
 
-void LibHandler::run(uint16_t op_type) {
+void LibHandler::run(OPType op_type, size_t offset, size_t request_size, char* data) {
     map_data();
-    if (op_type == OPType::READ) do_mapped_read();
-    else if (op_type == OPType::WRITE) do_mapped_write();
+    if (op_type == OPType::READ) do_mapped_read(offset, request_size, data);
+    else if (op_type == OPType::WRITE) do_mapped_write(offset, request_size, data);
     else if (op_type == OPType::FCLOSE);
     else if (op_type == OPType::FOPEN);
     else if (op_type == OPType::LSEEK);
 
 }
 
-void LibHandler::do_mapped_write() {
-    DataDescriptor src = {file_,0,  data.size(), 0 };
-    DataDescriptor read_src = {file_, 0,  data.size(), 0 };
+void LibHandler::do_mapped_write(size_t offset, size_t request_size, char *data) {
+    DataDescriptor src = {file_, 0,  request_size, 0 };
     DataMapper mapper_(db_type, max_obj_size);
     auto objs = mapper_.map(src);
-    auto read_objs = mapper_.map(read_src);
 
     if (lib_type == IOLib::IRIS){
         doOp operation(db_type);
@@ -55,11 +53,9 @@ void LibHandler::do_mapped_write() {
             auto data_obj = Data();
             data_obj.id_= i.id_;
             data_obj.position_=i.position_;
-
-            data_obj.position_=i.position_;
-            data_obj.buffer_ = data.substr(i.position_+i.chunk_index*max_obj_size, i.size).data();
-            data_obj.buffer_[ data.size()]='\0';
-            data_obj.data_size_= data.size()+1;
+            data_obj.buffer_ = std::string(data).substr(i.position_+i.chunk_index*max_obj_size, i.size).data();
+            data_obj.buffer_[i.size] = '\0';
+            data_obj.data_size_= i.size + 1;
             data_obj.storage_index_ = db_type;
             COMMON_DBGVAR(data_obj);
             operation.Write(data_obj, data_obj);
@@ -74,10 +70,9 @@ void LibHandler::do_mapped_write() {
             data_obj.id_= i.id_;
             data_obj.position_=i.position_;
 
-            data_obj.position_=i.position_;
-            data_obj.buffer_ = data.substr(i.position_+i.chunk_index*max_obj_size, i.size).data();
-            data_obj.buffer_[ data.size()]='\0';
-            data_obj.data_size_= data.size()+1;
+            data_obj.buffer_ = std::string(data).substr(i.position_+i.chunk_index*max_obj_size, i.size).data();
+            data_obj.buffer_[i.size] = '\0';
+            data_obj.data_size_= i.size + 1;
             data_obj.storage_index_ = db_type;
 
             client.StoreRequest(data_obj);
@@ -92,13 +87,11 @@ void LibHandler::do_mapped_write() {
             data_obj.id_= i.id_;
             data_obj.position_=i.position_;
 
-            data_obj.position_=i.position_;
-            data_obj.buffer_ = data.substr(i.position_+i.chunk_index*max_obj_size, i.size).data();
-            data_obj.buffer_[ data.size()]='\0';
-            data_obj.data_size_= data.size()+1;
+            data_obj.buffer_ = std::string(data).substr(i.position_+i.chunk_index*max_obj_size, i.size).data();
+            data_obj.buffer_[i.size] = '\0';
+            data_obj.data_size_= i.size + 1;
             data_obj.storage_index_ = db_type;
 
-            data_obj.storage_index_ = db_type;
             client.StoreRequest(data_obj);
         }
     }
@@ -107,12 +100,11 @@ void LibHandler::do_mapped_write() {
     }
 }
 
-void LibHandler::do_mapped_read() {
-    DataDescriptor src = {file_,0,  data.size(), 0 };
-    DataDescriptor read_src = {file_, 0,  data.size(), 0 };
+void LibHandler::do_mapped_read(size_t offset, size_t request_size, char *data) {
+    DataDescriptor read_src = {file_, 0,  request_size, 0 };
     DataMapper mapper_(db_type, max_obj_size);
-    auto objs = mapper_.map(src);
     auto read_objs = mapper_.map(read_src);
+    int data_offset = 0;
 
     if (lib_type == IOLib::IRIS){
         doOp operation(db_type);
@@ -120,12 +112,14 @@ void LibHandler::do_mapped_read() {
             auto data_obj = Data();
             data_obj.id_= i.id_;
             data_obj.position_=i.position_;
-            data_obj.buffer_ = static_cast<char *>(malloc(data_obj.data_size_));;
+            data_obj.buffer_ = static_cast<char *>(malloc(data_obj.data_size_));
             data_obj.storage_index_ = db_type;
 
             operation.Read(data_obj, data_obj);
             COMMON_DBGVAR2(data_obj, i);
             std::cout<<i.position_<<':'<<data_obj.buffer_<<std::endl;
+            memcpy(&data[data_offset], data_obj.buffer_, data_obj.data_size_);
+            data_offset += data_obj.data_size_;
         }
     }
 
@@ -135,12 +129,14 @@ void LibHandler::do_mapped_read() {
             auto data_obj = Data();
             data_obj.id_= i.id_;
             data_obj.position_=i.position_;
-            data_obj.buffer_ = static_cast<char *>(malloc(data_obj.data_size_));;
+            data_obj.buffer_ = static_cast<char *>(malloc(data_obj.data_size_));
             data_obj.storage_index_ = db_type;
 
             client.LocateRequest(data_obj);
             COMMON_DBGVAR2(data_obj, i);
             std::cout<<data_obj.buffer_<<std::endl;
+            memcpy(&data[data_offset], data_obj.buffer_, data_obj.data_size_);
+            data_offset += data_obj.data_size_;
         }
 
     }
@@ -151,12 +147,15 @@ void LibHandler::do_mapped_read() {
             auto data_obj = Data();
             data_obj.id_= i.id_;
             data_obj.position_=i.position_;
-            data_obj.buffer_ = static_cast<char *>(malloc(data_obj.data_size_));;
+            data_obj.buffer_ = static_cast<char *>(malloc(data_obj.data_size_));
             data_obj.storage_index_ = db_type;
 
             client.LocateRequest(data_obj);
             COMMON_DBGVAR2(data_obj, i);
             std::cout<<data_obj.buffer_<<std::endl;
+            memcpy(&data[data_offset], data_obj.buffer_, data_obj.data_size_);
+            data_offset += data_obj.data_size_;
+
         }
     }
     else{
@@ -164,12 +163,11 @@ void LibHandler::do_mapped_read() {
     }
 }
 
-LibHandler::LibHandler(std::string file__, char* data_, uint16_t lib_type_, uint16_t db_type_, uint16_t max_obj_size_) {
+LibHandler::LibHandler(std::string file__, IOLib lib_type_, uint16_t db_type_, uint16_t max_obj_size_) {
     lib_type = lib_type_;
     db_type = db_type_;
     max_obj_size = max_obj_size_;
     file_ = file__;
-    data = data_;
 }
 
 

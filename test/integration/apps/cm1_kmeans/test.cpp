@@ -13,6 +13,7 @@ class ReplayArgs : public common::args::ArgMap {
         AssertOptIsSet("-m");
         AssertOptIsSet("-t");
         AssertOptIsSet("-o");
+        AssertOptIsSet("-c");
     }
 
   public:
@@ -20,6 +21,7 @@ class ReplayArgs : public common::args::ArgMap {
         std::cout << "Usage: ./cm1_kmeans -[param-id] [value] ... " << std::endl;
         std::cout << std::endl;
         std::cout << "-r [int]: number of repetitions" << std::endl;
+        std::cout << "-c [int]: Chunk size of storage" << std::endl;
         std::cout << "-m [string]: Trace replay mode" << std::endl;
         std::cout << "  POSIX" << std::endl;
         std::cout << "  IRIS" << std::endl;
@@ -38,6 +40,7 @@ class ReplayArgs : public common::args::ArgMap {
         AddOpt("-t", common::args::ArgType::kString);
         AddOpt("-o", common::args::ArgType::kString);
         AddOpt("-r", common::args::ArgType::kInt);
+        AddOpt("-c", common::args::ArgType::kInt);
         ArgIter(argc, argv);
         VerifyArgs();
     }
@@ -48,15 +51,16 @@ int main(int argc, char * argv[]){
     ReplayArgs args(argc, argv);
     int reps = args.GetIntOpt("-r");
     int mode = args.GetIntOpt("-m");
+    int chunk = args.GetIntOpt("-c");
     std::string trace_path = args.GetStringOpt("-t");
     std::string output_path = args.GetStringOpt("-o");
     int my_rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
     trace_replayer tr;
-    tr.prepare_data(trace_path + boost::filesystem::path::preferred_separator + "CM1.csv");
-    tr.replay_trace(trace_path + boost::filesystem::path::preferred_separator + "CM1.csv", output_path + "cm_out.csv", reps, my_rank, mode);
-    tr.prepare_data(trace_path + boost::filesystem::path::preferred_separator + "Kmeans.csv");
-    tr.replay_trace(trace_path + boost::filesystem::path::preferred_separator + "Kmeans.csv", output_path + boost::filesystem::path::preferred_separator + "kmeans_out.csv", reps, my_rank, mode);
+    tr.prepare_data(trace_path + boost::filesystem::path::preferred_separator + "CM1.csv", output_path + boost::filesystem::path::preferred_separator + "cm1_out.csv", reps, my_rank, (IOLib)mode, chunk);
+    tr.replay_trace(trace_path + boost::filesystem::path::preferred_separator + "CM1.csv", output_path + boost::filesystem::path::preferred_separator + "cm1_out.csv", reps, my_rank, (IOLib)mode, chunk);
+    tr.prepare_data(trace_path + boost::filesystem::path::preferred_separator + "Kmeans.csv", output_path + boost::filesystem::path::preferred_separator + "kmeans_out.csv", reps, my_rank, (IOLib)mode, chunk);
+    tr.replay_trace(trace_path + boost::filesystem::path::preferred_separator + "Kmeans.csv", output_path + boost::filesystem::path::preferred_separator + "kmeans_out.csv", reps, my_rank, (IOLib)mode, chunk);
     MPI_Finalize();
     return 0;
 }

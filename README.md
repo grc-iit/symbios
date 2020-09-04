@@ -291,14 +291,14 @@ cd scripts/local
 ./run_mongo.sh mongo_config_path mongo_install_path [clean_flag]
 ```
 
+- mongo_config_path is the directory where the logs and configurations will be dumped
+- mongo_install_path is the path of the mongod binary to use (without bin)
+
 ## Mongo sharding cluster Local Script Usage
 ```bash
 cd scripts/local
 ./run_mongo_cluster.sh mongo_cluster_install_path shard_server_nums mongo_server_install_path database_name collection_name [clean_flag]
 ```
-
-- mongo_config_path is the directory where the logs and configurations will be dumped
-- mongo_install_path is the path of the mongod binary to use (without bin)
 
 ## Local testing of Symbios
 
