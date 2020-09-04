@@ -19,7 +19,7 @@ mongos_local_path=${MONGO_PATH}/mongos
 
 CONFIG_SERVERS=$(head -${CONFIG_SERVER_COUNT} $SERVER_HOSTFILE | awk '{print $1}')
 SHARD_SERVERS=$(cat $SERVER_HOSTFILE | awk '{print $1}')
-ROUTER_SERVERS=$(cat ROUTER_SERVER_HOSTFILE | awk '{print $1}')
+ROUTER_SERVERS=$(cat $ROUTER_SERVER_HOSTFILE | awk '{print $1}')
 SHARD_SERVER_COUNT=${#SHARD_SERVERS[@]}
 
 CONFIG_REPL_NAME=replconfig01
@@ -167,7 +167,7 @@ EOF
 cat ${MONGO_PATH}/enableSharding.log | grep -i ok
 
 echo -e "${GREEN}Checking Config Servers${NC}"
-for config_server in "${SERVER_HOSTFILE[@]}"
+for config_server in "${CONFIG_SERVERS[@]}"
 do
 ssh "${config_server}" /bin/bash << EOF
   pgrep -la mongod
