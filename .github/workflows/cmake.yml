@@ -1,6 +1,22 @@
 name: CMake
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - 'benchmak/**'
+      - 'old/**'
+      - README.md
+      - 'scripts/**'
+  pull_request:
+    branches:
+      - master
+    paths-ignore:
+      - 'benchmak/**'
+      - 'old/**'
+      - README.md
+      - 'scripts/**'
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
