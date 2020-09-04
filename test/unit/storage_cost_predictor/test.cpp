@@ -138,6 +138,7 @@ int main(int argc, char * argv[]) {
         fwrite(serializer.GetBuf(), 1, serializer.GetSize(), fp);
         fclose(fp);
     }
+    MPI_Barrier(MPI_COMM_WORLD);
 
     //Run tests
     common::debug::Timer t[4];

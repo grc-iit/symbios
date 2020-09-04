@@ -48,6 +48,12 @@
 #include <string>
 #include <tuple>
 
+#if defined(COMMON_DEBUG_TRACE) || defined(COMMON_DEBUG_TIMER) || defined(ENABLE_AUTO_TRACER)
+#define AUTO_TRACER(...) common::debug::AutoTrace trace(__VA_ARGS__);
+#else
+#define AUTO_TRACER(...)
+#endif
+
 template <class Tup, class Func, std::size_t ...Is>
 constexpr void static_for_impl(Tup&& t, Func &&f, std::index_sequence<Is...> )
 {
@@ -112,110 +118,108 @@ std::cout << "DBG: " << __FILE__ << "(" << __LINE__ << ") "\
  * Time all functions and instrument it
  */
 
+class Timer {
+public:
+    Timer():time_elapsed(0){}
+    void startTime() {
+        t1 = std::chrono::high_resolution_clock::now();
+        time_elapsed=0;
+    }
+    void pauseTime() {
+        auto t2 = std::chrono::high_resolution_clock::now();
+        time_elapsed +=  std::chrono::duration_cast<std::chrono::nanoseconds>(
+                t2 - t1).count()/1000000.0;
+    }
+    void resumeTime() {
+        t1 = std::chrono::high_resolution_clock::now();
+    }
+    double endTime(){
+        auto t2 = std::chrono::high_resolution_clock::now();
+        time_elapsed +=  std::chrono::duration_cast<std::chrono::nanoseconds>(
+                t2 - t1).count()/1000000.0;
+        return time_elapsed;
+    }
 
-
-    class Timer {
-    public:
-        Timer():time_elapsed(0){}
-        void startTime() {
-            t1 = std::chrono::high_resolution_clock::now();
-            time_elapsed=0;
-        }
-        void pauseTime() {
-            auto t2 = std::chrono::high_resolution_clock::now();
-            time_elapsed +=  std::chrono::duration_cast<std::chrono::nanoseconds>(
-                    t2 - t1).count()/1000000.0;
-        }
-        void resumeTime() {
-            t1 = std::chrono::high_resolution_clock::now();
-        }
-        double endTime(){
-            auto t2 = std::chrono::high_resolution_clock::now();
-            time_elapsed +=  std::chrono::duration_cast<std::chrono::nanoseconds>(
-                    t2 - t1).count()/1000000.0;
-            return time_elapsed;
-        }
-
-        double getTimeElapsed(){
-            return time_elapsed;
-        }
-    private:
-        std::chrono::high_resolution_clock::time_point t1;
-        double time_elapsed;
-    };
+    double getTimeElapsed(){
+        return time_elapsed;
+    }
+private:
+    std::chrono::high_resolution_clock::time_point t1;
+    double time_elapsed;
+};
 /**
  * Implement Auto tracing Mechanism.
  */
-    using namespace std;
-    class AutoTrace
+using namespace std;
+class AutoTrace
+{
+    Timer timer;
+    static int rank,item;
+
+public:
+    template <typename... Args>
+    AutoTrace(std::string string,Args... args):m_line(string)
     {
-        Timer timer;
-        static int rank,item;
 
-    public:
-        template <typename... Args>
-        AutoTrace(std::string string,Args... args):m_line(string)
-        {
+        char thread_name[256];
+        pthread_getname_np(pthread_self(), thread_name,256);
+        std::stringstream stream;
 
-            char thread_name[256];
-            pthread_getname_np(pthread_self(), thread_name,256);
-            std::stringstream stream;
-
-            if(rank == -1) MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+        if(rank == -1) MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 #if defined(COMMON_DEBUG_TRACE) || defined(COMMON_DEBUG_TIMER)
-            //stream << "\033[31m";
-        stream <<++item<<";"<<thread_name<<";"<< rank << ";" <<m_line << ";";
+        //stream << "\033[31m";
+    stream <<++item<<";"<<thread_name<<";"<< rank << ";" <<m_line << ";";
 #endif
 #if  defined(COMMON_DEBUG_TIMER)
-            stream <<";;";
+        stream <<";;";
 #endif
 #ifdef COMMON_DEBUG_TRACE
-            auto args_obj = std::make_tuple(args...);
-        const ulong args_size = std::tuple_size<decltype(args_obj)>::value;
-        stream << "args(";
-        if(args_size == 0) stream << "Void";
-        else{
-            static_for(args_obj, [&] (auto i, auto w) {
-                stream << w << ", ";
-            });
-        }
-        stream << ");";
+        auto args_obj = std::make_tuple(args...);
+    const ulong args_size = std::tuple_size<decltype(args_obj)>::value;
+    stream << "args(";
+    if(args_size == 0) stream << "Void";
+    else{
+        static_for(args_obj, [&] (auto i, auto w) {
+            stream << w << ", ";
+        });
+    }
+    stream << ");";
 #endif
 #if defined(COMMON_DEBUG_TRACE) || defined(COMMON_DEBUG_TIMER)
-            stream <<"start"<< endl;
-        stream << "\033[00m";
-        cout << stream.str();
+        stream <<"start"<< endl;
+    stream << "\033[00m";
+    cout << stream.str();
 #endif
 #ifdef COMMON_DEBUG_TIMER
-            timer.startTime();
+        timer.startTime();
 #endif
-        }
+    }
 
-        ~AutoTrace()
-        {
-            std::stringstream stream;
-            char thread_name[256];
-            pthread_getname_np(pthread_self(), thread_name,256);
-            //stream << "\033[31m";
+    ~AutoTrace()
+    {
+        std::stringstream stream;
+        char thread_name[256];
+        pthread_getname_np(pthread_self(), thread_name,256);
+        //stream << "\033[31m";
 #if defined(COMMON_DEBUG_TRACE) || defined(COMMON_DEBUG_TIMER)
-            stream <<item-- <<";"<<std::string(thread_name)<<";"<< rank << ";" << m_line << ";";
+        stream <<item-- <<";"<<std::string(thread_name)<<";"<< rank << ";" << m_line << ";";
 #endif
 #if defined(COMMON_DEBUG_TRACE)
-            stream  <<";";
+        stream  <<";";
 #endif
 #ifdef COMMON_DEBUG_TIMER
-            double end_time=timer.endTime();
-        stream  <<end_time<<";msecs;";
+        double end_time=timer.endTime();
+    stream  <<end_time<<";msecs;";
 #endif
 #if defined(COMMON_DEBUG_TRACE) || defined(COMMON_DEBUG_TIMER)
-            stream  <<"finish"<< endl;
-        stream << "\033[00m";
-        cout << stream.str();
+        stream  <<"finish"<< endl;
+    stream << "\033[00m";
+    cout << stream.str();
 #endif
-        }
-    private:
-        string m_line;
-    };
+    }
+private:
+    string m_line;
+};
 }
 
 
