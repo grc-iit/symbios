@@ -12,7 +12,7 @@
 #include <unistd.h>
 
 void FileIOClient::Read(Data &source, Data &destination) {
-    auto tracer_source = common::debug::AutoTrace("FileIOClient::Read", source, destination);
+    AUTO_TRACER("FileIOClient::Read", source, destination);
     const char *file_name = source.id_.c_str();
     int fileFd = open(file_name, O_RDONLY);
     if (fileFd == -1) {
@@ -44,7 +44,7 @@ void FileIOClient::Read(Data &source, Data &destination) {
 }
 
 void FileIOClient::Write(Data &source, Data &destination) {
-    auto tracer_source = common::debug::AutoTrace("FileIOClient::Read", source, destination);
+    AUTO_TRACER("FileIOClient::Read", source, destination);
     const char *dest_file_name = destination.id_.c_str();
     int fileFd = open(dest_file_name, O_RDWR | O_CREAT, 0644);
     if (fileFd == -1) {
@@ -68,7 +68,7 @@ void FileIOClient::Write(Data &source, Data &destination) {
 }
 
 bool FileIOClient::Remove(Data &source) {
-    auto tracer_source = common::debug::AutoTrace("FileIOClient::Remove", source);
+    AUTO_TRACER("FileIOClient::Remove", source);
     remove(source.id_.c_str());
     return true;
 }
