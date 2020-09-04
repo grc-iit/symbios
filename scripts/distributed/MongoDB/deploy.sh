@@ -153,7 +153,7 @@ sleep 5
 
 echo -e "${GREEN}Adding shards to mongos/query router ...${NC}"
 truncate -s 0 ${MONGO_PATH}/add_shard_to_mongos.log
-mongo --host ${router_server} --port ${MONGO_PORT} < ${MONGO_PATH}/.js >> ${MONGO_PATH}/add_shard_to_mongos.log
+mongo --host ${router_server} --port ${MONGO_PORT} < ${MONGO_PATH}/add_shard_to_mongos.js >> ${MONGO_PATH}/add_shard_to_mongos.log
 cat ${MONGO_PATH}/add_shard_to_mongos.log | grep -i ok
 
 echo -e "${GREEN}Enabling sharding${NC}"
