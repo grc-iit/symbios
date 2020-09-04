@@ -128,6 +128,10 @@ int main(int argc, char * argv[]) {
     //Generate test data
     if(rank == 0) {
         FILE *fp = std::fopen(model_path.c_str(), "w");
+        if(fp == nullptr) {
+            std::cout << "Can't open model path: " << model_path << std::endl;
+            return 1;
+        }
         BinarySerializer serializer(nprocs * RECORD_SIZE);
         for(size_t i = 0; i < nprocs; ++i) {
             serializer.WriteFloat(0);

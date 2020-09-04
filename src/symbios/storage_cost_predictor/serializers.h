@@ -61,14 +61,14 @@ public:
 
     bool WriteUlong(size_t num) {
         if(buf_off_ + sizeof(size_t) > buf_size_) { return false; }
-        memcpy(data_, &num, sizeof(size_t));
+        memcpy(data_ + buf_off_, &num, sizeof(size_t));
         buf_off_ += sizeof(size_t);
         return true;
     }
 
     bool WriteFloat(float num) {
         if(buf_off_ + sizeof(float) > buf_size_) { return false; }
-        memcpy(data_, &num, sizeof(float));
+        memcpy(data_ + buf_off_, &num, sizeof(float));
         buf_off_ += sizeof(float);
         return true;
     }
