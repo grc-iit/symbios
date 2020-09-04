@@ -37,16 +37,6 @@ SHARD_SERVER_COUNT=`cat ${SERVER_HOSTFILE} | wc -l`
 SHARD_COPY_COUNT=1
 ROUTER_SERVER_COUNT=`cat ${ROUTER_SERVER_HOSTFILE} | wc -l`
 
-if [ -f ${CWD}/env.sh ]
-then
-  source ${CWD}/env.sh
-else
-  echo "env.sh does not exist, quiting ..."
-  exit
-fi
-
-source ~/.bash_aliases
-
 echo -e "${GREEN}============ Deploying MongoDB ... ============"
 echo -e "${GREEN}======== Number of config server: ${CONFIG_SERVER_COUNT} ========"
 echo -e "${GREEN}======== Number of shard server:  ${SHARD_SERVER_COUNT} ========"
