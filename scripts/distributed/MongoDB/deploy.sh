@@ -41,14 +41,13 @@ echo -e "${GREEN}============ Deploying MongoDB ... ============"
 echo -e "${GREEN}======== Number of config server: ${CONFIG_SERVER_COUNT} ========"
 echo -e "${GREEN}======== Number of shard server:  ${SHARD_SERVER_COUNT} ========"
 echo -e "${GREEN}======== Number of router server: ${ROUTER_SERVER_COUNT} ========"
-echo ""
 
 config_server_list=`head -${CONFIG_SERVER_COUNT} ${SERVER_HOSTFILE} | awk '{print $1}'`
 shard_server_list=`cat ${SERVER_HOSTFILE} | awk '{print $1}'`
 client_list=`cat ${ROUTER_SERVER_HOSTFILE} | awk '{print $1}'`
-echo -e "${CYAN}======== Config server: ${config_server_list} ========"
-echo -e "${CYAN}======== Shard server: ${shard_server_list} ========"
-echo -e "${CYAN}======== Router server: ${client_list} ========"
+echo -e "${CYAN}======== Config server: \n${config_server_list} ========"
+echo -e "${CYAN}======== Shard server: \n${shard_server_list} ========"
+echo -e "${CYAN}======== Router server: \n${client_list} ========"
 
 echo -e "${GREEN}Preparing config files ...${NC}"
 sed -i "s|clusterRole: .*|clusterRole: configsvr|" ${MONGOD_CONFIG_CONF_FILE}
@@ -96,6 +95,7 @@ wait
 echo -e "${GREEN}Starting config nodes ...${NC}"
 for config_server in ${config_server_list[@]}
 do
+  echo -e "${CYAN}${config_server}${NC}"
   ssh ${config_server} "numactl --interleave=all mongod --config ${SERVER_LOCAL_PATH}/${MONGOD_CONFIG_CONF_FILE} --fork" &
 done
 wait
