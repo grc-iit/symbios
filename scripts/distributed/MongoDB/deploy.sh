@@ -15,9 +15,9 @@ CONF_PATH=${4}
 DATABASE_NAME="integration"
 COLLECTION_NAME="symbios"
 
-SERVER_LOCAL_PATH="/mnt/hdd/${user}/MongoDB"
-CLIENT_LOCAL_PATH="/mnt/nvme/${user}/MongoDB"
-TMPFS_PATH="/dev/shm/${user}/MongoDB"
+SERVER_LOCAL_PATH="/mnt/hdd/${USER}/MongoDB"
+CLIENT_LOCAL_PATH="/mnt/nvme/${USER}/MongoDB"
+TMPFS_PATH="/dev/shm/${USER}/MongoDB"
 mongod_config_path=${SERVER_LOCAL_PATH}/mongod_config
 mongos_local_path=${CLIENT_LOCAL_PATH}/mongos
 mongod_shard_path=${SERVER_LOCAL_PATH}/mongod_shard

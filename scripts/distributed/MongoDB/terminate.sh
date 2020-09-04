@@ -9,9 +9,9 @@ CWD="$( pwd )"
 
 SERVER_HOSTFILE=${1}
 CLIENT_HOSTFILE=${2}
-SERVER_LOCAL_PATH="/mnt/hdd/${user}/MongoDB"
-CLIENT_LOCAL_PATH="/mnt/nvme/${user}/MongoDB"
-TMPFS_PATH="/dev/shm/${user}/MongoDB"
+SERVER_LOCAL_PATH="/mnt/hdd/${USER}/MongoDB"
+CLIENT_LOCAL_PATH="/mnt/nvme/${USER}/MongoDB"
+TMPFS_PATH="/dev/shm/${USER}/MongoDB"
 
 SERVERS=($(cat ${SERVER_HOSTFILE}))
 CLIENTS=($(cat ${CLIENT_HOSTFILE}))
