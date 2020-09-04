@@ -65,14 +65,14 @@ done
 echo -e "${GREEN}Initializing config replica set${NC}"
 first_config_server="${CONFIG_SERVERS[0]}"
 second_config_server="${CONFIG_SERVERS[1]}"
-sed -i "s|_id : 0, host : \".*|_id : 0, host : \"${first_config_server}:${MONGO_PORT}\" },|" conf_replica_init.js
-sed -i "s|_id : 1, host : \".*|_id : 1, host : \"${second_config_server}:${MONGO_PORT}\" }|" conf_replica_init.js
-mongo --host "${first_config_server}" --port ${MONGO_PORT} < conf_replica_init.js > conf_replica_init.log
-cat conf_replica_init.log | grep -i ok
-mongo --host "${first_config_server}" --port ${MONGO_PORT} --eval "rs.isMaster()" > conf_replica_init.log
+sed -i "s|_id : 0, host : \".*|_id : 0, host : \"${first_config_server}:${MONGO_PORT}\" },|" ${CONF_PATH}/conf_replica_init.js
+sed -i "s|_id : 1, host : \".*|_id : 1, host : \"${second_config_server}:${MONGO_PORT}\" }|" ${CONF_PATH}/conf_replica_init.js
+mongo --host "${first_config_server}" --port ${MONGO_PORT} < ${CONF_PATH}/conf_replica_init.js > ${CONF_PATH}/conf_replica_init.log
+cat ${CONF_PATH}/conf_replica_init.log | grep -i ok
+mongo --host "${first_config_server}" --port ${MONGO_PORT} --eval "rs.isMaster()" > ${CONF_PATH}/conf_replica_init.log
 cat conf_replica_init.log | grep -i "ismaster\|configsvr"
-mongo --host "${first_config_server}" --port ${MONGO_PORT} --eval "rs.status()" > conf_replica_init.log
-cat conf_replica_init.log | grep -i "ok\|\"name\"\|stateStr"
+mongo --host "${first_config_server}" --port ${MONGO_PORT} --eval "rs.status()" > ${CONF_PATH}/conf_replica_init.log
+cat ${CONF_PATH}/conf_replica_init.log | grep -i "ok\|\"name\"\|stateStr"
 
 SHARD_BASE_PORT_BAKE=${SHARD_BASE_PORT}
 echo -e "${GREEN}Starting shard nodes ...${NC}"
@@ -101,11 +101,11 @@ truncate -s 0 add_shard_to_mongos.js
 count=0
 for shard_server in ${SHARD_SERVERS}
 do
-  truncate -s 0 shard_replica_init.js
+  truncate -s 0 ${MONGO_PATH}/shard_replica_init.js
   printf "sh.addShard(\"${SHARD_REPL_NAME}$((count+1))/" >> add_shard_to_mongos.js
-  printf "rs.initiate(\n{\n" > shard_replica_init.js
-  printf "\t_id : \"${SHARD_REPL_NAME}$((count+1))\",\n" >> shard_replica_init.js
-  printf "\tmembers: [\n" >> shard_replica_init.js
+  printf "rs.initiate(\n{\n" > ${MONGO_PATH}/shard_replica_init.js
+  printf "\t_id : \"${SHARD_REPL_NAME}$((count+1))\",\n" >> ${MONGO_PATH}/shard_replica_init.js
+  printf "\tmembers: [\n" >> ${MONGO_PATH}/shard_replica_init.js
 
   number=0
   for ((i=0;i<"SHARD_COPY_COUNT";i++))
@@ -114,22 +114,22 @@ do
     current_server=`sed -n $((nodeid+1))p ${CWD}/servers | awk '{print $1}'`
     if [[ ${i} != $((SHARD_COPY_COUNT-1)) ]]
     then
-      printf "\t\t{ _id :a %s, host : \"%s\" },\n" ${number} ${current_server}:$((SHARD_BASE_PORT_BAKE+count)) >> shard_replica_init.js
+      printf "\t\t{ _id :a %s, host : \"%s\" },\n" ${number} ${current_server}:$((SHARD_BASE_PORT_BAKE+count)) >> ${MONGO_PATH}/shard_replica_init.js
       printf "${current_server}:$((SHARD_BASE_PORT_BAKE+count))," >> add_shard_to_mongos.js
     else
-      printf "\t\t{ _id : %s, host : \"%s\" }\n" ${number} ${current_server}:$((SHARD_BASE_PORT_BAKE+count)) >> shard_replica_init.js
+      printf "\t\t{ _id : %s, host : \"%s\" }\n" ${number} ${current_server}:$((SHARD_BASE_PORT_BAKE+count)) >> ${MONGO_PATH}/shard_replica_init.js
       printf "${current_server}:$((SHARD_BASE_PORT_BAKE+count))\")\n" >> add_shard_to_mongos.js
     fi
       number=$((number+1))
   done
 
-  printf "\t]\n}\n)\n" >> shard_replica_init.js
-  cat shard_replica_init.js
-  mongo --host ${current_server} --port $((SHARD_BASE_PORT_BAKE+count)) < shard_replica_init.js > shard_replica_init.log
+  printf "\t]\n}\n)\n" >> ${MONGO_PATH}/shard_replica_init.js
+  cat ${MONGO_PATH}/shard_replica_init.js
+  mongo --host ${current_server} --port $((SHARD_BASE_PORT_BAKE+count)) < ${MONGO_PATH}/shard_replica_init.js > ${MONGO_PATH}/shard_replica_init.log
   echo -e "${CYAN}Finish configuring shard server ${current_server}:$((SHARD_BASE_PORT_BAKE+count))${NC}"
   count=$((count+1))
 done
-cat shard_replica_init.log | grep -i ok
+cat ${MONGO_PATH}/shard_replica_init.log | grep -i ok
 
 echo -e "${GREEN}Starting router nodes ...${NC}"
 mongos_cmd="mongos --configdb \"${CONFIG_REPL_NAME}/"
