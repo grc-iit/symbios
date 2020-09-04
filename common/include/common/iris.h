@@ -20,7 +20,7 @@ typedef enum IOLib {
     IRIS,
     NIOBE,
     SYMBIOS
-};
+} IOLib;
 
 typedef enum OPType {
     READ,
@@ -28,7 +28,7 @@ typedef enum OPType {
     FOPEN,
     LSEEK,
     FCLOSE
-};
+} OPType;
 
 
 typedef struct DataDescriptor {

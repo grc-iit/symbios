@@ -13,6 +13,7 @@
 #include <iomanip>
 #include <common/debug.h>
 #include <mpi.h>
+#include <common/iris.h>
 
 class trace_replayer {
 public:
@@ -27,7 +28,7 @@ public:
 
   static int replay_trace(std::string traceFile,
                           std::string filename, int repetitions,
-                          int rank, int mode) {
+                          int rank, IOLib mode) {
       /*Initialization of some stuff*/
       FILE* trace;
       FILE* file = nullptr;

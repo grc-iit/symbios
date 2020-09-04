@@ -2,7 +2,7 @@
 // Created by neeraj on 9/1/20.
 //
 
-#include "iris.h"
+#include <common/iris.h>
 #include <common/debug.h>
 #include <symbios/client/client.h>
 
@@ -25,7 +25,6 @@ int main(int argc, char * argv[]){
     }
 
     std::string distributionMode;
-
     if(argc > 1){
         SYMBIOS_CONF->CONFIGURATION_FILE=argv[1];
     }
@@ -48,6 +47,7 @@ int main(int argc, char * argv[]){
     COMMON_DBGVAR(objs);
 
     doOp operation(type_);
+
     for (auto &i : objs){
         auto data_obj = Data();
         data_obj.id_= i.id_;

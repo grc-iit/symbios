@@ -46,7 +46,6 @@ class ReplayArgs : public common::args::ArgMap {
 int main(int argc, char * argv[]){
     MPI_Init(&argc, &argv);
     ReplayArgs args(argc, argv);
-
     int reps = args.GetIntOpt("-r");
     int mode = args.GetIntOpt("-m");
     std::string trace_path = args.GetStringOpt("-t");
@@ -55,7 +54,7 @@ int main(int argc, char * argv[]){
     MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
     trace_replayer tr;
     tr.prepare_data(trace_path + boost::filesystem::path::preferred_separator + "CM1.csv");
-    tr.replay_trace(trace_path + boost::filesystem::path::preferred_separator + "CM1.csv", output_path + "/cm_out.csv", reps, my_rank, mode);
+    tr.replay_trace(trace_path + boost::filesystem::path::preferred_separator + "CM1.csv", output_path + "cm_out.csv", reps, my_rank, mode);
     tr.prepare_data(trace_path + boost::filesystem::path::preferred_separator + "Kmeans.csv");
     tr.replay_trace(trace_path + boost::filesystem::path::preferred_separator + "Kmeans.csv", output_path + boost::filesystem::path::preferred_separator + "kmeans_out.csv", reps, my_rank, mode);
     MPI_Finalize();
