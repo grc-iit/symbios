@@ -27,7 +27,7 @@ public:
 
   static int replay_trace(std::string traceFile,
                           std::string filename, int repetitions,
-                          int rank) {
+                          int rank, int mode) {
       /*Initialization of some stuff*/
       FILE* trace;
       FILE* file = nullptr;
