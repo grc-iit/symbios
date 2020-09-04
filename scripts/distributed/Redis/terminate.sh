@@ -21,4 +21,4 @@ EOF
 done
 echo -e "${GREEN}Redis is stopped${NC}"
 
-rm -rf "${LOG_DIR}"/*
+rm -rf ${LOG_DIR}/*

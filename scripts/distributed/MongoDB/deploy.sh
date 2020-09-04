@@ -6,20 +6,20 @@ CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
 CWD="$( pwd )"
-SERVER_HOSTFILE=@1
-ROUTER_SERVER_HOSTFILE=@2
-CONFIG_SERVER_COUNT=@3
-MONGO_PATH=@4
-DATABASE_NAME=@5
-COLLECTION_NAME=@6
+SERVER_HOSTFILE=${1}
+ROUTER_SERVER_HOSTFILE=${2}
+CONFIG_SERVER_COUNT=${3}
+MONGO_PATH=${4}
+DATABASE_NAME=${5}
+COLLECTION_NAME=${6}
 
 mongod_config_path=${MONGO_PATH}/mongod_config
 mongod_shard_path=${MONGO_PATH}/mongod_shard
 mongos_local_path=${MONGO_PATH}/mongos
 
-CONFIG_SERVERS=`head -${CONFIG_SERVER_COUNT} ${CWD}/servers | awk '{print $1}'`
-SHARD_SERVERS=`cat ${CWD}/servers | awk '{print $1}'`
-ROUTER_SERVERS="($(cat "${ROUTER_SERVER_HOSTFILE}"))"
+CONFIG_SERVERS=$(head -${CONFIG_SERVER_COUNT} $SERVER_HOSTFILE | awk '{print $1}')
+SHARD_SERVERS=$(cat $SERVER_HOSTFILE | awk '{print $1}')
+ROUTER_SERVERS=$(cat ROUTER_SERVER_HOSTFILE | awk '{print $1}')
 SHARD_SERVER_COUNT=${#SHARD_SERVERS[@]}
 
 CONFIG_REPL_NAME=replconfig01
@@ -28,7 +28,10 @@ SHARD_REPL_NAME=shard
 SHARD_COPY_COUNT=1
 SHARD_BASE_PORT=27100
 MONGO_PORT=27017
-CONFIG_SERVER_COUNT=2
+
+echo -e "${CYAN}Config Servers :${NC}${CONFIG_SERVERS[*]}"
+echo -e "${CYAN}Shard Servers :${NC}${SHARD_SERVERS[*]}"
+echo -e "${CYAN}Router Servers :${NC}${ROUTER_SERVERS[*]}"
 
 echo -e "${GREEN}============ Deploying MongoDB ============${NC}"
 
