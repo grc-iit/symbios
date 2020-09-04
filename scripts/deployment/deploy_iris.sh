@@ -18,8 +18,7 @@ LOG_DIR="${HOME}/symbios_data/Redis"
 #MONGO
 SERVER_HOSTFILE="${HOME}/symbios/scripts/distributed/hostfile/mongo_server_iris"
 CONFIG_SERVER_COUNT=2
-MONGO_PATH="${HOME}/symbios_data/MongoDB"
 
 ${RUN_ORANGE} "${conf_file}" "${server_dir}" "${client_dir}" "${server_hostfile}" "${client_hostfile}"
 ${RUN_REDIS} "${HOSTFILE}" "${LOG_DIR}"
-${RUN_MONGO} "${SERVER_HOSTFILE}" "${client_hostfile}" "${CONFIG_SERVER_COUNT}" "${MONGO_PATH}"
+${RUN_MONGO} "${SERVER_HOSTFILE}" "${client_hostfile}" "${CONFIG_SERVER_COUNT}"

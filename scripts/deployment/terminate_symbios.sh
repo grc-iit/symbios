@@ -14,9 +14,6 @@ client_hostfile="${HOME}/symbios/scripts/distributed/hostfile/client"
 #REDIS
 LOG_DIR="${HOME}/symbios_data/Redis"
 
-#MONGO
-MONGO_PATH="${HOME}/symbios_data/MongoDB"
-
 ${RUN_ORANGE} "${conf_file}" "${server_dir}" "${client_dir}" "${server_hostfile}" "${client_hostfile}"
 ${RUN_REDIS} "${server_hostfile}" "${LOG_DIR}"
-${RUN_MONGO} "${server_hostfile}" "${client_hostfile}" "${MONGO_PATH}"
+${RUN_MONGO} "${server_hostfile}" "${client_hostfile}"

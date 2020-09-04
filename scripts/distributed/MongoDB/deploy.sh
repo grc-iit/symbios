@@ -11,7 +11,6 @@ CWD="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 SERVER_HOSTFILE=${1}
 ROUTER_SERVER_HOSTFILE=${2}
 CONFIG_SERVER_COUNT=${3}
-CONF_PATH=${4}
 DATABASE_NAME="integration"
 COLLECTION_NAME="symbios"
 
