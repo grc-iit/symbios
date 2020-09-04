@@ -78,21 +78,21 @@ config_server_list=`head -${CONFIG_SERVER_COUNT} ${SERVER_HOSTFILE} | awk '{prin
 for server in ${config_server_list[@]}
 do
   echo -e "${CYAN}${server}${NC}"
-  ssh ${server} "mkdir -p ${mongod_config_path}" ; rsync -az ${CWD}/${MONGOD_CONFIG_CONF_FILE} ${server}:${SERVER_LOCAL_PATH}/${MONGOD_CONFIG_CONF_FILE}
+  ssh ${server} "mkdir -p ${mongod_config_path};mkdir -p ${TMPFS_PATH}" ; rsync -az ${CWD}/${MONGOD_CONFIG_CONF_FILE} ${server}:${SERVER_LOCAL_PATH}/${MONGOD_CONFIG_CONF_FILE}
 done
 wait
 client_list=`cat ${ROUTER_SERVER_HOSTFILE} | awk '{print $1}'`
 for client in ${client_list[@]}
 do
   echo -e "${CYAN}${client}${NC}"
-  ssh ${client} "mkdir -p ${mongos_local_path}" ; rsync -az ${CWD}/${MONGOS_CONF_FILE} ${client}:${CLIENT_LOCAL_PATH}/${MONGOS_CONF_FILE}
+  ssh ${client} "mkdir -p ${mongos_local_path};mkdir -p ${TMPFS_PATH}" ; rsync -az ${CWD}/${MONGOS_CONF_FILE} ${client}:${CLIENT_LOCAL_PATH}/${MONGOS_CONF_FILE}
 done
 wait
 shard_server_list=`cat ${SERVER_HOSTFILE} | awk '{print $1}'`
 for server in ${shard_server_list[@]}
 do
   echo -e "${CYAN}${server}${NC}"
-  ssh ${server} "mkdir -p ${mongod_shard_path}" ; rsync -az ${CWD}/${MONGOD_SHARD_CONF_FILE} ${server}:${SERVER_LOCAL_PATH}/${MONGOD_SHARD_CONF_FILE}
+  ssh ${server} "mkdir -p ${mongod_shard_path};mkdir -p ${TMPFS_PATH}" ; rsync -az ${CWD}/${MONGOD_SHARD_CONF_FILE} ${server}:${SERVER_LOCAL_PATH}/${MONGOD_SHARD_CONF_FILE}
 done
 wait
 
