@@ -62,6 +62,24 @@ add_dependencies(symbios_server symbios_server_lib)
 target_link_libraries(symbios_server symbios_server_lib)
 target_link_libraries(symbios_server  -lmpi)
 
+
+add_custom_target(copy_conf)
+add_custom_command(
+        TARGET copy_conf
+        COMMAND ${CMAKE_COMMAND} -E copy
+        ${CMAKE_CURRENT_SOURCE_DIR}/conf
+        ${CMAKE_INSTALL_PREFIX})
+
+add_custom_target(copy_scripts)
+add_custom_command(
+        TARGET copy_scripts
+        COMMAND ${CMAKE_COMMAND} -E copy
+        ${CMAKE_CURRENT_SOURCE_DIR}/scripts
+        ${CMAKE_INSTALL_PREFIX})
+
+add_dependencies(symbios copy_conf)
+add_dependencies(symbios copy_scripts)
+
 # add benchmark tool
 add_subdirectory(benchmark)
 add_subdirectory(common/test)
