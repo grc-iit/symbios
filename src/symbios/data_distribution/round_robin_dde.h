@@ -10,13 +10,13 @@
 
 class RoundRobinDDE: public DataDistributionEngine {
 private:
-    //basket::global_sequence sequence;
+    basket::global_sequence sequence;
     uint16_t index;
 public:
     /*
      * Constructor
      */
-    RoundRobinDDE():/*sequence(),*/index(0){}
+    RoundRobinDDE():sequence(),index(0){}
     /*
      * Methods
      */

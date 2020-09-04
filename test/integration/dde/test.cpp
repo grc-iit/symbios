@@ -86,7 +86,9 @@ int main(int argc, char* argv[]){
     std::string config = args.GetStringOpt("-c");
     SYMBIOS_CONF->CONFIGURATION_FILE=config.data();
     BASKET_CONF->BACKED_FILE_DIR=SYMBIOS_CONF->SERVER_DIR;
-    SYMBIOS_CONF->ConfigureSymbiosServer();
+    /*if(rank == 0)*/ SYMBIOS_CONF->ConfigureSymbiosServer();
+    /*MPI_Barrier(MPI_COMM_WORLD);
+    if(rank != 0) SYMBIOS_CONF->ConfigureSymbiosClient();*/
     int dde_i = args.GetIntOpt("-p");
     SYMBIOS_CONF->DATA_DISTRIBUTION_POLICY = static_cast<DataDistributionPolicy>(dde_i);
     SYMBIOS_CONF->RANDOM_SEED = args.GetIntOpt("-seed");
@@ -98,8 +100,12 @@ int main(int argc, char* argv[]){
     //distribution->Shape((double)request_size/sizeof(double));
 
     std::shared_ptr<DataDistributionEngine> engine;
-    engine = basket::Singleton<DataDistributionEngineFactory>::GetInstance()->GetDataDistributionEngine(SYMBIOS_CONF->DATA_DISTRIBUTION_POLICY);
-    MPI_Barrier(MPI_COMM_WORLD);
+   /* if(rank == 0)*/
+        engine = basket::Singleton<DataDistributionEngineFactory>::GetInstance()->GetDataDistributionEngine(SYMBIOS_CONF->DATA_DISTRIBUTION_POLICY);
+    /*MPI_Barrier(MPI_COMM_WORLD);
+    if(rank != 0)
+        engine = basket::Singleton<DataDistributionEngineFactory>::GetInstance()->GetDataDistributionEngine(SYMBIOS_CONF->DATA_DISTRIBUTION_POLICY);
+    MPI_Barrier(MPI_COMM_WORLD);*/
     auto request = Data();
     request.position_ = 0;
     request.storage_index_ = 0;
