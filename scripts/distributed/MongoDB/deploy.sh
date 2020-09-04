@@ -96,7 +96,7 @@ echo -e "${GREEN}Starting config nodes ...${NC}"
 for config_server in ${config_server_list[@]}
 do
   echo -e "${CYAN}${config_server}${NC}"
-  ssh ${config_server} "numactl --interleave=all mongod --config ${SERVER_LOCAL_PATH}/${MONGOD_CONFIG_CONF_FILE} --fork" &
+  ssh ${config_server} "numactl --interleave=all mongod --config ${SERVER_LOCAL_PATH}/${MONGOD_CONFIG_CONF_FILE} --fork"
 done
 wait
 sleep 5
