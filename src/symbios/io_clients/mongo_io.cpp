@@ -16,7 +16,7 @@
 #include <symbios/io_clients/mongo_io.h>
 
 void MongoIOClient::Read(Data &source, Data &destination) {
-  auto tracer_source = common::debug::AutoTrace("MongoIOClient::Read", source, destination);
+  AUTO_TRACER("MongoIOClient::Read", source, destination);
 mongocxx::collection file = client[mongo_solution->database_.c_str()].collection(
             mongo_solution->collection_.c_str());
     bsoncxx::stdx::optional<bsoncxx::document::value> maybe_result =
@@ -38,8 +38,7 @@ mongocxx::collection file = client[mongo_solution->database_.c_str()].collection
 }
 
 void MongoIOClient::Write(Data &source, Data &destination) {
-   auto tracer_source =
-      common::debug::AutoTrace("MongoIOClient::Write", source,destination);
+    AUTO_TRACER("MongoIOClient::Write", source,destination);
     mongocxx::collection file = client[mongo_solution->database_.c_str()].collection(
             mongo_solution->collection_.c_str());
     bool exists = false;
@@ -96,8 +95,7 @@ void MongoIOClient::Write(Data &source, Data &destination) {
 }
 
 bool MongoIOClient::Remove(Data &source) {
-  auto tracer =
-      common::debug::AutoTrace("MongoIOClient::Remove", source);
+    AUTO_TRACER("MongoIOClient::Remove", source);
     mongocxx::collection file = client[mongo_solution->database_.c_str()].collection(
             mongo_solution->collection_.c_str());
     file.delete_many(bsoncxx::builder::basic::make_document(

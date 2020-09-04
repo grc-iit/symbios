@@ -74,7 +74,6 @@ git checkout v1.1.0 -b v1.1.0
 mkdir build
 cd build
 cmake .. -DCMAKE_CXX_FLAGS:STRING="-Wno-error=class-memaccess -Wno-error=implicit-fallthrough="  -DCMAKE_INSTALL_PREFIX=$DEP_INSTALL -DINCLUDE_INSTALL_DIR=$DEP_INSTALL/include -DLIB_INSTALL_DIR=$DEP_INSTALL/lib -DCMAKE_INSTALL_DIR=$DEP_INSTALL/cmake -DDOC_INSTALL_DIR=$DEP_INSTALL/share/doc/RapidJSON
-make
 make -j8
 make install
 ```
@@ -97,18 +96,33 @@ make -j8
 make install
 ```
 
+Make sure to do this before you execute symbios
+(every single time)
+
+```bash
+export DLIB_NUM_THREADS=1
+```
+
 ### DLIB
 
 ```bash
-wget http://dlib.net/files/dlib-19.21.tar.bz2
-tar -xjf dlib-19.21.tar.bz2
-cd dlib-19.21
+wget http://dlib.net/files/dlib-19.17.tar.bz2
+tar -xjf dlib-19.17.tar.bz2
+cd dlib-19.17
 mkdir build
 cd build
-cmake -DCMAKE_INSTALL_PREFIX=$DEP_INSTALL ../ -DBUILD_SHARED_LIBS=1 -DCMAKE_INSTALL_PREFIX=$DEP_INSTALL
+cmake  ../ -DCMAKE_INSTALL_PREFIX=$DEP_INSTALL -DBUILD_SHARED_LIBS=1 -DCMAKE_INSTALL_PREFIX=$DEP_INSTALL
 make -j8
 make install
 ```
+
+Make sure to do this before you execute symbios
+(every single time)
+
+```bash
+export OPENBLAS_NUM_THREADS=1
+```
+
 
 ### HCL
 HCL is dependendat upon:
@@ -138,7 +152,6 @@ A C library for interacting with Redis. Redis-plus-plus depends on it.
 wget https://github.com/redis/hiredis/archive/v1.0.0.tar.gz  
 tar -xzf v1.0.0.tar.gz  
 cd hiredis*  
-make  
 sed -i 's&INSTALL_INCLUDE_PATH= $(DESTDIR)$(PREFIX)/$(INCLUDE_PATH)&INSTALL_INCLUDE_PATH=$(PREFIX)/include/hiredis&g' ./Makefile
 sed -i 's&INSTALL_LIBRARY_PATH= $(DESTDIR)$(PREFIX)/$(LIBRARY_PATH)&INSTALL_LIBRARY_PATH=$(PREFIX)/lib&g' ./Makefile
 sed -i 's&INSTALL_PKGCONF_PATH= $(INSTALL_LIBRARY_PATH)/$(PKGCONF_PATH)&INSTALL_PKGCONF_PATH=$(INSTALL_LIBRARY_PATH)/pkgconfig&g' ./Makefile

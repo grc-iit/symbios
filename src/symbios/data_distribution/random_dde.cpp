@@ -12,7 +12,7 @@ RandomDDE::RandomDDE() { srand((unsigned) SYMBIOS_CONF->RANDOM_SEED); }
 
 std::vector<DataDistribution> RandomDDE::Distribute(Data &request) {
 
-    auto tracer = common::debug::AutoTrace("RandomDDE::Distribute", request);
+    AUTO_TRACER("RandomDDE::Distribute", request);
     auto distributions = std::vector<DataDistribution>();
     auto random_number = rand();
     auto size = SYMBIOS_CONF->STORAGE_SOLUTIONS.size();

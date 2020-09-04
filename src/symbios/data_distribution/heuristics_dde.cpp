@@ -15,7 +15,7 @@ HeuristicsDDE::HeuristicsDDE() : maps() {
 }
 
 std::vector<DataDistribution> HeuristicsDDE::Distribute(Data &request) {
-    auto tracer = common::debug::AutoTrace("HeuristicsDDE::Distribute", request);
+    AUTO_TRACER("HeuristicsDDE::Distribute", request);
     auto distributions = std::vector<DataDistribution>();
     int16_t selected_solution_index = 0;
     COMMON_DBGVAR(request.data_size_);

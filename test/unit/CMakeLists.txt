@@ -75,14 +75,14 @@ foreach (test_file ${test_files})
     set_property(TEST ${test_name} APPEND PROPERTY ENVIRONMENT "RUN_DIR=$ENV{RUN_DIR}")
 endforeach ()
 
-
+message(${CMAKE_CXX_FLAGS})
 set(NREQS_LIST 100 1000 10000 100000 1000000)
 set(NPROCS_LIST 1 2 4 8 16 32)
 set(MODEL_FILE ${CMAKE_BINARY_DIR}/test_data.csv)
 add_executable(unit_storage_cost_predictor storage_cost_predictor/test.cpp)
 target_link_libraries(unit_storage_cost_predictor symbios_server_lib)
 target_link_libraries(unit_storage_cost_predictor ${LIBS})
-#set_target_properties(unit_storage_cost_predictor PROPERTIES COMPILE_FLAGS -O3)
+set_target_properties(unit_storage_cost_predictor PROPERTIES COMPILE_FLAGS "-O3 -ffast-math")
 foreach(NREQS ${NREQS_LIST})
     foreach(NPROCS ${NPROCS_LIST})
         add_test(NAME sc_predictor_${NREQS}_${NPROCS} COMMAND

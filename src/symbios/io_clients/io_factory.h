@@ -19,7 +19,7 @@ public:
     IOFactory(){}
 
     std::shared_ptr<IOClient> GetIOClient(uint16_t storage_index){
-        auto tracer_source = common::debug::AutoTrace("IOFactory::GetIOClient", storage_index);
+        AUTO_TRACER("IOFactory::GetIOClient", storage_index);
         auto solution = SYMBIOS_CONF->STORAGE_SOLUTIONS[storage_index];
         switch (solution->io_client_type_){
             case IOClientType::FILE_IO:
