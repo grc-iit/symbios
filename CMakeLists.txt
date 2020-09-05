@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(symbios)
+project(symbios VERSION 1.0.0 DESCRIPTION "Symbios")
 set(INSTALL_DIR $ENV{INSTALL_DIR})
 #string(REPLACE ":" "/;" MODULE_LIST $ENV{PATH})
 #string(REPLACE ":" "/;" MODULE_LIB_LIST $ENV{LD_LIBRARY_PATH})
