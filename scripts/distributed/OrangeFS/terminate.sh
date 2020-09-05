@@ -16,9 +16,10 @@ conf_file=${1}
 server_dir=${2}
 client_dir=${3}
 server_hostfile=${4}
+client_hostfile=${5}
 
 #General Variables
-client_list=($(cat ${CWD}/hostfiles/hostfile_clients))
+client_list=($(cat ${client_hostfile}))
 server_list=($(cat ${server_hostfile}))
 
 #Stop clients

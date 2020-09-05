@@ -1,4 +1,47 @@
 # symbios
+
+
+## Setup spack
+
+## On local
+
+```bash
+git clone https://github.com/scs-lab/spack.git
+cd spack
+export SPACK_INSTALL_DIR=$HOME/software/spack/0.15.4
+export BINARY_DIR=$HOME/software/spackbinary
+./install.sh 0.15.4 $BINARY_DIR $SPACK_INSTALL_DIR
+```
+
+
+### On ares
+```bash
+git clone https://github.com/scs-lab/spack.git
+cd spack
+export SPACK_INSTALL_DIR=$HOME/software/spack/0.15.4
+export BINARY_DIR=$HOME/software/spackbinary
+./install_client.sh 0.15.4 $BINARY_DIR $SPACK_INSTALL_DIR
+```
+## Installation using spack
+
+### Local
+```bash
+spack install gcc@9.3.0
+spack load gcc@9.3.0
+spack compiler find
+spack install symbios%gcc@9.3.0
+spack load symbios%gcc@9.3.0
+```
+
+### On ares
+```bash
+spack load symbios%gcc@9.3.0
+spack load gcc@9.3.0
+spack compiler find
+spack install symbios%gcc@9.3.0
+spack load symbios%gcc@9.3.0
+```
+
 ## Dependencies
 
 ### Environment
