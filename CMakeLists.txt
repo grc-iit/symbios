@@ -40,6 +40,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
     VERSION ${PROJECT_VERSION}
     SOVERSION 1
     PUBLIC_HEADER include/symbios/symbios.h)
+message(info "${CMAKE_INSTALL_INCLUDEDIR}")
 install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
 target_link_libraries(symbios -lbasket -lrpc  -lboost_system -lboost_filesystem -ldl)
