@@ -36,6 +36,12 @@ set(SYMBIOS_LIB_SRC ${SYMBIOS_COMMON_SRC} include/symbios/client/client.h src/sy
 
 # add symbios lib
 add_library(symbios SHARED ${SYMBIOS_LIB_SRC})
+set_target_properties(${PROJECT_NAME} PROPERTIES
+    VERSION ${PROJECT_VERSION}
+    SOVERSION 1
+    PUBLIC_HEADER include/symbios/symbios.h)
+install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+
 target_link_libraries(symbios -lbasket -lrpc  -lboost_system -lboost_filesystem -ldl)
 # TODO: add any required libraries
 
@@ -83,6 +89,18 @@ add_custom_command(
 
 add_dependencies(symbios copy_conf)
 add_dependencies(symbios copy_scripts)
+
+install(TARGETS ${PROJECT_NAME}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+
+if (DEFINED ENV{PKG_CONFIG_PATH})
+   install(FILES ${CMAKE_BINARY_DIR}/symbios.pc
+                  DESTINATION $ENV{PKG_CONFIG_PATH}/pkgconfig)
+else()
+   install(FILES ${CMAKE_BINARY_DIR}/symbios.pc
+                  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/pkgconfig)
+endif()
 
 # add benchmark tool
 add_subdirectory(benchmark)
