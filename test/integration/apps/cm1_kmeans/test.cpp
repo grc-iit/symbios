@@ -57,10 +57,10 @@ int main(int argc, char * argv[]){
     int my_rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
     trace_replayer tr;
-    tr.prepare_data(trace_path + boost::filesystem::path::preferred_separator + "CM1.csv", output_path + boost::filesystem::path::preferred_separator + "cm1_out.csv", reps, my_rank, (IOLib)mode, chunk);
-    tr.replay_trace(trace_path + boost::filesystem::path::preferred_separator + "CM1.csv", output_path + boost::filesystem::path::preferred_separator + "cm1_out.csv", reps, my_rank, (IOLib)mode, chunk);
-    tr.prepare_data(trace_path + boost::filesystem::path::preferred_separator + "Kmeans.csv", output_path + boost::filesystem::path::preferred_separator + "kmeans_out.csv", reps, my_rank, (IOLib)mode, chunk);
-    tr.replay_trace(trace_path + boost::filesystem::path::preferred_separator + "Kmeans.csv", output_path + boost::filesystem::path::preferred_separator + "kmeans_out.csv", reps, my_rank, (IOLib)mode, chunk);
+    // tr.prepare_data(trace_path + boost::filesystem::path::preferred_separator + "CM1.csv", output_path + boost::filesystem::path::preferred_separator + "cm1_out.csv", reps, my_rank, (IOLib)mode, chunk);
+    // tr.replay_trace(trace_path + boost::filesystem::path::preferred_separator + "CM1.csv", output_path + boost::filesystem::path::preferred_separator + "cm1_out.csv", reps, my_rank, (IOLib)mode, chunk);
+    // tr.prepare_data(trace_path + boost::filesystem::path::preferred_separator + "Kmeans.csv", output_path + boost::filesystem::path::preferred_separator + "kmeans_out.csv", reps, my_rank, (IOLib)mode, chunk);
+    // tr.replay_trace(trace_path + boost::filesystem::path::preferred_separator + "Kmeans.csv", output_path + boost::filesystem::path::preferred_separator + "kmeans_out.csv", reps, my_rank, (IOLib)mode, chunk);
     MPI_Finalize();
     return 0;
 }

@@ -35,7 +35,7 @@ typedef enum OPType {
 typedef struct DataDescriptor {
     CharStruct id_;
     size_t position_; // read/write start position
-    uint16_t size;
+    size_t size;
     uint chunk_index;
 };
 

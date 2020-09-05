@@ -24,6 +24,8 @@ public:
         FILE* trace;
         FILE *file;
         char* line = NULL;
+        char *readbuf;
+        char *writebuf;
         int comm_size;
         size_t len=0;
         ssize_t readsize;
@@ -82,7 +84,7 @@ public:
                         lh.run(OPType::FCLOSE, 0, 0, NULL);
                     }
                 } else if (operation == "WRITE") {
-                    char* writebuf = (char *)randstring(request_size);
+                    writebuf = (char *)randstring(request_size);
                     if (mode == IOLib::POSIX) {
                         fseek(file, (size_t) offset, SEEK_SET);
                         fwrite(writebuf, sizeof(char), (size_t) request_size, file);
@@ -90,17 +92,18 @@ public:
                     else {
                         lh.run(OPType::WRITE, offset, request_size, writebuf);
                     }
-                    if(writebuf) free(writebuf);
+                    free(writebuf);
                 } else if (operation == "READ") {
-                    char* readbuf = (char*)malloc((size_t) request_size);
+                    readbuf = (char*) malloc((size_t) request_size + 1);
                     if (mode == IOLib::POSIX) {
                         fseek(file, (size_t) offset, SEEK_SET);
                         fread(readbuf, sizeof(char), (size_t) request_size, file);
                     }
                     else {
-                        lh.run(OPType::READ, offset, request_size, readbuf);
+                        std::cout << "read size: " << request_size << std::endl;
+                        lh.run(OPType::READ, offset, request_size, NULL);
                     }
-                    if(readbuf) free(readbuf);
+                    free(readbuf);
                 } else if (operation == "LSEEK") {
                     if (mode == IOLib::POSIX) {
                         fseek(file, (size_t) offset, SEEK_SET);
@@ -135,7 +138,7 @@ public:
                       << average/repetitions
                       << "\n";
         }
-        if (line) free(line);
+        free(line);
 
         /*if( remove( "/home/anthony/temp/" ) != 0 )
           perror( "Error deleting file" );*/
@@ -145,6 +148,7 @@ public:
     static int prepare_data(std::string traceFile, std::string filename, int repetitions, int rank, IOLib mode, uint16_t chunk_size) {
       FILE* trace;
       FILE *file;
+      char *writebuf;
       char* line = NULL;
       size_t len=0;
       ssize_t readsize;
@@ -160,7 +164,7 @@ public:
 
       trace = fopen(traceFile.c_str(), "r");
 
-      int max_offset = 0;
+      long max_offset = 0;
       while ((readsize = getline(&line, &len, trace)) != -1){
           lineNumber++;
           word = strtok(line, ",");
@@ -178,7 +182,7 @@ public:
 
           } else if (operation == "READ") {
               // prepare trace file information by writing to filename for every read in tracefile
-              char* writebuf = randstring(request_size);
+              writebuf = randstring(request_size);
               if (mode == IOLib::POSIX) {
                   if (offset + request_size > max_offset) {
                       max_offset = offset + request_size;
@@ -187,7 +191,7 @@ public:
               else {
                   lh.run(OPType::WRITE, offset, request_size, writebuf);
               }
-              if (writebuf) free(writebuf);
+              free(writebuf);
           } else if (operation == "LSEEK") {
 
           }
@@ -198,12 +202,12 @@ public:
 
       if (mode == IOLib::POSIX) {
           file = fopen((filename+std::to_string(rank)).c_str(), "w+");
-          char* writebuf = randstring(max_offset);
+          writebuf = randstring(max_offset);
           fwrite(writebuf, sizeof(char), (size_t) max_offset, file);
-          if (writebuf) free(writebuf);
+          free(writebuf);
       }
 
-      if (line) free(line);
+      free(line);
 
       return 0;
   }
