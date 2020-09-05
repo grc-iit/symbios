@@ -27,6 +27,7 @@ export BINARY_DIR=$HOME/software/spackbinary
 ### Local
 ```bash
 spack install gcc@9.3.0
+spack load gcc@9.3.0
 spack compiler find
 spack install symbios%gcc@9.3.0
 spack load symbios%gcc@9.3.0
@@ -34,6 +35,10 @@ spack load symbios%gcc@9.3.0
 
 ### On ares
 ```bash
+spack load symbios%gcc@9.3.0
+spack load gcc@9.3.0
+spack compiler find
+spack install symbios%gcc@9.3.0
 spack load symbios%gcc@9.3.0
 ```
 
