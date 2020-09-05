@@ -52,7 +52,12 @@ void LibHandler::do_mapped_write(size_t offset, size_t request_size, char *data)
             auto data_obj = Data();
             data_obj.id_= i.id_;
             data_obj.position_=i.position_;
-            data_obj.buffer_ = data + (i.position_+i.chunk_index*max_obj_size);
+            data_obj.buffer_ = data + i.position_;
+            // memcpy(data_obj.buffer_, data + i.position_, i.size);
+            // std::cout << i.position_ << " " << i.chunk_index << " " << max_obj_size << std::endl;
+            // strncpy(data_obj.buffer_, data + (i.position_+i.chunk_index*max_obj_size), i.size);
+            // std::cout << "w: " << data_obj.buffer_ << std::endl;
+            std::cout << "w: " << i.position_ << " " << i.size << std::endl;
             data_obj.data_size_= i.size;
             data_obj.storage_index_ = db_type;
             COMMON_DBGVAR(data_obj);
@@ -112,16 +117,17 @@ void LibHandler::do_mapped_read(size_t offset, size_t request_size, char *data) 
             // data_obj.buffer_ = static_cast<char *>(malloc(data_obj.data_size_));
             data_obj.storage_index_ = db_type;
 
+            std::cout << "r: " << data_offset << " " << data_obj.data_size_ << std::endl;
             operation.Read(data_obj, data_obj);
             COMMON_DBGVAR2(data_obj, i);
-            std::cout<<'r'<<i.position_<<','<<i.size<<':'<<data_obj.buffer_<<std::endl;
-            // if (data_offset + data_obj.data_size_ > request_size) {
-            //     strncpy(data + data_offset, data_obj.buffer_, request_size);
-            //     break;
-            // }
-            // else {
-            //     strncpy(data + data_offset, data_obj.buffer_, data_obj.data_size_);
-            // }
+            // std::cout<<"r: "<<data_obj.buffer_<<std::endl;
+            if (data_offset + data_obj.data_size_ > request_size) {
+                memcpy(data + data_offset, data_obj.buffer_, request_size - data_offset);
+                break;
+            }
+            else {
+                memcpy(data + data_offset, data_obj.buffer_, data_obj.data_size_);
+            }
             // free(data_obj.buffer_);
             data_offset += data_obj.data_size_;
         }
@@ -134,19 +140,19 @@ void LibHandler::do_mapped_read(size_t offset, size_t request_size, char *data) 
             data_obj.id_= i.id_;
             data_obj.position_=i.position_;
             data_obj.data_size_= i.size;
-            data_obj.buffer_ = static_cast<char *>(malloc(data_obj.data_size_));
+            // data_obj.buffer_ = static_cast<char *>(malloc(data_obj.data_size_));
             data_obj.storage_index_ = db_type;
 
             client.LocateRequest(data_obj);
             COMMON_DBGVAR2(data_obj, i);
             // std::cout<<data_obj.buffer_<<std::endl;
-            // if (data_offset + data_obj.data_size_ > request_size) {
-            //     strncpy(data + data_offset, data_obj.buffer_, request_size);
-            //     break;
-            // }
-            // else {
-            //     strncpy(data + data_offset, data_obj.buffer_, data_obj.data_size_);
-            // }
+            if (data_offset + data_obj.data_size_ > request_size) {
+                memcpy(data + data_offset, data_obj.buffer_, request_size);
+                break;
+            }
+            else {
+                memcpy(data + data_offset, data_obj.buffer_, data_obj.data_size_);
+            }
             // free(data_obj.buffer_);
             data_offset += data_obj.data_size_;
         }
@@ -165,13 +171,13 @@ void LibHandler::do_mapped_read(size_t offset, size_t request_size, char *data) 
             client.LocateRequest(data_obj);
             COMMON_DBGVAR2(data_obj, i);
             // std::cout<<data_obj.buffer_<<std::endl;
-            // if (data_offset + data_obj.data_size_ > request_size) {
-            //     strncpy(data + data_offset, data_obj.buffer_, request_size);
-            //     break;
-            // }
-            // else {
-            //     strncpy(data + data_offset, data_obj.buffer_, data_obj.data_size_);
-            // }
+            if (data_offset + data_obj.data_size_ > request_size) {
+                memcpy(data + data_offset, data_obj.buffer_, request_size);
+                break;
+            }
+            else {
+                memcpy(data + data_offset, data_obj.buffer_, data_obj.data_size_);
+            }
             // free(data_obj.buffer_);
 
             data_offset += data_obj.data_size_;
@@ -216,7 +222,7 @@ std::vector<DataDescriptor> DataMapper::map(DataDescriptor &src){
         obj.id_=src.id_+ std::to_string(index);
         obj.position_ = curr_pos ;
         // (maxObjSize - (obj.position_ % maxObjSize))
-        obj.size = (remainingOperationSize > maxObjSize) ? (maxObjSize - (obj.position_ % maxObjSize)) : remainingOperationSize; // What does this line do? It seems like it's supposed to detect the last thing and make it smaller
+        obj.size = (remainingOperationSize > maxObjSize) ? (maxObjSize - (obj.position_ % maxObjSize)) : remainingOperationSize;
         remainingOperationSize -= obj.size;
         curr_pos += obj.size;
         obj.chunk_index = index;
