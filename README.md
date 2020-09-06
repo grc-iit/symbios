@@ -310,18 +310,11 @@ cd scripts/local
 ./run_redis_cluster.sh redis_cluster_config_path redis_server_numbers redis_cluster_install_path [clean_flag]
 ```
 
-- redis_cluster_config_path is the directory where the logs and configurations will be dumped
-- redis_server_numbers is the number of servers in the cluster (3 is a good number if you don't know what to put and are running locally)
-- redis_cluster_install_path is the path to the redis-server binary to use (without bin)
-
 ## Mongo Local Script Usage
 ```bash
 cd scripts/local
 ./run_mongo.sh mongo_config_path mongo_install_path [clean_flag]
 ```
-
-- mongo_config_path is the directory where the logs and configurations will be dumped
-- mongo_install_path is the path of the mongod binary to use (without bin)
 
 ## Mongo sharding cluster Local Script Usage
 ```bash
@@ -332,8 +325,6 @@ cd scripts/local
 ## Local testing of Symbios
 
 - update conf/symbios.conf to correct the path of SERVER_LISTS, CLIENT_LISTS, and SERVER_DIR
-  - SERVER_LISTS and CLIENT_LISTS should point to the symbios/conf/server_lists/ files symbios_server and symbios_client, respectively (or other files to denote distribution of server and client)
-  - SERVER_DIR should point to some directory where the server will dump log files (the directory should exist)
 
 ### start server in one terminal (or clion)
 ```bash
