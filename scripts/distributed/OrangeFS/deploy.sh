@@ -8,7 +8,7 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 CYAN='\033[0;36m'
 NC='\033[0m' # No Color
-
+echo -e "${GREEN}============ Deploying OrangeFS ============${NC}"
 CWD=$(pwd)
 
 #Input Variables
@@ -16,7 +16,7 @@ conf_file=${1}
 server_dir=${2} 
 client_dir=${3} 
 server_hostfile=${4}
-client_hostfile=${4}
+client_hostfile=${5}
 
 #General Variables
 client_list=($(cat ${client_hostfile}))

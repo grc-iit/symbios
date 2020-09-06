@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(symbios)
+project(symbios VERSION 1.0.0 DESCRIPTION "Symbios")
 set(INSTALL_DIR $ENV{INSTALL_DIR})
 #string(REPLACE ":" "/;" MODULE_LIST $ENV{PATH})
 #string(REPLACE ":" "/;" MODULE_LIB_LIST $ENV{LD_LIBRARY_PATH})
@@ -12,6 +12,8 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DH5_HAVE_DIRECT -w -DBASKET_ENABLE_RPCL
 set(INCLUDE_DIRS "-I${INSTALL_DIR}/include/ -L${INSTALL_DIR}/lib/") #-L${PROJECT_SOURCE_DIR}/build/hcl/ -I${PROJECT_SOURCE_DIR}/hcl/include/") # -I${MODULE_LIST} -L${MODULE_LIB_LIST}")# -DRPCLIB_ENABLE_LOGGING -DRPCLIB_ASIO=clmdep_asio -DRPCLIB_FMT=clmdep_fmt")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${INCLUDE_DIRS}")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${INCLUDE_DIRS}")
+configure_file(symbios.pc.in symbios.pc @ONLY)
+
 if(CMAKE_BUILD_TYPE MATCHES Release)
     set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -O3 -ffast-math")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -ffast-math")
@@ -36,6 +38,13 @@ set(SYMBIOS_LIB_SRC ${SYMBIOS_COMMON_SRC} include/symbios/client/client.h src/sy
 
 # add symbios lib
 add_library(symbios SHARED ${SYMBIOS_LIB_SRC})
+set_target_properties(${PROJECT_NAME} PROPERTIES
+    VERSION ${PROJECT_VERSION}
+    SOVERSION 1
+    PUBLIC_HEADER include/symbios/symbios.h)
+message(info "${CMAKE_INSTALL_INCLUDEDIR}")
+install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+
 target_link_libraries(symbios -lbasket -lrpc  -lboost_system -lboost_filesystem -ldl)
 # TODO: add any required libraries
 
@@ -83,6 +92,18 @@ add_custom_command(
 
 add_dependencies(symbios copy_conf)
 add_dependencies(symbios copy_scripts)
+
+install(TARGETS ${PROJECT_NAME}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+
+if (DEFINED ENV{PKG_CONFIG_PATH})
+   install(FILES ${CMAKE_BINARY_DIR}/symbios.pc
+                  DESTINATION $ENV{PKG_CONFIG_PATH}/pkgconfig)
+else()
+   install(FILES ${CMAKE_BINARY_DIR}/symbios.pc
+                  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/pkgconfig)
+endif()
 
 # add benchmark tool
 add_subdirectory(benchmark)
