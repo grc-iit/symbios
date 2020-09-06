@@ -47,14 +47,15 @@ void LibHandler::do_mapped_write(long offset, size_t request_size, char *data) {
     DataMapper mapper_(db_type, max_obj_size);
     auto objs = mapper_.map(src);
 
+    uint min_chunk_index = objs[0].chunk_index;
+    for (auto &i : objs) {
+        if (i.chunk_index < min_chunk_index) {
+            min_chunk_index = i.chunk_index;
+        }
+    }
+
     if (lib_type == IOLib::IRIS){
         doOp operation(db_type);
-        uint min_chunk_index = objs[0].chunk_index;
-        for (auto &i : objs) {
-            if (i.chunk_index < min_chunk_index) {
-                min_chunk_index = i.chunk_index;
-            }
-        }
         for (auto &i : objs){
             auto dest_data = Data();
             auto src_data = Data();
@@ -64,10 +65,6 @@ void LibHandler::do_mapped_write(long offset, size_t request_size, char *data) {
             src_data.position_ = 0;
             src_data.data_size_ = i.size;
 
-            // dest_data.buffer_ = (char *)malloc(i.size);
-            // memcpy(data_obj.buffer_, data + (i.chunk_index - min_chunk_index)*max_obj_size, i.size);
-
-            // data_obj.data_size_= i.size;
             dest_data.storage_index_ = db_type;
             // COMMON_DBGVAR(data_obj);
             operation.Write(src_data, dest_data);
@@ -75,13 +72,14 @@ void LibHandler::do_mapped_write(long offset, size_t request_size, char *data) {
     }
 
     else if (lib_type == IOLib::NIOBE){
+        SYMBIOS_CONF->CONFIGURATION_FILE=symbios_conf;
         auto client = symbios::Client();
         for (auto &i : objs) {
             auto data_obj = Data();
             data_obj.id_= i.id_;
             data_obj.position_=i.position_;
 
-            data_obj.buffer_ = data + (i.position_+i.chunk_index*max_obj_size);
+            data_obj.buffer_ = data + (i.chunk_index-min_chunk_index)*max_obj_size;
             data_obj.data_size_= i.size;
             data_obj.storage_index_ = db_type;
 
@@ -90,6 +88,7 @@ void LibHandler::do_mapped_write(long offset, size_t request_size, char *data) {
     }
 
     else if (lib_type == IOLib::SYMBIOS){
+        SYMBIOS_CONF->CONFIGURATION_FILE=symbios_conf;
         auto client = symbios::Client();
 
         for (auto &i : objs) {
@@ -97,7 +96,7 @@ void LibHandler::do_mapped_write(long offset, size_t request_size, char *data) {
             data_obj.id_= i.id_;
             data_obj.position_=i.position_;
 
-            data_obj.buffer_ = data + (i.position_+i.chunk_index*max_obj_size);
+            data_obj.buffer_ = data + (i.chunk_index-min_chunk_index)*max_obj_size;
             data_obj.data_size_= i.size;
             data_obj.storage_index_ = db_type;
 
@@ -122,7 +121,6 @@ void LibHandler::do_mapped_read(long offset, size_t request_size, char *data) {
             auto dest_data = Data();
             src_data.id_= i.id_;
             src_data.position_=i.position_;
-            // dest_data.buffer_ = data+data_offset;
             dest_data.position_=0;
             if (data_offset + i.size > request_size) {
                 src_data.data_size_= i.size;
@@ -133,8 +131,6 @@ void LibHandler::do_mapped_read(long offset, size_t request_size, char *data) {
                 dest_data.data_size_=i.size;
             }
             
-            // data_obj.buffer_ = static_cast<char *>(malloc(data_obj.data_size_));
-            // data_obj.buffer_ = (char *)malloc(data_obj.data_size_);
             src_data.storage_index_ = db_type;
 
             operation.Read(src_data, dest_data);
@@ -155,53 +151,53 @@ void LibHandler::do_mapped_read(long offset, size_t request_size, char *data) {
     }
 
     else if (lib_type == IOLib::NIOBE){
+        SYMBIOS_CONF->CONFIGURATION_FILE=symbios_conf;
         auto client = symbios::Client();
         for (auto &i : read_objs){
             auto data_obj = Data();
             data_obj.id_= i.id_;
             data_obj.position_=i.position_;
-            data_obj.data_size_= i.size;
-            // data_obj.buffer_ = static_cast<char *>(malloc(data_obj.data_size_));
+
+            if (data_offset + i.size > request_size) {
+                data_obj.data_size_=request_size - data_offset;
+            }
+            else {
+                data_obj.data_size_=i.size;
+            }
             data_obj.storage_index_ = db_type;
 
             client.LocateRequest(data_obj);
             COMMON_DBGVAR2(data_obj, i);
-            // std::cout<<data_obj.buffer_<<std::endl;
-            if (data_offset + data_obj.data_size_ > request_size) {
-                memcpy(data + data_offset, data_obj.buffer_, request_size);
+            data_offset += data_obj.data_size_;
+            if (data_offset > request_size) {
                 break;
             }
-            else {
-                memcpy(data + data_offset, data_obj.buffer_, data_obj.data_size_);
-            }
-            // free(data_obj.buffer_);
-            data_offset += data_obj.data_size_;
         }
 
     }
 
     else if (lib_type == IOLib::SYMBIOS){
+        SYMBIOS_CONF->CONFIGURATION_FILE=symbios_conf;
         auto client = symbios::Client();
         for (auto &i : read_objs){
             auto data_obj = Data();
             data_obj.id_= i.id_;
-            data_obj.position_=i.position_%max_obj_size;
-            // data_obj.buffer_ = static_cast<char *>(malloc(data_obj.data_size_));
+            data_obj.position_=i.position_;
+            if (data_offset + i.size > request_size) {
+                data_obj.data_size_=request_size - data_offset;
+            }
+            else {
+                data_obj.data_size_=i.size;
+            }
             data_obj.storage_index_ = db_type;
 
             client.LocateRequest(data_obj);
             COMMON_DBGVAR2(data_obj, i);
-            // std::cout<<data_obj.buffer_<<std::endl;
-            if (data_offset + data_obj.data_size_ > request_size) {
-                memcpy(data + data_offset, data_obj.buffer_, request_size);
-                break;
-            }
-            else {
-                memcpy(data + data_offset, data_obj.buffer_, data_obj.data_size_);
-            }
-            // free(data_obj.buffer_);
 
             data_offset += data_obj.data_size_;
+            if (data_offset > request_size) {
+                break;
+            }
         }
     }
     else{
@@ -209,12 +205,13 @@ void LibHandler::do_mapped_read(long offset, size_t request_size, char *data) {
     }
 }
 
-LibHandler::LibHandler(std::string file__, IOLib lib_type_, uint16_t db_type_, uint16_t max_obj_size_, bool print_p_) {
+LibHandler::LibHandler(std::string file__, IOLib lib_type_, uint16_t db_type_, uint16_t max_obj_size_, bool print_p_, std::string symbios_conf_) {
     lib_type = lib_type_;
     db_type = db_type_;
     max_obj_size = max_obj_size_;
     file_ = file__;
     print_p = print_p_;
+    symbios_conf = symbios_conf_;
 }
 
 

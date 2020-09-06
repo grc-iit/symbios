@@ -11,6 +11,7 @@ class ReplayArgs : public common::args::ArgMap {
     void VerifyArgs(void) {
         AssertOptIsSet("-r");
         AssertOptIsSet("-m");
+        AssertOptIsSet("-s");
         AssertOptIsSet("-t");
         AssertOptIsSet("-o");
         AssertOptIsSet("-c");
@@ -27,8 +28,13 @@ class ReplayArgs : public common::args::ArgMap {
         std::cout << "  IRIS" << std::endl;
         std::cout << "  NIOBE" << std::endl;
         std::cout << "  SYMBIOS" << std::endl;
+        std::cout << "-s [string]: Storage (I/O) type" << std::endl;
+        std::cout << "  FILE" << std::endl;
+        std::cout << "  MONGO" << std::endl;
+        std::cout << "  REDIS" << std::endl;
         std::cout << "-t [string]: Trace directory" << std::endl;
         std::cout << "-o [string]: Output directory" << std::endl;
+        std::cout << "-f [string]: Symbios configuration file (optional)" << std::endl;
     }
 
     ReplayArgs(int argc, char **argv) {
@@ -37,8 +43,13 @@ class ReplayArgs : public common::args::ArgMap {
         AddStringMapVal("-m", "IRIS", 1);
         AddStringMapVal("-m", "NIOBE", 2);
         AddStringMapVal("-m", "SYMBIOS", 3);
+        AddOpt("-s", common::args::ArgType::kStringMap);
+        AddStringMapVal("-s", "FILE", IOClientType::FILE_IO);
+        AddStringMapVal("-s", "MONGO", IOClientType::MONGO_IO);
+        AddStringMapVal("-s", "REDIS", IOClientType::REDIS_IO);
         AddOpt("-t", common::args::ArgType::kString);
         AddOpt("-o", common::args::ArgType::kString);
+        AddOpt("-f", common::args::ArgType::kString);
         AddOpt("-r", common::args::ArgType::kInt);
         AddOpt("-c", common::args::ArgType::kInt);
         ArgIter(argc, argv);
@@ -51,16 +62,18 @@ int main(int argc, char * argv[]){
     ReplayArgs args(argc, argv);
     int reps = args.GetIntOpt("-r");
     int mode = args.GetIntOpt("-m");
+    int stor_type = args.GetIntOpt("-s");
     int chunk = args.GetIntOpt("-c");
     std::string trace_path = args.GetStringOpt("-t");
     std::string output_path = args.GetStringOpt("-o");
+    std::string symbios_conf = args.GetStringOpt("-f");
     int my_rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
     trace_replayer tr;
-    tr.prepare_data(trace_path + boost::filesystem::path::preferred_separator + "CM1.csv", output_path + boost::filesystem::path::preferred_separator + "cm1_out.csv", reps, my_rank, (IOLib)mode, chunk);
-    tr.replay_trace(trace_path + boost::filesystem::path::preferred_separator + "CM1.csv", output_path + boost::filesystem::path::preferred_separator + "cm1_out.csv", reps, my_rank, (IOLib)mode, chunk);
-    tr.prepare_data(trace_path + boost::filesystem::path::preferred_separator + "Kmeans.csv", output_path + boost::filesystem::path::preferred_separator + "kmeans_out.csv", reps, my_rank, (IOLib)mode, chunk);
-    tr.replay_trace(trace_path + boost::filesystem::path::preferred_separator + "Kmeans.csv", output_path + boost::filesystem::path::preferred_separator + "kmeans_out.csv", reps, my_rank, (IOLib)mode, chunk);
+    tr.prepare_data(trace_path + boost::filesystem::path::preferred_separator + "CM1.csv", output_path + boost::filesystem::path::preferred_separator + "cm1_out.csv", reps, my_rank, (IOLib)mode, stor_type, chunk, symbios_conf);
+    tr.replay_trace(trace_path + boost::filesystem::path::preferred_separator + "CM1.csv", output_path + boost::filesystem::path::preferred_separator + "cm1_out.csv", reps, my_rank, (IOLib)mode, stor_type, chunk, symbios_conf);
+    tr.prepare_data(trace_path + boost::filesystem::path::preferred_separator + "Kmeans.csv", output_path + boost::filesystem::path::preferred_separator + "kmeans_out.csv", reps, my_rank, (IOLib)mode, stor_type, chunk, symbios_conf);
+    tr.replay_trace(trace_path + boost::filesystem::path::preferred_separator + "Kmeans.csv", output_path + boost::filesystem::path::preferred_separator + "kmeans_out.csv", reps, my_rank, (IOLib)mode, stor_type, chunk, symbios_conf);
     MPI_Finalize();
     return 0;
 }

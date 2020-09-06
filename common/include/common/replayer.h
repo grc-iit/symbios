@@ -19,7 +19,7 @@ class trace_replayer {
 public:
     static int replay_trace(std::string traceFile,
                             std::string filename, int repetitions,
-                            int rank, IOLib mode, uint16_t chunk_size) {
+                            int rank, IOLib mode, uint16_t stor_type, uint16_t chunk_size, std::string symbios_conf="") {
         /*Initialization of some stuff*/
         FILE* trace;
         FILE *file;
@@ -33,7 +33,7 @@ public:
         long offset = 0;
         long request_size = 0;
         char* word;
-        LibHandler lh = LibHandler(filename, mode, 0, chunk_size, false);
+        LibHandler lh = LibHandler(filename, mode, stor_type, chunk_size, false, symbios_conf);
         line = (char*) malloc(128);
         int i;
         for (i = 0; i < 128; i++) {
@@ -144,7 +144,7 @@ public:
         return 0;
     }
 
-    static int prepare_data(std::string traceFile, std::string filename, int repetitions, int rank, IOLib mode, uint16_t chunk_size) {
+    static int prepare_data(std::string traceFile, std::string filename, int repetitions, int rank, IOLib mode, uint16_t stor_type, uint16_t chunk_size, std::string symbios_conf="") {
       FILE* trace;
       FILE *file;
       char* line = NULL;
@@ -155,7 +155,7 @@ public:
       long offset = 0;
       long request_size = 0;
       char* word;
-      LibHandler lh = LibHandler(filename, mode, 0, chunk_size, false);
+      LibHandler lh = LibHandler(filename, mode, stor_type, chunk_size, false, symbios_conf);
       line = (char*) malloc(128);
       int lineNumber=0;
 
