@@ -41,16 +41,17 @@ int main(int argc, char * argv[]){
     auto file_ = argc > 4 ? argv[4] : "iris_emu_4";  // argv[4]
     auto max_obj_size = argc > 5 ? std::atoi(argv[5]) : MAX_OBJ_SIZE;  // argv[5]
 
-    LibHandler lh = LibHandler(file_, IOLib::IRIS, type_, max_obj_size);
+    LibHandler lh = LibHandler(file_, IOLib::IRIS, type_, max_obj_size, true);
     char *input = strdup(data);
     lh.run(OPType::FOPEN, 0, 0, NULL);
     lh.run(OPType::WRITE, 0, strlen(data), input);
-    char *result = (char *)malloc(strlen(data) + 1);
+    char *result;
+    // char *result = (char *)malloc(strlen(data) + 1);
     lh.run(OPType::READ, 0, strlen(data), result);
     lh.run(OPType::FCLOSE, 0, 0, NULL);
-    std::cout << result << std::endl;
+    // std::cout << result << std::endl;
     free(input);
-    free(result);
+    // free(result);
 
     MPI_Finalize();
     return 0;

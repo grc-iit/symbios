@@ -24,8 +24,8 @@ public:
         FILE* trace;
         FILE *file;
         char* line = NULL;
-        char *readbuf;
         char *writebuf;
+        char *readbuf;
         int comm_size;
         size_t len=0;
         ssize_t readsize;
@@ -33,7 +33,7 @@ public:
         long offset = 0;
         long request_size = 0;
         char* word;
-        LibHandler lh = LibHandler(filename, mode, 0, chunk_size);
+        LibHandler lh = LibHandler(filename, mode, 0, chunk_size, false);
         line = (char*) malloc(128);
         int i;
         for (i = 0; i < 128; i++) {
@@ -94,16 +94,15 @@ public:
                     }
                     free(writebuf);
                 } else if (operation == "READ") {
-                    readbuf = (char*) malloc((size_t) request_size + 1);
                     if (mode == IOLib::POSIX) {
+                        readbuf = (char*) malloc((size_t) request_size + 1);
                         fseek(file, (size_t) offset, SEEK_SET);
                         fread(readbuf, sizeof(char), (size_t) request_size, file);
+                        free(readbuf);
                     }
                     else {
-                        std::cout << "read size: " << request_size << std::endl;
-                        lh.run(OPType::READ, offset, request_size, NULL);
+                        lh.run(OPType::READ, offset, request_size, readbuf);
                     }
-                    free(readbuf);
                 } else if (operation == "LSEEK") {
                     if (mode == IOLib::POSIX) {
                         fseek(file, (size_t) offset, SEEK_SET);
@@ -148,15 +147,15 @@ public:
     static int prepare_data(std::string traceFile, std::string filename, int repetitions, int rank, IOLib mode, uint16_t chunk_size) {
       FILE* trace;
       FILE *file;
-      char *writebuf;
       char* line = NULL;
+      char *writebuf;
       size_t len=0;
       ssize_t readsize;
       std::string operation;
       long offset = 0;
       long request_size = 0;
       char* word;
-      LibHandler lh = LibHandler(filename, mode, 0, chunk_size);
+      LibHandler lh = LibHandler(filename, mode, 0, chunk_size, false);
       line = (char*) malloc(128);
       int lineNumber=0;
 

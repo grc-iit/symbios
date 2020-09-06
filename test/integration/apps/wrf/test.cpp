@@ -33,10 +33,10 @@ class ReplayArgs : public common::args::ArgMap {
 
     ReplayArgs(int argc, char **argv) {
         AddOpt("-m", common::args::ArgType::kStringMap);
-        // AddStringMapVal("-m", "POSIX", 0);
-        AddStringMapVal("-m", "IRIS", 0);
-        AddStringMapVal("-m", "NIOBE", 1);
-        AddStringMapVal("-m", "SYMBIOS", 2);
+        AddStringMapVal("-m", "POSIX", 0);
+        AddStringMapVal("-m", "IRIS", 1);
+        AddStringMapVal("-m", "NIOBE", 2);
+        AddStringMapVal("-m", "SYMBIOS", 3);
         AddOpt("-t", common::args::ArgType::kString);
         AddOpt("-o", common::args::ArgType::kString);
         AddOpt("-r", common::args::ArgType::kInt);
