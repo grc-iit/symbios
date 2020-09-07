@@ -58,7 +58,7 @@ public:
                 fprintf(stderr, "Cannot connect to MongoDB collection.\n");
                 throw ErrorException(CONNECT_MONGO_COLLECTION_ERROR);
             }
-        } catch (const mongocxx::operation_exception& e){
+        } catch (const mongocxx::exception& e){
             throw ErrorException(CONNECT_MONGO_SERVER_ERROR);
         }
     }
