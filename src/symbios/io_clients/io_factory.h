@@ -16,7 +16,21 @@
 
 class IOFactory {
 public:
-    IOFactory(){}
+    IOFactory(){
+        for (auto entry : SYMBIOS_CONF->STORAGE_SOLUTIONS) {
+            switch (entry.second->io_client_type_){
+                case IOClientType::FILE_IO:
+                    basket::Singleton<FileIOClient>::GetInstance(entry.first);
+                    break;
+                case IOClientType::MONGO_IO:
+                    basket::Singleton<MongoIOClient>::GetInstance(entry.first);
+                    break;
+                case IOClientType::REDIS_IO:
+                    basket::Singleton<RedisIOClient>::GetInstance(entry.first);
+                    break;
+            }
+        }
+    }
 
     std::shared_ptr<IOClient> GetIOClient(uint16_t storage_index){
         AUTO_TRACER("IOFactory::GetIOClient", storage_index);

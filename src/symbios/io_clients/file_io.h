@@ -14,6 +14,10 @@ public:
      * Constructor
      */
     FileIOClient(uint16_t storage_index):IOClient(storage_index){
+        auto file_solution = std::static_pointer_cast<FileSS>(solution);
+        if(!boost::filesystem::exists(file_solution->end_point_.c_str())){
+            throw ErrorException(FILE_PATH_NON_EXISTANCE);
+        }
     }
 
     /*

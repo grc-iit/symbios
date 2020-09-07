@@ -38,7 +38,11 @@ public:
         auto index = BASKET_CONF->MPI_RANK % end_points_arr.size();
         connectionOptions.host = end_points_arr[index]; // redis_cluster ip
         connectionOptions.port = atoi(ports_arr[index].c_str()); // redis_cluster port
-        m_redisCluster = std::make_shared<RedisCluster>(connectionOptions);
+        try {
+            m_redisCluster = std::make_shared<RedisCluster>(connectionOptions);
+        }catch (const Error &err){
+            throw ErrorException(CONNECT_REDIS_SERVER_ERROR);
+        }
     }
     /*
      * Methods

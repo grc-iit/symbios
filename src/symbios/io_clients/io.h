@@ -18,6 +18,7 @@ public:
         if(iter != SYMBIOS_CONF->STORAGE_SOLUTIONS.end()) solution = iter->second;
         else{
             //TODO: throw exception
+            throw ErrorException(INVALID_STORAGE_INDEX);
         }
     }
     /**
