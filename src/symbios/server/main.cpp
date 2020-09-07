@@ -10,7 +10,6 @@
 
 int main(int argc, char* argv[]){
     MPI_Init(&argc,&argv);
-
     MPI_Barrier(MPI_COMM_WORLD);
     if(argc > 1) SYMBIOS_CONF->CONFIGURATION_FILE=argv[1];
     BASKET_CONF->BACKED_FILE_DIR=SYMBIOS_CONF->SERVER_DIR;
