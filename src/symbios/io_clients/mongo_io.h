@@ -15,7 +15,7 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <mongocxx/logger.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
-#include <mongocxx/exception.hpp>
+#include <mongocxx/exception/exception.hpp>
 #include <memory>
 #include "io.h"
 
