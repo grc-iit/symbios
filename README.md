@@ -3,43 +3,16 @@
 
 ## Setup spack
 
-## On local
-
-```bash
-git clone https://github.com/scs-lab/spack.git
-cd spack
-export SPACK_INSTALL_DIR=$HOME/software/spack/0.15.4
-export BINARY_DIR=$HOME/software/spackbinary
-./install.sh 0.15.4 $BINARY_DIR $SPACK_INSTALL_DIR
-```
-
-
 ### On ares
 ```bash
-git clone https://github.com/scs-lab/spack.git
-cd spack
-export SPACK_INSTALL_DIR=$HOME/software/spack/0.15.4
-export BINARY_DIR=$HOME/software/spackbinary
-./install_client.sh 0.15.4 $BINARY_DIR $SPACK_INSTALL_DIR
-```
-## Installation using spack
+echo "export PATH=/opt/ohpc/pub/software/hdevarajan/spack/v0.15.4.scs:$PATH" >> ~/.bashrc
+echo "export spack=/opt/ohpc/pub/software/hdevarajan/spack/v0.15.4.scs" >> ~/.bashrc
+echo ". /opt/ohpc/pub/software/hdevarajan/spack/v0.15.4.scs/share/spack/setup-env.sh" >> ~/.bashrc
+rm -r ~/.spack/*
+source ~/.bashrc
 
-### Local
-```bash
-spack install gcc@9.3.0
-spack load gcc@9.3.0
-spack compiler find
-spack install symbios%gcc@9.3.0
-spack load symbios%gcc@9.3.0
-```
-
-### On ares
-```bash
-spack load symbios%gcc@9.3.0
-spack load gcc@9.3.0
-spack compiler find
-spack install symbios%gcc@9.3.0
-spack load symbios%gcc@9.3.0
+spack env activate symbios
+spack load boost@1.74.0%gcc@9.3.0   cmake@3.15.2%gcc@9.3.0   dlib@19.17%gcc@9.3.0   hcl@0.0.4%gcc@9.3.0    mongo-cxx-driver@3.5.1%gcc@9.3.0   mpich@3.3.2%gcc@9.3.0   redis-plus-plus@1.1.2%gcc@9.3.0 rapidjson
 ```
 
 ## Dependencies
