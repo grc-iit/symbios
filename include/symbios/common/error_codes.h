@@ -25,6 +25,13 @@ const ErrorCode READ_MONGODB_DATA_FAILED = {1008, "Read data from Mongodb failed
 const ErrorCode WRITE_MONGODB_DATA_FAILED = {1009, "Write data to Mongodb failed"};
 const ErrorCode READ_MONGO_POSITION_OR_SIZE_FAILED = {1010, "Error read position or data size when reading data from Mongodb"};
 const ErrorCode MONGODB_SERVER_SIDE_FAILED = {1011, "Mongodb server maybe failed"};
+const ErrorCode CONNECT_REDIS_SERVER_ERROR = {1012, "Connect Redis Cluster failed"};
+const ErrorCode CONNECT_MONGO_SERVER_ERROR = {1013, "Connect Mongo Cluster failed"};
+const ErrorCode CREATE_MONGO_CLIENT_ERROR = {1014, "Create Mongo Client failed"};
+const ErrorCode CONNECT_MONGO_DATABASE_ERROR = {1015, "Cannot connect to mongo database"};
+const ErrorCode CONNECT_MONGO_COLLECTION_ERROR = {1016, "Cannot connect to mongo collection"};
+const ErrorCode FILE_PATH_NON_EXISTANCE = {1017, "The file io path is non existance"};
+const ErrorCode INVALID_STORAGE_INDEX={1018, "Invalid storage index"};
 const ErrorCode UNDEFINED_ENV_VARIABLE = {2011, "The environment variable is not defined %s"};
 
 #endif //SYMBIOS_ERROR_CODES_H
