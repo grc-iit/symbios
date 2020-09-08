@@ -44,7 +44,7 @@ do
 
               echo "Starting Client"
               echo "mpirun -n ${n_client_processes} --hostfile ${HOSTFILE_PATH}/single_node_symbios_client ./test/unit/unit_client ${CONFIG_PATH} ${io_mode} ${io_operation} ${distribution_mode} ${request_size} ${request_number}"
-              mpirun -n "${n_client _processes}" --hostfile "${HOSTFILE_PATH}"/single_node_symbios_client "${CLIENT_PATH}" "${CONFIG_PATH}" "${io_mode}" "${io_operation}" "${distribution_mode}" "${request_size}" "${request_number}"
+              mpirun -n "${n_client_processes}" --hostfile "${HOSTFILE_PATH}"/single_node_symbios_client "${CLIENT_PATH}" "${CONFIG_PATH}" "${io_mode}" "${io_operation}" "${distribution_mode}" "${request_size}" "${request_number}"
 
               echo "Stopping Server"
               killall mpirun
