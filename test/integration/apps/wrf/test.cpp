@@ -15,6 +15,7 @@ class ReplayArgs : public common::args::ArgMap {
         AssertOptIsSet("-t");
         AssertOptIsSet("-o");
         AssertOptIsSet("-c");
+        AssertOptIsSet("-f");
     }
 
   public:
@@ -73,10 +74,10 @@ int main(int argc, char * argv[]){
     MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
 
     trace_replayer tr;
-    tr.prepare_data(trace_path + boost::filesystem::path::preferred_separator + "WRFC.csv", output_path + boost::filesystem::path::preferred_separator + "wrfc_out.csv", reps, my_rank, (IOLib)mode, stor_type, chunk);
-    tr.replay_trace(trace_path + boost::filesystem::path::preferred_separator + "WRFC.csv", output_path + boost::filesystem::path::preferred_separator + "wrfc_out.csv", reps, my_rank, (IOLib)mode, stor_type, chunk);
-    tr.prepare_data(trace_path + boost::filesystem::path::preferred_separator + "WRFA.csv", output_path + boost::filesystem::path::preferred_separator + "wrfa_out.csv", reps, my_rank, (IOLib)mode, stor_type, chunk);
-    tr.replay_trace(trace_path + boost::filesystem::path::preferred_separator + "WRFA.csv", output_path + boost::filesystem::path::preferred_separator + "wrfa_out.csv", reps, my_rank, (IOLib)mode, stor_type, chunk);
+    tr.prepare_data(trace_path + boost::filesystem::path::preferred_separator + "WRFC.csv", output_path + boost::filesystem::path::preferred_separator + "wrfc_out.csv", reps, my_rank, (IOLib)mode, stor_type, chunk, symbios_conf);
+    tr.replay_trace(trace_path + boost::filesystem::path::preferred_separator + "WRFC.csv", output_path + boost::filesystem::path::preferred_separator + "wrfc_out.csv", reps, my_rank, (IOLib)mode, stor_type, chunk, symbios_conf);
+    tr.prepare_data(trace_path + boost::filesystem::path::preferred_separator + "WRFA.csv", output_path + boost::filesystem::path::preferred_separator + "wrfa_out.csv", reps, my_rank, (IOLib)mode, stor_type, chunk, symbios_conf);
+    tr.replay_trace(trace_path + boost::filesystem::path::preferred_separator + "WRFA.csv", output_path + boost::filesystem::path::preferred_separator + "wrfa_out.csv", reps, my_rank, (IOLib)mode, stor_type, chunk, symbios_conf);
 
     MPI_Finalize();
     return 0;

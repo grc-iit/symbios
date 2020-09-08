@@ -59,7 +59,7 @@ private:
     void do_mapped_read(long offset, size_t request_size, char *data);
     void do_mapped_write(long offset, size_t request_size, char *data);
 public:
-    LibHandler(std::string file_, IOLib lib_type_, uint16_t io_type_, uint16_t max_obj_size_, bool print_p_, std::string symbios_conf_="");
+    LibHandler(std::string file_, IOLib lib_type_, uint16_t io_type_, uint16_t max_obj_size_, bool print_p_, std::string symbios_conf_);
     void run(OPType op_type, long offset, size_t request_size, char *data);
 };
 

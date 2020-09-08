@@ -15,6 +15,7 @@ class ReplayArgs : public common::args::ArgMap {
         AssertOptIsSet("-t");
         AssertOptIsSet("-o");
         AssertOptIsSet("-c");
+        AssertOptIsSet("-f");
     }
 
   public:
