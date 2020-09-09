@@ -70,6 +70,7 @@ public:
                 common::debug::Timer operationTimer = common::debug::Timer();
                 operationTimer.startTime();
                 if (operation == "FOPEN") {
+                    std::cout << "open" << std::endl;
                     if (mode == IOLib::POSIX) {
                         file = fopen((filename+std::to_string(rank)).c_str(), "w+");
                     }
@@ -77,6 +78,7 @@ public:
                         lh.run(OPType::FOPEN, 0, 0, NULL);
                     }
                 } else if (operation == "FCLOSE") {
+                    std::cout << "close" << std::endl;
                     if (mode == IOLib::POSIX) {
                         fclose(file);
                     }
@@ -84,6 +86,7 @@ public:
                         lh.run(OPType::FCLOSE, 0, 0, NULL);
                     }
                 } else if (operation == "WRITE") {
+                    std::cout << "write" << std::endl;
                     writebuf = (char *)randstring(request_size);
                     if (mode == IOLib::POSIX) {
                         fseek(file, (size_t) offset, SEEK_SET);
@@ -94,6 +97,7 @@ public:
                     }
                     free(writebuf);
                 } else if (operation == "READ") {
+                    std::cout << "read" << std::endl;
                     if (mode == IOLib::POSIX) {
                         readbuf = (char*) malloc((size_t) request_size + 1);
                         fseek(file, (size_t) offset, SEEK_SET);
@@ -104,6 +108,7 @@ public:
                         lh.run(OPType::READ, offset, request_size, readbuf);
                     }
                 } else if (operation == "LSEEK") {
+                    std::cout << "seek" << std::endl;
                     if (mode == IOLib::POSIX) {
                         fseek(file, (size_t) offset, SEEK_SET);
                     }

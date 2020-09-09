@@ -73,7 +73,16 @@ void LibHandler::do_mapped_write(long offset, size_t request_size, char *data) {
 
     else if (lib_type == IOLib::NIOBE){
         SYMBIOS_CONF->CONFIGURATION_FILE=symbios_conf;
+        BASKET_CONF->BACKED_FILE_DIR=SYMBIOS_CONF->SERVER_DIR;
         auto client = symbios::Client();
+        MPI_Barrier(MPI_COMM_WORLD);
+        auto solution = SYMBIOS_CONF->STORAGE_SOLUTIONS[db_type];
+        auto newSSMap = std::unordered_map<uint16_t, std::shared_ptr<StorageSolution>>();
+        auto new_SS = std::pair<uint16_t, std::shared_ptr<StorageSolution>>(0, solution);
+        newSSMap.insert(new_SS);
+        SYMBIOS_CONF->STORAGE_SOLUTIONS = newSSMap;
+        SYMBIOS_CONF->DATA_DISTRIBUTION_POLICY=RANDOM_POLICY;
+        MPI_Barrier(MPI_COMM_WORLD);
         for (auto &i : objs) {
             auto data_obj = Data();
             data_obj.id_= i.id_;
@@ -88,19 +97,22 @@ void LibHandler::do_mapped_write(long offset, size_t request_size, char *data) {
     }
 
     else if (lib_type == IOLib::SYMBIOS){
-        SYMBIOS_CONF->CONFIGURATION_FILE=symbios_conf;
-        auto client = symbios::Client();
 
         for (auto &i : objs) {
             auto data_obj = Data();
             data_obj.id_= i.id_;
-            data_obj.position_=i.position_;
+            if (db_type==0) {
+                data_obj.position_=i.position_;
+            }
+            else {
+                data_obj.position_=0;
+            }
 
             data_obj.buffer_ = data + (i.chunk_index-min_chunk_index)*max_obj_size;
             data_obj.data_size_= i.size;
             data_obj.storage_index_ = db_type;
 
-            client.StoreRequest(data_obj);
+            symbios_client->StoreRequest(data_obj);
         }
     }
     else{
@@ -152,7 +164,16 @@ void LibHandler::do_mapped_read(long offset, size_t request_size, char *data) {
 
     else if (lib_type == IOLib::NIOBE){
         SYMBIOS_CONF->CONFIGURATION_FILE=symbios_conf;
+        BASKET_CONF->BACKED_FILE_DIR=SYMBIOS_CONF->SERVER_DIR;
         auto client = symbios::Client();
+        MPI_Barrier(MPI_COMM_WORLD);
+        auto solution = SYMBIOS_CONF->STORAGE_SOLUTIONS[db_type];
+        auto newSSMap = std::unordered_map<uint16_t, std::shared_ptr<StorageSolution>>();
+        auto new_SS = std::pair<uint16_t, std::shared_ptr<StorageSolution>>(0, solution);
+        newSSMap.insert(new_SS);
+        SYMBIOS_CONF->STORAGE_SOLUTIONS = newSSMap;
+        SYMBIOS_CONF->DATA_DISTRIBUTION_POLICY=RANDOM_POLICY;
+        MPI_Barrier(MPI_COMM_WORLD);
         for (auto &i : read_objs){
             auto data_obj = Data();
             data_obj.id_= i.id_;
@@ -166,9 +187,10 @@ void LibHandler::do_mapped_read(long offset, size_t request_size, char *data) {
             }
             data_obj.storage_index_ = db_type;
 
+            data_offset += data_obj.data_size_;
+
             client.LocateRequest(data_obj);
             COMMON_DBGVAR2(data_obj, i);
-            data_offset += data_obj.data_size_;
             if (data_offset > request_size) {
                 break;
             }
@@ -177,12 +199,17 @@ void LibHandler::do_mapped_read(long offset, size_t request_size, char *data) {
     }
 
     else if (lib_type == IOLib::SYMBIOS){
-        SYMBIOS_CONF->CONFIGURATION_FILE=symbios_conf;
-        auto client = symbios::Client();
+
         for (auto &i : read_objs){
             auto data_obj = Data();
             data_obj.id_= i.id_;
-            data_obj.position_=i.position_;
+            if (db_type==0) {
+                data_obj.position_=i.position_;
+            }
+            else {
+                data_obj.position_=0;
+            }
+            // data_obj.position_=i.position_;
             if (data_offset + i.size > request_size) {
                 data_obj.data_size_=request_size - data_offset;
             }
@@ -191,7 +218,8 @@ void LibHandler::do_mapped_read(long offset, size_t request_size, char *data) {
             }
             data_obj.storage_index_ = db_type;
 
-            client.LocateRequest(data_obj);
+            symbios_client->LocateRequest(data_obj);
+            free(data_obj.buffer_);
             COMMON_DBGVAR2(data_obj, i);
 
             data_offset += data_obj.data_size_;
@@ -205,15 +233,35 @@ void LibHandler::do_mapped_read(long offset, size_t request_size, char *data) {
     }
 }
 
-LibHandler::LibHandler(std::string file__, IOLib lib_type_, uint16_t db_type_, uint16_t max_obj_size_, bool print_p_, std::string symbios_conf_) {
+LibHandler::LibHandler(std::string file__, IOLib lib_type_, uint16_t io_type_, uint16_t max_obj_size_, bool print_p_, std::string symbios_conf_) {
     lib_type = lib_type_;
-    db_type = db_type_;
+    db_type = io_type_;
     max_obj_size = max_obj_size_;
     file_ = file__;
     print_p = print_p_;
     symbios_conf = symbios_conf_;
+
+    if (lib_type == IOLib::SYMBIOS || lib_type == IOLib::NIOBE) {
+        SYMBIOS_CONF->CONFIGURATION_FILE=symbios_conf;
+        BASKET_CONF->BACKED_FILE_DIR=SYMBIOS_CONF->SERVER_DIR;
+        symbios_client = new symbios::Client();
+        MPI_Barrier(MPI_COMM_WORLD);
+        auto solution = SYMBIOS_CONF->STORAGE_SOLUTIONS[db_type];
+        auto newSSMap = std::unordered_map<uint16_t, std::shared_ptr<StorageSolution>>();
+        auto new_SS = std::pair<uint16_t, std::shared_ptr<StorageSolution>>(0, solution);
+        newSSMap.insert(new_SS);
+        SYMBIOS_CONF->STORAGE_SOLUTIONS = newSSMap;
+        SYMBIOS_CONF->DATA_DISTRIBUTION_POLICY=RANDOM_POLICY;
+        MPI_Barrier(MPI_COMM_WORLD);
+
+    }
 }
 
+LibHandler::~LibHandler() {
+    if (lib_type == IOLib::SYMBIOS || lib_type == IOLib::NIOBE) {
+        delete symbios_client;
+    }
+}
 
 //// DATA MAPPER
 
