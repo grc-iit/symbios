@@ -7,7 +7,7 @@ NC='\033[0m' # No Color
 
 CWD="$(pwd)"
 HOSTFILE=${1}
-LOG_DIR=${2}
+LOG_DIR="/mnt/hdd/${USER}/Redis"
 
 PORT_BASE=7000
 SERVERS=($(cat ${HOSTFILE}))
@@ -32,6 +32,18 @@ for server in "${SERVERS[@]}"; do
   ) >>"${LOG_DIR}"/"${port}"/redis.conf
   ((i = i + 1))
 done
+
+# Copy configuration files to local directories on all servers
+echo -e "${GREEN}Copying Redis cluster configuration files ...${NC}"
+i=0
+for server in "${SERVERS[@]}"; do
+  ((port = $PORT_BASE + $i))
+  echo Copying configuration directory $port to $server ...
+  ssh $server mkdir -p "${LOG_DIR}"
+  rsync -qraz "${LOG_DIR}"/"${port}" $server:"${LOG_DIR}"/ &
+  ((i = i + 1))
+done
+wait
 
 # Start server
 echo -e "${GREEN}Starting Redis${NC}"
