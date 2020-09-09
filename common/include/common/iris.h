@@ -11,16 +11,18 @@
 #include <symbios/client/client.h>
 #include <common/debug.h>
 #include <vector>
+#include <mpi.h>
 
 
 void slice_str(const char * str, char * buffer, size_t start, size_t end);
 
 
 typedef enum IOLib {
+    POSIX,
     IRIS,
     NIOBE,
     SYMBIOS
-};
+} IOLib;
 
 typedef enum OPType {
     READ,
@@ -28,12 +30,12 @@ typedef enum OPType {
     FOPEN,
     LSEEK,
     FCLOSE
-};
+} OPType;
 
 
 typedef struct DataDescriptor {
     CharStruct id_;
-    size_t position_; // read/write start position
+    long position_; // read/write start position
     uint16_t size;
     uint chunk_index;
 };
@@ -51,14 +53,17 @@ private:
     uint16_t lib_type;
     uint16_t db_type;
     uint16_t max_obj_size;
-    std::string data;
+    bool print_p;
     std::string file_;
+    std::string symbios_conf;
+    symbios::Client *symbios_client;
     std::vector<DataDescriptor> map_data();
-    void do_mapped_read();
-    void do_mapped_write();
+    void do_mapped_read(long offset, size_t request_size, char *data);
+    void do_mapped_write(long offset, size_t request_size, char *data);
 public:
-    LibHandler(std::string file_, char* data, uint16_t lib_type_, uint16_t io_type_, uint16_t max_obj_size_);
-    void run(uint16_t op_type);
+    LibHandler(std::string file_, IOLib lib_type_, uint16_t io_type_, uint16_t max_obj_size_, bool print_p_, std::string symbios_conf_);
+    ~LibHandler();
+    void run(OPType op_type, long offset, size_t request_size, char *data);
 };
 
 
