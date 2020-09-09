@@ -56,7 +56,7 @@ int main(int argc, char * argv[]){
             printf("Data Sent %s\n",data.buffer_);
         }
         data.buffer_ = static_cast<char *>(malloc(data.data_size_));;
-        data.storage_index_=1;
+        data.storage_index_=0;
         if(ioOperation == 0 || ioOperation == 2){
             printf("Reading Data\n");
             client.LocateRequest(data);
