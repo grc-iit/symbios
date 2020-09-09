@@ -32,7 +32,7 @@ mongocxx::collection file = client[mongo_solution->database_.c_str()].collection
         memcpy(destination.buffer_,data.data()+source.position_,source_size - source.position_);
         destination.data_size_ = source_size - source.position_;
     } else {
-        throw ErrorException(READ_REDIS_DATA_FAILED);
+        throw ErrorException(READ_MONGODB_DATA_FAILED);
     }
     COMMON_DBGVAR(destination);
 }

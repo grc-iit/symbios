@@ -15,6 +15,7 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <mongocxx/logger.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
+#include <mongocxx/exception/exception.hpp>
 #include <memory>
 #include "io.h"
 
@@ -34,24 +35,31 @@ public:
         /* Setup the MongoDB client */
         mongocxx::instance instance{mongocxx::stdx::make_unique<noop_logger>()};
         auto uri = mongocxx::uri{mongo_solution->end_point_.c_str()};
-        client = mongocxx::client{uri};
-        /* make sure the client is OK */
-        if (!client) {
-            fprintf(stderr, "Cannot create MongoDB client.\n");
-        }
-        mongocxx::database db = client[mongo_solution->database_.c_str()];
-        if (!db) {
-            fprintf(stderr, "Cannot connect to MongoDB database.\n");
-        }
-        mongocxx::collection file;
-        if(BASKET_CONF->MPI_RANK==0) {
-            file = client.database(mongo_solution->database_.c_str()).has_collection(mongo_solution->collection_.c_str()) ?
+        try {
+            client = mongocxx::client{uri};
+            /* make sure the client is OK */
+            if (!client) {
+                fprintf(stderr, "Cannot create MongoDB client.\n");
+                throw ErrorException(CREATE_MONGO_CLIENT_ERROR);
+            }
+            mongocxx::database db = client[mongo_solution->database_.c_str()];
+            if (!db) {
+                fprintf(stderr, "Cannot connect to MongoDB database.\n");
+                throw ErrorException(CONNECT_MONGO_DATABASE_ERROR);
+            }
+            mongocxx::collection file;
+            if(BASKET_CONF->MPI_RANK==0) {
+                file = client.database(mongo_solution->database_.c_str()).has_collection(mongo_solution->collection_.c_str()) ?
                    db.collection(mongo_solution->collection_.c_str()) :
                    db.create_collection(mongo_solution->collection_.c_str());
-        }
-        file = db.collection(mongo_solution->collection_.c_str());
-        if (!file) {
-            fprintf(stderr, "Cannot connect to MongoDB collection.\n");
+            }
+            file = db.collection(mongo_solution->collection_.c_str());
+            if (!file) {
+                fprintf(stderr, "Cannot connect to MongoDB collection.\n");
+                throw ErrorException(CONNECT_MONGO_COLLECTION_ERROR);
+            }
+        } catch (const mongocxx::exception& e){
+            throw ErrorException(CONNECT_MONGO_SERVER_ERROR);
         }
     }
     /*
