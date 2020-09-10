@@ -134,19 +134,19 @@ done
 wait
 sleep 5
 
-shard_server_list=`head -${SHARD_SERVER_COUNT} ${SERVER_HOSTFILE} | awk '{print $1}'`
-echo -e "${GREEN}Initializing shard replica set ...${NC}"
+#shard_server_list=`head -${SHARD_SERVER_COUNT} ${SERVER_HOSTFILE} | awk '{print $1}'`
+#echo -e "${GREEN}Initializing shard replica set ...${NC}"
 echo -e "${GREEN}Preparing shards to mongos/query router ...${NC}"
 truncate -s 0 add_shard_to_mongos.js
 count=0
 for shard_server in ${shard_server_list}
 do
-  truncate -s 0 shard_replica_init.js
+#  truncate -s 0 shard_replica_init.js
   printf "sh.addShard(\"${SHARD_REPL_NAME}$((count+1))/" >> add_shard_to_mongos.js
-  printf "rs.initiate(\n{\n" > shard_replica_init.js
-  printf "\t_id : \"${SHARD_REPL_NAME}$((count+1))\",\n" >> shard_replica_init.js
-  printf "\tmembers: [\n" >> shard_replica_init.js
-
+#  printf "rs.initiate(\n{\n" > shard_replica_init.js
+#  printf "\t_id : \"${SHARD_REPL_NAME}$((count+1))\",\n" >> shard_replica_init.js
+#  printf "\tmembers: [\n" >> shard_replica_init.js
+#
   number=0
   for ((i=0;i<"SHARD_COPY_COUNT";i++))
   do
@@ -154,22 +154,22 @@ do
     current_server=`sed -n $((nodeid+1))p ${SERVER_HOSTFILE} | awk '{print $1}'`
     if [[ ${i} != $((SHARD_COPY_COUNT-1)) ]]
     then
-      printf "\t\t{ _id :a %s, host : \"%s\" },\n" ${number} ${current_server}:$((SHARD_BASE_PORT_BAKE+count)) >> shard_replica_init.js
+#      printf "\t\t{ _id :a %s, host : \"%s\" },\n" ${number} ${current_server}:$((SHARD_BASE_PORT_BAKE+count)) >> shard_replica_init.js
       printf "${current_server}:$((SHARD_BASE_PORT_BAKE+count))," >> add_shard_to_mongos.js
     else
-      printf "\t\t{ _id : %s, host : \"%s\" }\n" ${number} ${current_server}:$((SHARD_BASE_PORT_BAKE+count)) >> shard_replica_init.js
+#      printf "\t\t{ _id : %s, host : \"%s\" }\n" ${number} ${current_server}:$((SHARD_BASE_PORT_BAKE+count)) >> shard_replica_init.js
       printf "${current_server}:$((SHARD_BASE_PORT_BAKE+count))\")\n" >> add_shard_to_mongos.js
     fi
       number=$((number+1))
   done
-
-  printf "\t]\n}\n)\n" >> shard_replica_init.js
-  cat shard_replica_init.js
-  mongo --host ${current_server} --port $((SHARD_BASE_PORT_BAKE+count)) < shard_replica_init.js > shard_replica_init.log
+#
+#  printf "\t]\n}\n)\n" >> shard_replica_init.js
+#  cat shard_replica_init.js
+#  mongo --host ${current_server} --port $((SHARD_BASE_PORT_BAKE+count)) < shard_replica_init.js > shard_replica_init.log
   echo -e "${CYAN}Finish configuring shard server ${current_server}:$((SHARD_BASE_PORT_BAKE+count))${NC}"
   count=$((count+1))
 done
-cat shard_replica_init.log | grep -i ok
+#cat shard_replica_init.log | grep -i ok
 
 echo -e "${GREEN}Starting router nodes ...${NC}"
 router_server_list=`head -${ROUTER_SERVER_COUNT} ${ROUTER_SERVER_HOSTFILE} | awk '{print $1}'`
