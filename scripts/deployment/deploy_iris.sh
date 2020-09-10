@@ -13,11 +13,12 @@ client_hostfile="${HOME}/symbios/scripts/distributed/hostfile/client"
 
 #REDIS
 HOSTFILE="${HOME}/symbios/scripts/distributed/hostfile/redis_server_iris"
+MASTER_SETUP_FOLDER="${HOME}/symbios-setup/Redis"
 
 #MONGO
 SERVER_HOSTFILE="${HOME}/symbios/scripts/distributed/hostfile/mongo_server_iris"
 CONFIG_SERVER_COUNT=2
 
 ${RUN_ORANGE} "${conf_file}" "${server_dir}" "${client_dir}" "${server_hostfile}" "${client_hostfile}"
-${RUN_REDIS} "${HOSTFILE}"
+${RUN_REDIS} "${HOSTFILE}" "${MASTER_SETUP_FOLDER}"
 ${RUN_MONGO} "${SERVER_HOSTFILE}" "${client_hostfile}" "${CONFIG_SERVER_COUNT}"
