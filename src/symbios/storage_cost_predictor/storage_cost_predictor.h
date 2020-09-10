@@ -34,6 +34,9 @@
 #define RECORD_SIZE (3*sizeof(float) + sizeof(int))
 #define MB (1<<20)
 
+/*
+ * A class that holds information for fitting a particular linear regression model
+ */
 class LinRegModel {
 public:
     typedef std::array<double, LINREG_NPARAMS> CoeffArray;
@@ -134,6 +137,9 @@ public:
     }
 };
 
+/*
+ * A class holds multiple linear regression models, one for each io storage.
+ */
 class StorageCostPredictor {
 private:
     std::string model_file_path_;
@@ -147,6 +153,12 @@ private:
     std::promise<void> terminate_worker_;
     size_t buffer_size_ = 2*MB;
 
+    /*
+     * Save the serialized data into a csv file
+     * @Parameter serial: serialized data content
+     * @Parameter serial_size: serialized data size
+     * @Parameter file: the file handle you want to write
+     */
     void SaveCSV(char *serial, size_t serial_size, FILE *file) {
         AUTO_TRACER("StorageCostPredictor::SaveCSV", serial, serial_size, file);
         if(file == nullptr) {
@@ -160,6 +172,10 @@ private:
         }
     }
 
+    /*
+   * Close the csv file
+   * @Parameter file: the file handle you want to close
+   */
     void CloseCSV(FILE *file) {
         AUTO_TRACER("StorageCostPredictor::CloseCSV", file);
         if(file != nullptr) {
@@ -167,6 +183,9 @@ private:
         }
     }
 
+    /*
+     * Parsing the model data by row
+     */
     void ParseModelRow(BinaryDeserializer &deserializer) {
         int conf;
         float nprocs_coeff, tot_read_coeff, tot_write_coeff;
@@ -180,6 +199,9 @@ private:
         storage_models_[conf].UpdateCoeffs(nprocs_coeff, tot_read_coeff, tot_write_coeff);
     }
 
+    /*
+     * Load part of the model data
+     */
     bool LoadModelCSV_part(std::string path, bool required) {
         AUTO_TRACER("StorageCostPredictor::LoadModelCSV_part", path, required);
         BinaryDeserializer deserializer(buffer_size_);
@@ -201,6 +223,9 @@ private:
         return true;
     }
 
+    /*
+     * Loading the model file to read model data
+     */
     void LoadModelCSV() {
         AUTO_TRACER("StorageCostPredictor::LoadModelCSV");
         BinaryDeserializer deserializer(buffer_size_);
@@ -218,6 +243,9 @@ private:
         LoadModelCSV_part(model_file_path_, true);
     }
 
+    /*
+     * Saving each storage model data into the model file
+     */
     void SaveModelCSV() {
         BinarySerializer serializer(buffer_size_);
         AUTO_TRACER("StorageCostPredictor::SaveModelCSV");
@@ -241,6 +269,9 @@ private:
         SaveModelCSV();
     }
 
+    /*
+     * Fit each storage linear regression model
+     */
     void Fit() {
         AUTO_TRACER("StorageCostPredictor::Fit");
         for(int &storage_config : storage_configs_) {
@@ -272,6 +303,12 @@ public:
     void SetWindowSize(size_t window_size) { window_size_ = window_size; }
     void EnableMetricStorage(bool commit_metrics) { commit_metrics_ = commit_metrics; }
 
+    /*
+     * Initialize interface
+     * @Parameter rank: MPI rank number
+     * @Parameter nprocs: number of processors
+     * @Parameter model_file_path: the model file path
+     */
     void Init(int rank, int nprocs, std::string model_file_path) {
         AUTO_TRACER("StorageCostPredictor::LoadMetrics");
         rank_ = rank;
@@ -281,18 +318,34 @@ public:
         worker_thread_ = std::thread(&StorageCostPredictor::Run, this, std::move(terminate_worker_.get_future()));
     }
 
+    /*
+     * Stop the worker thread
+     */
     void Finalize() {
         terminate_worker_.set_value();
         worker_thread_.join();
         CloseCSV(model_file_);
     }
 
+    /*
+     * Feedback new data into the responding storage linear regression model
+     * @Parameter bw_measured: bandwidth
+     * @Parameter read_bytes: io request read bytes
+     * @Parameter write_bytes: io request write bytes
+     * @Parameter storage_index: the io storage index
+     */
     void Feedback(double bw_measured, double read_bytes, double write_bytes, int storage_index) {
         AUTO_TRACER("StorageCostPredictor::Feedback", bw_measured, read_bytes, write_bytes, storage_index);
         storage_models_[storage_index].Feedback(bw_measured, nprocs_, write_bytes, read_bytes);
         ++window_tick_;
     }
 
+    /*
+     * Predict the bandwidth of given storage for a particular io request
+     * @Parameter read_bytes: io request read data size
+     * @Parameter write_bytes: io request write data size
+     * @Parameter storage_index: the io storage index
+     */
     double Predict(double read_bytes, double write_bytes, int storage_index) {
         AUTO_TRACER("StorageCostPredictor::Predict", read_bytes, write_bytes, storage_index);
         return storage_models_[storage_index].Predict(nprocs_, read_bytes, write_bytes);

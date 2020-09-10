@@ -8,6 +8,9 @@
 #include <string>
 #include <cstring>
 
+/*
+ * A class Deserialize binary data
+ */
 class BinaryDeserializer {
 private:
     char *data_ = nullptr;
@@ -42,6 +45,9 @@ public:
     size_t GetSize() { return buf_off_; }
 };
 
+/*
+ * A class Serialize data into binary
+ */
 class BinarySerializer {
 private:
     char *data_ = nullptr;
