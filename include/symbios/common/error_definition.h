@@ -9,6 +9,9 @@
 #include <exception>
 #include <common/debug.h>
 
+/*
+ * The definition of ErrorCode structure, which contains the error code and its responding error message
+ */
 typedef struct ErrorCode{
 private:
     int code_;
@@ -22,6 +25,9 @@ public:
     void setMessage(std::string message) {message_=message;}
 } ErrorCode;
 
+/*
+ * A custom exception class
+ */
 class ErrorException: public std::exception{
 private:
     bool replace(std::string& str, const std::string& from, const std::string& to) {

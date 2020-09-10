@@ -11,6 +11,10 @@
 
 using namespace sw::redis;
 
+/*
+ * An subclass which inherits from IOClient class
+ * 1) implement the interface to access redis io storage
+ */
 class RedisIOClient: public IOClient {
 private:
     std::vector<std::string> split(const std::string& s, char delimiter)
@@ -53,6 +57,9 @@ public:
      */
     void Read(Data &source, Data &destination) override;
 
+    /*
+     * Remove the request data from redis io
+     */
     bool Remove(Data &source) override;
 
     /*
@@ -60,6 +67,9 @@ public:
      */
     void Write(Data &source, Data &destination) override;
 
+    /*
+     * Get data size interface
+     */
     size_t Size(Data &source) override;
 
 private:

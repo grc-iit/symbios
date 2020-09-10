@@ -8,8 +8,18 @@
 #include <symbios/common/configuration_manager.h>
 #include <symbios/data_distribution/random_dde.h>
 
+/*
+ * Default Constructor
+ * 1) Initialize random number generator
+ */
 RandomDDE::RandomDDE() { srand((unsigned) SYMBIOS_CONF->RANDOM_SEED); }
 
+/*
+ * Select target data distributions for the request by using random policy
+ * @Parameter source: the source request data information
+ * @Parameter destination: the original destination data information
+ * @return std::vector<DataDistribution>: return a group of selected data distributions
+ */
 std::vector<DataDistribution> RandomDDE::Distribute(Data &source, Data &destination) {
 
     AUTO_TRACER("RandomDDE::Distribute", request);

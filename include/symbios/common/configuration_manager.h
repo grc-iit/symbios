@@ -17,6 +17,9 @@
 
 #define SYMBIOS_CONF basket::Singleton<symbios::ConfigurationManager>::GetInstance()
 namespace symbios {
+    /*
+     * A class to manage the configuation information used in Symbios
+     */
     class ConfigurationManager {
 
     private:
@@ -68,6 +71,13 @@ namespace symbios {
             variable = CharStruct(replaceEnvVariable(temp_variable));
         }
 
+        /*
+         * Read the storage solutions from configuration file
+         * @Parameter doc: the rapidjson Document instance
+         * @Parameter member: the element name you want to read from the configuration file
+         * @Parameter variable: the value get from this function, it contains all the storage solutions attained from
+         *  the configuration file
+         */
         void config(rapidjson::Document &doc, const char *member,
                     std::unordered_map<uint16_t, std::shared_ptr<StorageSolution>>&variable) {
             variable = std::unordered_map<uint16_t, std::shared_ptr<StorageSolution>>();
@@ -104,6 +114,12 @@ namespace symbios {
             }
         }
 
+        /*
+        * Read the data distribution policy value from configuration file
+        * @Parameter doc: the rapidjson Document instance
+        * @Parameter member: the element name you want to read from the configuration file
+        * @Parameter variable: the value get from this function, it means the responding data distribution policy
+        */
         void config(rapidjson::Document &doc, const char *member, DataDistributionPolicy &variable) {
             if(!doc.HasMember(member)) return;
             assert(doc[member].IsString());
@@ -149,6 +165,9 @@ namespace symbios {
         }
 
     public:
+        /*
+         * Configuration variables used in symbios
+         */
         CharStruct SERVER_LISTS, CLIENT_LISTS;
         uint16_t SYMBIOS_PORT;
         uint16_t SERVER_RPC_THREADS;
@@ -160,6 +179,10 @@ namespace symbios {
         std::unordered_map<uint16_t, std::shared_ptr<StorageSolution>> STORAGE_SOLUTIONS;
         DataDistributionPolicy DATA_DISTRIBUTION_POLICY;
 
+        /*
+         * Default Constructor
+         * 1) Initialize all the configuration variables used in symbios
+         */
         ConfigurationManager() : SERVER_LISTS("/home/user/symbios/conf/server_lists/single_node_symbios_server"),
                                  CLIENT_LISTS("/home/user/symbios/conf/server_lists/single_node_symbios_client"),
                                  SYMBIOS_PORT(8000),
@@ -177,6 +200,9 @@ namespace symbios {
 
         }
 
+        /*
+         * Load and read the configuration information from the given configuration file
+         */
         void LoadConfiguration() {
             using namespace rapidjson;
 
@@ -207,12 +233,18 @@ namespace symbios {
             fclose(outfile);
         }
 
+        /*
+         * Load and read symbios client configuration file
+         */
         void ConfigureSymbiosClient() {
             LoadConfiguration();
             BASKET_CONF->ConfigureDefaultClient(SERVER_LISTS.c_str());
             BASKET_CONF->RPC_PORT = SYMBIOS_PORT;
         }
 
+        /*
+         * Load and read symbios server configuration file
+         */
         void ConfigureSymbiosServer() {
             LoadConfiguration();
             BASKET_CONF->RPC_THREADS = SERVER_RPC_THREADS;

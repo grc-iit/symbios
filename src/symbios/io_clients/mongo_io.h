@@ -19,6 +19,10 @@
 #include <memory>
 #include "io.h"
 
+/*
+ * An subclass which inherits from IOClient class
+ * 1) implement the interface to access mongo io storage
+ */
 class MongoIOClient: public IOClient {
 public:
     /*
@@ -76,8 +80,14 @@ public:
      */
     void Write(Data &source, Data &destination) override;
 
+    /*
+     * Remove data interface
+     */
     bool Remove(Data &source) override;
 
+    /*
+     * Get data size interface
+     */
     size_t Size(Data &source) override;
 
 private:

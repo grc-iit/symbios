@@ -7,6 +7,10 @@
 
 #include <symbios/data_distribution/data_distribution.h>
 
+/*
+ * A subclass which inherits from DataDistributionEngine
+ * 1) selecting target data distributions by dynamic programming policy
+ */
 class DynamicProgrammingDDE: public DataDistributionEngine {
 public:
     /*
@@ -17,7 +21,7 @@ public:
      * Methods
      */
 
-    // Select the target storages for the request by using dynamic programming DDE
+    // Select the target storages for the source request by using dynamic programming DDE
     std::vector<DataDistribution> Distribute(Data &source, Data &destination) override;
 };
 

@@ -8,10 +8,16 @@
 
 #include <symbios/io_clients/io.h>
 
+/*
+ * An subclass which inherits from IOClient class
+ * 1) implement the interface to access file io storage
+ */
 class FileIOClient: public IOClient  {
 public:
     /**
      * Constructor
+     * 1) Checking if the file directory exists.
+     *    If the file directory is non exist, throw an exception.
      */
     FileIOClient(uint16_t storage_index):IOClient(storage_index){
         auto file_solution = std::static_pointer_cast<FileSS>(solution);
@@ -34,8 +40,14 @@ public:
      */
     void Write(Data &source, Data &destination) override;
 
+    /*
+     * Remove the data from the file io
+     */
     bool Remove(Data &source) override;
 
+    /*
+     * Get the source file size
+     */
     size_t Size(Data &source) override;
 
 };

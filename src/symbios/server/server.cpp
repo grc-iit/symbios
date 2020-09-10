@@ -4,6 +4,11 @@
 #include <symbios/metadata_orchestrator/metadata_orchestrator.h>
 #include <symbios/io_clients/io_factory.h>
 
+/*
+ * Default Constructor
+ * 1) Initialize and get rpc instance
+ * 2) preload DataDistributionEngineFactory/MetadataOrchestrator/IOFactory classes
+ */
 symbios::Server::Server(){
     SYMBIOS_CONF->ConfigureSymbiosServer();
     auto basket=BASKET_CONF;
@@ -25,16 +30,30 @@ symbios::Server::Server(){
 
 }
 
+/*
+ * Running interface which is called by external module
+ */
 void symbios::Server::Run(std::future<void> futureObj) {
     RunInternal(std::move(futureObj));
 }
 
+/*
+ * Internal running interface
+ */
 void symbios::Server::RunInternal(std::future<void> futureObj) {
     while(futureObj.wait_for(std::chrono::milliseconds(1)) == std::future_status::timeout){
         usleep(10000);
     }
 }
 
+/*
+ * Store the source request data
+ * 1) Getting the data distributions according to the data distribution policy
+ * 2) Calling MetadataOrchestrator module to store the metadata information
+ * 3) Iterating all the data distributions and storing data into the responding storage.
+ * @Parameter source: the source data information that contains the data you want to store
+ * @Parameter destination: the original destination information that includes the io related information
+ */
 int symbios::Server::Store(Data &source, Data &destination){
     AUTO_TRACER(std::string("symbios::Server::StoreRequest"), request);
     auto dde = basket::Singleton<DataDistributionEngineFactory>::GetInstance()->GetDataDistributionEngine(SYMBIOS_CONF->DATA_DISTRIBUTION_POLICY);
@@ -48,6 +67,15 @@ int symbios::Server::Store(Data &source, Data &destination){
     return SYMBIOS_CONF->SERVER_COUNT;
 }
 
+/*
+ * Locate the source request data
+ * 1) Getting the data distributions from MetadataOrchestrator by locating the request data information
+ * 2) Iterating all the data distributions and getting data from the responding storage.
+ * 3) Merging all the data getting from storages
+ * @Parameter source: the source data information that you want to locate
+ * @Parameter destination: the destination information which will contains the data attained from the responding data distributions
+ * @return Data: the getted data information
+ */
 Data symbios::Server::Locate(Data &source, Data &destination){
     AUTO_TRACER(std::string("symbios::Server::LocateRequest"), request);
     Metadata primary_metadata;
@@ -68,6 +96,14 @@ Data symbios::Server::Locate(Data &source, Data &destination){
     return destination;
 }
 
+/*
+ * Get data size
+ * 1) Getting the data distributions from MetadataOrchestrator by locating the request data information
+ * 2) Iterating all the data distributions and getting data size from the responding storage
+ * 3) Calculating the total data size
+ * @Parameter request: the data request information
+ * @return size_t: the data size
+ */
 size_t symbios::Server::Size(Data &request) {
     AUTO_TRACER(std::string("symbios::Server::Size"), request);
     Metadata primary_metadata;
@@ -84,8 +120,16 @@ size_t symbios::Server::Size(Data &request) {
     return total_size;
 }
 
+/*
+ * Delete the request data
+ * 1) Getting the data distributions from MetadataOrchestrator by locating the request data information
+ * 2) Iterating all the data distributions and removing data from the responding storage.
+ * 3) Calling MetadataOrchestrator module to delete all the metadata information
+ * @Parameter request: the data information that you want to locate
+ * @return bool
+ */
 bool symbios::Server::Delete(Data &request) {
-    AUTO_TRACER(std::string("symbios::Server::Size"), request);
+    AUTO_TRACER(std::string("symbios::Server::Delete"), request);
     Metadata primary_metadata;
     std::vector<DataDistribution> distributions;
     try {

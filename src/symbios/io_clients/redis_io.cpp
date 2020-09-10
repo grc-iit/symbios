@@ -10,6 +10,11 @@
 #include <symbios/common/error_codes.h>
 #include <symbios/io_clients/redis_io.h>
 
+/*
+ * Reads data from source into destination buffer while respecting the position_
+ * @parameter source: describe the key-value related information which you want to read from redis
+ * @parameter destination: the memory information
+ */
 void RedisIOClient::Read(Data &source, Data &destination) {
     AUTO_TRACER(std::string("RedisIOClient::Read"), source, destination);
     try {
@@ -39,6 +44,13 @@ void RedisIOClient::Read(Data &source, Data &destination) {
     COMMON_DBGVAR(destination);
 }
 
+/*
+ * Writes data from source into destination buffer while respecting the position_
+ * 1) If the key is non exist in redis, just write the key-value information into redis
+ * 2) If the key has been exist in redis, update the data and then put back to redis
+ * @parameter source: the memory information which stores the data you want to write to redis
+ * @parameter destination: the redis information which has the key information
+ */
 void RedisIOClient::Write(Data &source, Data &destination) {
     AUTO_TRACER("RedisIOClient::Write", source, destination);
     try {
@@ -84,12 +96,22 @@ void RedisIOClient::Write(Data &source, Data &destination) {
     }
 }
 
+/*
+ * Remove the data from redis io storage
+ * @parameter source: the data request information which contains the key you want to remove from redis
+ * @return bool
+ */
 bool RedisIOClient::Remove(Data &source) {
     AUTO_TRACER("RedisIOClient::Remove", source);
     auto resp = m_redisCluster->del(source.id_.c_str());
     return true;
 }
 
+/*
+ * Get the data size
+ * @parameter source: the data request information which contains the key information
+ * @return size_t: if the key is exist in redis, return the data size; if the key is non exist, return 0
+ */
 size_t RedisIOClient::Size(Data &source) {
     auto resp = m_redisCluster->get(source.id_.c_str());
     if(resp){

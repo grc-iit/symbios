@@ -8,6 +8,9 @@
 #include <symbios/server/server.h>
 #include <symbios/common/configuration_manager.h>
 
+/*
+ * The main function to start Symbios server
+ */
 int main(int argc, char* argv[]){
     MPI_Init(&argc,&argv);
     MPI_Barrier(MPI_COMM_WORLD);
