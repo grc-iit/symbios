@@ -6,6 +6,12 @@
 #include <symbios/common/configuration_manager.h>
 #include <symbios/data_distribution/round_robin_dde.h>
 
+/*
+ * Select target data distributions for the request by using round-robin policy
+ * @Parameter source: the source request data information
+ * @Parameter destination: the original destination data information
+ * @return std::vector<DataDistribution>: return a group of selected data distributions
+ */
 std::vector<DataDistribution> RoundRobinDDE::Distribute(Data &source, Data &destination) {
     AUTO_TRACER("RoundRobinDDE::Distribute", request);
     auto distributions = std::vector<DataDistribution>();

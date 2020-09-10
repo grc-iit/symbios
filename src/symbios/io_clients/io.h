@@ -9,6 +9,9 @@
 #include <symbios/common/data_structure.h>
 #include <symbios/common/configuration_manager.h>
 
+/*
+ * An abstract class which provides io storage interface for other modules to access the io storage
+ */
 class IOClient {
 protected:
     std::shared_ptr<StorageSolution> solution;
@@ -35,13 +38,11 @@ public:
       */
      virtual void Write(Data &source, Data &destination) = 0;
     /**
-     * Remove
-     *
+     * Remove interface
      */
     virtual bool Remove(Data &source) = 0;
     /**
-     * Size
-     *
+     * Size interface
      */
     virtual size_t Size(Data &source) = 0;
 };

@@ -14,8 +14,17 @@
 #include <symbios/io_clients/redis_io.h>
 #include <common/debug.h>
 
+/*
+ *  A Factory class which can return a IOClient
+ *  instance according to the given storage index
+ */
 class IOFactory {
 public:
+    /*
+    * Constructor
+    * 1) Initialize all the IOClient instance according to the Storage Solutions
+    *    configured in configuration file
+    */
     IOFactory(){
         for (auto entry : SYMBIOS_CONF->STORAGE_SOLUTIONS) {
             switch (entry.second->io_client_type_){
@@ -32,6 +41,11 @@ public:
         }
     }
 
+    /*
+    * Return an IOClient instance by the given storage index
+    * @Parameter storage_index: the storage index of the given storage solutions in configuration file
+    * @return std::shared_ptr<IOClient>: the responding IOClient instance
+    */
     std::shared_ptr<IOClient> GetIOClient(uint16_t storage_index){
         AUTO_TRACER("IOFactory::GetIOClient", storage_index);
         auto solution = SYMBIOS_CONF->STORAGE_SOLUTIONS[storage_index];

@@ -15,6 +15,11 @@
 #include <symbios/common/error_codes.h>
 #include <symbios/io_clients/mongo_io.h>
 
+/*
+ * Reads data from source into destination buffer while respecting the position_
+ * @parameter source: describe the key-value related information which you want to read from mongo
+ * @parameter destination: the memory information
+ */
 void MongoIOClient::Read(Data &source, Data &destination) {
   AUTO_TRACER("MongoIOClient::Read", source, destination);
 mongocxx::collection file = client[mongo_solution->database_.c_str()].collection(
@@ -37,6 +42,13 @@ mongocxx::collection file = client[mongo_solution->database_.c_str()].collection
     COMMON_DBGVAR(destination);
 }
 
+/*
+ * Writes data from source into destination buffer while respecting the position_
+ * 1) If the key is non exist in mongo, just write the key-value information into mongo
+ * 2) If the key has been exist in mongo, update the data and then put back to mongo
+ * @parameter source: the memory information which stores the data you want to write to mongo
+ * @parameter destination: the redis information which has the key information
+ */
 void MongoIOClient::Write(Data &source, Data &destination) {
     AUTO_TRACER("MongoIOClient::Write", source,destination);
     mongocxx::collection file = client[mongo_solution->database_.c_str()].collection(
@@ -93,6 +105,11 @@ void MongoIOClient::Write(Data &source, Data &destination) {
     } else std::cout << "Inserted id was not an OID type" << "\n";
 }
 
+/*
+ * Remove the data from mongo io storage
+ * @parameter source: the data request information which contains the key you want to remove from mongo
+ * @return bool
+ */
 bool MongoIOClient::Remove(Data &source) {
     AUTO_TRACER("MongoIOClient::Remove", source);
     mongocxx::collection file = client[mongo_solution->database_.c_str()].collection(
@@ -102,6 +119,11 @@ bool MongoIOClient::Remove(Data &source) {
     return true;
 }
 
+/*
+ * Get the data size
+ * @parameter source: the data request information which contains the key information
+ * @return size_t: if the key is exist in mongo, return the data size; if the key is non exist, return 0
+ */
 size_t MongoIOClient::Size(Data &source) {
     bool exists = false;
     Data read_source;

@@ -10,11 +10,17 @@
 #include <symbios/common/enumerations.h>
 #include <rpc/msgpack.hpp>
 
+/*The Data structure for Load and Store request*/
 typedef struct Data{
-    CharStruct id_; // for file io, the "id_" is the filename; for object store io, the "id_" is the key.
-    size_t position_; // read/write start position
-    char* buffer_;  // data content
+    /* The "id_" is the filename for file io; And the "id_" is key for redis/mongo io.*/
+    CharStruct id_;
+    // read/write start position
+    size_t position_;
+    // read/write data content
+    char* buffer_;
+    // read/write data size
     size_t data_size_;
+    // native io storage index
     uint16_t storage_index_;
 
     /*Define the default, copy and move constructor*/
@@ -35,7 +41,9 @@ typedef struct Data{
     }
 } Data;
 
+/*Base Storage Solution data structure*/
 typedef struct StorageSolution{
+    // The 'end_point' is the mount directory for file io; it is the ip address for redis io, uri for mongo io.
     CharStruct end_point_;
     IOClientType io_client_type_;
     /*Define the default, copy and move constructor*/
@@ -54,6 +62,7 @@ typedef struct StorageSolution{
     }
 } StorageSolution;
 
+/*Definition of File Storage Solution structure*/
 typedef struct FileSS: public StorageSolution{
     /*Define the default, copy and move constructor*/
     FileSS(CharStruct end_point): StorageSolution(end_point,IOClientType::FILE_IO){}
@@ -66,6 +75,7 @@ typedef struct FileSS: public StorageSolution{
     }
 }FileStorageSolution;
 
+/*Definition of Redis Storage Solution structure*/
 typedef struct RedisSS: public StorageSolution{
     std::string port_;
     /*Define the default, copy and move constructor*/
@@ -80,6 +90,7 @@ typedef struct RedisSS: public StorageSolution{
     }
 }RedisSS;
 
+/*Definition of Mongo Storage Solution structure*/
 typedef struct MongoSS: public StorageSolution{
     CharStruct database_;
     CharStruct collection_;
@@ -96,11 +107,11 @@ typedef struct MongoSS: public StorageSolution{
     }
 }MongoSS;
 
-
+/*Definition of Data Distribution structure*/
 typedef struct DataDistribution{
     Data source_data_; // memory buffer for write and file buffer for read
     Data destination_data_; // file info for write and memory info for read
-    uint16_t storage_index_; // native io client type
+    uint16_t storage_index_; // native io storage index
 
     /*Define the default, copy and move constructor*/
     DataDistribution(): storage_index_(), destination_data_(), source_data_(){}
@@ -118,6 +129,7 @@ typedef struct DataDistribution{
     }
 } DataDistribution;
 
+/*Definition of Metadata structure*/
 typedef struct Metadata{
     bool is_link_;
     uint16_t storage_index_;

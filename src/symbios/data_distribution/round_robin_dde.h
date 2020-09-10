@@ -8,6 +8,10 @@
 #include <symbios/data_distribution/data_distribution.h>
 #include <basket/sequencer/global_sequence.h>
 
+/*
+ * A subclass which inherits from DataDistributionEngine
+ * 1) selecting target data distributions by round-robin policy
+ */
 class RoundRobinDDE: public DataDistributionEngine {
 private:
     basket::global_sequence sequence;
@@ -21,7 +25,7 @@ public:
      * Methods
      */
 
-    // Select target storages for the request by using round-robin data placement policy
+    // Select target storages for the source request by using round-robin data placement policy
     std::vector<DataDistribution> Distribute(Data &source, Data &destination) override;
 };
 

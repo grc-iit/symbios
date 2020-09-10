@@ -8,6 +8,9 @@
 #include <symbios/common/data_structure.h>
 #include <vector>
 
+/*
+ * An abstract class which provides data distribution interface for other modules
+ */
 class DataDistributionEngine {
 public:
     /*
@@ -18,7 +21,7 @@ public:
      * Methods
      */
 
-    // select the target storages for the request
+    // select the target storages for the source request
     virtual std::vector<DataDistribution> Distribute(Data &source, Data &destination) = 0;
 };
 

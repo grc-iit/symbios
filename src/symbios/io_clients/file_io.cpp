@@ -11,6 +11,11 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+/*
+ * Reads data from source into destination buffer while respecting the position_
+ * @parameter source: the file related information which you want to read
+ * @parameter destination: the memory information
+ */
 void FileIOClient::Read(Data &source, Data &destination) {
     AUTO_TRACER("FileIOClient::Read", source, destination);
     const char *file_name = source.id_.c_str();
@@ -43,8 +48,13 @@ void FileIOClient::Read(Data &source, Data &destination) {
     COMMON_DBGVAR(destination);
 }
 
+/*
+ * Writes data from source into destination buffer while respecting the position_
+ * @parameter source: the memory information which stores the data you want to write to file io
+ * @parameter destination: the file io information which has the file_name and writing position information
+ */
 void FileIOClient::Write(Data &source, Data &destination) {
-    AUTO_TRACER("FileIOClient::Read", source, destination);
+    AUTO_TRACER("FileIOClient::Write", source, destination);
     const char *dest_file_name = destination.id_.c_str();
     int fileFd = open(dest_file_name, O_RDWR | O_CREAT, 0644);
     if (fileFd == -1) {
@@ -67,12 +77,22 @@ void FileIOClient::Write(Data &source, Data &destination) {
     }
 }
 
+/*
+ * Remove the data from file io storage
+ * @parameter source: the data request information which contains the filename you want to remove from file io storage
+ * @return bool
+ */
 bool FileIOClient::Remove(Data &source) {
     AUTO_TRACER("FileIOClient::Remove", source);
     remove(source.id_.c_str());
     return true;
 }
 
+/*
+ * Get file size
+ * @parameter source: the data request information which contains the filename
+ * @return size_t: the file size, if the file is non exist in file io storage, return 0
+ */
 size_t FileIOClient::Size(Data &source) {
     if(boost::filesystem::exists(source.id_.c_str())){
         return boost::filesystem::file_size(source.id_.c_str());

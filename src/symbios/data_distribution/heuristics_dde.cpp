@@ -6,6 +6,10 @@
 #include <symbios/common/configuration_manager.h>
 #include <symbios/data_distribution/heuristics_dde.h>
 
+/*
+ * Default Constructor
+ * 1) initialize the maps according to the Storage Solutions we configured in configuration file
+ */
 HeuristicsDDE::HeuristicsDDE() : maps() {
     for (auto entry : SYMBIOS_CONF->STORAGE_SOLUTIONS) {
         maps.insert({entry.second->io_client_type_,
@@ -14,6 +18,15 @@ HeuristicsDDE::HeuristicsDDE() : maps() {
     }
 }
 
+/*
+ * Select target data distributions for the request by using heuristics policy
+ * 1) if request data size is less than 16KB, Selecting the Mongo io
+ * 2) if request data size is greater than or equal to 16KB but less than 128KB, Selecting the Redis io
+ * 3) if request data size is greater than or equal to 128KB, Selecting the file io.
+ * @Parameter request: the source request data information
+ * @Parameter destination: the original destination data information
+ * @return std::vector<DataDistribution>: return a group of selected data distributions
+ */
 std::vector<DataDistribution> HeuristicsDDE::Distribute(Data &source, Data &destination) {
     AUTO_TRACER("HeuristicsDDE::Distribute", request);
     auto distributions = std::vector<DataDistribution>();

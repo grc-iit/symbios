@@ -14,10 +14,20 @@
 #include <basket/common/singleton.h>
 #include <common/debug.h>
 
+/*
+ *  A Factory class which can return a DataDistributionEngine
+ *  instance according to different policy
+ */
 class DataDistributionEngineFactory {
 public:
+    // Constructor
     DataDistributionEngineFactory() {}
 
+    /*
+     *  Return a responding DataDistributionEngine instance according to the policy
+     *  @Parameter policy: the data distribution policy
+     *  @return std::shared_ptr<DataDistributionEngine>: the responding DataDistributionEngine instance
+     */
     std::shared_ptr<DataDistributionEngine> GetDataDistributionEngine(DataDistributionPolicy &policy) {
         AUTO_TRACER("DataDistributionEngineFactory::GetDataDistributionEngine", policy);
         switch (policy) {
