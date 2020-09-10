@@ -156,6 +156,7 @@ namespace symbios {
         CharStruct CONFIGURATION_FILE;
         uint16_t SERVER_COUNT;
         uint16_t RANDOM_SEED;
+        long MAX_OBJ_SIZE;
         std::unordered_map<uint16_t, std::shared_ptr<StorageSolution>> STORAGE_SOLUTIONS;
         DataDistributionPolicy DATA_DISTRIBUTION_POLICY;
 
@@ -167,6 +168,7 @@ namespace symbios {
                                  CONFIGURATION_FILE("/home/user/symbios/conf/base_symbios.conf"),
                                  SERVER_COUNT(1),
                                  RANDOM_SEED(100),
+                                 MAX_OBJ_SIZE(2*1024*1024),
                                  STORAGE_SOLUTIONS(),
                                  DATA_DISTRIBUTION_POLICY(DataDistributionPolicy::RANDOM_POLICY){
             STORAGE_SOLUTIONS.insert({0, std::make_shared<FileStorageSolution>("./") });

@@ -22,7 +22,7 @@ public:
      */
 
     // Select target storages for the request by using round-robin data placement policy
-    std::vector<DataDistribution> Distribute(Data& request) override;
+    std::vector<DataDistribution> Distribute(Data &source, Data &destination) override;
 };
 
 #endif //SYMBIOS_ROUNDROBINDATAPLACEMENT_H

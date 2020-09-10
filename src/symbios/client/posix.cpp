@@ -121,22 +121,23 @@ size_t fread(void *ptr, std::size_t size, std::size_t count, FILE *stream) {
     auto posix = basket::Singleton<symbios::Posix>::GetInstance();
     if (posix->isFileDescriptorTracked(stream)) {
         auto client = basket::Singleton<symbios::Client>::GetInstance();
-        auto data = Data();
+        auto source = Data();
         //get the filename
         auto data_size = size * count;
         auto stat = posix->GetStat(stream);
         if (stat.first){
             if(stat.second.file_size_ < stat.second.file_pointer_ +  data_size) return -1;
-            data.id_ = stat.second.filename_;
-            data.position_ = stat.second.file_pointer_;
+            source.id_ = stat.second.filename_;
+            source.position_ = stat.second.file_pointer_;
         }
         else return stat.first;
-        data.data_size_=data_size;
-        data.buffer_= static_cast<char *>(malloc(data_size));
-        client->LocateRequest(data);
-        if (data.data_size_ != data_size) return data.data_size_;
-        memcpy(ptr, data.buffer_, data.data_size_);
-        return data.data_size_;
+        source.data_size_=data_size;
+        auto destination = source;
+        destination.position_=0;
+        client->LocateRequest(source,destination);
+        if (destination.data_size_ != data_size) return destination.data_size_;
+        memcpy(ptr, destination.buffer_, destination.data_size_);
+        return destination.data_size_;
     }
     MAP_OR_FAIL(fread);
     return __real_fread(ptr, size, count, stream);
@@ -146,21 +147,23 @@ size_t fwrite(const void *ptr, size_t size, size_t count, FILE *stream) {
     auto posix = basket::Singleton<symbios::Posix>::GetInstance();
     if (posix->isFileDescriptorTracked(stream)) {
         auto client = basket::Singleton<symbios::Client>::GetInstance();
-        auto data = Data();
+        auto destination = Data();
         //get the filename
         auto data_size = size * count;
         auto stat = posix->GetStat(stream);
         if (stat.first){
             if(stat.second.file_size_ < stat.second.file_pointer_ +  data_size) return -1;
-            data.id_ = stat.second.filename_;
-            data.position_ = stat.second.file_pointer_;
+            destination.id_ = stat.second.filename_;
+            destination.position_ = stat.second.file_pointer_;
         }
         else return stat.first;
         //set the other variables
-        data.data_size_=data_size;
-        data.buffer_= static_cast<char *>(malloc(data_size));
-        memcpy(data.buffer_, ptr, data_size);
-        client->StoreRequest(data);
+        destination.data_size_=data_size;
+        auto source = destination;
+        source.position_ = 0;
+        source.buffer_= static_cast<char *>(malloc(data_size));
+        memcpy(source.buffer_, ptr, data_size);
+        client->StoreRequest(source, destination);
         if(data_size + stat.second.file_pointer_ > stat.second.file_size_){
             stat.second.file_size_ = data_size + stat.second.file_pointer_;
             posix->UpdateStat(stream,stat.second);

@@ -6,7 +6,7 @@
 #include <string>
 #include <symbios/data_distribution/dp_dde.h>
 
-std::vector<DataDistribution> DynamicProgrammingDDE::Distribute(Data &request) {
+std::vector<DataDistribution> DynamicProgrammingDDE::Distribute(Data &source, Data &destination) {
     AUTO_TRACER("DynamicProgrammingDDE::Distribute", request);
     auto distributions = std::vector<DataDistribution>();
     COMMON_DBGVAR(distributions);

@@ -8,8 +8,8 @@ symbios::Server::Server(){
     SYMBIOS_CONF->ConfigureSymbiosServer();
     auto basket=BASKET_CONF;
     rpc=basket::Singleton<RPCFactory>::GetInstance()->GetRPC(BASKET_CONF->RPC_PORT);
-    std::function<int(Data&)> functionStoreRequest(std::bind(&Server::Store, this, std::placeholders::_1));
-    std::function<Data(Data&)> functionLocateRequest(std::bind(&Server::Locate, this, std::placeholders::_1));
+    std::function<int(Data&,Data&)> functionStoreRequest(std::bind(&Server::Store, this, std::placeholders::_1, std::placeholders::_2));
+    std::function<Data(Data&,Data&)> functionLocateRequest(std::bind(&Server::Locate, this, std::placeholders::_1, std::placeholders::_2));
     std::function<size_t(Data&)> functionSizeRequest(std::bind(&Server::Size, this, std::placeholders::_1));
     std::function<bool(Data&)> functionDeleteRequest(std::bind(&Server::Delete, this, std::placeholders::_1));
     rpc->bind("StoreRequest", functionStoreRequest);
@@ -35,11 +35,11 @@ void symbios::Server::RunInternal(std::future<void> futureObj) {
     }
 }
 
-int symbios::Server::Store(Data &request){
+int symbios::Server::Store(Data &source, Data &destination){
     AUTO_TRACER(std::string("symbios::Server::StoreRequest"), request);
     auto dde = basket::Singleton<DataDistributionEngineFactory>::GetInstance()->GetDataDistributionEngine(SYMBIOS_CONF->DATA_DISTRIBUTION_POLICY);
-    auto distributions = dde->Distribute(request);
-    basket::Singleton<MetadataOrchestrator>::GetInstance()->Store(request,distributions);
+    auto distributions = dde->Distribute(source,destination);
+    basket::Singleton<MetadataOrchestrator>::GetInstance()->Store(destination,distributions);
     for(auto distribution:distributions){
         basket::Singleton<IOFactory>::GetInstance()->GetIOClient(distribution.destination_data_.storage_index_)->Write(distribution.source_data_, distribution.destination_data_);
         COMMON_DBGMSG("Storing data in "<<distribution.destination_data_.storage_index_);
@@ -48,24 +48,24 @@ int symbios::Server::Store(Data &request){
     return SYMBIOS_CONF->SERVER_COUNT;
 }
 
-Data symbios::Server::Locate(Data &request){
+Data symbios::Server::Locate(Data &source, Data &destination){
     AUTO_TRACER(std::string("symbios::Server::LocateRequest"), request);
     Metadata primary_metadata;
-    auto distributions = basket::Singleton<MetadataOrchestrator>::GetInstance()->Locate(request, primary_metadata);
+    auto distributions = basket::Singleton<MetadataOrchestrator>::GetInstance()->Locate(source, primary_metadata);
     int total_size= 0;
     for(auto &distribution:distributions){
         basket::Singleton<IOFactory>::GetInstance()->GetIOClient(distribution.destination_data_.storage_index_)->Read(distribution.source_data_,distribution.destination_data_);
         total_size+=distribution.destination_data_.data_size_;
     }
-    request.buffer_= static_cast<char *>(malloc(total_size));
+    destination.buffer_= static_cast<char *>(malloc(total_size));
     long start=0;
     for(auto &distribution:distributions){
-        memcpy(request.buffer_+start,distribution.destination_data_.buffer_+ distribution.destination_data_.position_, distribution.destination_data_.data_size_- distribution.destination_data_.position_);
+        memcpy(destination.buffer_+start,distribution.destination_data_.buffer_+ distribution.destination_data_.position_, distribution.destination_data_.data_size_- distribution.destination_data_.position_);
         free(distribution.destination_data_.buffer_);
         start+=distribution.destination_data_.data_size_ - distribution.destination_data_.position_;
     }
-    COMMON_DBGVAR(request.buffer_);
-    return request;
+    COMMON_DBGVAR(destination.buffer_);
+    return destination;
 }
 
 size_t symbios::Server::Size(Data &request) {

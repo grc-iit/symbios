@@ -19,7 +19,7 @@ public:
      */
 
     // select the target storages for the request
-    virtual std::vector<DataDistribution> Distribute(Data& request) = 0;
+    virtual std::vector<DataDistribution> Distribute(Data &source, Data &destination) = 0;
 };
 
 #endif //SYMBIOS_DATA_DISTRIBUTION_H

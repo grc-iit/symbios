@@ -28,9 +28,9 @@ mongocxx::collection file = client[mongo_solution->database_.c_str()].collection
         if(source_size == 0){
             source_size = data.size();
         }
-        destination.buffer_= static_cast<char *>(malloc(source_size - source.position_) );
+        destination.buffer_= static_cast<char *>(malloc(source_size) );
         memcpy(destination.buffer_,data.data()+source.position_,source_size - source.position_);
-        destination.data_size_ = source_size - source.position_;
+        destination.data_size_ = source_size;
     } else {
         throw ErrorException(READ_MONGODB_DATA_FAILED);
     }
@@ -52,34 +52,33 @@ void MongoIOClient::Write(Data &source, Data &destination) {
         exists = false;
     }
     if (exists) {
-        if (source.data_size_ - source.position_ >= read_source.data_size_ || source.data_size_ - source.position_ + destination.position_ >= read_source.data_size_) {
+        if (source.data_size_  >= read_source.data_size_ || source.data_size_  + destination.position_ >= read_source.data_size_) {
             new_val=std::string();
-            new_val.resize(destination.position_ + source.data_size_ - source.position_);
+            new_val.resize(destination.position_ + source.data_size_ );
             if (destination.position_ > 0) {
-                memcpy(new_val.data(), read_source.buffer_, destination.position_ - 1);
+                memcpy(new_val.data(), read_source.buffer_, destination.position_ > read_source.data_size_? read_source.data_size_:destination.position_ - 1);
             }
-            memcpy(new_val.data() + destination.position_, source.buffer_ + source.position_, source.data_size_ - source.position_);
+            memcpy(new_val.data() + destination.position_, source.buffer_ + source.position_, source.data_size_);
             source.position_ = 0;
         } else {
             new_val=std::string(read_source.buffer_,read_source.data_size_);
             // update the old_value
             memcpy(new_val.data() + destination.position_,
                    source.buffer_ + source.position_,
-                   source.data_size_ - source.position_);
+                   source.data_size_ );
             source.position_ = 0;
         }
         file.delete_many(bsoncxx::builder::basic::make_document(
                 bsoncxx::builder::basic::kvp("key", std::string(destination.id_.c_str()))));
         free(read_source.buffer_);
     }else{
-        new_val=std::string(source.buffer_,source.data_size_);
+        new_val=std::string(source.buffer_+ source.position_,source.data_size_);
     }
     auto document = bsoncxx::builder::basic::document{};
     using bsoncxx::builder::basic::kvp;
-    std::string data(new_val.data() + source.position_, source.data_size_ - source.position_);
     std::string keyName(destination.id_.c_str());
     //std::cout<<"KeyName :"<<keyName<<"\n";
-    document.append(kvp("key", keyName), kvp("value", data));
+    document.append(kvp("key", keyName), kvp("value", new_val));
 
     //adding the created key-value pair to the collection
     bsoncxx::document::view putView = document.view();//get the view

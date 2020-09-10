@@ -15,9 +15,9 @@ namespace symbios {
     public:
         Client();
 
-        void StoreRequest(Data &request);
+        void StoreRequest(Data &source,Data &destination);
 
-        void LocateRequest(Data &request);
+        void LocateRequest(Data &source,Data &destination);
 
         bool Delete(Data &request);
 

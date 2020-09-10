@@ -11,20 +11,20 @@ symbios::Client::Client(){
     COMMON_DBGVAR(BASKET_CONF->RPC_PORT);
 }
 
-void symbios::Client::StoreRequest(Data &request) {
+void symbios::Client::StoreRequest(Data &source,Data &destination) {
     AUTO_TRACER("symbios::Client::StoreRequest", request);
     int server = rand() % BASKET_CONF->NUM_SERVERS;
-    auto num_servers = rpc->call<RPCLIB_MSGPACK::object_handle>(server, "StoreRequest", request) .as<int>();
+    auto num_servers = rpc->call<RPCLIB_MSGPACK::object_handle>(server, "StoreRequest", source,destination) .as<int>();
     COMMON_DBGVAR(num_servers);
 }
 
-void symbios::Client::LocateRequest(Data &request) {
+void symbios::Client::LocateRequest(Data &source,Data &destination) {
 
     AUTO_TRACER("symbios::Client::LocateRequest", request);
     int server = rand() % BASKET_CONF->NUM_SERVERS;
-    auto ret = rpc->call<RPCLIB_MSGPACK::object_handle>(server, "LocateRequest", request).as<Data>();
-    if(request.buffer_==NULL) request.buffer_ = static_cast<char *>(malloc(ret.data_size_));
-    memcpy(request.buffer_,ret.buffer_,ret.data_size_);
+    auto ret = rpc->call<RPCLIB_MSGPACK::object_handle>(server, "LocateRequest", source,destination).as<Data>();
+    if(destination.buffer_==NULL) destination.buffer_ = static_cast<char *>(malloc(ret.data_size_));
+    memcpy(destination.buffer_,ret.buffer_,ret.data_size_);
     COMMON_DBGVAR(request.buffer_);
 
 }

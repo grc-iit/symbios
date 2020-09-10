@@ -10,7 +10,7 @@
 
 RandomDDE::RandomDDE() { srand((unsigned) SYMBIOS_CONF->RANDOM_SEED); }
 
-std::vector<DataDistribution> RandomDDE::Distribute(Data &request) {
+std::vector<DataDistribution> RandomDDE::Distribute(Data &source, Data &destination) {
 
     AUTO_TRACER("RandomDDE::Distribute", request);
     auto distributions = std::vector<DataDistribution>();
@@ -21,9 +21,9 @@ std::vector<DataDistribution> RandomDDE::Distribute(Data &request) {
             SYMBIOS_CONF->STORAGE_SOLUTIONS[selected_solution_index];
     COMMON_DBGVAR3(random_number, size, selected_solution->io_client_type_);
     auto distribution = DataDistribution();
-    distribution.storage_index_ = request.storage_index_;
-    distribution.destination_data_ = request;
-    distribution.source_data_ = request;
+    distribution.storage_index_ = source.storage_index_;
+    distribution.destination_data_ = destination;
+    distribution.source_data_ = source;
     distribution.destination_data_.storage_index_ = selected_solution_index;
     distributions.push_back(distribution);
     COMMON_DBGVAR(distributions);
