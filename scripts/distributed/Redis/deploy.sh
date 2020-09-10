@@ -7,6 +7,7 @@ NC='\033[0m' # No Color
 
 CWD="$(pwd)"
 HOSTFILE=${1}
+MASTER_SETUP_FOLDER=${2} #${HOME}/symbios-setup/Redis
 LOG_DIR="/mnt/hdd/${USER}/Redis"
 
 PORT_BASE=7000
@@ -19,8 +20,8 @@ i=0
 for server in "${SERVERS[@]}"; do
   server_ip=$(getent ahosts "${server}" | grep STREAM | awk '{print $1}')
   ((port = $PORT_BASE + $i))
-  mkdir -p "${LOG_DIR}"/"${port}"
-  rm -rf "${LOG_DIR}"/"${port}"/redis.conf
+  mkdir -p "${MASTER_SETUP_FOLDER}"/"${port}"
+  rm -rf "${MASTER_SETUP_FOLDER}"/"${port}"/redis.conf
   (
     echo "port $port"
     echo "cluster-enabled yes"
@@ -29,7 +30,8 @@ for server in "${SERVERS[@]}"; do
     echo "appendonly yes"
     echo "protected-mode no"
     echo "logfile ${LOG_DIR}/${port}/file.log"
-  ) >>"${LOG_DIR}"/"${port}"/redis.conf
+    echo "dir ${LOG_DIR}"
+  ) >>"${MASTER_SETUP_FOLDER}"/"${port}"/redis.conf
   ((i = i + 1))
 done
 
@@ -40,7 +42,7 @@ for server in "${SERVERS[@]}"; do
   ((port = $PORT_BASE + $i))
   echo Copying configuration directory $port to $server ...
   ssh $server mkdir -p "${LOG_DIR}"
-  rsync -qraz "${LOG_DIR}"/"${port}" $server:"${LOG_DIR}"/ &
+  rsync -qraz "${MASTER_SETUP_FOLDER}"/"${port}" $server:"${LOG_DIR}"/ &
   ((i = i + 1))
 done
 wait
@@ -70,7 +72,7 @@ for server in "${SERVERS[@]}"; do
   cmd="${cmd}${server_ip}:${port} "
   ((i = i + 1))
 done
-cmd="${cmd}--cluster-replicas 1"
+cmd="${cmd}--cluster-replicas 0"
 echo "Cluster command: ${cmd}"
 echo yes | $cmd
 
