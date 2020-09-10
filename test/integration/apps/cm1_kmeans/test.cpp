@@ -71,12 +71,14 @@ int main(int argc, char * argv[]){
     std::string trace_path = args.GetStringOpt("-t");
     std::string output_path = args.GetStringOpt("-o");
     std::string symbios_conf = args.GetStringOpt("-f");
-    int my_rank;
+    int my_rank,comm_size;
     MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &comm_size);
     trace_replayer tr;
-    double cm1_time = tr.replay_trace(trace_path + boost::filesystem::path::preferred_separator + "CM1.csv", output_path + boost::filesystem::path::preferred_separator + "data.bat", reps, my_rank, (IOLib)mode, stor_type, chunk, symbios_conf);
-    double kmeans_time = tr.replay_trace(trace_path + boost::filesystem::path::preferred_separator + "Kmeans.csv", output_path + boost::filesystem::path::preferred_separator + "data.bat", reps, my_rank, (IOLib)mode, stor_type, chunk, symbios_conf);
-    tr.clean_data(trace_path + boost::filesystem::path::preferred_separator + "CM1.csv", output_path + boost::filesystem::path::preferred_separator + "data.bat", reps, my_rank, (IOLib)mode, stor_type, chunk, symbios_conf);
+    auto filename = output_path + boost::filesystem::path::preferred_separator + "data_" +std::to_string(my_rank)+".bat";
+    double cm1_time = tr.replay_trace(trace_path + boost::filesystem::path::preferred_separator + "CM1.csv",filename , reps, my_rank, (IOLib)mode, stor_type, chunk, symbios_conf);
+    double kmeans_time = tr.replay_trace(trace_path + boost::filesystem::path::preferred_separator + "Kmeans.csv", filename, reps, my_rank, (IOLib)mode, stor_type, chunk, symbios_conf);
+    tr.clean_data(trace_path + boost::filesystem::path::preferred_separator + "CM1.csv", filename, reps, my_rank, (IOLib)mode, stor_type, chunk, symbios_conf);
     if(my_rank == 0 && args.OptIsSet("-out")) {
         std::string output_path = args.GetStringOpt("-out");
         bool exists = boost::filesystem::exists(output_path);
@@ -84,9 +86,9 @@ int main(int argc, char * argv[]){
         std::stringstream stream;
         std::ofstream outfile(output_path, std::ofstream::out | std::ofstream::app);
         if(!exists) {
-            stream << "cm1,kmeans,mode,stor_type,chunk" << std::endl;
+            stream << "cm1,kmeans,mode,stor_type,chunk,nprocs" << std::endl;
         }
-        stream << cm1_time << "," << kmeans_time << "," << mode << "," << stor_type << "," << chunk << std::endl;
+        stream << cm1_time << "," << kmeans_time << "," << mode << "," << stor_type << "," << chunk << "," << comm_size << std::endl;
         outfile << stream.str();
         std::cout << stream.str();
     }
