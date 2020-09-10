@@ -75,6 +75,8 @@ int main(int argc, char * argv[]){
     MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
     MPI_Comm_size(MPI_COMM_WORLD, &comm_size);
     trace_replayer tr;
+    SYMBIOS_CONF->CONFIGURATION_FILE=symbios_conf;
+    SYMBIOS_CONF->ConfigureSymbiosClient();
     auto filename = output_path + boost::filesystem::path::preferred_separator + "data_" +std::to_string(my_rank)+".bat";
     double cm1_time = tr.replay_trace(trace_path + boost::filesystem::path::preferred_separator + "CM1.csv",filename , reps, my_rank, (IOLib)mode, stor_type, chunk, symbios_conf);
     double kmeans_time = tr.replay_trace(trace_path + boost::filesystem::path::preferred_separator + "Kmeans.csv", filename, reps, my_rank, (IOLib)mode, stor_type, chunk, symbios_conf);
