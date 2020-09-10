@@ -14,6 +14,9 @@ client_hostfile="${HOME}/symbios/scripts/distributed/hostfile/client"
 #MONGO
 CONFIG_SERVER_COUNT=2
 
+#redis
+"MASTER_SETUP_FOLDER=${HOME}/symbios-setup/Redis"
+
 ${RUN_ORANGE} "${conf_file}" "${server_dir}" "${client_dir}" "${server_hostfile}" "${client_hostfile}"
-${RUN_REDIS} "${server_hostfile}"
+${RUN_REDIS} "${server_hostfile}" "${MASTER_SETUP_FOLDER}"
 ${RUN_MONGO} "${server_hostfile}" "${client_hostfile}" "${CONFIG_SERVER_COUNT}"
