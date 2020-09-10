@@ -86,9 +86,9 @@ int main(int argc, char * argv[]){
         std::stringstream stream;
         std::ofstream outfile(output_path, std::ofstream::out | std::ofstream::app);
         if(!exists) {
-            stream << "cm1,kmeans,mode,stor_type,chunk,nprocs" << std::endl;
+            stream << "cm1,kmeans,mode,stor_type,chunk,nprocs,servers" << std::endl;
         }
-        stream << cm1_time << "," << kmeans_time << "," << mode << "," << stor_type << "," << chunk << "," << comm_size << std::endl;
+        stream << cm1_time << "," << kmeans_time << "," << mode << "," << stor_type << "," << chunk << "," << comm_size << "," << BASKET_CONF->NUM_SERVERS << std::endl;
         outfile << stream.str();
         std::cout << stream.str();
     }
