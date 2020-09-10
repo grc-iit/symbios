@@ -5,9 +5,10 @@
 #include <common/arguments.h>
 #include <common/replayer.h>
 #include <boost/filesystem.hpp>
+#include <fstream>
 
 class ReplayArgs : public common::args::ArgMap {
-  private:
+private:
     void VerifyArgs(void) {
         AssertOptIsSet("-r");
         AssertOptIsSet("-m");
@@ -18,9 +19,9 @@ class ReplayArgs : public common::args::ArgMap {
         AssertOptIsSet("-f");
     }
 
-  public:
+public:
     void Usage(void) {
-        std::cout << "Usage: ./wrf -[param-id] [value] ... " << std::endl;
+        std::cout << "Usage: ./cm1_kmeans -[param-id] [value] ... " << std::endl;
         std::cout << std::endl;
         std::cout << "-r [int]: number of repetitions" << std::endl;
         std::cout << "-c [int]: Chunk size of storage" << std::endl;
@@ -35,6 +36,7 @@ class ReplayArgs : public common::args::ArgMap {
         std::cout << "  REDIS" << std::endl;
         std::cout << "-t [string]: Trace directory" << std::endl;
         std::cout << "-o [string]: Output directory" << std::endl;
+        std::cout << "-out [string]: output csv" << std::endl;
         std::cout << "-f [string]: Symbios configuration file (optional)" << std::endl;
     }
 
@@ -51,6 +53,7 @@ class ReplayArgs : public common::args::ArgMap {
         AddOpt("-t", common::args::ArgType::kString);
         AddOpt("-o", common::args::ArgType::kString);
         AddOpt("-f", common::args::ArgType::kString);
+        AddOpt("-out", common::args::ArgType::kString);
         AddOpt("-r", common::args::ArgType::kInt);
         AddOpt("-c", common::args::ArgType::kInt);
         ArgIter(argc, argv);
@@ -60,9 +63,7 @@ class ReplayArgs : public common::args::ArgMap {
 
 int main(int argc, char * argv[]){
     MPI_Init(&argc, &argv);
-
     ReplayArgs args(argc, argv);
-
     int reps = args.GetIntOpt("-r");
     int mode = args.GetIntOpt("-m");
     int stor_type = args.GetIntOpt("-s");
@@ -70,15 +71,27 @@ int main(int argc, char * argv[]){
     std::string trace_path = args.GetStringOpt("-t");
     std::string output_path = args.GetStringOpt("-o");
     std::string symbios_conf = args.GetStringOpt("-f");
-    int my_rank;
+    int my_rank,comm_size;
     MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
-
+    MPI_Comm_size(MPI_COMM_WORLD, &comm_size);
     trace_replayer tr;
-    tr.prepare_data(trace_path + boost::filesystem::path::preferred_separator + "WRFC.csv", output_path + boost::filesystem::path::preferred_separator + "wrfc_out.csv", reps, my_rank, (IOLib)mode, stor_type, chunk, symbios_conf);
-    tr.replay_trace(trace_path + boost::filesystem::path::preferred_separator + "WRFC.csv", output_path + boost::filesystem::path::preferred_separator + "wrfc_out.csv", reps, my_rank, (IOLib)mode, stor_type, chunk, symbios_conf);
-    tr.prepare_data(trace_path + boost::filesystem::path::preferred_separator + "WRFA.csv", output_path + boost::filesystem::path::preferred_separator + "wrfa_out.csv", reps, my_rank, (IOLib)mode, stor_type, chunk, symbios_conf);
-    tr.replay_trace(trace_path + boost::filesystem::path::preferred_separator + "WRFA.csv", output_path + boost::filesystem::path::preferred_separator + "wrfa_out.csv", reps, my_rank, (IOLib)mode, stor_type, chunk, symbios_conf);
+    auto filename = output_path + boost::filesystem::path::preferred_separator + "data_" +std::to_string(my_rank)+".bat";
+    double cm1_time = tr.replay_trace(trace_path + boost::filesystem::path::preferred_separator + "WRFC.csv",filename , reps, my_rank, (IOLib)mode, stor_type, chunk, symbios_conf);
+    double kmeans_time = tr.replay_trace(trace_path + boost::filesystem::path::preferred_separator + "WRFA.csv", filename, reps, my_rank, (IOLib)mode, stor_type, chunk, symbios_conf);
+    tr.clean_data(trace_path + boost::filesystem::path::preferred_separator + "WRFC.csv", filename, reps, my_rank, (IOLib)mode, stor_type, chunk, symbios_conf);
+    if(my_rank == 0 && args.OptIsSet("-out")) {
+        std::string output_path = args.GetStringOpt("-out");
+        bool exists = boost::filesystem::exists(output_path);
 
+        std::stringstream stream;
+        std::ofstream outfile(output_path, std::ofstream::out | std::ofstream::app);
+        if(!exists) {
+            stream << "cm1,kmeans,mode,stor_type,chunk,nprocs,servers" << std::endl;
+        }
+        stream << cm1_time << "," << kmeans_time << "," << mode << "," << stor_type << "," << chunk << "," << comm_size << "," << BASKET_CONF->NUM_SERVERS << std::endl;
+        outfile << stream.str();
+        std::cout << stream.str();
+    }
     MPI_Finalize();
     return 0;
 }
