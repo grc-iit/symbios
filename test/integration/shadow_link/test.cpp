@@ -87,7 +87,7 @@ int main(int argc, char* argv[]){
     request.data_size_=request_size;
     ops_per_proc = number_request;
     bytes_per_proc = ops_per_proc * request_size;
-    auto distributions = engine->Distribute(request);
+    auto distributions = engine->Distribute(request,request);
 
     auto mo = basket::Singleton<MetadataOrchestrator>::GetInstance();
     auto path = SYMBIOS_CONF->STORAGE_SOLUTIONS[0]->end_point_ +"/"+std::to_string(rank)+"_";

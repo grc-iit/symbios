@@ -31,13 +31,18 @@ void MetadataOrchestrator::Store(Data &original_request,
     bool is_metadata_updated = false;
     if (exists) {
         for (auto &distribution : distributions) {
-            auto iter = primary_metadata.links_.find(distribution.destination_data_.position_);
+            auto segment = distribution.destination_data_.position_/ SYMBIOS_CONF->MAX_OBJ_SIZE;
+            auto relative_segment_offset = distribution.destination_data_.position_ % SYMBIOS_CONF->MAX_OBJ_SIZE;
+            auto iter = primary_metadata.links_.find(segment);
             if (iter == primary_metadata.links_.end()) {
                 distribution.destination_data_.buffer_= NULL;
-                primary_metadata.links_.insert(
-                        {distribution.destination_data_.position_, distribution.destination_data_});
+                distribution.destination_data_.position_ = relative_segment_offset;
+                distribution.destination_data_.id_+=std::to_string(segment);
+                primary_metadata.links_.insert({segment, distribution.destination_data_});
                 is_metadata_updated = true;
             } else {
+                distribution.destination_data_.id_ = iter->second.id_;
+                distribution.destination_data_.position_ = relative_segment_offset;
                 distribution.destination_data_.storage_index_ = iter->second.storage_index_;
             }
         }
@@ -46,11 +51,14 @@ void MetadataOrchestrator::Store(Data &original_request,
         primary_metadata.is_link_ = false;
         primary_metadata.storage_index_ = original_request.storage_index_;
         for (auto &distribution:distributions) {
+            auto segment = distribution.destination_data_.position_/ SYMBIOS_CONF->MAX_OBJ_SIZE;
+            auto relative_segment_offset = distribution.destination_data_.position_ % SYMBIOS_CONF->MAX_OBJ_SIZE;
+
+            distribution.destination_data_.position_ = relative_segment_offset;
+            distribution.destination_data_.id_+=std::to_string(segment);
             auto link_data =  distribution.destination_data_;
             link_data.buffer_= NULL;
-            link_data.id_ = original_request.id_;
-            link_data.position_=0;
-            primary_metadata.links_.insert({distribution.destination_data_.position_, link_data});
+            primary_metadata.links_.insert({segment, link_data});
         }
     }
     original_metadata.id_ = original_request.id_ + "_meta";
@@ -129,24 +137,33 @@ MetadataOrchestrator::Locate(Data &request, Metadata &primary_metadata) {
         COMMON_DBGMSG("Getting Primary metadata using hop");
     }
     auto distributions = std::vector<DataDistribution>();
-    auto start_position = 0;
     bool get_all = request.data_size_ == 0;
-    for (auto link:primary_metadata.links_) {
-        if (get_all || link.first >= request.position_ && link.first <= request.data_size_) {
-            auto dest_data = link.second;
-            if (!get_all) {
-                if (request.position_ > link.first)
-                    dest_data.position_ = request.position_;
-                if (request.data_size_ < link.first + link.second.data_size_ - link.second.position_)
-                    link.second.buffer_ = request.buffer_;
-            }
-            auto distribution = DataDistribution();
-            distribution.source_data_ = dest_data;
-            distribution.destination_data_ = dest_data;
-            distribution.storage_index_ = distribution.destination_data_.storage_index_;
-            distribution.source_data_.position_ = start_position;
-            distributions.push_back(distribution);
-        }
+    auto start_segment = request.position_/SYMBIOS_CONF->MAX_OBJ_SIZE;
+    auto end_segment = (request.position_+request.data_size_)/SYMBIOS_CONF->MAX_OBJ_SIZE;
+    Data links[primary_metadata.links_.size()];
+    auto link_size = primary_metadata.links_.size();
+    for (auto &link:primary_metadata.links_) {
+        links[link.first]=link.second;
+    }
+    auto start_offset = request.position_;
+    auto size_left = request.data_size_;
+    auto destination_position = 0;
+    for(int i=start_segment; (get_all || i <= end_segment) && i < link_size; ++i){
+        auto relative_offset =  get_all ? 0:start_offset % SYMBIOS_CONF->MAX_OBJ_SIZE;
+        auto source = links[i];
+        auto destination = links[i];
+        source.position_=relative_offset;
+        source.data_size_=SYMBIOS_CONF->MAX_OBJ_SIZE-relative_offset > size_left?size_left:SYMBIOS_CONF->MAX_OBJ_SIZE-relative_offset;
+        destination.position_ = destination_position;
+        destination.data_size_ = source.data_size_;
+        start_offset += source.data_size_;
+        destination_position += source.data_size_;
+        size_left-=source.data_size_;
+        auto distribution = DataDistribution();
+        distribution.source_data_ = source;
+        distribution.destination_data_ = destination;
+        distribution.storage_index_ = source.storage_index_;
+        distributions.push_back(distribution);
     }
     COMMON_DBGVAR(distributions);
     return distributions;

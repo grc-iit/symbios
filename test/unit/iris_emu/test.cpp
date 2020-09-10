@@ -43,12 +43,12 @@ int main(int argc, char * argv[]){
 
     LibHandler lh = LibHandler(file_, IOLib::IRIS, type_, max_obj_size, true, "");
     char *input = strdup(data);
-    lh.run(OPType::FOPEN, 0, 0, NULL);
+    //lh.run(OPType::FOPEN, 0, 0, NULL);
     lh.run(OPType::WRITE, 0, strlen(data), input);
     char *result;
     // char *result = (char *)malloc(strlen(data) + 1);
     lh.run(OPType::READ, 0, strlen(data), result);
-    lh.run(OPType::FCLOSE, 0, 0, NULL);
+    //lh.run(OPType::FCLOSE, 0, 0, NULL);
     // std::cout << result << std::endl;
     free(input);
     // free(result);

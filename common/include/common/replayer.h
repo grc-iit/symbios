@@ -17,9 +17,9 @@
 
 class trace_replayer {
 public:
-    static int replay_trace(std::string traceFile,
+    static double replay_trace(std::string traceFile,
                             std::string filename, int repetitions,
-                            int rank, IOLib mode, uint16_t stor_type, uint16_t chunk_size, std::string symbios_conf="") {
+                            int rank, IOLib mode, uint16_t stor_type, long chunk_size, std::string symbios_conf="") {
         /*Initialization of some stuff*/
         FILE* trace;
         FILE *file;
@@ -54,7 +54,7 @@ public:
             common::debug::Timer globalTimer = common::debug::Timer();
             globalTimer.startTime();
             auto now = globalTimer.getTimeElapsed();
-            std::cout << traceFile << "," << now << std::endl;
+            COMMON_DBGVAR2(traceFile,now);
             int lineNumber=0;
             while ((readsize = getline(&line, &len, trace)) != -1) {
                 if (readsize < 4) {
@@ -70,23 +70,17 @@ public:
                 common::debug::Timer operationTimer = common::debug::Timer();
                 operationTimer.startTime();
                 if (operation == "FOPEN") {
-                    std::cout << "open" << std::endl;
+                    COMMON_DBGMSG("open");
                     if (mode == IOLib::POSIX) {
                         file = fopen((filename+std::to_string(rank)).c_str(), "w+");
                     }
-                    else {
-                        lh.run(OPType::FOPEN, 0, 0, NULL);
-                    }
                 } else if (operation == "FCLOSE") {
-                    std::cout << "close" << std::endl;
+                    COMMON_DBGMSG("close");
                     if (mode == IOLib::POSIX) {
                         fclose(file);
                     }
-                    else {
-                        lh.run(OPType::FCLOSE, 0, 0, NULL);
-                    }
                 } else if (operation == "WRITE") {
-                    std::cout << "write" << std::endl;
+                    COMMON_DBGMSG("write");
                     writebuf = (char *)randstring(request_size);
                     if (mode == IOLib::POSIX) {
                         fseek(file, (size_t) offset, SEEK_SET);
@@ -97,7 +91,8 @@ public:
                     }
                     free(writebuf);
                 } else if (operation == "READ") {
-                    std::cout << "read" << std::endl;
+                    COMMON_DBGMSG("read");
+                    readbuf = (char *)randstring(request_size);
                     if (mode == IOLib::POSIX) {
                         readbuf = (char*) malloc((size_t) request_size + 1);
                         fseek(file, (size_t) offset, SEEK_SET);
@@ -108,18 +103,14 @@ public:
                         lh.run(OPType::READ, offset, request_size, readbuf);
                     }
                 } else if (operation == "LSEEK") {
-                    std::cout << "seek" << std::endl;
+                    COMMON_DBGMSG("seek");
                     if (mode == IOLib::POSIX) {
                         fseek(file, (size_t) offset, SEEK_SET);
-                    }
-                    else {
-                        lh.run(OPType::LSEEK, 0, 0, NULL);
                     }
                 }
                 operationTimer.endTime();
                 lineNumber++;
             }
-            std::cout << "Symbios,";
             timings.emplace_back(globalTimer.endTime());
             rep--;
             std::fclose(trace);
@@ -127,29 +118,17 @@ public:
         for(auto timing:timings){
             average +=timing;
         }
-        average=average/repetitions;
+        average = average/repetitions;
         double global_time;
         MPI_Comm_size(MPI_COMM_WORLD, &comm_size);
         MPI_Allreduce(&average, &global_time, 1, MPI_DOUBLE, MPI_SUM,
                       MPI_COMM_WORLD);
         double mean = global_time / comm_size;
-
-        if(rank == 0) {
-            printf("Time : %lf\n",mean);
-            std::cout << "Symbios,"
-                      << "average,"
-                      << std::setprecision(6)
-                      << average/repetitions
-                      << "\n";
-        }
         free(line);
-
-        /*if( remove( "/home/anthony/temp/" ) != 0 )
-          perror( "Error deleting file" );*/
-        return 0;
+        return mean;
     }
 
-    static int prepare_data(std::string traceFile, std::string filename, int repetitions, int rank, IOLib mode, uint16_t stor_type, uint16_t chunk_size, std::string symbios_conf="") {
+    static int prepare_data(std::string traceFile, std::string filename, int repetitions, int rank, IOLib mode, uint16_t stor_type, long chunk_size, std::string symbios_conf="") {
       FILE* trace;
       FILE *file;
       char* line = NULL;
@@ -215,6 +194,67 @@ public:
 
       return 0;
   }
+    static int clean_data(std::string traceFile, std::string filename, int repetitions, int rank, IOLib mode, uint16_t stor_type, long chunk_size, std::string symbios_conf="") {
+        FILE* trace;
+        FILE *file;
+        char* line = NULL;
+        char *writebuf;
+        size_t len=0;
+        ssize_t readsize;
+        std::string operation;
+        long offset = 0;
+        long request_size = 0;
+        char* word;
+        LibHandler lh = LibHandler(filename, mode, stor_type, chunk_size, false, symbios_conf);
+        line = (char*) malloc(128);
+        int lineNumber=0;
+
+        /* putting down the data, file for PFS and objects for Hyperdex*/
+
+        trace = fopen(traceFile.c_str(), "r");
+
+        long max_offset = 0;
+        while ((readsize = getline(&line, &len, trace)) != -1){
+            lineNumber++;
+            word = strtok(line, ",");
+            operation = word;
+            word = strtok(NULL, ",");
+            offset = atol(word);
+            word = strtok(NULL, ",");
+            request_size = atol(word);
+
+            if (operation == "FOPEN") {
+
+            } else if (operation == "FCLOSE") {
+
+            } else if (operation == "WRITE") {
+                // prepare trace file information by writing to filename for every read in tracefile
+                if (mode == IOLib::POSIX) {
+                    if (offset + request_size > max_offset) {
+                        max_offset = offset + request_size;
+                    }
+                }
+                else {
+                    lh.run(OPType::DELETE,offset, request_size,NULL);
+                }
+            } else if (operation == "READ") {
+
+            } else if (operation == "LSEEK") {
+
+            }
+
+            lineNumber++;
+        }
+        fclose(trace);
+
+        if (mode == IOLib::POSIX) {
+            remove((filename+std::to_string(rank)).c_str());
+        }
+
+        free(line);
+
+        return 0;
+    }
 
 private:
     static char *randstring(long length) {

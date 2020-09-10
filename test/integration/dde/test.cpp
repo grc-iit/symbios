@@ -116,7 +116,7 @@ int main(int argc, char* argv[]){
     request.id_ = "temp_";
     t.resumeTime();
     for(int i=0;i<number_request;++i){
-        engine->Distribute(request);
+        engine->Distribute(request,request);
     }
     t.pauseTime();
     MPI_Barrier(MPI_COMM_WORLD);

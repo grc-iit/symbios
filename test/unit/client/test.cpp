@@ -52,14 +52,14 @@ int main(int argc, char * argv[]){
 
         if(ioOperation == 0 || ioOperation == 2){
             printf("Sending Data\n");
-            client.StoreRequest(data);
+            client.StoreRequest(data,data);
             printf("Data Sent %s\n",data.buffer_);
         }
         data.buffer_ = static_cast<char *>(malloc(data.data_size_));;
         data.storage_index_=0;
         if(ioOperation == 0 || ioOperation == 2){
             printf("Reading Data\n");
-            client.LocateRequest(data);
+            client.LocateRequest(data,data);
             printf("Data recieved %s\n",data.buffer_);
             client.Delete(data);
         }

@@ -27,6 +27,10 @@ void doOp::Read(Data &source, Data &destination) {
     client->Read(source, destination);
 }
 
+void doOp::Remove(Data &source) {
+    client->Remove(source);
+}
+
 doOp::~doOp() {}
 
 
@@ -36,13 +40,60 @@ void LibHandler::run(OPType op_type, long offset, size_t request_size, char* dat
     //map_data() ?
     if (op_type == OPType::READ) do_mapped_read(offset, request_size, data);
     else if (op_type == OPType::WRITE) do_mapped_write(offset, request_size, data);
-    else if (op_type == OPType::FCLOSE);
-    else if (op_type == OPType::FOPEN);
-    else if (op_type == OPType::LSEEK);
+    else if (op_type == OPType::DELETE) do_mapped_delete(offset, request_size, data);
 
 }
 
 void LibHandler::do_mapped_write(long offset, size_t request_size, char *data) {
+
+
+
+    if (lib_type == IOLib::IRIS){
+        DataDescriptor src = {file_, offset,  request_size, 0 };
+        DataMapper mapper_(db_type, max_obj_size);
+        auto objs = mapper_.map(src);
+
+        uint min_chunk_index = objs[0].chunk_index;
+        for (auto &i : objs) {
+            if (i.chunk_index < min_chunk_index) {
+                min_chunk_index = i.chunk_index;
+            }
+        }
+        doOp operation(db_type);
+        long source_position = 0;
+        for (auto &i : objs){
+            auto dest_data = Data();
+            auto src_data = Data();
+            dest_data.id_= i.id_;
+            dest_data.position_=i.position_;
+            dest_data.data_size_=i.size;
+            src_data.buffer_ = data;
+            src_data.position_ = source_position;
+            src_data.data_size_ = i.size;
+            source_position += src_data.data_size_;
+            dest_data.storage_index_ = db_type;
+            // COMMON_DBGVAR(data_obj);
+            operation.Write(src_data, dest_data);
+        }
+    }
+
+    else if (lib_type == IOLib::SYMBIOS || lib_type == IOLib::NIOBE){
+        auto destination = Data();
+        destination.id_= file_;
+        destination.position_= offset;
+        destination.data_size_= request_size;
+        destination.storage_index_ = db_type;
+        auto source = destination;
+        source.buffer_ = data;
+        source.position_=0;
+        symbios_client->StoreRequest(source, destination);
+    }
+    else{
+        exit(3); // throw("INVALID LIB");
+    }
+}
+
+void LibHandler::do_mapped_delete(long offset, size_t request_size, char *data){
     DataDescriptor src = {file_, offset,  request_size, 0 };
     DataMapper mapper_(db_type, max_obj_size);
     auto objs = mapper_.map(src);
@@ -67,53 +118,18 @@ void LibHandler::do_mapped_write(long offset, size_t request_size, char *data) {
 
             dest_data.storage_index_ = db_type;
             // COMMON_DBGVAR(data_obj);
-            operation.Write(src_data, dest_data);
+            operation.Remove(dest_data);
         }
     }
 
-    else if (lib_type == IOLib::NIOBE){
-        SYMBIOS_CONF->CONFIGURATION_FILE=symbios_conf;
-        BASKET_CONF->BACKED_FILE_DIR=SYMBIOS_CONF->SERVER_DIR;
-        auto client = symbios::Client();
-        MPI_Barrier(MPI_COMM_WORLD);
-        auto solution = SYMBIOS_CONF->STORAGE_SOLUTIONS[db_type];
-        auto newSSMap = std::unordered_map<uint16_t, std::shared_ptr<StorageSolution>>();
-        auto new_SS = std::pair<uint16_t, std::shared_ptr<StorageSolution>>(0, solution);
-        newSSMap.insert(new_SS);
-        SYMBIOS_CONF->STORAGE_SOLUTIONS = newSSMap;
-        SYMBIOS_CONF->DATA_DISTRIBUTION_POLICY=RANDOM_POLICY;
-        MPI_Barrier(MPI_COMM_WORLD);
-        for (auto &i : objs) {
-            auto data_obj = Data();
-            data_obj.id_= i.id_;
-            data_obj.position_=i.position_;
-
-            data_obj.buffer_ = data + (i.chunk_index-min_chunk_index)*max_obj_size;
-            data_obj.data_size_= i.size;
-            data_obj.storage_index_ = db_type;
-
-            client.StoreRequest(data_obj);
-        }
-    }
-
-    else if (lib_type == IOLib::SYMBIOS){
-
-        for (auto &i : objs) {
-            auto data_obj = Data();
-            data_obj.id_= i.id_;
-            if (db_type==0) {
-                data_obj.position_=i.position_;
-            }
-            else {
-                data_obj.position_=0;
-            }
-
-            data_obj.buffer_ = data + (i.chunk_index-min_chunk_index)*max_obj_size;
-            data_obj.data_size_= i.size;
-            data_obj.storage_index_ = db_type;
-
-            symbios_client->StoreRequest(data_obj);
-        }
+    else if (lib_type == IOLib::SYMBIOS || lib_type == IOLib::NIOBE){
+        auto source = Data();
+        source.buffer_ = data;
+        source.id_= file_;
+        source.position_= offset;
+        source.data_size_= request_size;
+        source.storage_index_ = db_type;
+        symbios_client->Delete(source);
     }
     else{
         exit(3); // throw("INVALID LIB");
@@ -162,78 +178,24 @@ void LibHandler::do_mapped_read(long offset, size_t request_size, char *data) {
         }
     }
 
-    else if (lib_type == IOLib::NIOBE){
-        SYMBIOS_CONF->CONFIGURATION_FILE=symbios_conf;
-        BASKET_CONF->BACKED_FILE_DIR=SYMBIOS_CONF->SERVER_DIR;
-        auto client = symbios::Client();
-        MPI_Barrier(MPI_COMM_WORLD);
-        auto solution = SYMBIOS_CONF->STORAGE_SOLUTIONS[db_type];
-        auto newSSMap = std::unordered_map<uint16_t, std::shared_ptr<StorageSolution>>();
-        auto new_SS = std::pair<uint16_t, std::shared_ptr<StorageSolution>>(0, solution);
-        newSSMap.insert(new_SS);
-        SYMBIOS_CONF->STORAGE_SOLUTIONS = newSSMap;
-        SYMBIOS_CONF->DATA_DISTRIBUTION_POLICY=RANDOM_POLICY;
-        MPI_Barrier(MPI_COMM_WORLD);
-        for (auto &i : read_objs){
-            auto data_obj = Data();
-            data_obj.id_= i.id_;
-            data_obj.position_=i.position_;
-
-            if (data_offset + i.size > request_size) {
-                data_obj.data_size_=request_size - data_offset;
-            }
-            else {
-                data_obj.data_size_=i.size;
-            }
-            data_obj.storage_index_ = db_type;
-
-            data_offset += data_obj.data_size_;
-
-            client.LocateRequest(data_obj);
-            COMMON_DBGVAR2(data_obj, i);
-            if (data_offset > request_size) {
-                break;
-            }
-        }
-
-    }
-
-    else if (lib_type == IOLib::SYMBIOS){
-
-        for (auto &i : read_objs){
-            auto data_obj = Data();
-            data_obj.id_= i.id_;
-            if (db_type==0) {
-                data_obj.position_=i.position_;
-            }
-            else {
-                data_obj.position_=0;
-            }
-            // data_obj.position_=i.position_;
-            if (data_offset + i.size > request_size) {
-                data_obj.data_size_=request_size - data_offset;
-            }
-            else {
-                data_obj.data_size_=i.size;
-            }
-            data_obj.storage_index_ = db_type;
-
-            symbios_client->LocateRequest(data_obj);
-            free(data_obj.buffer_);
-            COMMON_DBGVAR2(data_obj, i);
-
-            data_offset += data_obj.data_size_;
-            if (data_offset > request_size) {
-                break;
-            }
-        }
+    else if (lib_type == IOLib::SYMBIOS || lib_type == IOLib::NIOBE){
+        auto source = Data();
+        source.buffer_ = data;
+        source.id_= file_;
+        source.position_= offset;
+        source.data_size_= request_size;
+        source.storage_index_ = db_type;
+        auto destination = source;
+        destination.buffer_ = data;
+        destination.position_=0;
+        symbios_client->LocateRequest(source,destination);
     }
     else{
         exit(3); // throw("INVALID LIB");
     }
 }
 
-LibHandler::LibHandler(std::string file__, IOLib lib_type_, uint16_t io_type_, uint16_t max_obj_size_, bool print_p_, std::string symbios_conf_) {
+LibHandler::LibHandler(std::string file__, IOLib lib_type_, uint16_t io_type_, long max_obj_size_, bool print_p_, std::string symbios_conf_) {
     lib_type = lib_type_;
     db_type = io_type_;
     max_obj_size = max_obj_size_;

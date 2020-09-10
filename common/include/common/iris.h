@@ -27,16 +27,14 @@ typedef enum IOLib {
 typedef enum OPType {
     READ,
     WRITE,
-    FOPEN,
-    LSEEK,
-    FCLOSE
+    DELETE
 } OPType;
 
 
 typedef struct DataDescriptor {
     CharStruct id_;
     long position_; // read/write start position
-    uint16_t size;
+    long size;
     uint chunk_index;
 };
 
@@ -52,7 +50,7 @@ private:
     std::vector<DataDescriptor> objs;
     uint16_t lib_type;
     uint16_t db_type;
-    uint16_t max_obj_size;
+    long max_obj_size;
     bool print_p;
     std::string file_;
     std::string symbios_conf;
@@ -60,8 +58,9 @@ private:
     std::vector<DataDescriptor> map_data();
     void do_mapped_read(long offset, size_t request_size, char *data);
     void do_mapped_write(long offset, size_t request_size, char *data);
+    void do_mapped_delete(long offset, size_t request_size, char *data);
 public:
-    LibHandler(std::string file_, IOLib lib_type_, uint16_t io_type_, uint16_t max_obj_size_, bool print_p_, std::string symbios_conf_);
+    LibHandler(std::string file_, IOLib lib_type_, uint16_t io_type_, long max_obj_size_, bool print_p_, std::string symbios_conf_);
     ~LibHandler();
     void run(OPType op_type, long offset, size_t request_size, char *data);
 };
@@ -88,6 +87,7 @@ public:
     doOp(int16_t type_);
     void Write(Data &source, Data &destination);
     void Read(Data &source, Data &destination);
+    void Remove(Data &source);
     ~doOp();
 };
 

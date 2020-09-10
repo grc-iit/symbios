@@ -18,7 +18,7 @@ public:
      */
 
     // Select the target storages for the request by using dynamic programming DDE
-    std::vector<DataDistribution> Distribute(Data& request) override;
+    std::vector<DataDistribution> Distribute(Data &source, Data &destination) override;
 };
 
 #endif //SYMBIOS_DP_DDE_H

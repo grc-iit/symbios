@@ -5,6 +5,7 @@
 #include <common/arguments.h>
 #include <common/replayer.h>
 #include <boost/filesystem.hpp>
+#include <fstream>
 
 class ReplayArgs : public common::args::ArgMap {
   private:
@@ -35,6 +36,7 @@ class ReplayArgs : public common::args::ArgMap {
         std::cout << "  REDIS" << std::endl;
         std::cout << "-t [string]: Trace directory" << std::endl;
         std::cout << "-o [string]: Output directory" << std::endl;
+        std::cout << "-out [string]: output csv" << std::endl;
         std::cout << "-f [string]: Symbios configuration file (optional)" << std::endl;
     }
 
@@ -51,6 +53,7 @@ class ReplayArgs : public common::args::ArgMap {
         AddOpt("-t", common::args::ArgType::kString);
         AddOpt("-o", common::args::ArgType::kString);
         AddOpt("-f", common::args::ArgType::kString);
+        AddOpt("-out", common::args::ArgType::kString);
         AddOpt("-r", common::args::ArgType::kInt);
         AddOpt("-c", common::args::ArgType::kInt);
         ArgIter(argc, argv);
@@ -71,10 +74,22 @@ int main(int argc, char * argv[]){
     int my_rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
     trace_replayer tr;
-    tr.prepare_data(trace_path + boost::filesystem::path::preferred_separator + "CM1.csv", output_path + boost::filesystem::path::preferred_separator + "cm1_out.csv", reps, my_rank, (IOLib)mode, stor_type, chunk, symbios_conf);
-    tr.replay_trace(trace_path + boost::filesystem::path::preferred_separator + "CM1.csv", output_path + boost::filesystem::path::preferred_separator + "cm1_out.csv", reps, my_rank, (IOLib)mode, stor_type, chunk, symbios_conf);
-    tr.prepare_data(trace_path + boost::filesystem::path::preferred_separator + "Kmeans.csv", output_path + boost::filesystem::path::preferred_separator + "kmeans_out.csv", reps, my_rank, (IOLib)mode, stor_type, chunk, symbios_conf);
-    tr.replay_trace(trace_path + boost::filesystem::path::preferred_separator + "Kmeans.csv", output_path + boost::filesystem::path::preferred_separator + "kmeans_out.csv", reps, my_rank, (IOLib)mode, stor_type, chunk, symbios_conf);
+    double cm1_time = tr.replay_trace(trace_path + boost::filesystem::path::preferred_separator + "CM1.csv", output_path + boost::filesystem::path::preferred_separator + "data.bat", reps, my_rank, (IOLib)mode, stor_type, chunk, symbios_conf);
+    double kmeans_time = tr.replay_trace(trace_path + boost::filesystem::path::preferred_separator + "Kmeans.csv", output_path + boost::filesystem::path::preferred_separator + "data.bat", reps, my_rank, (IOLib)mode, stor_type, chunk, symbios_conf);
+    tr.clean_data(trace_path + boost::filesystem::path::preferred_separator + "CM1.csv", output_path + boost::filesystem::path::preferred_separator + "data.bat", reps, my_rank, (IOLib)mode, stor_type, chunk, symbios_conf);
+    if(my_rank == 0 && args.OptIsSet("-out")) {
+        std::string output_path = args.GetStringOpt("-out");
+        bool exists = boost::filesystem::exists(output_path);
+
+        std::stringstream stream;
+        std::ofstream outfile(output_path, std::ofstream::out | std::ofstream::app);
+        if(!exists) {
+            stream << "cm1,kmeans,mode,stor_type,chunk" << std::endl;
+        }
+        stream << cm1_time << "," << kmeans_time << "," << mode << "," << stor_type << "," << chunk << std::endl;
+        outfile << stream.str();
+        std::cout << stream.str();
+    }
     MPI_Finalize();
     return 0;
 }
